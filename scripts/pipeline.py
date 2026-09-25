@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Deterministic phase runner for the complete paper-read / paper-apply skill."""
+"""Deterministic phase runner for the complete Evidentia read / apply skill."""
 import argparse,subprocess,sys
 from pathlib import Path
 HERE=Path(__file__).resolve().parent
