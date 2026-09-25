@@ -1,5 +1,7 @@
 PyMuPDF>=1.23
 jsonschema>=4.20
-Jinja2>=3.1
-weasyprint>=60
 pytest>=8
+
+# Optional: PDF snapshot only (HTML reader works without it).
+# weasyprint>=60
+# Unused by scripts (safe to ignore): Jinja2>=3.1

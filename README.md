@@ -48,16 +48,16 @@ The Paper Model is canonical truth. Renderers, Kami-compatible presentation and 
 ### Requirements
 
 - Python 3.10+
-- PyMuPDF
-- jsonschema
-- Jinja2
-- WeasyPrint (optional for PDF snapshots; HTML remains available)
+- PyMuPDF (figure/table extraction)
+- jsonschema (schema + freeze gates)
+- pytest (run the gates)
+- WeasyPrint, optional: PDF snapshot only; HTML reader works without it.
 
 ### Install
 
 ```bash
-git clone https://github.com/tianshuo886/paper-read.git
-cd paper-read
+git clone https://github.com/tianshuo886/evidentia.git
+cd evidentia
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
@@ -187,7 +187,7 @@ The tests include negative cases for dangling evidence, missing Lens files, miss
 
 ## Naming
 
-The repository URL remains `paper-read` for link stability. The Skill name is **Evidentia** and the descriptor is **Evidence-Grounded Paper Research OS**.
+The repository is `evidentia`. The Skill name is **Evidentia** and the descriptor is **Evidence-Grounded Paper Research OS**. The old `paper-read` URL redirects to the new location.
 
 
 ## Kami integration
