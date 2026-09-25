@@ -1,5 +1,7 @@
 # Evidentia
 
+[English](README.md) · [中文](README.zh-CN.md)
+
 ## 基于证据的论文研究操作系统
 
 Evidentia 是一个面向单篇论文的深度研究 Skill。它把用户提供的 PDF 转化为一个可长期保存、可追溯、可复核的研究对象：先重建论文的证据来源层，再进行六个独立视角的重读，冻结论文事实，生成统一 Reader，并在需要时把论文投射到一个具体项目中，形成带证据来源的 Research Delta。
@@ -197,3 +199,8 @@ pytest -q
 ## 命名
 
 仓库 URL 暂时保留 `paper-read`，以保证已有链接稳定。Skill 正式名称是 **Evidentia**，完整描述是 **Evidence-Grounded Paper Research OS**。
+
+
+## Kami integration
+
+See `references/kami-integration.md` for the rendering and visual QA bridge.
