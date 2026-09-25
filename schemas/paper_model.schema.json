@@ -1,0 +1,989 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/tianshuo886/paper-read/blob/master/schemas/paper_model.schema.json",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "enum": [
+        "1.0"
+      ]
+    },
+    "paper_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created_at": {
+      "type": "string",
+      "minLength": 1
+    },
+    "generator_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "paper": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "authors": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "venue": {
+          "type": "string"
+        },
+        "year": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "doi": {
+          "type": "string"
+        },
+        "pdf_sha256": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "title",
+        "authors",
+        "pdf_sha256"
+      ],
+      "additionalProperties": false
+    },
+    "natural_structure": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "paper_type": {
+      "enum": [
+        "method",
+        "empirical",
+        "theory",
+        "dataset",
+        "benchmark",
+        "review",
+        "hybrid"
+      ]
+    },
+    "questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^Q[0-9]{2,}$"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1
+          },
+          "page": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          }
+        },
+        "required": [
+          "id",
+          "text"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^C[0-9]{2,}$"
+          },
+          "statement": {
+            "type": "string",
+            "minLength": 1
+          },
+          "page": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "epistemic": {
+            "enum": [
+              "VERIFIED",
+              "SUPPORTED",
+              "PARTIAL",
+              "NOT_STATED",
+              "AMBIGUOUS",
+              "INSUFFICIENT_EVIDENCE",
+              "MODEL_UNCERTAIN",
+              "NEEDS_SUPPLEMENT",
+              "NEEDS_CITATION_TRACE",
+              "UNRESOLVED"
+            ]
+          },
+          "evidence_scope": {
+            "enum": [
+              "IN_PAPER_EVIDENCE",
+              "CITED_EVIDENCE"
+            ]
+          },
+          "observation": {
+            "type": "string",
+            "minLength": 1
+          },
+          "author_interpretation": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reader_assessment": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "statement",
+          "evidence",
+          "epistemic",
+          "evidence_scope",
+          "observation",
+          "author_interpretation",
+          "reader_assessment"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "observations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^O[0-9]{2,}$"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "page": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          }
+        },
+        "required": [
+          "id",
+          "text",
+          "source"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "author_interpretations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "claim": {
+            "type": "string",
+            "minLength": 1
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1
+          },
+          "page": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          }
+        },
+        "required": [
+          "claim",
+          "text"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "reader_assessments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "claim": {
+            "type": "string",
+            "minLength": 1
+          },
+          "verdict": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "epistemic": {
+            "enum": [
+              "VERIFIED",
+              "SUPPORTED",
+              "PARTIAL",
+              "NOT_STATED",
+              "AMBIGUOUS",
+              "INSUFFICIENT_EVIDENCE",
+              "MODEL_UNCERTAIN",
+              "NEEDS_SUPPLEMENT",
+              "NEEDS_CITATION_TRACE",
+              "UNRESOLVED"
+            ]
+          }
+        },
+        "required": [
+          "claim",
+          "verdict",
+          "reason",
+          "epistemic"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "experiments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^E[0-9]{2,}$"
+          },
+          "question": {
+            "type": "string",
+            "minLength": 1
+          },
+          "design": {
+            "type": "string",
+            "minLength": 1
+          },
+          "control": {
+            "type": "string",
+            "minLength": 1
+          },
+          "result": {
+            "type": "string",
+            "minLength": 1
+          },
+          "supports": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "page": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          }
+        },
+        "required": [
+          "id",
+          "question",
+          "design",
+          "control",
+          "result",
+          "supports"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "figures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^F[0-9]{2,}$"
+          },
+          "paper_label": {
+            "type": "string",
+            "minLength": 1
+          },
+          "page": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          },
+          "caption_original": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "caption_status": {
+            "enum": [
+              "OK",
+              "NOT_EXTRACTED"
+            ]
+          },
+          "role": {
+            "enum": [
+              "critical",
+              "supporting",
+              "context",
+              "diagnostic"
+            ]
+          },
+          "depth": {
+            "enum": [
+              "deep",
+              "normal",
+              "light"
+            ]
+          },
+          "file": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "bbox": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "caption_bbox": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "subfigures": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "extraction_method": {
+            "enum": [
+              "page_crop",
+              "embedded",
+              "manual",
+              "none"
+            ]
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "inspection": {
+            "type": "string",
+            "minLength": 1
+          },
+          "observation": {
+            "type": "string",
+            "minLength": 1
+          },
+          "author_interpretation": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reader_assessment": {
+            "type": "string",
+            "minLength": 1
+          },
+          "supports_claims": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "limitations": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "open_questions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "required": [
+          "id",
+          "paper_label",
+          "page",
+          "caption_original",
+          "caption_status",
+          "role",
+          "depth",
+          "file",
+          "inspection"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "tables": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^T[0-9]{2,}$"
+          },
+          "paper_label": {
+            "type": "string",
+            "minLength": 1
+          },
+          "page": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          },
+          "caption_original": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "caption_status": {
+            "enum": [
+              "OK",
+              "NOT_EXTRACTED"
+            ]
+          },
+          "role": {
+            "enum": [
+              "critical",
+              "supporting",
+              "context",
+              "diagnostic"
+            ]
+          },
+          "depth": {
+            "enum": [
+              "deep",
+              "normal",
+              "light"
+            ]
+          },
+          "inspection": {
+            "type": "string",
+            "minLength": 1
+          },
+          "file": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "supports_claims": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "required": [
+          "id",
+          "paper_label",
+          "page",
+          "caption_original",
+          "caption_status",
+          "role",
+          "depth",
+          "inspection"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "methods": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^M[0-9]{2,}$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "mechanism": {
+            "type": "string",
+            "minLength": 1
+          },
+          "assumptions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "page": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "mechanism"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "data": {
+      "type": "object",
+      "properties": {
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "scale": {
+          "type": "string"
+        },
+        "preprocessing": {
+          "type": "string"
+        },
+        "splits": {
+          "type": "string"
+        },
+        "leakage_risk": {
+          "type": "string"
+        },
+        "metrics": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "sources"
+      ],
+      "additionalProperties": false
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^A[0-9]{2,}$"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1
+          },
+          "page": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          }
+        },
+        "required": [
+          "id",
+          "text"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^B[0-9]{2,}$"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1
+          },
+          "self_admitted": {
+            "type": "boolean"
+          },
+          "page": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          }
+        },
+        "required": [
+          "id",
+          "text"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "open_questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^Q[0-9]{2,}$"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "required": [
+          "id",
+          "text",
+          "source"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "anomalies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^AN[0-9]{2,}$"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "required": [
+          "id",
+          "text",
+          "source"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "side_findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^SF[0-9]{2,}$"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "required": [
+          "id",
+          "text",
+          "source"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "portable_components": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^PC[0-9]{2,}$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "io": {
+            "type": "string",
+            "minLength": 1
+          },
+          "page": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          },
+          "source": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "io",
+          "source"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "argument_chain": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "unresolved": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "issue": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "epistemic": {
+            "enum": [
+              "VERIFIED",
+              "SUPPORTED",
+              "PARTIAL",
+              "NOT_STATED",
+              "AMBIGUOUS",
+              "INSUFFICIENT_EVIDENCE",
+              "MODEL_UNCERTAIN",
+              "NEEDS_SUPPLEMENT",
+              "NEEDS_CITATION_TRACE",
+              "UNRESOLVED"
+            ]
+          }
+        },
+        "required": [
+          "issue",
+          "source",
+          "epistemic"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "properties": {
+        "supplement": {
+          "enum": [
+            "SUPPLIED_INSPECTED",
+            "NOT_SUPPLIED",
+            "NOT_APPLICABLE",
+            "UNRESOLVED"
+          ]
+        },
+        "methods_appendix": {
+          "enum": [
+            "INSPECTED",
+            "ABSENT",
+            "UNRESOLVED"
+          ]
+        },
+        "ablations": {
+          "enum": [
+            "INSPECTED",
+            "ABSENT",
+            "UNRESOLVED"
+          ]
+        },
+        "negative_results": {
+          "enum": [
+            "INSPECTED",
+            "ABSENT",
+            "UNRESOLVED"
+          ]
+        }
+      },
+      "required": [
+        "supplement",
+        "methods_appendix",
+        "ablations",
+        "negative_results"
+      ],
+      "additionalProperties": false
+    },
+    "lens_synthesis": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "statement": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "from_lens": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "required": [
+          "id",
+          "statement",
+          "source",
+          "from_lens"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "lens_conflicts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "findings": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "resolution": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "findings",
+          "resolution"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "paper_id",
+    "created_at",
+    "generator_version",
+    "paper",
+    "natural_structure",
+    "paper_type",
+    "questions",
+    "claims",
+    "observations",
+    "author_interpretations",
+    "reader_assessments",
+    "experiments",
+    "figures",
+    "tables",
+    "methods",
+    "data",
+    "assumptions",
+    "limitations",
+    "open_questions",
+    "anomalies",
+    "side_findings",
+    "portable_components",
+    "argument_chain",
+    "unresolved",
+    "coverage",
+    "lens_synthesis",
+    "lens_conflicts"
+  ],
+  "additionalProperties": false
+}
