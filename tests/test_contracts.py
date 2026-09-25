@@ -6,7 +6,7 @@ def test_init_run_is_source_only():
   r=Path(t);pdf=r/'p.pdf';pdf.write_bytes(b'%PDF fake')
   p=subprocess.run([sys.executable,str(ROOT/'scripts/init_run.py'),'--pdf',str(pdf),'--out',str(r/'out')],capture_output=True,text=True)
   assert p.returncode==0
-  state=json.loads((r/'out/run_state.json').read_text());assert state['mode']=='paper-read';assert 'project' not in json.dumps(state).lower()
+  state=json.loads((r/'out/run_state.json').read_text());assert state['mode']=='evidentia';assert 'project' not in json.dumps(state).lower()
 def test_lens_runner_requires_base_model():
  with tempfile.TemporaryDirectory() as t:
   r=Path(t);(r/'source').mkdir();(r/'source/paper.pdf').write_bytes(b'x');(r/'model').mkdir()

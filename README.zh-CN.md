@@ -48,16 +48,16 @@ Paper Model 是事实层。Reader、Kami 兼容展示和项目分析都只能作
 ### 环境要求
 
 - Python 3.10+
-- PyMuPDF
-- jsonschema
-- Jinja2
-- WeasyPrint（用于生成 PDF 快照，可选；HTML 不依赖它）
+- PyMuPDF（抽图/抽表）
+- jsonschema（schema 与冻结门）
+- pytest（跑门禁测试）
+- WeasyPrint，可选：仅用于 PDF 快照；HTML 不依赖它。
 
 ### 安装命令
 
 ```bash
-git clone https://github.com/tianshuo886/paper-read.git
-cd paper-read
+git clone https://github.com/tianshuo886/evidentia.git
+cd evidentia
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
@@ -198,7 +198,7 @@ pytest -q
 
 ## 命名
 
-仓库 URL 暂时保留 `paper-read`，以保证已有链接稳定。Skill 正式名称是 **Evidentia**，完整描述是 **Evidence-Grounded Paper Research OS**。
+仓库名为 `evidentia`。Skill 正式名称是 **Evidentia**，完整描述是 **Evidence-Grounded Paper Research OS**。旧 `paper-read` 链接会自动跳转到新地址。
 
 
 ## Kami integration
