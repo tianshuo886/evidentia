@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/tianshuo886/paper-read/blob/master/schemas/render_ir.schema.json",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "enum": [
+        "1.0"
+      ]
+    },
+    "paper_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "dashboard": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "claim_count": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "title",
+        "claim_count"
+      ],
+      "additionalProperties": false
+    },
+    "paper_map": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "claim_cards": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "figure_blocks": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "table_blocks": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "delta_projects": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "paper_id",
+    "dashboard",
+    "paper_map",
+    "claim_cards",
+    "figure_blocks",
+    "table_blocks",
+    "delta_projects"
+  ],
+  "additionalProperties": false
+}

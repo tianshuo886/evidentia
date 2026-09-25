@@ -1,0 +1,5 @@
+PyMuPDF>=1.23
+jsonschema>=4.20
+Jinja2>=3.1
+weasyprint>=60
+pytest>=8

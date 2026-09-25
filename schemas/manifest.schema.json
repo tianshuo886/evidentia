@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/tianshuo886/paper-read/blob/master/schemas/manifest.schema.json",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "enum": [
+        "1.0"
+      ]
+    },
+    "status": {
+      "enum": [
+        "FROZEN"
+      ]
+    },
+    "hashes": {
+      "type": "object",
+      "properties": {
+        "source/paper.pdf": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model/paper_model.json": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model/evidence_graph.json": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model/figure_inventory.json": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model/source_map.json": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "source/paper.pdf",
+        "model/paper_model.json",
+        "model/evidence_graph.json",
+        "model/figure_inventory.json",
+        "model/source_map.json"
+      ],
+      "additionalProperties": false
+    },
+    "lens_hashes": {
+      "type": "object",
+      "properties": {
+        "author": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reviewer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mechanism": {
+          "type": "string",
+          "minLength": 1
+        },
+        "builder": {
+          "type": "string",
+          "minLength": 1
+        },
+        "anomaly": {
+          "type": "string",
+          "minLength": 1
+        },
+        "counterfactual": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "author",
+        "reviewer",
+        "mechanism",
+        "builder",
+        "anomaly",
+        "counterfactual"
+      ],
+      "additionalProperties": false
+    },
+    "counts": {
+      "type": "object",
+      "properties": {
+        "figures": {
+          "type": "integer"
+        },
+        "tables": {
+          "type": "integer"
+        },
+        "claims": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "figures",
+        "tables",
+        "claims"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schema_version",
+    "status",
+    "hashes",
+    "lens_hashes",
+    "counts"
+  ],
+  "additionalProperties": false
+}
