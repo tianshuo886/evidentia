@@ -1,6 +1,6 @@
-# /paper-apply — contextual re-read → Research Delta
+# /evidentia-apply — contextual re-read → Research Delta
 
-Command: `/paper-apply --paper <paper-output-dir> --project <project-main-doc> [--focus <section>]`
+Command: `/evidentia-apply --paper <paper-output-dir> --project <project-main-doc> [--focus <section>]`
 
 1. Refuse unfrozen dirs (`manifest.json` status must be FROZEN). Load frozen
    model + one project doc. Re-scan the paper for evidence the blind read
