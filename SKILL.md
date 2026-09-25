@@ -157,27 +157,10 @@ anomalies, or experiments; no silent frozen-model edits; no science reshaped
 for templates; no pretty PDF without structured data; no full-reader dumps in
 chat — report counts, paths, and anomalies only.
 
-## Worked reference
+## Complete executable workflow
 
-Sun 2025 hybrid PINN (RSE 114958): 596 labeled (17.3%) + 2855 validation;
-PINN RMSE 0.034 vs PLSR 0.038 vs MCMC 0.045; only plate-model replacement wins;
-447 µs vs MCMC 25 days. Diagnosis pattern (swap one physics block, watch
-downstream) ports to canopy mapper/residual probes. See
-`references/paper_model.md`, `references/lens.md`, `references/audit.md`,
-`references/apply.md` for schemas and checklists.
+Use `scripts/pipeline.py read` to initialize the source-only run. The state machine in `scripts/phase.py` prevents skipping Source Reconstruction, Open Reading, independent Lens outputs, Freeze, or Reader rendering. `scripts/lens_runner.py` creates six separate task packets; it must never be replaced by one multi-perspective prompt.
 
+Use `scripts/pipeline.py apply` only after `scripts/verify_frozen.py` succeeds. It copies exactly one project document into `apply/<project>/`, creates a Project Gap Map and an empty Research Delta contract, and keeps the frozen Paper Model outside the mutable apply workspace. Fill the delta from a contextual reread, then run `scripts/validate_delta.py`.
 
-## Executable v1 gates
-
-The repository includes machine-enforced schemas in `schemas/` and scripts for each boundary:
-
-```text
-ingest.py → extract_figs.py + extract_structure.py → paper_model/evidence_graph
-→ validate_model.py → six independent lens files → check_lenses.py
-→ merge_lenses.py → freeze_check.py → verify_frozen.py → render_reader.py
-→ validate_delta.py (apply)
-```
-
-Run `freeze_check.py` only after every Figure/Table has a role, depth, inspection record, caption status, and a real file for critical figures. It rejects dangling IDs, invalid graph edges, missing Lens files, unresolved omissions, invalid coverage declarations, and missing critical assets. `verify_frozen.py` must pass before `/paper-apply`; any model or Lens mutation requires a new freeze revision.
-
-The Reader contract has three depths: 30-second Dashboard, 5-minute Paper Map/Claim Cards, and 30–60-minute Evidence Atlas. Paper facts and Project Delta share navigation in one HTML surface but remain separate files and hashes. Open Reading uses a source-only paper bundle; project context is unavailable until apply.
+The repository contains no paper-specific fixture. Any paper, including a regression paper, is an external input to the skill.

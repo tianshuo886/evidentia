@@ -103,6 +103,12 @@
         "claims"
       ],
       "additionalProperties": false
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
     }
   },
   "required": [
