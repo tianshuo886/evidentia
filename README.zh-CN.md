@@ -51,7 +51,8 @@ Paper Model 是事实层。Reader、Kami 兼容展示和项目分析都只能作
 - PyMuPDF（抽图/抽表）
 - jsonschema（schema 与冻结门）
 - pytest（跑门禁测试）
-- WeasyPrint，可选：仅用于 PDF 快照；HTML 不依赖它。
+- WeasyPrint：生成 PDF 快照必需，Kami 视觉质检要读这个 PDF；只看 HTML 可以不装。
+- Kami（必需）：Evidentia 的展示与视觉质检后端——排版、MathJax、PDF 渲染，以及孤儿行/密度/字体/视觉四项检查都经由 Kami 的 `build.py` 执行。Evidentia 拥有 Reader 信息架构，Kami 不定义科学内容。没有 Kami，`kami_adapter.py` 直接失败，Reader 缺少视觉质检。
 
 ### 安装命令
 
@@ -61,6 +62,27 @@ cd evidentia
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
+```
+
+#### Kami 安装（必需）
+
+Evidentia 通过 Kami 的 `build.py` 做 Reader 视觉质检。把 `KAMI_ROOT` 指向完整 Kami 仓库或已安装的 kami skill：
+
+```bash
+# 方案 A：已装 /kami skill
+export KAMI_ROOT=~/.agents/skills/kami
+
+# 方案 B：克隆完整 Kami 仓库（已验证 v1.16.0）
+git clone https://github.com/tw93/Kami.git
+export KAMI_ROOT=/path/to/Kami
+```
+
+验证本机 Kami 可用：
+
+```bash
+python "$KAMI_ROOT/skills/kami/scripts/build.py" --doctor
+# 若 KAMI_ROOT 指向 skill 目录本身：
+# python "$KAMI_ROOT/scripts/build.py" --doctor
 ```
 
 Windows PowerShell：
@@ -132,6 +154,17 @@ python scripts/reader_audit.py --out paper-output
 
 Reader 包含三个阅读层级：30 秒 Dashboard、5 分钟 Paper Map/Claim Cards、30–60 分钟 Evidence Atlas。HTML 是主阅读界面，PDF 是存档快照。
 
+### 4b. Kami 视觉质检（可交付 Reader 的必需步骤）
+
+Evidentia 自带的 `reader_audit.py` 只查内容链接（claim/figure/table 是否齐全、有无占位符、图文件是否存在），不管视觉质量。视觉质量是 Kami 的职责——`kami_adapter.py` 用 Kami 的孤儿行/密度/字体/视觉四项检查扫描 `reader/reader.pdf`，结果写入 `reader/kami_audit.json`：
+
+```bash
+export KAMI_ROOT=~/.agents/skills/kami   # 或 /path/to/Kami
+python scripts/kami_adapter.py --out paper-output --kami-root "$KAMI_ROOT"
+```
+
+没有 `KAMI_ROOT` adapter 拒绝运行；缺少 `reader/reader.pdf` 也会失败，所以到这一步 PDF 快照（即 WeasyPrint）是必需的。没有 `kami_audit.json` 且状态 OK 的 Reader 只能算草稿，不能交付。机器检查通过后，仍需肉眼打开页面图确认：图是否清晰、caption 是否对齐、分页、公式、Paper/Project 视觉区分是否正确。
+
 ### 5. 将冻结论文投射到项目
 
 ```bash
@@ -201,6 +234,10 @@ pytest -q
 仓库名为 `evidentia`。Skill 正式名称是 **Evidentia**，完整描述是 **Evidence-Grounded Paper Research OS**。旧 `paper-read` 链接会自动跳转到新地址。
 
 
-## Kami integration
+## Kami 集成（必需后端，不是可选项）
 
-See `references/kami-integration.md` for the rendering and visual QA bridge.
+Evidentia 拥有 Reader 信息架构（Paper Model、Evidence Graph、自然结构、Lens 重读、Delta、`render_ir.json`、`reader.html`）。Kami 负责展示与视觉质检：排版、MathJax、PDF 渲染，以及经 `scripts/kami_adapter.py` 调用的孤儿行/密度/字体/视觉检查（Kami 的 `build.py`）。
+
+依赖是单向的：Evidentia 锁定一个验证过的 Kami（已验证 v1.16.0），可交付 Reader 必须设置 `KAMI_ROOT`。若 Kami 的 `build.py` 接口变化，只需改 `kami_adapter.py`——论文事实、schema、门禁不受影响。
+
+完整安装与执行顺序见上文"Kami 安装（必需）"与"4b. Kami 视觉质检"。细节见 `references/kami-integration.md`。

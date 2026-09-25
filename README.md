@@ -51,7 +51,8 @@ The Paper Model is canonical truth. Renderers, Kami-compatible presentation and 
 - PyMuPDF (figure/table extraction)
 - jsonschema (schema + freeze gates)
 - pytest (run the gates)
-- WeasyPrint, optional: PDF snapshot only; HTML reader works without it.
+- WeasyPrint: required for the PDF snapshot, which the Kami visual QA needs; HTML-only reading works without it.
+- Kami (required): Evidentia's presentation + visual QA backend — typography, MathJax, PDF rendering, and the orphan/density/font/visual checks run through Kami's `build.py`. Evidentia owns the Reader information architecture; Kami never defines the science. Without Kami, `kami_adapter.py` fails and the Reader ships without visual QA.
 
 ### Install
 
@@ -61,6 +62,27 @@ cd evidentia
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
+```
+
+#### Kami setup (required)
+
+Evidentia calls Kami's `build.py` for the Reader visual QA. Point `KAMI_ROOT` at either a full Kami checkout or your installed kami skill:
+
+```bash
+# Option A: you already have the /kami skill installed
+export KAMI_ROOT=~/.agents/skills/kami
+
+# Option B: clone the full Kami repo (tested with v1.16.0)
+git clone https://github.com/tw93/Kami.git
+export KAMI_ROOT=/path/to/Kami
+```
+
+Verify Kami can render and check on your machine:
+
+```bash
+python "$KAMI_ROOT/skills/kami/scripts/build.py" --doctor
+# if KAMI_ROOT points at the installed skill dir instead:
+# python "$KAMI_ROOT/scripts/build.py" --doctor
 ```
 
 Windows PowerShell:
@@ -120,6 +142,17 @@ python scripts/reader_audit.py --out paper-output
 ```
 
 The Reader has three reading depths: a 30-second dashboard, a 5-minute argument view, and a 30–60-minute Evidence Atlas. HTML is the primary surface; PDF is an archive snapshot.
+
+### 4b. Kami visual QA (required for a shippable Reader)
+
+Evidentia's own `reader_audit.py` checks content links (claims/figures/tables present, no placeholders, assets exist). It does not check visual quality. That is Kami's job — `kami_adapter.py` runs Kami's orphan/density/font/visual checks against `reader/reader.pdf` and writes `reader/kami_audit.json`:
+
+```bash
+export KAMI_ROOT=~/.agents/skills/kami   # or /path/to/Kami
+python scripts/kami_adapter.py --out paper-output --kami-root "$KAMI_ROOT"
+```
+
+The adapter refuses to run without `KAMI_ROOT` and fails if `reader/reader.pdf` is missing, so the PDF snapshot (hence WeasyPrint) is required at this stage. A Reader without `kami_audit.json` status OK is draft-only, not shippable. After the machine checks pass, still open the page images and confirm figure clarity, caption binding, page breaks, math, and the Paper/Project visual distinction by eye.
 
 ### 5. Apply the frozen paper to a project
 
@@ -190,6 +223,10 @@ The tests include negative cases for dangling evidence, missing Lens files, miss
 The repository is `evidentia`. The Skill name is **Evidentia** and the descriptor is **Evidence-Grounded Paper Research OS**. The old `paper-read` URL redirects to the new location.
 
 
-## Kami integration
+## Kami integration (required backend, not optional)
 
-See `references/kami-integration.md` for the rendering and visual QA bridge.
+Evidentia owns the Reader information architecture (Paper Model, Evidence Graph, natural structure, Lens rereads, Delta, `render_ir.json`, `reader.html`). Kami owns presentation and visual QA: typography, MathJax, PDF rendering, and the orphan/density/font/visual checks invoked via `scripts/kami_adapter.py` → Kami's `build.py`.
+
+Consequences: the Paper→Project dependency is one-way. Evidentia pins a known-good Kami (tested with v1.16.0) and `KAMI_ROOT` is mandatory for a shippable Reader. If Kami's `build.py` interface changes, only `kami_adapter.py` needs updating — paper facts, schemas, and gates are untouched.
+
+Full setup and run order: see "Kami setup (required)" above and "4b. Kami visual QA". Detail: `references/kami-integration.md`.
