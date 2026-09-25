@@ -2,6 +2,11 @@ PyMuPDF>=1.23
 jsonschema>=4.20
 pytest>=8
 
-# Optional: PDF snapshot only (HTML reader works without it).
-# weasyprint>=60
+# Required for the PDF snapshot, which Kami visual QA reads (kami_adapter.py
+# fails without reader/reader.pdf). HTML-only reading works without it.
+weasyprint>=60
 # Unused by scripts (safe to ignore): Jinja2>=3.1
+
+# Kami is a required backend but lives outside pip: install the /kami skill
+# or clone https://github.com/tw93/Kami (tested with v1.16.0),
+# then export KAMI_ROOT=<kami-repo-or-skill-dir>.
