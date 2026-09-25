@@ -1,5 +1,7 @@
 # Evidentia
 
+[English](README.md) · [中文](README.zh-CN.md)
+
 ## Evidence-Grounded Paper Research OS
 
 Evidentia is a single-paper research system for turning a supplied PDF into a durable, inspectable research object. It reconstructs the paper’s evidence surface, reads it from six independent perspectives, freezes the paper facts, renders a unified reader, and optionally maps the paper into a project without mutating the original understanding.
@@ -186,3 +188,8 @@ The tests include negative cases for dangling evidence, missing Lens files, miss
 ## Naming
 
 The repository URL remains `paper-read` for link stability. The Skill name is **Evidentia** and the descriptor is **Evidence-Grounded Paper Research OS**.
+
+
+## Kami integration
+
+See `references/kami-integration.md` for the rendering and visual QA bridge.
