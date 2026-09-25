@@ -221,6 +221,10 @@ Research Delta 可以记录改变的判断、新证据、新未知、可迁移�
 
 Open Reading 只能接收论文 bundle 和 Skill 资源。项目仓库、项目计划、聊天记录、记忆和连接器数据都不属于它的输入边界。Apply 是单独阶段，只有 Frozen Model 通过哈希校验后才能开始。
 
+## P0 合同审计
+
+仓库提供保守的能力矩阵。运行 `python scripts/contract_audit.py --out .`，把文档声明与 schemas、scripts、tests 的实际实现逐项对照。详见 [`references/contract-audit.md`](references/contract-audit.md)。
+
 ## 测试
 
 ```bash

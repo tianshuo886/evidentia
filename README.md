@@ -210,6 +210,10 @@ A valid Research Delta may change a belief, expose an unknown, transfer a compon
 
 Open Reading receives only the paper bundle and skill resources. Project repositories, plans, chats, memory and connectors are outside its input boundary. Apply is a separate phase and starts only after the Paper Model is frozen and hash-verified.
 
+## P0 Contract Audit
+
+The repository publishes a conservative capability matrix. Run `python scripts/contract_audit.py --out .` to compare documented capabilities with schemas, scripts and tests. See [`references/contract-audit.md`](references/contract-audit.md).
+
 ## Tests
 
 ```bash
