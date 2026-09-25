@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/tianshuo886/paper-read/blob/master/schemas/source_map.schema.json",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "enum": [
+        "1.0"
+      ]
+    },
+    "pdf_sha256": {
+      "type": "string",
+      "minLength": 1
+    },
+    "pages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "number": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "sections": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "equations": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "mentions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "kind": {
+                  "enum": [
+                    "figure",
+                    "table"
+                  ]
+                },
+                "bbox": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  }
+                }
+              },
+              "required": [
+                "label",
+                "kind",
+                "bbox"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "number",
+          "sections",
+          "equations",
+          "mentions"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "supplements": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "pdf_sha256",
+    "pages",
+    "supplements"
+  ],
+  "additionalProperties": false
+}

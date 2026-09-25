@@ -1,0 +1,416 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/tianshuo886/paper-read/blob/master/schemas/research_delta.schema.json",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "enum": [
+        "1.0"
+      ]
+    },
+    "paper_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "paper_model_sha256": {
+      "type": "string",
+      "minLength": 1
+    },
+    "project": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "document": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "name",
+        "document"
+      ],
+      "additionalProperties": false
+    },
+    "project_gap_map": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^G[0-9]{2,}$"
+          },
+          "question": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "open",
+              "partial",
+              "closed"
+            ]
+          },
+          "existing_experiments": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "required": [
+          "id",
+          "question",
+          "status",
+          "existing_experiments"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "contextual_reread": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "finding": {
+            "type": "string",
+            "minLength": 1
+          },
+          "gap_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "required": [
+          "source",
+          "finding",
+          "gap_ids"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "changed_beliefs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "before": {
+            "type": "string",
+            "minLength": 1
+          },
+          "after": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "gap_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "required": [
+          "before",
+          "after",
+          "reason",
+          "source",
+          "gap_ids"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "new_evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "finding": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "gap_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "required": [
+          "finding",
+          "source",
+          "gap_ids"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "new_unknowns": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "question": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "gap_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "required": [
+          "question",
+          "source",
+          "gap_ids"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "transfer_units": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "component_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "gap_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "verdict": {
+            "enum": [
+              "DIRECT",
+              "ADAPT",
+              "INSPIRATION_ONLY",
+              "REJECT"
+            ]
+          },
+          "reason_codes": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "different_data_regime",
+                "different_label_semantics",
+                "different_scale",
+                "different_physical_assumption",
+                "different_sensor_or_modality",
+                "different_causal_interpretation",
+                "different_deployment_constraint",
+                "insufficient_evidence",
+                "already_covered",
+                "cost_exceeds_value",
+                "other_specific"
+              ]
+            }
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "required": [
+          "id",
+          "component_ids",
+          "gap_ids",
+          "verdict",
+          "reason_codes",
+          "reason",
+          "source"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "invalidated_plans": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "plan": {
+            "type": "string",
+            "minLength": 1
+          },
+          "action": {
+            "enum": [
+              "INVALIDATE",
+              "DEPRIORITIZE"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "gap_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "required": [
+          "plan",
+          "action",
+          "reason",
+          "source",
+          "gap_ids"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "experiments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "delta_vs_current_plan": {
+            "type": "string",
+            "minLength": 1
+          },
+          "hypothesis": {
+            "type": "string",
+            "minLength": 1
+          },
+          "integration_point": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cost": {
+            "type": "string",
+            "minLength": 1
+          },
+          "risk": {
+            "type": "string",
+            "minLength": 1
+          },
+          "decision_value_success": {
+            "type": "string",
+            "minLength": 1
+          },
+          "decision_value_failure": {
+            "type": "string",
+            "minLength": 1
+          },
+          "gap_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "required": [
+          "id",
+          "source",
+          "delta_vs_current_plan",
+          "hypothesis",
+          "integration_point",
+          "cost",
+          "risk",
+          "decision_value_success",
+          "decision_value_failure",
+          "gap_ids"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "no_new_actionable_experiment": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "schema_version",
+    "paper_id",
+    "paper_model_sha256",
+    "project",
+    "project_gap_map",
+    "contextual_reread",
+    "changed_beliefs",
+    "new_evidence",
+    "new_unknowns",
+    "transfer_units",
+    "invalidated_plans",
+    "experiments",
+    "no_new_actionable_experiment"
+  ],
+  "additionalProperties": false
+}

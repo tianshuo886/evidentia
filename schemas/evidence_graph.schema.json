@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/tianshuo886/paper-read/blob/master/schemas/evidence_graph.schema.json",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "enum": [
+        "1.0"
+      ]
+    },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "kind": {
+            "enum": [
+              "claim",
+              "observation",
+              "experiment",
+              "figure",
+              "table",
+              "assumption",
+              "boundary",
+              "question",
+              "method",
+              "portable_component",
+              "side_finding",
+              "anomaly"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "kind"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string",
+            "minLength": 1
+          },
+          "rel": {
+            "enum": [
+              "supported_by",
+              "challenged_by",
+              "limited_by",
+              "depends_on",
+              "observed_in",
+              "interpreted_as",
+              "tested_by",
+              "contradicts",
+              "consistent_with",
+              "derived_from",
+              "raises_question",
+              "explained_by",
+              "alternative_to",
+              "supports"
+            ]
+          },
+          "to": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "from",
+          "rel",
+          "to"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "nodes",
+    "edges"
+  ],
+  "additionalProperties": false
+}

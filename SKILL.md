@@ -106,9 +106,7 @@ model, never by loosening the check. `/paper-apply` refuses unfrozen dirs.
 
 ## Render (Kami is presentation, not truth)
 
-Adapt `paper_model.json` → `render_ir.json` → fill the Kami long-doc tokens
-(reuse `~/.agents/skills/kami` templates; do not fork Kami internals, do not
-reshape science to fit slides). Emit `reader/reader.html`, print
+Adapt `paper_model.json` → Paper Reader Adapter → `render_ir.json`; use Kami only for typography, MathJax and print tooling. The Paper Reader information architecture is owned here and is never reshaped to fit Kami Long Doc tokens. Emit `reader/reader.html`, print
 `reader/reader.pdf` (Part I Understanding, Part II Evidence Atlas, Part III
 Delta if present), and `notes.md` (5-minute fallback: one-line model, Q/A,
 argument chain, decisive findings, key figures, weakest link, boundary, open
@@ -167,3 +165,19 @@ PINN RMSE 0.034 vs PLSR 0.038 vs MCMC 0.045; only plate-model replacement wins;
 downstream) ports to canopy mapper/residual probes. See
 `references/paper_model.md`, `references/lens.md`, `references/audit.md`,
 `references/apply.md` for schemas and checklists.
+
+
+## Executable v1 gates
+
+The repository includes machine-enforced schemas in `schemas/` and scripts for each boundary:
+
+```text
+ingest.py → extract_figs.py + extract_structure.py → paper_model/evidence_graph
+→ validate_model.py → six independent lens files → check_lenses.py
+→ merge_lenses.py → freeze_check.py → verify_frozen.py → render_reader.py
+→ validate_delta.py (apply)
+```
+
+Run `freeze_check.py` only after every Figure/Table has a role, depth, inspection record, caption status, and a real file for critical figures. It rejects dangling IDs, invalid graph edges, missing Lens files, unresolved omissions, invalid coverage declarations, and missing critical assets. `verify_frozen.py` must pass before `/paper-apply`; any model or Lens mutation requires a new freeze revision.
+
+The Reader contract has three depths: 30-second Dashboard, 5-minute Paper Map/Claim Cards, and 30–60-minute Evidence Atlas. Paper facts and Project Delta share navigation in one HTML surface but remain separate files and hashes. Open Reading uses a source-only paper bundle; project context is unavailable until apply.
