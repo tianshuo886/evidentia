@@ -1,24 +1,19 @@
-# paper-read · Paper Research OS v1
+# paper-read · Paper Research OS
 
-A single-paper research workflow that turns a PDF into a source-grounded, frozen Paper Model, Evidence Graph, independent Multi-Lens rereads, and a unified Paper/Project Reader.
+A complete single-paper research skill: source reconstruction, project-invisible open reading, six independent Lens rereads, frozen evidence-grounded Paper Model, unified Paper/Project Reader, contextual Research Delta, and reusable literature memory.
 
-## Commands
+This repository contains only the skill and its executable contracts. Papers used for testing remain external inputs.
 
-```bash
-/paper-read <paper.pdf> --out <directory> [--supplement <supp.pdf>]
-/paper-apply --paper <directory> --project <project-doc> [--focus <section>]
-```
-
-The executable pieces can be run directly:
+## Entrypoints
 
 ```bash
-python scripts/extract_figs.py --pdf paper.pdf --out out/assets/figures --inventory out/model/figure_inventory.json
-python scripts/extract_structure.py --pdf paper.pdf --out out/model/source_map.json
-python scripts/freeze_check.py --out out
-python scripts/verify_frozen.py --out out
-python scripts/render_reader.py --out out
+python scripts/pipeline.py read --pdf paper.pdf --out output
+python scripts/lens_runner.py --out output
+python scripts/phase.py --out output --complete SOURCE_RECONSTRUCTION
+python scripts/freeze_check.py --out output
+python scripts/render_reader.py --out output
+python scripts/pipeline.py apply --paper output --project project.md
+python scripts/validate_delta.py --paper output --delta output/apply/project/research_delta.json
 ```
 
-The freeze gate requires JSON Schema-valid data, explicit Figure/Table inspection, real critical assets, a complete Evidence Graph, six independent Lens files, unresolved/coverage declarations, and reproducible SHA-256 hashes. `paper_model.json` is canonical; the Reader is a presentation adapter. Project Delta is stored separately and must reference the frozen model.
-
-Run `pytest -q` for failure-oriented regression tests.
+The system refuses missing schemas, dangling provenance, incomplete Lens passes, changed frozen hashes, unresolved coverage declarations, and Reader omissions. It stores Paper facts and Project Delta separately while presenting both in one Reader.
