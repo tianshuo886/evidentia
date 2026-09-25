@@ -33,9 +33,17 @@ def main():
   if r.startswith(('p.','Fig.','Table.')):continue
   if r not in ids:errs.append(f'dangling reference {r}')
  for lens in LENSES:
-  if not (root/'lens'/f'{lens}.json').exists():errs.append(f'missing lens/{lens}.json')
+  lp=root/'lens'/f'{lens}.json'
+  if not lp.exists():errs.append(f'missing lens/{lens}.json')
+  else:
+   try: errs += schema_validate(load_json(lp),'lens')
+   except Exception as e: errs.append(f'unparseable lens/{lens}.json: {e}')
  if not pm.get('unresolved') and any(c.get('epistemic') in ('AMBIGUOUS','INSUFFICIENT_EVIDENCE','UNRESOLVED') for c in pm.get('claims',[])):errs.append('unresolved claims must be explicitly listed')
  if not pm.get('coverage'):errs.append('coverage audit missing')
+ if (root/'model/source_map.json').exists() and (root/'model/figure_inventory.json').exists():
+  inv_ids={x.get('id') for x in inv.get('items',[])};model_ids={x.get('id') for x in pm.get('figures',[])+pm.get('tables',[])}
+  for ident in sorted(inv_ids-model_ids): errs.append(f'inventory item absent from model {ident}')
+  for ident in sorted(model_ids-inv_ids): errs.append(f'model item absent from inventory {ident}')
  status='FROZEN' if not errs else 'FAIL';man={'schema_version':'1.0','status':status,'hashes':{},'lens_hashes':{},'counts':{'figures':sum(i.get('kind')=='figure' for i in inv.get('items',[])),'tables':sum(i.get('kind')=='table' for i in inv.get('items',[])),'claims':len(pm.get('claims',[]))},'errors':errs}
  for rel in required:
   if (root/rel).exists():man['hashes'][rel]=sha256(root/rel)
