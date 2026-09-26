@@ -50,6 +50,9 @@ def run_workflow(args):
         sh(str(HERE / 'phase.py'), '--out', str(out_dir), '--complete', 'SOURCE_RECONSTRUCTION')
         sh(str(HERE / 'phase.py'), '--out', str(out_dir), '--complete', 'SOURCE_LOCK')
         
+        # Generate evidence bundles for Host Agent consumption (Section 12)
+        sh(str(HERE / 'evidence_bundle.py'), '--out', str(out_dir))
+
         # Generate Open Reading task
         import task_protocol
         t_path = task_protocol.create_open_reading_task(out_dir)

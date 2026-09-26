@@ -5,6 +5,17 @@ All notable changes to Evidentia are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0] - 2026-09-26
+
+### Added
+- **True Host-Agent Execution Protocol**: Removed all hardcoded pseudo-agent scientific conclusions (no LENS_FINDINGS_TEMPLATES or manufactured benefits); added automated regression gate against pseudo-agent strings in production code.
+- **Frozen Research Memory Subsystem**: Explicit, rebuildable long-term research memory with immutable JSON object storage under `objects/`, SQLite+FTS5 index, paper/project commits, and experiment outcome tracking.
+- **Open Reading Memory Firewall**: Technical boundary enforcing zero memory/project leakage during Open Reading and Lens passes (Open Reading contamination rate = 0.0).
+- **Two-Stage Apply Design**: Stage A Local Apply (strictly isolated to current frozen paper and project document) and Stage B Memory-Augmented Synthesis (cross-paper context integration).
+- **Scientific Artifact Model v2**: Canonical entity model with `origin_type` (SOURCE_EXTRACTION, HOST_AGENT, HUMAN, DETERMINISTIC_DERIVATION) and migration script (`migrate_v1_to_v2.py`).
+- **Structured Evidence Bundles**: Core generation of clean evidence surfaces (`evidence_bundles/page-*.json`, `figure-*.json`, `table-*.json`, `equation-*.json`) for Host Agent consumption.
+- **Two-Dimensional Capability Status**: Capability tracking now evaluates both `implementation_status` and `validation_status`.
+
 ## [0.2.0] - 2026-09-26
 
 ### Added

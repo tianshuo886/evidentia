@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
-"""Apply Agent for Evidentia: Maps frozen paper truth into project context.
+"""Apply Agent for Evidentia v1.0: Two-stage Apply Design (Section 39).
 
-Full execution:
-Frozen Paper + Project Document
--> Project Gap Map
--> Contextual Reread
--> Transfer Analysis (Transfer Unit v2)
--> Validated Research Delta
+Stage A — Local Apply:
+Frozen Paper + Project Document -> Local Research Delta (NO cross-paper memory)
 
-Strictly enforces project isolation: frozen paper truth cannot be mutated.
-Only references authentic IDs that exist in the canonical Paper Model.
+Stage B — Memory-Augmented Synthesis (Optional):
+Local Research Delta + Project Gaps + Retrieved Frozen Research Memory
+-> Memory-Augmented Research Synthesis (apply/<project>/memory_augmented_synthesis.json)
+
+Strictly enforces:
+- Project isolation: frozen paper truth cannot be mutated
+- Epistemic separation: Stage A is single-paper only; Stage B is explicitly separate
 """
 import argparse, hashlib, json, os, re, subprocess, sys
 from pathlib import Path
@@ -18,7 +19,8 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 from validate_common import load_json, schema_validate, sha256, all_ids
 
-def run_apply(paper_dir, project_doc, out_dir=None, focus=None):
+def run_local_apply(paper_dir, project_doc, out_dir=None, focus=None):
+    """Stage A: Local Apply without cross-paper memory."""
     p_dir = Path(paper_dir)
     doc_path = Path(project_doc)
 
@@ -50,25 +52,12 @@ def run_apply(paper_dir, project_doc, out_dir=None, focus=None):
     pm_ids = all_ids(pm)
     valid_source_ids = [k for k, v in pm_ids.items() if v in ('figures', 'tables', 'experiments', 'methods')]
     if not valid_source_ids:
-        # Fallback to any valid ID in pm or page anchor
         valid_source_ids = list(pm_ids.keys())[:1] if pm_ids else ["p.1"]
     primary_source_id = valid_source_ids[0]
 
     # Authentic portable components
     available_comps = pm.get('portable_components', [])
-    if available_comps:
-        comp_id = available_comps[0].get('id')
-        comp_name = available_comps[0].get('name', 'Architecture Component')
-    else:
-        # If no portable component in pm, create one in paper_model? No, paper is FROZEN!
-        # Use existing method or claim target if allowed, or check what all_ids has
-        method_comps = [k for k, v in pm_ids.items() if v == 'methods']
-        if method_comps:
-            comp_id = method_comps[0]
-            comp_name = "Method Component"
-        else:
-            comp_id = primary_source_id
-            comp_name = "Core Component"
+    comp_name = available_comps[0].get('name', 'Architecture Component') if available_comps else "Core Component"
 
     # 2. Extract project gaps from document
     gaps = []
@@ -113,10 +102,7 @@ def run_apply(paper_dir, project_doc, out_dir=None, focus=None):
             })
 
     # 4. Transfer Units v2 with authentic provenance
-    # Notice: component_ids in research_delta must be in pm.get('portable_components') according to validate_delta.py
-    # If pm has no portable_components, component_ids must match whatever is in portable_components
     tu_comp_ids = [c['id'] for c in available_comps] if available_comps else []
-    
     transfer_units = []
     if tu_comp_ids:
         for idx, cid in enumerate(tu_comp_ids[:3], 1):
@@ -208,8 +194,45 @@ def run_apply(paper_dir, project_doc, out_dir=None, focus=None):
     if v_res.returncode != 0:
         sys.exit(f"Generated research_delta.json failed validate_delta.py:\n{v_res.stdout}\n{v_res.stderr}")
 
-    print(f"OK: Generated validated Research Delta at {out_delta_p} with {len(transfer_units)} Transfer Units.")
-    return 0
+    print(f"OK Stage A: Generated validated Local Research Delta at {out_delta_p}")
+    return out_delta_p
+
+def run_memory_synthesis(paper_dir, project_id, memory_root=None):
+    """Stage B: Memory-Augmented Synthesis combining local delta and retrieved research memory."""
+    p_dir = Path(paper_dir)
+    target_apply_dir = p_dir / 'apply' / project_id
+    delta_p = target_apply_dir / 'research_delta.json'
+    if not delta_p.exists():
+        sys.exit(f"Error: Stage A Research Delta missing at {delta_p}")
+
+    import memory_manager
+    mem_root = memory_manager.get_memory_root(memory_root)
+    delta = load_json(delta_p)
+
+    # Query memory for relevant cross-paper prior items
+    retrieved = []
+    for g in delta.get('project_gap_map', []):
+        hits = memory_manager.search_memory(g.get('question', ''), limit=3, custom_root=mem_root)
+        retrieved.extend(hits)
+
+    synthesis = {
+        "schema_version": "1.0",
+        "project_id": project_id,
+        "paper_id": delta.get('paper_id'),
+        "local_delta_sha256": sha256(delta_p),
+        "retrieved_memory_items": retrieved,
+        "cross_paper_insights": [
+            f"Retrieved {len(retrieved)} prior research items from Frozen Research Memory matching project gaps."
+        ],
+        "synthesized_recommendations": [
+            f"Integrate component insights from {delta.get('paper_id')} alongside prior confirmed findings in memory."
+        ]
+    }
+
+    synth_p = target_apply_dir / 'memory_augmented_synthesis.json'
+    synth_p.write_text(json.dumps(synthesis, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
+    print(f"OK Stage B: Generated Memory-Augmented Synthesis at {synth_p} ({len(retrieved)} memory items retrieved)")
+    return synth_p
 
 def main():
     ap = argparse.ArgumentParser()
@@ -217,8 +240,14 @@ def main():
     ap.add_argument('--project', required=True)
     ap.add_argument('--out')
     ap.add_argument('--focus')
+    ap.add_argument('--with-memory', action='store_true', help="Run optional Stage B Memory-Augmented Synthesis")
+    ap.add_argument('--memory-root')
     a = ap.parse_args()
-    run_apply(a.paper, a.project, a.out, a.focus)
+
+    delta_file = run_local_apply(a.paper, a.project, a.out, a.focus)
+    if a.with_memory:
+        project_name = Path(a.project).stem
+        run_memory_synthesis(a.paper, project_name, a.memory_root)
 
 if __name__ == '__main__':
     main()

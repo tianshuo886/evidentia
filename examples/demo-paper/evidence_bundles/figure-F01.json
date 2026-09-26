@@ -1,0 +1,15 @@
+{
+  "bundle_type": "FIGURE",
+  "id": "F01",
+  "paper_label": "Fig. 1",
+  "page": 1,
+  "asset_path": "assets/figures/f.png",
+  "caption": "cap",
+  "bbox": [],
+  "caption_bbox": [],
+  "figure_bbox": [],
+  "subfigures": [],
+  "mentions": [],
+  "binding_method": "embedded",
+  "binding_confidence": 0.9
+}
