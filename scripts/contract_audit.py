@@ -57,12 +57,12 @@ CAPABILITIES = [
         "area": "Execution",
         "claim": "Host-agnostic single-model Standard Mode execution without manual JSON authoring",
         "schema": ["run_state", "agent_task", "agent_result_envelope"],
-        "scripts": ["evidentia.py", "task_protocol.py", "open_reading_agent.py"],
-        "tests": ["test_phase_b3", "test_system_integrity"],
+        "scripts": ["evidentia.py", "task_protocol.py", "open_reading_agent.py", "agent_dispatch.py", "agent_submit.py"],
+        "tests": ["test_phase_b3", "test_system_integrity", "test_replay_validation"],
         "implementation_status": "IMPLEMENTED",
-        "validation_status": "SYNTHETIC_VALIDATED",
+        "validation_status": "REPLAY_VALIDATED",
         "status": "IMPLEMENTED",
-        "evidence": "Task protocol and evidentia.py orchestrate full host-agent loop; live model validation in progress."
+        "evidence": "Task protocol, agent_dispatch, and evidentia.py orchestrate full host-agent loop; verified via Tier 2 recorded replay."
     },
     {
         "id": "independent_lens_execution",
@@ -70,11 +70,11 @@ CAPABILITIES = [
         "claim": "Six independent Lens task execution packets with contract validation",
         "schema": ["lens_task", "lens"],
         "scripts": ["lens_runner.py", "check_lenses.py", "task_protocol.py", "lens_agent.py"],
-        "tests": ["test_lens_runner_requires_base_model", "test_phase_b3"],
+        "tests": ["test_lens_runner_requires_base_model", "test_phase_b3", "test_replay_validation"],
         "implementation_status": "IMPLEMENTED",
-        "validation_status": "SYNTHETIC_VALIDATED",
+        "validation_status": "REPLAY_VALIDATED",
         "status": "IMPLEMENTED",
-        "evidence": "task_protocol and lens_runner create six independent task packets with executor metadata and contract validation."
+        "evidence": "task_protocol and lens_agent execute six independent task packets with executor metadata and contract validation; verified via recorded replay."
     },
     {
         "id": "deterministic_pre_reconciliation",
@@ -93,7 +93,7 @@ CAPABILITIES = [
         "area": "Core",
         "claim": "Semantic finding clustering, agreement, tension, and contradiction categorization",
         "schema": ["lens_reconciliation", "finding_cluster"],
-        "scripts": ["merge_lenses.py"],
+        "scripts": ["merge_lenses.py", "reconciliation_agent.py"],
         "tests": ["test_phase_b4"],
         "implementation_status": "IMPLEMENTED",
         "validation_status": "SYNTHETIC_VALIDATED",
@@ -105,7 +105,7 @@ CAPABILITIES = [
         "area": "Verification",
         "claim": "Evidence-localized verifier with SUPPORTED/REJECTED/AMBIGUOUS verdicts",
         "schema": ["verification_task", "verification_result"],
-        "scripts": ["verifier.py"],
+        "scripts": ["verifier.py", "scientific_verifier_agent.py"],
         "tests": ["test_phase_b4"],
         "implementation_status": "IMPLEMENTED",
         "validation_status": "SYNTHETIC_VALIDATED",
@@ -237,12 +237,12 @@ CAPABILITIES = [
         "area": "Memory",
         "claim": "Durable cross-paper research memory with rebuildable index and Open Reading firewall",
         "schema": ["memory_commit", "memory_item", "memory_relation", "project_memory", "experiment_outcome"],
-        "scripts": ["memory_manager.py"],
+        "scripts": ["memory_manager.py", "memory_relation.py", "memory_snapshot.py", "memory_export.py", "memory_import.py"],
         "tests": ["test_phase_c_memory"],
         "implementation_status": "IMPLEMENTED",
         "validation_status": "UNIT_TESTED",
         "status": "IMPLEMENTED",
-        "evidence": "memory_manager.py implements immutable JSON storage under objects/, rebuildable SQLite+FTS5 index, paper/project commits, experiment outcomes, and Open Reading firewall."
+        "evidence": "memory_manager.py implements immutable JSON storage under objects/, rebuildable SQLite+FTS5 index, paper/project commits, relations, snapshots, export/import, experiment outcomes, and Open Reading firewall."
     },
     {
         "id": "evaluation_framework",

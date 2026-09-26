@@ -1,0 +1,63 @@
+{
+  "schema_version": "1.0",
+  "pdf_sha256": "58cdf8f8aae51f41daf1b2e48b96131731893559a508bfeb7354f9cb3c0c01ad",
+  "pages": [
+    {
+      "number": 1,
+      "text": "Sparse Attention Mechanisms for Representation Learning\nAbstract\nThis paper investigates advanced representations and algorithmic trade-offs.\n1. Introduction\nModern visual systems require efficient representations that preserve fine-grained features.\nFig. 1: Attention architecture and perplexity scaling across sequence lengths.",
+      "reading_order": [
+        "Sparse Attention Mechanisms for Representation Learning",
+        "Abstract\nThis paper investigates advanced representations and algorithmic trade-offs.",
+        "1. Introduction\nModern visual systems require efficient representations that preserve fine-grained features.",
+        "Fig. 1: Attention architecture and perplexity scaling across sequence lengths."
+      ],
+      "sections": [],
+      "equations": [],
+      "mentions": [
+        {
+          "label": "Fig. 1",
+          "kind": "figure",
+          "bbox": [],
+          "target_id": "F01",
+          "bound": true
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "text": "2. Methodology and Experiments\n2. Methodology\nDetailed experimental evaluations across benchmarks.\n3. Experiments\nDetailed experimental evaluations across benchmarks.\n4. Ablations\nDetailed experimental evaluations across benchmarks.\nTable 1: Accuracy comparisons across dense and sparse variants.",
+      "reading_order": [
+        "2. Methodology and Experiments",
+        "2. Methodology\nDetailed experimental evaluations across benchmarks.",
+        "3. Experiments\nDetailed experimental evaluations across benchmarks.",
+        "4. Ablations\nDetailed experimental evaluations across benchmarks.",
+        "Table 1: Accuracy comparisons across dense and sparse variants."
+      ],
+      "sections": [],
+      "equations": [],
+      "mentions": [
+        {
+          "label": "Table 1",
+          "kind": "table",
+          "bbox": [],
+          "target_id": "T01",
+          "bound": true
+        }
+      ]
+    }
+  ],
+  "supplements": [],
+  "quality": {
+    "total_pages": 2,
+    "total_chars": 625,
+    "avg_char_density": 312.5,
+    "empty_pages": [
+      1,
+      2
+    ],
+    "scanned_pages": [],
+    "garbled_pages_count": 0,
+    "needs_ocr": false,
+    "reading_order_valid": true
+  }
+}

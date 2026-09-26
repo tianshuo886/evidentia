@@ -1,0 +1,32 @@
+{
+  "lens": "reviewer",
+  "source_sha256": "58cdf8f8aae51f41daf1b2e48b96131731893559a508bfeb7354f9cb3c0c01ad",
+  "base_sha256": "3a16b17f808ae4d33777546a6bca2c74f1de4ce7ea8ac79b96d167f4546fc0cf",
+  "base_model_sha256": "3a16b17f808ae4d33777546a6bca2c74f1de4ce7ea8ac79b96d167f4546fc0cf",
+  "lens_contract_version": "1.0",
+  "prompt_version": "1.0",
+  "findings": [
+    {
+      "id": "L-reviewer-01",
+      "statement": "Stride hyperparameter requires task-specific manual tuning.",
+      "evidence": [
+        "F01"
+      ],
+      "epistemic": "PARTIAL",
+      "novel_vs_base": true
+    }
+  ],
+  "notes": "Recorded Host Agent pass for reviewer lens.",
+  "executor": {
+    "kind": "HOST_AGENT",
+    "host": "pi-agent",
+    "host_version": "1.0.0",
+    "provider": "anthropic",
+    "model": "claude-3-7-sonnet",
+    "model_version": "20250219",
+    "reasoning_profile": "high-effort-scientific",
+    "tool_profile": "paper-source-only",
+    "started_at": "2026-03-27T10:00:00Z",
+    "completed_at": "2026-03-27T10:01:30Z"
+  }
+}

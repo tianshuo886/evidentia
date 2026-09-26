@@ -1,146 +1,95 @@
 #!/usr/bin/env python3
-"""Host-Agent Lens Runner Shell for Evidentia v1.0.
+"""Host-Agent Lens Runner Shell for Evidentia v1.1.
 
-Executes genuine evidence-grounded Lens reasoning passes without hard-coded scientific templates:
-- Author
-- Reviewer
-- Mechanism
-- Builder
-- Anomaly (empty findings explicitly legal when no anomalies exist in paper)
-- Counterfactual
-
-Injects standardized executor metadata and validates output against lens.schema.json.
+Strictly adheres to Section 5 and Section 13:
+- Mode A: Dispatches Lens AgentTask to configured Host Agent / Replay / Fixture
+- Mode B: Sets WAITING_FOR_LENS_AGENTS and stops cleanly
+- Zero fabrication of scientific findings in production code.
 """
 import argparse, json, os, sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
-from validate_common import load_json, schema_validate, sha256
-from executor_meta import build_executor_metadata
+from validate_common import load_json, schema_validate
+from agent_dispatch import dispatch_agent_task
+from agent_submit import submit_agent_result
 
-def run_lens(task_path, out_path=None, model=None, host=None, result_file=None):
+def run_lens(task_path, out_path=None, result_file=None, model=None, host=None, fixture=False, replay_dir=None, adapter=None):
     tp = Path(task_path)
+    if not tp.exists():
+        sys.exit(f"Error: Task packet not found at {tp}")
+
     task = load_json(tp)
     lens = task['lens']
     root = tp.parent.parent
     if tp.parent.name == 'lens':
         root = tp.parent.parent.parent
-        
-    out_file = Path(out_path) if out_path else (root / task.get('output', f'lens/{lens}.json'))
 
-    # If an external result file was supplied (e.g. from Host Agent execution)
-    if result_file and Path(result_file).exists():
-        lens_doc = load_json(result_file)
-        out_file.parent.mkdir(parents=True, exist_ok=True)
-        out_file.write_text(json.dumps(lens_doc, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
-        errs = schema_validate(lens_doc, 'lens')
-        if errs:
-            sys.exit(f"Submitted result failed lens schema validation:\n{errs}")
-        print(f"OK: Accepted Host Agent result for {lens} -> {out_file}")
+    target_out = Path(out_path) if out_path else (root / task.get('target_output', task.get('output', f'lens/{lens}.json')))
+
+    # If external result file supplied
+    if result_file:
+        submit_agent_result(root, task.get('task_id', f'TASK-LENS-{lens.upper()}'), result_file)
         return 0
 
-    base_p = root / task.get('base_model', 'model/open_reading_model.json')
-    base_model = load_json(base_p)
-    claims = base_model.get('claims', [])
-    default_ev = claims[0].get('evidence', ['p.1']) if claims else ['p.1']
+    # Dispatch to Host Agent / Replay / Fixture
+    envelope = dispatch_agent_task(tp, adapter=adapter, model=model, replay_dir=replay_dir, fixture=fixture)
+    if envelope is not None:
+        errs = schema_validate(envelope, 'agent_result_envelope')
+        if errs:
+            sys.exit(f"Host Agent result failed agent_result_envelope schema validation:\n{errs}")
 
-    # Ground findings in real paper entities from base_model without hardcoded templates
-    findings = []
-    if lens == 'author':
-        title = base_model.get('paper', {}).get('title', 'Method')
-        findings.append({
-            "id": f"L-{lens}-01",
-            "statement": f"Core innovation proposed in {title} advances the tested task boundaries.",
-            "evidence": default_ev,
-            "epistemic": "SUPPORTED",
-            "novel_vs_base": True
-        })
-    elif lens == 'reviewer':
-        for idx, lim in enumerate(base_model.get('limitations', [])[:2], 1):
-            findings.append({
-                "id": f"L-{lens}-{idx:02d}",
-                "statement": f"Reviewer audit identifies scope boundary: {lim.get('text', '')}",
-                "evidence": default_ev,
-                "epistemic": "PARTIAL",
-                "novel_vs_base": True
-            })
-    elif lens == 'mechanism':
-        for idx, comp in enumerate(base_model.get('portable_components', [])[:2], 1):
-            findings.append({
-                "id": f"L-{lens}-{idx:02d}",
-                "statement": f"Causal mechanism traces component {comp.get('name', 'Module')} IO mapping: {comp.get('io', '')}",
-                "evidence": comp.get('source', default_ev),
-                "epistemic": "SUPPORTED",
-                "novel_vs_base": True
-            })
-    elif lens == 'builder':
-        data_info = base_model.get('data', {})
-        findings.append({
-            "id": f"L-{lens}-01",
-            "statement": f"Re-implementation requires data regime matching {data_info.get('scale', 'standard scale')} and preprocessing: {data_info.get('preprocessing', 'standard')}",
-            "evidence": default_ev,
-            "epistemic": "SUPPORTED",
-            "novel_vs_base": True
-        })
-    elif lens == 'anomaly':
-        for idx, anom in enumerate(base_model.get('anomalies', []), 1):
-            findings.append({
-                "id": f"L-{lens}-{idx:02d}",
-                "statement": anom.get('text', ''),
-                "evidence": anom.get('source', default_ev),
-                "epistemic": "SUPPORTED",
-                "novel_vs_base": True
-            })
-        # Empty anomaly findings list is legal per Section 2.5
-    elif lens == 'counterfactual':
-        for idx, c in enumerate(claims[:1], 1):
-            findings.append({
-                "id": f"L-{lens}-{idx:02d}",
-                "statement": f"Counterfactual stress-test of claim {c.get('id')}: sensitivity under perturbed distribution.",
-                "evidence": c.get('evidence', default_ev),
-                "epistemic": "PARTIAL",
-                "novel_vs_base": True
-            })
+        payload = envelope['result']
+        lens_errs = schema_validate(payload, 'lens')
+        if lens_errs:
+            sys.exit(f"Host Agent result failed lens schema validation:\n{lens_errs}")
 
-    model_name = model or os.environ.get("AGENT_MODEL") or os.environ.get("PI_MODEL") or "standard-model"
-    host_name = host or os.environ.get("AGENT_HOST") or "evidentia-host"
+        target_out.parent.mkdir(parents=True, exist_ok=True)
+        target_out.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
 
-    lens_doc = {
-        "lens": lens,
-        "source_sha256": task.get('source_sha256'),
-        "base_sha256": task.get('base_sha256'),
-        "base_model_sha256": task.get('base_model_sha256'),
-        "lens_contract_version": task.get('lens_contract_version', '1.0'),
-        "prompt_version": task.get('prompt_version', '1.0'),
-        "executor": build_executor_metadata(
-            host=host_name,
-            model=model_name,
-            tool_profile=f"lens-{lens}"
-        ),
-        "findings": findings,
-        "notes": f"Executed independent {lens} lens pass."
-    }
+        runs_dir = root / f'agent_runs/TASK-LENS-{lens.upper()}'
+        runs_dir.mkdir(parents=True, exist_ok=True)
+        run_idx = len(list(runs_dir.glob('run-*.json'))) + 1
+        (runs_dir / f"run-{run_idx:03d}.json").write_text(json.dumps(envelope, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
 
-    out_file.parent.mkdir(parents=True, exist_ok=True)
-    out_file.write_text(json.dumps(lens_doc, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
+        print(f"OK: Lens {lens} successfully completed by {envelope.get('executor', {}).get('model', 'agent')} -> {target_out}")
+        return 0
 
-    errs = schema_validate(lens_doc, 'lens')
-    if errs:
-        sys.exit(f"Generated lens/{lens}.json failed schema validation:\n{errs}")
+    # Mode B: Submission boundary when no agent is active
+    rs_p = root / 'run_state.json'
+    if rs_p.exists():
+        rs = load_json(rs_p)
+        rs['phase'] = 'WAITING_FOR_LENS_AGENTS'
+        rs_p.write_text(json.dumps(rs, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
 
-    print(f"OK: Executed {lens} lens -> {out_file} ({len(findings)} findings)")
+    print(f"\n[WAITING_FOR_AGENT] Lens task {lens} ready at: {tp}")
+    print(f"Evidentia has paused in WAITING_FOR_LENS_AGENTS state.")
+    print(f"Submit completed lens pass via:")
+    print(f"  evidentia.py submit --out {root} --task TASK-LENS-{lens.upper()} --result <file.json>\n")
     return 0
 
 def main():
-    ap = argparse.ArgumentParser()
+    ap = argparse.ArgumentParser(description="Evidentia Lens Agent Runner")
     ap.add_argument('--task', required=True)
     ap.add_argument('--out')
+    ap.add_argument('--result')
     ap.add_argument('--model')
     ap.add_argument('--host')
-    ap.add_argument('--result')
-    a = ap.parse_args()
-    run_lens(a.task, a.out, a.model, a.host, a.result)
+    ap.add_argument('--fixture', action='store_true', help="Enable isolated synthetic fixture for testing")
+    ap.add_argument('--replay', help="Directory containing recorded replay envelopes")
+    ap.add_argument('--adapter')
+    args = ap.parse_args()
+    run_lens(
+        args.task,
+        out_path=args.out,
+        result_file=args.result,
+        model=args.model,
+        host=args.host,
+        fixture=args.fixture,
+        replay_dir=args.replay,
+        adapter=args.adapter
+    )
 
 if __name__ == '__main__':
     main()

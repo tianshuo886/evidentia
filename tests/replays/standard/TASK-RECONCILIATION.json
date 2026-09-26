@@ -1,0 +1,50 @@
+{
+  "task_id": "TASK-RECONCILIATION",
+  "execution_kind": "HOST_AGENT",
+  "executor": {
+    "kind": "HOST_AGENT",
+    "host": "pi-agent",
+    "host_version": "1.0.0",
+    "provider": "anthropic",
+    "model": "claude-3-7-sonnet",
+    "model_version": "20250219",
+    "reasoning_profile": "high-effort-scientific",
+    "tool_profile": "paper-source-only",
+    "started_at": "2026-03-27T10:00:00Z",
+    "completed_at": "2026-03-27T10:01:30Z"
+  },
+  "started_at": "2026-03-27T10:00:00Z",
+  "completed_at": "2026-03-27T10:01:30Z",
+  "result": {
+    "schema_version": "1.0",
+    "source_sha256": "5194b14568975fcd3d3b9be2c16b9ff571d151834de91196d541c68f96c0b6b6",
+    "base_model_sha256": "afdb4190917e6680effbeafd544e844f5828e39c6d78b57965d9fe5be3435a1b",
+    "items": [
+      {
+        "id": "RF01",
+        "statement": "Sparse attention kernel reduces memory footprint while preserving perplexity.",
+        "status": "AGREEMENT",
+        "relation": "AGREEMENT",
+        "canonical_statement": "Sparse attention kernel reduces memory footprint while preserving perplexity.",
+        "cluster_id": "RFC-01",
+        "members": [
+          "L-author-01",
+          "L-mechanism-01"
+        ],
+        "supporting_lenses": [
+          "author",
+          "mechanism"
+        ],
+        "evidence": [
+          "F01"
+        ],
+        "source": [
+          "F01"
+        ],
+        "epistemic_state": "SUPPORTED",
+        "requires_verification": false,
+        "verifier_status": null
+      }
+    ]
+  }
+}

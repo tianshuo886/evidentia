@@ -29,21 +29,41 @@
         "INGEST",
         "SOURCE_RECONSTRUCTION",
         "SOURCE_LOCK",
+        "OPEN_READING_TASK_READY",
+        "WAITING_FOR_OPEN_READING_AGENT",
+        "WAITING_FOR_AGENT",
         "OPEN_READING",
+        "OPEN_READING_RECEIVED",
         "BASELINE_LOCK",
+        "LENS_TASKS_READY",
+        "WAITING_FOR_LENS_AGENTS",
         "LENS_EXECUTION",
+        "LENS_EXECUTION_COMPLETE",
+        "PRE_RECONCILIATION",
+        "WAITING_FOR_RECONCILIATION_AGENT",
         "RECONCILIATION",
+        "RECONCILIATION_COMPLETE",
+        "VERIFICATION_TASKS_READY",
+        "WAITING_FOR_VERIFIERS",
         "VERIFICATION",
+        "VERIFICATION_COMPLETE",
         "FINAL_MODEL",
         "LENS",
         "FREEZE",
         "RENDER",
         "APPLY_INIT",
         "PROJECT_CONTEXT",
+        "APPLY_LOCAL_TASK_READY",
+        "WAITING_FOR_APPLY_AGENT",
+        "LOCAL_DELTA",
         "CONTEXTUAL_REREAD",
         "DELTA_VALIDATION",
         "APPLY_COMPLETE",
         "APPLY",
+        "OPTIONAL_MEMORY_RETRIEVAL",
+        "MEMORY_SYNTHESIS_TASK_READY",
+        "MEMORY_AUGMENTED_SYNTHESIS",
+        "PROJECT_MEMORY_COMMIT",
         "COMPLETE",
         "FAILED"
       ]
@@ -115,6 +135,12 @@
     },
     "executor": {
       "type": "object"
+    },
+    "execution_kind": {
+      "type": "string"
+    },
+    "validation_status": {
+      "type": "string"
     }
   }
 }

@@ -4,8 +4,8 @@ description: Evidence-grounded Paper Research OS for one paper at a time. Build 
 license: Apache-2.0
 compatibility: ">=Python 3.9"
 metadata:
-  version: "1.0.0"
-  argument-hint: "<paper.pdf> --out <directory> [--supplement ...] | apply --paper <directory> --project <document> [--focus ...]"
+  version: "1.1.0"
+  argument-hint: "<paper.pdf> --out <directory> [--supplement ...] | apply --paper <directory> --project <document> [--focus ...] | memory ..."
 ---
 
 # Evidentia · Evidence-Grounded Paper Research OS
@@ -13,16 +13,18 @@ metadata:
 Evidentia turns one supplied paper into a durable research object:
 
 ```text
-PDF → Source Reconstruction → Source Lock → Open Reading → Baseline Lock
-→ Six Lens Rereads → Reconciliation → Frozen Paper Model + Evidence Graph
-→ Unified Reader → Contextual Apply → Research Delta → Literature Memory
+PDF → Source Reconstruction → Source Lock → Open Reading (AgentTask) → Baseline Lock
+→ Six Independent Lenses (AgentTask) → Semantic Reconciliation → Evidence Verification
+→ Frozen Paper Model + Evidence Graph → Unified Reader → Contextual Apply (AgentTask)
+→ Research Delta → Frozen Research Memory (objects/ + memory.sqlite)
 ```
 
 ## Entries
 
 ```bash
-/evidentia <paper.pdf> --out <directory> [--supplement <supp.pdf>]
+/evidentia <paper.pdf> --out <directory> [--supplement <supp.pdf>] [--mode standard|ensemble]
 /evidentia-apply --paper <paper-output-dir> --project <project-document> [--focus <section>]
+/evidentia-memory [commit-paper|commit-project|relation|inspect|snapshot|export|import]
 ```
 
 Open Reading is project-invisible. Apply loads exactly one project document only after the Paper Model is frozen and its hash is verified. Triage and paper search are outside this skill.
@@ -33,21 +35,27 @@ Open Reading is project-invisible. Apply loads exactly one project document only
 <out>/
 ├── source/paper.pdf [+ supplements]
 ├── working/                         # source-only Open Reading boundary
+├── tasks/                           # schema-valid AgentTask packets
+│   ├── open_reading.json
+│   ├── reconciliation.json
+│   └── lens/{author,reviewer,mechanism,builder,anomaly,counterfactual}.json
+├── agent_runs/                      # immutable records of AgentResultEnvelope executions
 ├── model/
 │   ├── paper_model.json             # final reconciled model (Open Reading draft → frozen final)
 │   ├── open_reading_model.json      # immutable lens baseline snapshot (snapshot_baseline.py)
 │   ├── open_reading_manifest.json   # baseline hashes + contract/prompt versions
-│   ├── lens_reconciliation.json     # converged findings w/ supporting_lenses + recorded conflicts
+│   ├── candidate_clusters.json      # Layer 1 deterministic pre-clustering
+│   ├── lens_reconciliation.json     # Layer 2 semantic reconciliation + recorded conflicts
 │   ├── evidence_graph.json          # typed claim/evidence relations (bound to SOURCE_SHA256)
 │   ├── figure_inventory.json        # extraction record (bound to SOURCE_SHA256)
 │   ├── source_map.json
 │   └── manifest.json                # freeze hashes and audit status
-├── lens_tasks/                      # six independent reread packets
 ├── lens/{author,reviewer,mechanism,builder,anomaly,counterfactual}.json
 ├── reader/{reader.html,reader.pdf,render_ir.json}
 ├── apply/<project>/                 # created only by Apply
 │   ├── project_context.json
-│   └── research_delta.json
+│   ├── research_delta.json
+│   └── memory_augmented_synthesis.json
 └── notes.md
 ```
 

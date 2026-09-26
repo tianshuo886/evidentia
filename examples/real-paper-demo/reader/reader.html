@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Sparse Attention Mechanisms for Representation Learning · Evidentia Evidence Atlas</title>
+<style>
+* { box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: #17263c; background: #f6f8fb; max-width: 1200px; margin: auto; padding: 36px; line-height: 1.5; }
+header { background: #102a43; color: white; padding: 36px; border-radius: 18px; margin-bottom: 22px; }
+.eyebrow { letter-spacing: .12em; opacity: .7; font-size: 12px; margin-top: 0; }
+h1 { font-size: 32px; margin: 10px 0 20px; }
+.stats { display: flex; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+.stats b { font-size: 24px; color: #63b3ed; }
+.stats span { opacity: .8; margin-right: 14px; }
+.card { background: white; padding: 28px; border-radius: 16px; margin: 20px 0; box-shadow: 0 4px 18px #102a4312; }
+.claim, .evidence, .delta, .equation-card, .experiment-card { border-left: 4px solid #2b6cb0; padding: 16px 20px; margin: 16px 0; background: #f8fbff; border-radius: 0 8px 8px 0; }
+.claim-header, .evidence-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.badge { display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 12px; font-weight: 600; text-decoration: none; margin: 0 4px; }
+.evidence-link { background: #e2e8f0; color: #2b6cb0; border: 1px solid #cbd5e0; }
+.claim-link { background: #ebf8ff; color: #2b6cb0; border: 1px solid #bee3f8; }
+.page-anchor-link { background: #edf2f7; color: #4a5568; }
+.epistemic-supported { background: #c6f6d5; color: #22543d; }
+.epistemic-verified { background: #9ae6b4; color: #1c4532; }
+.epistemic-ambiguous { background: #feebc8; color: #744210; }
+.verifier-supported { background: #9ae6b4; color: #1c4532; }
+.verifier-rejected { background: #fed7d7; color: #742a2a; }
+.oia-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin-top: 12px; font-size: 13px; }
+.oia-box { padding: 10px 12px; border-radius: 6px; }
+.oia-obs { background: #edf2f7; }
+.oia-auth { background: #fefcbf; }
+.oia-read { background: #e6fffa; }
+.asset-container img { display: block; max-width: 100%; max-height: 500px; margin: 12px auto; border-radius: 8px; border: 1px solid #e2e8f0; }
+.conflict-item { border-left: 3px solid #e53e3e; padding: 10px 14px; margin: 10px 0; background: #fff5f5; }
+.project { border-left: 6px solid #718355; background: #fbfcf5; }
+.project .delta { border-color: #718355; }
+.page-anchor-bar { margin-bottom: 12px; }
+.page-anchor-block { border-bottom: 1px solid #e2e8f0; padding: 6px 0; }
+small { color: #63748a; }
+ul { padding-left: 20px; }
+li { margin: 6px 0; }
+</style>
+</head>
+<body>
+<header><p class="eyebrow">PAPER RESEARCH OS · FROZEN MODEL · EVIDENCE ATLAS</p><h1>Sparse Attention Mechanisms for Representation Learning</h1><div class="stats"><b>1</b><span>claims</span><b>1</b><span>figures</span><b>1</b><span>tables</span><b>0</b><span>equations</span><b>0</b><span>unresolved</span><b>0</b><span>conflicts</span></div></header><section class="card"><h2>30-second scan</h2><div class="page-anchor-bar"><strong>Page Nav:</strong> <a href="#p.1" class="badge page-anchor-link">p.1</a> <a href="#p.2" class="badge page-anchor-link">p.2</a></div><p>1. Introduction → 2. Methodology → 3. Experiments</p><h3>Argument chain</h3><ul><li>Dense self-attention exhibits quadratic complexity.</li><li>Factorized projection reduces token interactions to strided windows.</li><li>Empirical results confirm perplexity parity.</li></ul></section><section class="card" id="claims-section"><h2>Claim-Centric Evidence Atlas</h2>
+        <article class="claim" id="C01">
+            <div class="claim-header">
+                <h3><a href="#C01">C01</a>: Sparse factorized attention matches dense transformer perplexity with 4x memory reduction.</h3>
+                <span class="badge epistemic-supported">SUPPORTED</span>
+                
+            </div>
+            <div class="evidence-row"><strong>Localized Evidence:</strong> <a href="#F01" class="badge evidence-link">F01</a> · <a href="#p.1">p.1</a></div>
+            <div class="oia-grid">
+                <div class="oia-box oia-obs"><strong>Observation (Data):</strong> Figure 1 displays validation perplexity curves overlapping dense baselines across 100k steps.</div>
+                <div class="oia-box oia-auth"><strong>Author Interpretation:</strong> Authors claim factorization preserves all critical attention routing paths.</div>
+                <div class="oia-box oia-read"><strong>Reader Assessment:</strong> The numerical overlap is visually and tabularly verified within the stated sequence lengths.</div>
+            </div>
+        </article>
+        </section><section class="card" id="evidence-section"><h2>Evidence Gallery &amp; Inspection Surface</h2>
+        <article class="evidence" id="F01">
+            <div class="evidence-header">
+                <h3><a href="#F01">Fig. 1</a> (F01)</h3>
+                <span class="badge role-critical">critical</span>
+                <span class="badge depth-deep">deep</span>
+            </div>
+            <p class="caption">Attention architecture and perplexity scaling across sequence lengths.</p>
+            <div class="asset-container"><img src="../assets/figures/page_p1_F01_1653x2339.png" alt="Fig. 1"></div>
+            <div class="evidence-meta">
+                <small><a href="#p.1">p.1</a> · Binding: none · </small>
+                <div class="return-links"><strong>Supports Claims:</strong> <a href="#C01" class="badge claim-link">C01</a></div>
+            </div>
+        </article>
+        
+        <article class="evidence" id="T01">
+            <div class="evidence-header">
+                <h3><a href="#T01">Table 1</a> (T01)</h3>
+                <span class="badge role-critical">critical</span>
+                <span class="badge depth-deep">deep</span>
+            </div>
+            <p class="caption">Accuracy comparisons across dense and sparse variants.</p>
+            
+            <div class="evidence-meta">
+                <small><a href="#p.1">p.1</a> · Binding: none · </small>
+                <div class="return-links"><strong>Supports Claims:</strong> <em>No direct claim binding</em></div>
+            </div>
+        </article>
+        </section><section class="card" id="pages-section"><h2>Page Evidence Anchors</h2>
+        <div class="page-anchor-block" id="p.1">
+            <h4>Page 1</h4>
+            <p><small>0 sections · 1 mentions</small></p>
+        </div>
+        
+        <div class="page-anchor-block" id="p.2">
+            <h4>Page 2</h4>
+            <p><small>0 sections · 1 mentions</small></p>
+        </div>
+        </section><section class="card"><h2>Cross-Lens Reconciliation &amp; Verification Surface</h2><p>No unresolved tensions recorded.</p></section><section class="card"><h2>Weakest Links, Boundaries &amp; Unresolved Questions</h2><h3>Limitations</h3><ul><li>Evaluated primarily on sequences up to 8192 tokens.</li></ul><h3>Unresolved Questions</h3><ul></ul></section>
+</body>
+</html>

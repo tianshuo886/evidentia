@@ -1,0 +1,29 @@
+[
+  {
+    "candidate_cluster_id": "CAND-CLUST-001",
+    "member_ids": [
+      "L-author-01",
+      "L-reviewer-01",
+      "L-mechanism-01",
+      "L-builder-01",
+      "L-counterfactual-01"
+    ],
+    "lenses": [
+      "author",
+      "builder",
+      "counterfactual",
+      "mechanism",
+      "reviewer"
+    ],
+    "shared_evidence": [
+      "F01"
+    ],
+    "statements": [
+      "Sparse attention kernel is universally drop-in for transformer layers.",
+      "Stride hyperparameter requires task-specific manual tuning.",
+      "Factorization routes attention via localized blocks and strided anchors.",
+      "Custom CUDA block layout required to achieve reported throughput.",
+      "Omitting the anchor token causes perplexity degradation on long spans."
+    ]
+  }
+]

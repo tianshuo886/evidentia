@@ -1,6 +1,9 @@
-# Evidentia Demo Paper Example
+# Evidentia Demo Paper Example (Synthetic Fixture / Tier 1)
 
-This directory demonstrates the canonical artifact layout produced by Evidentia Standard Mode.
+> **Validation Status:** `SYNTHETIC_VALIDATED` (`SIMULATED_FIXTURE`)  
+> For the genuine recorded Host-Agent execution on reconstructed source paper, see [`examples/real-paper-demo/`](../real-paper-demo/).
+
+This directory provides a lightweight deterministic synthetic fixture demonstrating the canonical artifact layout produced by Evidentia. All scientific assertions herein are simulated test fixtures.
 
 ## Layout
 

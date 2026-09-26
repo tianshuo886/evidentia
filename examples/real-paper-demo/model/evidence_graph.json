@@ -1,0 +1,46 @@
+{
+  "schema_version": "1.0",
+  "source_sha256": "58cdf8f8aae51f41daf1b2e48b96131731893559a508bfeb7354f9cb3c0c01ad",
+  "nodes": [
+    {
+      "id": "C01",
+      "kind": "claim"
+    },
+    {
+      "id": "F01",
+      "kind": "figure"
+    },
+    {
+      "id": "T01",
+      "kind": "table"
+    },
+    {
+      "id": "A01",
+      "kind": "assumption"
+    },
+    {
+      "id": "B01",
+      "kind": "boundary"
+    },
+    {
+      "id": "Q02",
+      "kind": "question"
+    },
+    {
+      "id": "PC01",
+      "kind": "portable_component"
+    }
+  ],
+  "edges": [
+    {
+      "from": "C01",
+      "rel": "supported_by",
+      "to": "F01"
+    },
+    {
+      "from": "F01",
+      "rel": "supports",
+      "to": "C01"
+    }
+  ]
+}

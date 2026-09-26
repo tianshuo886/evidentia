@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "status": "FROZEN",
+  "hashes": {
+    "source/paper.pdf": "58cdf8f8aae51f41daf1b2e48b96131731893559a508bfeb7354f9cb3c0c01ad",
+    "model/paper_model.json": "e8844c5f80a2132dfe4ae861ac05a0c0f6422268a7507e6f8db861f1aeb7b1ab",
+    "model/evidence_graph.json": "5454eba150e06cdf9fdb694122b8da77f2b09755542aec7534c819a403c178e6",
+    "model/figure_inventory.json": "b15413e51eb0d703521acd79d8cfc2fafc3fe63ecb9364eb316635b53ca7c613",
+    "model/source_map.json": "564dd0cb4cfb70be24acc81968e08eeafe3044e47b1a5a9ad71b4d937104410f",
+    "model/open_reading_model.json": "3a16b17f808ae4d33777546a6bca2c74f1de4ce7ea8ac79b96d167f4546fc0cf",
+    "model/open_reading_manifest.json": "86ca10032311a56d7023d519f68deb6e807929f178c619dec961473d0a8880b2",
+    "model/lens_reconciliation.json": "29190df58fa382fd93ea1be70b8e32ffb488ed437dfbb99b917ae160cd2c342b"
+  },
+  "lens_hashes": {
+    "author": "80a299d40518cd3dcff8a807541a62033c44078e7f0f80b0932fbfc968ca42ad",
+    "reviewer": "4f607c26bffdbe04f4b4cea47dcea70ac701a3c6d69ecba20a410603a70d8087",
+    "mechanism": "e4509bfcda62f881c04249db47a1b7fb9155a0e2383ea99c7e5aec2f79098e1f",
+    "builder": "068c5f861e9db182a2493ed19b891b7eef9f2abad3fb1d53476c8deedc7c36ef",
+    "anomaly": "d29a635dc4d619433e95aead3f725cb44d72f35bddd49a88d6ce3b21038d4824",
+    "counterfactual": "3784794ff0b1bbf8fa944d650933f22678c79c5a00d4ea170723d3ddb6bf1148"
+  },
+  "counts": {
+    "figures": 1,
+    "tables": 1,
+    "claims": 1
+  },
+  "errors": [],
+  "source_sha256": "58cdf8f8aae51f41daf1b2e48b96131731893559a508bfeb7354f9cb3c0c01ad",
+  "base_model_sha256": "3a16b17f808ae4d33777546a6bca2c74f1de4ce7ea8ac79b96d167f4546fc0cf"
+}

@@ -64,6 +64,60 @@
         "type": "string"
       }
     },
+    "description": {
+      "type": "string"
+    },
+    "constraints": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "executor_template": {
+      "type": "object"
+    },
+    "source_pdf": {
+      "type": "string"
+    },
+    "base_model": {
+      "type": "string"
+    },
+    "output": {
+      "type": "string"
+    },
+    "base_model_sha256": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "lens_contract_version": {
+      "type": "string"
+    },
+    "target_id": {
+      "type": "string"
+    },
+    "statement": {
+      "type": "string"
+    },
+    "allowed_verdicts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "project_doc": {
+      "type": "string"
+    },
+    "frozen_paper_model": {
+      "type": "string"
+    },
+    "manifest": {
+      "type": "string"
+    },
     "source_sha256": {
       "type": "string"
     },

@@ -1,0 +1,31 @@
+{
+  "task_id": "TASK-RECONCILIATION",
+  "task_type": "RECONCILIATION",
+  "required_capability": "SEMANTIC_RECONCILIATION",
+  "scientific_contract": "Semantic reconciliation: classify candidate finding cluster relations without majority voting.",
+  "description": "Semantic reconciliation and clustering across six independent lens passes.",
+  "input_artifacts": {
+    "lenses": [
+      "lens/author.json",
+      "lens/reviewer.json",
+      "lens/mechanism.json",
+      "lens/builder.json",
+      "lens/anomaly.json",
+      "lens/counterfactual.json"
+    ],
+    "candidate_clusters": "model/candidate_clusters.json",
+    "open_reading_model": "model/open_reading_model.json"
+  },
+  "target_output": "model/lens_reconciliation.json",
+  "output_schema": "lens_reconciliation",
+  "source_sha256": "58cdf8f8aae51f41daf1b2e48b96131731893559a508bfeb7354f9cb3c0c01ad",
+  "base_sha256": "3a16b17f808ae4d33777546a6bca2c74f1de4ce7ea8ac79b96d167f4546fc0cf",
+  "contract_version": "1.0",
+  "prompt_version": "1.0",
+  "prohibited_context": [
+    "RESEARCH_MEMORY",
+    "project_context",
+    "apply"
+  ],
+  "instructions": "Analyze findings from all six independent lenses and candidate clusters. Categorize relations into: AGREEMENT, COMPLEMENTARY, PARTIAL_AGREEMENT, TENSION, CONTRADICTION, ORTHOGONAL, UNRESOLVED. Preserve all supporting_lenses for every item. Never erase scientific tension or contradiction."
+}

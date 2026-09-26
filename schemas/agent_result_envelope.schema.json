@@ -5,14 +5,19 @@
   "required": [
     "task_id",
     "executor",
-    "started_at",
-    "completed_at",
     "result"
   ],
   "properties": {
     "task_id": {
       "type": "string",
       "minLength": 1
+    },
+    "execution_kind": {
+      "enum": [
+        "HOST_AGENT",
+        "SIMULATED_FIXTURE",
+        "REPLAY"
+      ]
     },
     "executor": {
       "type": "object",
@@ -26,7 +31,8 @@
           "enum": [
             "HOST_AGENT",
             "HUMAN",
-            "EXTERNAL_MODEL"
+            "EXTERNAL_MODEL",
+            "SIMULATED_FIXTURE"
           ]
         },
         "host": {
@@ -49,6 +55,12 @@
         },
         "tool_profile": {
           "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "completed_at": {
+          "type": "string"
         }
       },
       "additionalProperties": false
@@ -57,6 +69,15 @@
       "type": "string"
     },
     "completed_at": {
+      "type": "string"
+    },
+    "input_hashes": {
+      "type": "object"
+    },
+    "contract_version": {
+      "type": "string"
+    },
+    "prompt_version": {
       "type": "string"
     },
     "result": {

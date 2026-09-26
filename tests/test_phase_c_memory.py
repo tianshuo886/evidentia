@@ -189,3 +189,66 @@ def test_two_stage_apply_with_memory_synthesis(tmp_path):
     assert 'local_delta_sha256' in synth
     assert 'retrieved_memory_items' in synth
 
+def test_memory_relation_and_inspect(tmp_path):
+    import memory_relation
+    mem_root = tmp_path / 'memory'
+    p_dir = tmp_path / 'paper_run'
+    p_dir.mkdir()
+    fixture(p_dir)
+    run('freeze_check.py', '--out', str(p_dir))
+    c1 = memory_manager.commit_paper(p_dir, custom_root=mem_root)
+
+    # Inspect paper commit
+    ins_commit = memory_manager.inspect_memory(c1, custom_root=mem_root)
+    assert ins_commit is not None
+    assert ins_commit['kind'] == 'MEMORY_COMMIT'
+    assert ins_commit['paper_id'] == 'p1'
+
+    # Add cross-paper typed relation
+    rel_id = memory_relation.add_relation(
+        source_id=f"MEM-{c1}-C01",
+        target_id="MEM-EXTERNAL-C01",
+        rel_type="SUPPORTS",
+        reason="Method mechanism replicates in independent evaluation",
+        source_paper="p1",
+        target_paper="p2",
+        evidence_ids=["F01"],
+        custom_root=mem_root
+    )
+    assert rel_id.startswith("REL-")
+
+    # Inspect relation
+    ins_rel = memory_manager.inspect_memory(rel_id, custom_root=mem_root)
+    assert ins_rel is not None
+    assert ins_rel['kind'] == 'MEMORY_RELATION'
+    assert ins_rel['relation_type'] == 'SUPPORTS'
+
+def test_memory_snapshot_export_import(tmp_path):
+    import memory_snapshot, memory_export, memory_import
+    mem_root = tmp_path / 'memory'
+    p_dir = tmp_path / 'paper_run'
+    p_dir.mkdir()
+    fixture(p_dir)
+    run('freeze_check.py', '--out', str(p_dir))
+    memory_manager.commit_paper(p_dir, custom_root=mem_root)
+
+    # 1. Snapshot
+    snap_dir = tmp_path / 'snapshot_test'
+    memory_snapshot.create_snapshot(out_dir=snap_dir, custom_root=mem_root)
+    assert (snap_dir / 'snapshot_meta.json').exists()
+    assert (snap_dir / 'memory_manifest.json').exists()
+
+    # 2. Export
+    export_file = tmp_path / 'export.tar.gz'
+    memory_export.export_memory(out_file=export_file, custom_root=mem_root)
+    assert export_file.exists()
+
+    # 3. Import into fresh root
+    fresh_root = tmp_path / 'fresh_memory'
+    reindexed = memory_import.import_memory(export_file, custom_root=fresh_root)
+    assert reindexed >= 2
+    assert (fresh_root / 'memory.sqlite').exists()
+    hits = memory_manager.search_memory("Attention", custom_root=fresh_root)
+    assert len(hits) >= 1
+
+
