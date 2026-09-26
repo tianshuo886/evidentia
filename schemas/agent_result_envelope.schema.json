@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evidentia.dev/schemas/agent_result_envelope.schema.json",
+  "type": "object",
+  "required": [
+    "task_id",
+    "executor",
+    "started_at",
+    "completed_at",
+    "result"
+  ],
+  "properties": {
+    "task_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "executor": {
+      "type": "object",
+      "required": [
+        "kind",
+        "host",
+        "model"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "HOST_AGENT",
+            "HUMAN",
+            "EXTERNAL_MODEL"
+          ]
+        },
+        "host": {
+          "type": "string"
+        },
+        "host_version": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "model_version": {
+          "type": "string"
+        },
+        "reasoning_profile": {
+          "type": "string"
+        },
+        "tool_profile": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "started_at": {
+      "type": "string"
+    },
+    "completed_at": {
+      "type": "string"
+    },
+    "result": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": false
+}

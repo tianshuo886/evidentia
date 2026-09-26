@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Audit declared Evidentia capabilities against schemas, scripts, tests and docs."""
+"""Audit declared Evidentia capabilities against schemas, scripts, tests and docs (v1.0 Two-Dimensional Model)."""
 import argparse, json, re
 from pathlib import Path
 
@@ -11,6 +11,8 @@ CAPABILITIES = [
         "schema": ["source_map", "figure_inventory"],
         "scripts": ["ingest.py", "extract_structure.py", "extract_figs.py", "link_mentions.py"],
         "tests": ["test_init_run_is_source_only", "test_phase_b2"],
+        "implementation_status": "IMPLEMENTED",
+        "validation_status": "UNIT_TESTED",
         "status": "IMPLEMENTED",
         "evidence": "Dual-track text/visual extraction, caption-geometry binding, structured table/equation objects, supplement metadata, and mention linking implemented and validated."
     },
@@ -21,6 +23,8 @@ CAPABILITIES = [
         "schema": ["source_map", "figure_inventory", "paper_model", "evidence_graph", "lens_reconciliation", "manifest"],
         "scripts": ["extract_figs.py", "build_graph.py", "lens_runner.py", "freeze_check.py"],
         "tests": ["test_phase_a"],
+        "implementation_status": "IMPLEMENTED",
+        "validation_status": "UNIT_TESTED",
         "status": "IMPLEMENTED",
         "evidence": "SOURCE_SHA256 chain is closed across source_map, inventory, paper_model, evidence_graph, lens runs, and manifest; freeze fails closed on any mismatch."
     },
@@ -31,6 +35,8 @@ CAPABILITIES = [
         "schema": ["paper_model", "open_reading_manifest"],
         "scripts": ["snapshot_baseline.py", "lens_runner.py", "phase.py"],
         "tests": ["test_phase_a"],
+        "implementation_status": "IMPLEMENTED",
+        "validation_status": "UNIT_TESTED",
         "status": "IMPLEMENTED",
         "evidence": "snapshot_baseline.py freezes open_reading_model.json and open_reading_manifest.json with hashes and contract versions."
     },
@@ -41,6 +47,8 @@ CAPABILITIES = [
         "schema": ["open_reading_manifest", "lens", "lens_reconciliation", "manifest"],
         "scripts": ["check_lenses.py", "freeze_check.py"],
         "tests": ["test_lens_runner_requires_base_model", "test_phase_a"],
+        "implementation_status": "IMPLEMENTED",
+        "validation_status": "UNIT_TESTED",
         "status": "IMPLEMENTED",
         "evidence": "check_lenses.py and freeze_check.py refuse lenses with stale base_sha256 or mutated baseline."
     },
@@ -48,19 +56,23 @@ CAPABILITIES = [
         "id": "standard_agent_execution",
         "area": "Execution",
         "claim": "Host-agnostic single-model Standard Mode execution without manual JSON authoring",
-        "schema": ["run_state", "lens_task"],
-        "scripts": ["evidentia.py", "task_protocol.py", "pipeline.py"],
-        "tests": ["test_phase_b3"],
+        "schema": ["run_state", "agent_task", "agent_result_envelope"],
+        "scripts": ["evidentia.py", "task_protocol.py", "open_reading_agent.py"],
+        "tests": ["test_phase_b3", "test_system_integrity"],
+        "implementation_status": "IMPLEMENTED",
+        "validation_status": "SYNTHETIC_VALIDATED",
         "status": "IMPLEMENTED",
-        "evidence": "evidentia.py unified CLI and task_protocol.py create structured tasks and orchestrate the host-neutral loop."
+        "evidence": "Task protocol and evidentia.py orchestrate full host-agent loop; live model validation in progress."
     },
     {
         "id": "independent_lens_execution",
         "area": "Execution",
         "claim": "Six independent Lens task execution packets with contract validation",
         "schema": ["lens_task", "lens"],
-        "scripts": ["lens_runner.py", "check_lenses.py", "task_protocol.py"],
+        "scripts": ["lens_runner.py", "check_lenses.py", "task_protocol.py", "lens_agent.py"],
         "tests": ["test_lens_runner_requires_base_model", "test_phase_b3"],
+        "implementation_status": "IMPLEMENTED",
+        "validation_status": "SYNTHETIC_VALIDATED",
         "status": "IMPLEMENTED",
         "evidence": "task_protocol and lens_runner create six independent task packets with executor metadata and contract validation."
     },
@@ -71,6 +83,8 @@ CAPABILITIES = [
         "schema": ["lens_reconciliation", "lens_synthesis"],
         "scripts": ["merge_lenses.py", "check_lenses.py"],
         "tests": ["test_phase_a"],
+        "implementation_status": "IMPLEMENTED",
+        "validation_status": "UNIT_TESTED",
         "status": "IMPLEMENTED",
         "evidence": "merge_lenses.py converges identical findings, preserves all supporting_lenses, and records TENSION."
     },
@@ -78,11 +92,13 @@ CAPABILITIES = [
         "id": "semantic_cross_lens_reconciliation",
         "area": "Core",
         "claim": "Semantic finding clustering, agreement, tension, and contradiction categorization",
-        "schema": ["lens_reconciliation"],
+        "schema": ["lens_reconciliation", "finding_cluster"],
         "scripts": ["merge_lenses.py"],
         "tests": ["test_phase_b4"],
+        "implementation_status": "IMPLEMENTED",
+        "validation_status": "SYNTHETIC_VALIDATED",
         "status": "IMPLEMENTED",
-        "evidence": "Deterministic pre-clustering into Finding Clusters with canonical relations (AGREEMENT, TENSION, etc.) and verification triggers implemented."
+        "evidence": "Pre-clustering into Finding Clusters with canonical relations (AGREEMENT, TENSION, etc.) and verification triggers implemented."
     },
     {
         "id": "evidence_verifier",
@@ -91,6 +107,8 @@ CAPABILITIES = [
         "schema": ["verification_task", "verification_result"],
         "scripts": ["verifier.py"],
         "tests": ["test_phase_b4"],
+        "implementation_status": "IMPLEMENTED",
+        "validation_status": "SYNTHETIC_VALIDATED",
         "status": "IMPLEMENTED",
         "evidence": "verifier.py evaluates candidate claims/conflicts against localized evidence without majority voting, enforcing schemas and status vocabulary."
     },
@@ -101,6 +119,8 @@ CAPABILITIES = [
         "schema": ["paper_model"],
         "scripts": ["validate_model.py", "freeze_check.py"],
         "tests": ["test_phase_a", "test_phase_b6"],
+        "implementation_status": "IMPLEMENTED",
+        "validation_status": "UNIT_TESTED",
         "status": "IMPLEMENTED",
         "evidence": "Schema and freeze gates enforce O/I/A separation, coverage audits, and immutable paper truth without mutation during Apply."
     },
@@ -111,6 +131,8 @@ CAPABILITIES = [
         "schema": ["evidence_graph"],
         "scripts": ["build_graph.py"],
         "tests": ["test_gates", "test_phase_b6"],
+        "implementation_status": "IMPLEMENTED",
+        "validation_status": "UNIT_TESTED",
         "status": "IMPLEMENTED",
         "evidence": "build_graph.py connects claims, evidence, figures, and tables, with source SHA locking."
     },
@@ -120,9 +142,11 @@ CAPABILITIES = [
         "claim": "Fail-closed immutable freeze manifest with SHA-256 integrity verification",
         "schema": ["manifest"],
         "scripts": ["freeze_check.py", "verify_frozen.py"],
-        "tests": ["test_gates", "test_phase_a"],
+        "tests": ["test_gates", "test_phase_a", "test_system_integrity"],
+        "implementation_status": "IMPLEMENTED",
+        "validation_status": "UNIT_TESTED",
         "status": "IMPLEMENTED",
-        "evidence": "Freeze gates check source hash, baseline hash, complete 6-lens set, dangling IDs, and tamper rejection."
+        "evidence": "Freeze gates check source hash, baseline hash, complete 6-lens set, dangling IDs, and tamper rejection; refuses rewriting post-freeze."
     },
     {
         "id": "reader_evidence_atlas",
@@ -131,6 +155,8 @@ CAPABILITIES = [
         "schema": ["render_ir"],
         "scripts": ["render_reader.py", "reader_audit.py"],
         "tests": ["test_phase_b6"],
+        "implementation_status": "IMPLEMENTED",
+        "validation_status": "UNIT_TESTED",
         "status": "IMPLEMENTED",
         "evidence": "Claim-centric Evidence Atlas HTML reader with O/I/A grid, bidirectional return links, and broken anchor auditing implemented."
     },
@@ -141,6 +167,8 @@ CAPABILITIES = [
         "schema": ["render_ir"],
         "scripts": ["kami_adapter.py"],
         "tests": ["test_phase_b6"],
+        "implementation_status": "IMPLEMENTED",
+        "validation_status": "UNIT_TESTED",
         "status": "IMPLEMENTED",
         "evidence": "Kami adapter and reader audit v2 check presentation boundaries, image assets, and layout completeness."
     },
@@ -150,7 +178,9 @@ CAPABILITIES = [
         "claim": "Automated project contextual reread and gap mapping after frozen paper truth",
         "schema": ["project_context"],
         "scripts": ["init_apply.py", "apply_agent.py"],
-        "tests": ["test_phase_b6"],
+        "tests": ["test_phase_b6", "test_system_integrity"],
+        "implementation_status": "IMPLEMENTED",
+        "validation_status": "SYNTHETIC_VALIDATED",
         "status": "IMPLEMENTED",
         "evidence": "apply_agent.py executes project gap mapping, contextual reread, and refuses unfrozen paper models."
     },
@@ -161,6 +191,8 @@ CAPABILITIES = [
         "schema": ["research_delta"],
         "scripts": ["validate_delta.py", "apply_agent.py"],
         "tests": ["test_phase_b6"],
+        "implementation_status": "IMPLEMENTED",
+        "validation_status": "UNIT_TESTED",
         "status": "IMPLEMENTED",
         "evidence": "Research Delta schema with Transfer Unit v2 contracts (assumptions, constraints, contracts) generated and validated."
     },
@@ -170,7 +202,9 @@ CAPABILITIES = [
         "claim": "Multi-Model Ensemble execution across independent model providers",
         "schema": ["execution_config"],
         "scripts": ["evidentia.py"],
-        "tests": ["test_phase_b5"],
+        "tests": ["test_phase_b5", "test_system_integrity"],
+        "implementation_status": "IMPLEMENTED",
+        "validation_status": "SYNTHETIC_VALIDATED",
         "status": "IMPLEMENTED",
         "evidence": "execution_config.schema.json, Pi adapter, and multi-model dispatch architecture implemented."
     },
@@ -181,6 +215,8 @@ CAPABILITIES = [
         "schema": ["lens"],
         "scripts": ["within_lens_reconciliation.py"],
         "tests": ["test_phase_b5"],
+        "implementation_status": "IMPLEMENTED",
+        "validation_status": "UNIT_TESTED",
         "status": "IMPLEMENTED",
         "evidence": "within_lens_reconciliation.py resolves multiple runs into canonical lens outputs with convergence/singleton/conflict tags."
     },
@@ -191,8 +227,22 @@ CAPABILITIES = [
         "schema": ["execution_config"],
         "scripts": ["adaptive_escalation.py"],
         "tests": ["test_phase_b5"],
+        "implementation_status": "IMPLEMENTED",
+        "validation_status": "UNIT_TESTED",
         "status": "IMPLEMENTED",
         "evidence": "adaptive_escalation.py evaluates findings against explicit trigger policies (novel anomalies, uncertainty, weak evidence)."
+    },
+    {
+        "id": "frozen_research_memory",
+        "area": "Memory",
+        "claim": "Durable cross-paper research memory with rebuildable index and Open Reading firewall",
+        "schema": ["memory_commit", "memory_item", "memory_relation", "project_memory", "experiment_outcome"],
+        "scripts": ["memory_manager.py"],
+        "tests": ["test_phase_c_memory"],
+        "implementation_status": "IMPLEMENTED",
+        "validation_status": "UNIT_TESTED",
+        "status": "IMPLEMENTED",
+        "evidence": "memory_manager.py implements immutable JSON storage under objects/, rebuildable SQLite+FTS5 index, paper/project commits, experiment outcomes, and Open Reading firewall."
     },
     {
         "id": "evaluation_framework",
@@ -201,6 +251,8 @@ CAPABILITIES = [
         "schema": [],
         "scripts": ["evals/runners/eval_runner.py"],
         "tests": ["test_phase_b7"],
+        "implementation_status": "IMPLEMENTED",
+        "validation_status": "SYNTHETIC_VALIDATED",
         "status": "IMPLEMENTED",
         "evidence": "evals/ directory with 3-condition benchmark comparison (Single-pass vs Standard vs Ensemble), metrics, and detection fingerprints."
     },
@@ -211,6 +263,8 @@ CAPABILITIES = [
         "schema": [],
         "scripts": [],
         "tests": ["test_phase_b7"],
+        "implementation_status": "IMPLEMENTED",
+        "validation_status": "UNIT_TESTED",
         "status": "IMPLEMENTED",
         "evidence": ".github/workflows/ci.yml, pyproject.toml, LICENSE, CHANGELOG.md, and CONTRIBUTING.md created and verified."
     }
@@ -223,9 +277,25 @@ def main():
     a = ap.parse_args()
     root = Path(a.out)
     result = {
-        "schema_version": "1.0",
-        "audit": "Contract Audit",
+        "schema_version": "2.0",
+        "audit": "Contract Audit v1.0",
         "repository": "Evidentia",
+        "implementation_statuses": [
+            "IMPLEMENTED",
+            "PARTIAL",
+            "DECLARED_ONLY",
+            "MISSING",
+            "DEPRECATED"
+        ],
+        "validation_statuses": [
+            "UNVALIDATED",
+            "UNIT_TESTED",
+            "SYNTHETIC_VALIDATED",
+            "REPLAY_VALIDATED",
+            "LIVE_AGENT_VALIDATED",
+            "REAL_PAPER_VALIDATED",
+            "HUMAN_REVIEWED"
+        ],
         "statuses": [
             "IMPLEMENTED",
             "PARTIAL",
@@ -238,8 +308,9 @@ def main():
     target = root / 'model' / 'capability_matrix.json' if a.write else root / 'capability_matrix.json'
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(json.dumps(result, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
-    counts = {s: sum(x['status'] == s for x in CAPABILITIES) for s in result['statuses']}
-    print(json.dumps({"status": "OK", "output": str(target), "counts": counts}, ensure_ascii=False, indent=2))
+    impl_counts = {s: sum(x.get('implementation_status', x.get('status')) == s for x in CAPABILITIES) for s in result['implementation_statuses']}
+    val_counts = {s: sum(x.get('validation_status') == s for x in CAPABILITIES) for s in result['validation_statuses']}
+    print(json.dumps({"status": "OK", "output": str(target), "implementation_counts": impl_counts, "validation_counts": val_counts}, ensure_ascii=False, indent=2))
 
 if __name__ == '__main__':
     main()

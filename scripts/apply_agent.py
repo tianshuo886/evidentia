@@ -137,10 +137,10 @@ def run_apply(paper_dir, project_doc, out_dir=None, focus=None):
                 "data_regime": "Domain-specific sensory dataset",
                 "label_semantics": "Task-specific taxonomy",
                 "physical_assumptions": "Stationary background distribution",
-                "compute_constraints": "1x GPU >= 16GB VRAM",
-                "deployment_constraints": "Inference latency <= 50ms",
-                "expected_benefit": "Estimated +5% accuracy on target benchmark",
-                "known_risks": ["Potential degradation under uncalibrated camera noise"]
+                "compute_constraints": "Compatible with standard project training environment",
+                "deployment_constraints": "Inference latency acceptable for target domain",
+                "expected_benefit": "PROJECT_ESTIMATE: Potential accuracy improvement under project evaluation criteria",
+                "known_risks": ["Potential domain mismatch under uncalibrated data noise"]
             })
 
     # 5. Formulate Research Delta matching research_delta.schema.json
@@ -184,10 +184,10 @@ def run_apply(paper_dir, project_doc, out_dir=None, focus=None):
                 "id": "EXP-01",
                 "source": [primary_source_id],
                 "delta_vs_current_plan": "Replace standard module with adapted component.",
-                "hypothesis": "Applying adapted component will improve convergence rate by 20%.",
+                "hypothesis": "Applying adapted component to project data regime will address target gap requirements.",
                 "integration_point": "Feature representation block before output head.",
-                "cost": "2 GPU hours",
-                "risk": "Low risk of divergence under initial learning rates.",
+                "cost": "Standard experiment training budget",
+                "risk": "Risk of divergence under initial learning rates.",
                 "decision_value_success": "Adopt adapted component across all production models.",
                 "decision_value_failure": "Revert to standard baseline.",
                 "gap_ids": [gaps[0]['id']]

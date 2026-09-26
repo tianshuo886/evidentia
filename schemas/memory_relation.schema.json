@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evidentia.dev/schemas/memory_relation.schema.json",
+  "type": "object",
+  "required": [
+    "relation_id",
+    "relation_type",
+    "source_memory_id",
+    "target_memory_id",
+    "reasoning",
+    "evidence_ids",
+    "created_at"
+  ],
+  "properties": {
+    "relation_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "relation_type": {
+      "enum": [
+        "AGREES_WITH",
+        "CONTRADICTS",
+        "EXTENDS",
+        "ALTERNATIVE_TO",
+        "SAME_MECHANISM",
+        "SAME_FAILURE_MODE",
+        "SAME_DATA_REGIME",
+        "TRANSFER_ANALOG"
+      ]
+    },
+    "source_memory_id": {
+      "type": "string"
+    },
+    "target_memory_id": {
+      "type": "string"
+    },
+    "source_paper_id": {
+      "type": "string"
+    },
+    "target_paper_id": {
+      "type": "string"
+    },
+    "reasoning": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evidence_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "created_at": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

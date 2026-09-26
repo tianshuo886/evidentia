@@ -45,6 +45,7 @@ python scripts/contract_audit.py --out paper-output --write
 | `ensemble_execution` | Ensemble | IMPLEMENTED | `execution_config.schema.json`, Pi adapter, and multi-model dispatch architecture implemented. |
 | `within_lens_reconciliation` | Ensemble | IMPLEMENTED | `within_lens_reconciliation.py` resolves multiple runs into canonical lens outputs with convergence/singleton/conflict tags. |
 | `adaptive_model_escalation` | Ensemble | IMPLEMENTED | `adaptive_escalation.py` evaluates findings against explicit trigger policies (novel anomalies, uncertainty, weak evidence). |
+| `frozen_research_memory` | Memory | IMPLEMENTED | `memory_manager.py` implements immutable JSON storage under `objects/`, rebuildable SQLite+FTS5 index, paper/project commits, experiment outcomes, and Open Reading firewall. |
 | `evaluation_framework` | Evaluation | IMPLEMENTED | `evals/` directory with 3-condition benchmark comparison (Single-pass vs Standard vs Ensemble), metrics, and detection fingerprints. |
 | `ci_release_engineering` | Engineering | IMPLEMENTED | `.github/workflows/ci.yml`, `pyproject.toml`, `LICENSE`, `CHANGELOG.md`, and `CONTRIBUTING.md` created and verified. |
 

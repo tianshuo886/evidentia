@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evidentia.dev/schemas/finding_cluster.schema.json",
+  "type": "object",
+  "required": [
+    "cluster_id",
+    "member_finding_ids",
+    "relation",
+    "canonical_statement",
+    "supporting_lenses",
+    "evidence_ids",
+    "epistemic_state"
+  ],
+  "properties": {
+    "cluster_id": {
+      "type": "string"
+    },
+    "member_finding_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "relation": {
+      "enum": [
+        "AGREEMENT",
+        "COMPLEMENTARY",
+        "PARTIAL_AGREEMENT",
+        "TENSION",
+        "CONTRADICTION",
+        "ORTHOGONAL",
+        "UNRESOLVED"
+      ]
+    },
+    "canonical_statement": {
+      "type": "string"
+    },
+    "supporting_lenses": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "supporting_runs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "supporting_models": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "dissenting_runs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evidence_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "epistemic_state": {
+      "type": "string"
+    },
+    "verification_required": {
+      "type": "boolean"
+    },
+    "verification_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}
