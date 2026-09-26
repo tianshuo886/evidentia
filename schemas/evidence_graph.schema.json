@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/tianshuo886/paper-read/blob/master/schemas/evidence_graph.schema.json",
+  "$id": "https://github.com/tianshuo886/evidentia/blob/main/schemas/evidence_graph.schema.json",
   "type": "object",
   "properties": {
     "schema_version": {
@@ -30,7 +30,10 @@
               "method",
               "portable_component",
               "side_finding",
-              "anomaly"
+              "anomaly",
+              "lens_finding",
+              "author_interpretation",
+              "reader_assessment"
             ]
           }
         },
@@ -65,7 +68,10 @@
               "raises_question",
               "explained_by",
               "alternative_to",
-              "supports"
+              "supports",
+              "assessed_as",
+              "supports_claim",
+              "cites"
             ]
           },
           "to": {
@@ -80,12 +86,17 @@
         ],
         "additionalProperties": false
       }
+    },
+    "source_sha256": {
+      "type": "string",
+      "minLength": 1
     }
   },
   "required": [
-    "schema_version",
+    "edges",
     "nodes",
-    "edges"
+    "schema_version",
+    "source_sha256"
   ],
   "additionalProperties": false
 }

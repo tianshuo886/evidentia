@@ -34,12 +34,19 @@
       "area": "Core",
       "claim": "Explicit project-independent Open Reading Base",
       "schema": [
-        "paper_model"
+        "paper_model",
+        "open_reading_manifest"
       ],
-      "scripts": [],
-      "tests": [],
-      "status": "MISSING",
-      "evidence": "No open_reading_base schema or creation step; paper_model is used directly."
+      "scripts": [
+        "snapshot_baseline.py",
+        "lens_runner.py",
+        "phase.py"
+      ],
+      "tests": [
+        "test_phase_a"
+      ],
+      "status": "IMPLEMENTED",
+      "evidence": "snapshot_baseline.py freezes open_reading_model.json + open_reading_manifest.json; lens/phase gates bind base_model_sha256."
     },
     {
       "id": "independent_lens_tasks",
@@ -63,13 +70,20 @@
       "id": "lens_reconciliation",
       "area": "Core",
       "claim": "Agreement, complementary findings, conflicts and unresolved conflicts",
-      "schema": [],
-      "scripts": [
-        "merge_lenses.py"
+      "schema": [
+        "lens_reconciliation",
+        "lens_synthesis"
       ],
-      "tests": [],
-      "status": "PARTIAL",
-      "evidence": "Deduplicated synthesis is generated, but semantic conflict detection is not implemented."
+      "scripts": [
+        "merge_lenses.py",
+        "check_lenses.py",
+        "freeze_check.py"
+      ],
+      "tests": [
+        "test_merge_preserves_supporting_lenses"
+      ],
+      "status": "IMPLEMENTED",
+      "evidence": "merge_lenses writes lens_reconciliation.json (supporting_lenses preserved, TENSION recorded) + lens_synthesis.json; freeze refuses erased conflicts."
     },
     {
       "id": "canonical_paper_model",
@@ -165,11 +179,21 @@
       "id": "provenance",
       "area": "Core",
       "claim": "Every important object traces to source and execution metadata",
-      "schema": [],
-      "scripts": [],
-      "tests": [],
-      "status": "PARTIAL",
-      "evidence": "Some hashes and source links exist, but page/region/extractor/run/model/prompt metadata is not universal."
+      "schema": [
+        "open_reading_manifest",
+        "lens_reconciliation"
+      ],
+      "scripts": [
+        "freeze_check.py",
+        "check_lenses.py",
+        "phase.py",
+        "snapshot_baseline.py"
+      ],
+      "tests": [
+        "test_phase_a"
+      ],
+      "status": "IMPLEMENTED",
+      "evidence": "SOURCE_SHA256 chain closed (source_map/inventory/model/graph/lens/baseline all bound); freeze fail-closed on any mismatch."
     },
     {
       "id": "evaluation_benchmark",

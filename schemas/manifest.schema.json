@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/tianshuo886/paper-read/blob/master/schemas/manifest.schema.json",
+  "$id": "https://github.com/tianshuo886/evidentia/blob/main/schemas/manifest.schema.json",
   "type": "object",
   "properties": {
     "schema_version": {
@@ -44,7 +44,10 @@
         "model/figure_inventory.json",
         "model/source_map.json"
       ],
-      "additionalProperties": false
+      "additionalProperties": {
+        "type": "string",
+        "minLength": 1
+      }
     },
     "lens_hashes": {
       "type": "object",
@@ -109,6 +112,20 @@
       "items": {
         "type": "string"
       }
+    },
+    "source_sha256": {
+      "type": "string",
+      "minLength": 1
+    },
+    "base_model_sha256": {
+      "type": "string",
+      "minLength": 1
+    },
+    "open_reading_manifest": {
+      "type": "object"
+    },
+    "reconciliation": {
+      "type": "object"
     }
   },
   "required": [

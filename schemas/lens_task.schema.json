@@ -1,1 +1,59 @@
-{"$schema":"https://json-schema.org/draft/2020-12/schema","$id":"https://github.com/tianshuo886/paper-read/blob/master/schemas/lens_task.schema.json","type":"object","additionalProperties":false,"required":["lens","source_pdf","base_model","instructions","output"],"properties":{"lens":{"enum":["author","reviewer","mechanism","builder","anomaly","counterfactual"]},"source_pdf":{"type":"string","minLength":1},"base_model":{"type":"string","minLength":1},"instructions":{"type":"string","minLength":1},"output":{"type":"string","minLength":1},"source_sha256":{"type":"string"},"base_sha256":{"type":"string"}}}
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/tianshuo886/evidentia/blob/main/schemas/lens_task.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "lens",
+    "source_pdf",
+    "base_model",
+    "instructions",
+    "output"
+  ],
+  "properties": {
+    "lens": {
+      "enum": [
+        "author",
+        "reviewer",
+        "mechanism",
+        "builder",
+        "anomaly",
+        "counterfactual"
+      ]
+    },
+    "source_pdf": {
+      "type": "string",
+      "minLength": 1
+    },
+    "base_model": {
+      "type": "string",
+      "minLength": 1
+    },
+    "instructions": {
+      "type": "string",
+      "minLength": 1
+    },
+    "output": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_sha256": {
+      "type": "string"
+    },
+    "base_sha256": {
+      "type": "string"
+    },
+    "lens_contract_version": {
+      "type": "string"
+    },
+    "prompt_version": {
+      "type": "string"
+    },
+    "executor": {
+      "type": "object"
+    },
+    "base_model_sha256": {
+      "type": "string"
+    }
+  }
+}

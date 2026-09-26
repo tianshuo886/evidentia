@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/tianshuo886/paper-read/blob/master/schemas/lens.schema.json",
+  "$id": "https://github.com/tianshuo886/evidentia/blob/main/schemas/lens.schema.json",
   "type": "object",
   "properties": {
     "lens": {
@@ -71,12 +71,30 @@
     },
     "notes": {
       "type": "string"
+    },
+    "lens_contract_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "prompt_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "executor": {
+      "type": "object"
+    },
+    "base_model_sha256": {
+      "type": "string",
+      "minLength": 1
     }
   },
   "required": [
     "lens",
-    "base_sha256",
     "source_sha256",
+    "base_sha256",
+    "base_model_sha256",
+    "lens_contract_version",
+    "prompt_version",
     "findings",
     "notes"
   ],

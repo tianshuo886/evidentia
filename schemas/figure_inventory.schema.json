@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/tianshuo886/paper-read/blob/master/schemas/figure_inventory.schema.json",
+  "$id": "https://github.com/tianshuo886/evidentia/blob/main/schemas/figure_inventory.schema.json",
   "type": "object",
   "properties": {
     "schema_version": {
@@ -108,6 +108,26 @@
           },
           "inspection": {
             "type": "string"
+          },
+          "binding_method": {
+            "enum": [
+              "embedded",
+              "page_crop",
+              "manual",
+              "none",
+              "caption_geometry"
+            ]
+          },
+          "binding_confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "needs_visual_review": {
+            "type": "boolean"
+          },
+          "source_location": {
+            "type": "string"
           }
         },
         "required": [
@@ -138,15 +158,23 @@
         "type": "string",
         "minLength": 1
       }
+    },
+    "source_sha256": {
+      "type": "string",
+      "minLength": 1
+    },
+    "embedded_saved": {
+      "type": "integer"
     }
   },
   "required": [
-    "schema_version",
-    "pdf",
-    "pages",
     "items",
-    "unmatched_assets",
-    "review_required"
+    "pages",
+    "pdf",
+    "review_required",
+    "schema_version",
+    "source_sha256",
+    "unmatched_assets"
   ],
   "additionalProperties": false
 }
