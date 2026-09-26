@@ -1,7 +1,23 @@
 {
-  "schema_version": "1.0",
-  "audit": "Contract Audit",
+  "schema_version": "2.0",
+  "audit": "Contract Audit v1.0",
   "repository": "Evidentia",
+  "implementation_statuses": [
+    "IMPLEMENTED",
+    "PARTIAL",
+    "DECLARED_ONLY",
+    "MISSING",
+    "DEPRECATED"
+  ],
+  "validation_statuses": [
+    "UNVALIDATED",
+    "UNIT_TESTED",
+    "SYNTHETIC_VALIDATED",
+    "REPLAY_VALIDATED",
+    "LIVE_AGENT_VALIDATED",
+    "REAL_PAPER_VALIDATED",
+    "HUMAN_REVIEWED"
+  ],
   "statuses": [
     "IMPLEMENTED",
     "PARTIAL",
@@ -28,6 +44,8 @@
         "test_init_run_is_source_only",
         "test_phase_b2"
       ],
+      "implementation_status": "IMPLEMENTED",
+      "validation_status": "UNIT_TESTED",
       "status": "IMPLEMENTED",
       "evidence": "Dual-track text/visual extraction, caption-geometry binding, structured table/equation objects, supplement metadata, and mention linking implemented and validated."
     },
@@ -52,6 +70,8 @@
       "tests": [
         "test_phase_a"
       ],
+      "implementation_status": "IMPLEMENTED",
+      "validation_status": "UNIT_TESTED",
       "status": "IMPLEMENTED",
       "evidence": "SOURCE_SHA256 chain is closed across source_map, inventory, paper_model, evidence_graph, lens runs, and manifest; freeze fails closed on any mismatch."
     },
@@ -71,6 +91,8 @@
       "tests": [
         "test_phase_a"
       ],
+      "implementation_status": "IMPLEMENTED",
+      "validation_status": "UNIT_TESTED",
       "status": "IMPLEMENTED",
       "evidence": "snapshot_baseline.py freezes open_reading_model.json and open_reading_manifest.json with hashes and contract versions."
     },
@@ -92,6 +114,8 @@
         "test_lens_runner_requires_base_model",
         "test_phase_a"
       ],
+      "implementation_status": "IMPLEMENTED",
+      "validation_status": "UNIT_TESTED",
       "status": "IMPLEMENTED",
       "evidence": "check_lenses.py and freeze_check.py refuse lenses with stale base_sha256 or mutated baseline."
     },
@@ -101,18 +125,22 @@
       "claim": "Host-agnostic single-model Standard Mode execution without manual JSON authoring",
       "schema": [
         "run_state",
-        "lens_task"
+        "agent_task",
+        "agent_result_envelope"
       ],
       "scripts": [
         "evidentia.py",
         "task_protocol.py",
-        "pipeline.py"
+        "open_reading_agent.py"
       ],
       "tests": [
-        "test_phase_b3"
+        "test_phase_b3",
+        "test_system_integrity"
       ],
+      "implementation_status": "IMPLEMENTED",
+      "validation_status": "SYNTHETIC_VALIDATED",
       "status": "IMPLEMENTED",
-      "evidence": "evidentia.py unified CLI and task_protocol.py create structured tasks and orchestrate the host-neutral loop."
+      "evidence": "Task protocol and evidentia.py orchestrate full host-agent loop; live model validation in progress."
     },
     {
       "id": "independent_lens_execution",
@@ -125,12 +153,15 @@
       "scripts": [
         "lens_runner.py",
         "check_lenses.py",
-        "task_protocol.py"
+        "task_protocol.py",
+        "lens_agent.py"
       ],
       "tests": [
         "test_lens_runner_requires_base_model",
         "test_phase_b3"
       ],
+      "implementation_status": "IMPLEMENTED",
+      "validation_status": "SYNTHETIC_VALIDATED",
       "status": "IMPLEMENTED",
       "evidence": "task_protocol and lens_runner create six independent task packets with executor metadata and contract validation."
     },
@@ -149,6 +180,8 @@
       "tests": [
         "test_phase_a"
       ],
+      "implementation_status": "IMPLEMENTED",
+      "validation_status": "UNIT_TESTED",
       "status": "IMPLEMENTED",
       "evidence": "merge_lenses.py converges identical findings, preserves all supporting_lenses, and records TENSION."
     },
@@ -157,7 +190,8 @@
       "area": "Core",
       "claim": "Semantic finding clustering, agreement, tension, and contradiction categorization",
       "schema": [
-        "lens_reconciliation"
+        "lens_reconciliation",
+        "finding_cluster"
       ],
       "scripts": [
         "merge_lenses.py"
@@ -165,8 +199,10 @@
       "tests": [
         "test_phase_b4"
       ],
+      "implementation_status": "IMPLEMENTED",
+      "validation_status": "SYNTHETIC_VALIDATED",
       "status": "IMPLEMENTED",
-      "evidence": "Deterministic pre-clustering into Finding Clusters with canonical relations (AGREEMENT, TENSION, etc.) and verification triggers implemented."
+      "evidence": "Pre-clustering into Finding Clusters with canonical relations (AGREEMENT, TENSION, etc.) and verification triggers implemented."
     },
     {
       "id": "evidence_verifier",
@@ -182,6 +218,8 @@
       "tests": [
         "test_phase_b4"
       ],
+      "implementation_status": "IMPLEMENTED",
+      "validation_status": "SYNTHETIC_VALIDATED",
       "status": "IMPLEMENTED",
       "evidence": "verifier.py evaluates candidate claims/conflicts against localized evidence without majority voting, enforcing schemas and status vocabulary."
     },
@@ -200,6 +238,8 @@
         "test_phase_a",
         "test_phase_b6"
       ],
+      "implementation_status": "IMPLEMENTED",
+      "validation_status": "UNIT_TESTED",
       "status": "IMPLEMENTED",
       "evidence": "Schema and freeze gates enforce O/I/A separation, coverage audits, and immutable paper truth without mutation during Apply."
     },
@@ -217,6 +257,8 @@
         "test_gates",
         "test_phase_b6"
       ],
+      "implementation_status": "IMPLEMENTED",
+      "validation_status": "UNIT_TESTED",
       "status": "IMPLEMENTED",
       "evidence": "build_graph.py connects claims, evidence, figures, and tables, with source SHA locking."
     },
@@ -233,10 +275,13 @@
       ],
       "tests": [
         "test_gates",
-        "test_phase_a"
+        "test_phase_a",
+        "test_system_integrity"
       ],
+      "implementation_status": "IMPLEMENTED",
+      "validation_status": "UNIT_TESTED",
       "status": "IMPLEMENTED",
-      "evidence": "Freeze gates check source hash, baseline hash, complete 6-lens set, dangling IDs, and tamper rejection."
+      "evidence": "Freeze gates check source hash, baseline hash, complete 6-lens set, dangling IDs, and tamper rejection; refuses rewriting post-freeze."
     },
     {
       "id": "reader_evidence_atlas",
@@ -252,6 +297,8 @@
       "tests": [
         "test_phase_b6"
       ],
+      "implementation_status": "IMPLEMENTED",
+      "validation_status": "UNIT_TESTED",
       "status": "IMPLEMENTED",
       "evidence": "Claim-centric Evidence Atlas HTML reader with O/I/A grid, bidirectional return links, and broken anchor auditing implemented."
     },
@@ -268,6 +315,8 @@
       "tests": [
         "test_phase_b6"
       ],
+      "implementation_status": "IMPLEMENTED",
+      "validation_status": "UNIT_TESTED",
       "status": "IMPLEMENTED",
       "evidence": "Kami adapter and reader audit v2 check presentation boundaries, image assets, and layout completeness."
     },
@@ -283,8 +332,11 @@
         "apply_agent.py"
       ],
       "tests": [
-        "test_phase_b6"
+        "test_phase_b6",
+        "test_system_integrity"
       ],
+      "implementation_status": "IMPLEMENTED",
+      "validation_status": "SYNTHETIC_VALIDATED",
       "status": "IMPLEMENTED",
       "evidence": "apply_agent.py executes project gap mapping, contextual reread, and refuses unfrozen paper models."
     },
@@ -302,6 +354,8 @@
       "tests": [
         "test_phase_b6"
       ],
+      "implementation_status": "IMPLEMENTED",
+      "validation_status": "UNIT_TESTED",
       "status": "IMPLEMENTED",
       "evidence": "Research Delta schema with Transfer Unit v2 contracts (assumptions, constraints, contracts) generated and validated."
     },
@@ -316,8 +370,11 @@
         "evidentia.py"
       ],
       "tests": [
-        "test_phase_b5"
+        "test_phase_b5",
+        "test_system_integrity"
       ],
+      "implementation_status": "IMPLEMENTED",
+      "validation_status": "SYNTHETIC_VALIDATED",
       "status": "IMPLEMENTED",
       "evidence": "execution_config.schema.json, Pi adapter, and multi-model dispatch architecture implemented."
     },
@@ -334,6 +391,8 @@
       "tests": [
         "test_phase_b5"
       ],
+      "implementation_status": "IMPLEMENTED",
+      "validation_status": "UNIT_TESTED",
       "status": "IMPLEMENTED",
       "evidence": "within_lens_reconciliation.py resolves multiple runs into canonical lens outputs with convergence/singleton/conflict tags."
     },
@@ -350,8 +409,32 @@
       "tests": [
         "test_phase_b5"
       ],
+      "implementation_status": "IMPLEMENTED",
+      "validation_status": "UNIT_TESTED",
       "status": "IMPLEMENTED",
       "evidence": "adaptive_escalation.py evaluates findings against explicit trigger policies (novel anomalies, uncertainty, weak evidence)."
+    },
+    {
+      "id": "frozen_research_memory",
+      "area": "Memory",
+      "claim": "Durable cross-paper research memory with rebuildable index and Open Reading firewall",
+      "schema": [
+        "memory_commit",
+        "memory_item",
+        "memory_relation",
+        "project_memory",
+        "experiment_outcome"
+      ],
+      "scripts": [
+        "memory_manager.py"
+      ],
+      "tests": [
+        "test_phase_c_memory"
+      ],
+      "implementation_status": "IMPLEMENTED",
+      "validation_status": "UNIT_TESTED",
+      "status": "IMPLEMENTED",
+      "evidence": "memory_manager.py implements immutable JSON storage under objects/, rebuildable SQLite+FTS5 index, paper/project commits, experiment outcomes, and Open Reading firewall."
     },
     {
       "id": "evaluation_framework",
@@ -364,6 +447,8 @@
       "tests": [
         "test_phase_b7"
       ],
+      "implementation_status": "IMPLEMENTED",
+      "validation_status": "SYNTHETIC_VALIDATED",
       "status": "IMPLEMENTED",
       "evidence": "evals/ directory with 3-condition benchmark comparison (Single-pass vs Standard vs Ensemble), metrics, and detection fingerprints."
     },
@@ -376,6 +461,8 @@
       "tests": [
         "test_phase_b7"
       ],
+      "implementation_status": "IMPLEMENTED",
+      "validation_status": "UNIT_TESTED",
       "status": "IMPLEMENTED",
       "evidence": ".github/workflows/ci.yml, pyproject.toml, LICENSE, CHANGELOG.md, and CONTRIBUTING.md created and verified."
     }

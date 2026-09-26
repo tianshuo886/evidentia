@@ -5,7 +5,8 @@
   "properties": {
     "schema_version": {
       "enum": [
-        "1.0"
+        "1.0",
+        "2.0"
       ]
     },
     "paper_id": {
@@ -162,6 +163,38 @@
           "reader_assessment": {
             "type": "string",
             "minLength": 1
+          },
+          "origin_type": {
+            "enum": [
+              "SOURCE_EXTRACTION",
+              "HOST_AGENT",
+              "HUMAN",
+              "DETERMINISTIC_DERIVATION"
+            ]
+          },
+          "observation_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "author_interpretation_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "reader_assessment_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "evidence_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         },
         "required": [

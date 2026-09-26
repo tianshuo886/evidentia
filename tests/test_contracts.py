@@ -46,7 +46,7 @@ def test_capability_matrix_audit_clean():
     matrix_file = ROOT / 'capability_matrix.json'
     assert matrix_file.exists()
     matrix = json.loads(matrix_file.read_text(encoding='utf-8'))
-    assert matrix.get('schema_version') == '1.0'
+    assert matrix.get('schema_version') in ('1.0', '2.0')
     valid_statuses = {"IMPLEMENTED", "PARTIAL", "DECLARED_ONLY", "MISSING", "DEPRECATED"}
     ids = set()
     for cap in matrix.get('capabilities', []):
@@ -60,8 +60,25 @@ def test_capability_matrix_audit_clean():
         "evidence_verifier", "canonical_paper_model", "evidence_graph", "freeze_integrity",
         "reader_evidence_atlas", "reader_visual_qa", "project_apply_execution", "research_delta",
         "ensemble_execution", "within_lens_reconciliation", "adaptive_model_escalation",
-        "evaluation_framework", "ci_release_engineering"
+        "frozen_research_memory", "evaluation_framework", "ci_release_engineering"
     ]
     for req in required_ids:
         assert req in ids, f"Missing required capability: {req}"
+
+def test_no_hardcoded_scientific_pseudo_agent_templates_in_production_scripts():
+    """Section 10 regression test: production scripts must not contain pre-written scientific conclusions."""
+    import re
+    scripts_dir = ROOT / 'scripts'
+    forbidden_patterns = [
+        r'LENS_FINDINGS_TEMPLATES',
+        r'specialized CUDA kernel',
+        r'improved gradient flow in the residual',
+        r'convergence rate by 20%',
+        r'\+5% accuracy on target'
+    ]
+    for py_file in scripts_dir.glob('*.py'):
+        content = py_file.read_text(encoding='utf-8')
+        for pat in forbidden_patterns:
+            assert not re.search(pat, content, re.I), f"Forbidden pseudo-agent pattern '{pat}' found in {py_file.name}"
+
 

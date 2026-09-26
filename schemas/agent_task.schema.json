@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evidentia.dev/schemas/agent_task.schema.json",
+  "type": "object",
+  "required": [
+    "task_id",
+    "task_type",
+    "required_capability",
+    "input_artifacts",
+    "output_schema",
+    "scientific_contract",
+    "source_sha256"
+  ],
+  "properties": {
+    "task_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "task_type": {
+      "enum": [
+        "OPEN_READING",
+        "LENS",
+        "RECONCILIATION",
+        "VERIFICATION",
+        "APPLY_LOCAL",
+        "MEMORY_SYNTHESIS",
+        "CROSS_PAPER_RELATION"
+      ]
+    },
+    "lens": {
+      "enum": [
+        "author",
+        "reviewer",
+        "mechanism",
+        "builder",
+        "anomaly",
+        "counterfactual"
+      ]
+    },
+    "required_capability": {
+      "type": "string"
+    },
+    "input_artifacts": {
+      "type": "object"
+    },
+    "localized_evidence": {
+      "type": ["object", "array"]
+    },
+    "target_output": {
+      "type": "string"
+    },
+    "output_schema": {
+      "type": "string"
+    },
+    "scientific_contract": {
+      "type": "string"
+    },
+    "instructions": {
+      "type": "string"
+    },
+    "prohibited_context": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "source_sha256": {
+      "type": "string"
+    },
+    "base_sha256": {
+      "type": ["string", "null"]
+    },
+    "contract_version": {
+      "type": "string"
+    },
+    "prompt_version": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

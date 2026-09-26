@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
-"""Unified CLI and Host-agnostic workflow orchestrator for Evidentia Standard & Ensemble Modes.
+"""Unified CLI and Host-agnostic workflow orchestrator for Evidentia v1.0.
 
 Supports:
-- run: fully automated or step-by-step advancement from PDF to frozen reader
+- run: step-by-step or automated advancement through the Evidentia state machine
 - status: inspect current phase, artifacts, and task status
 - next: identify the next active task packet or gate
+- task: show or generate active agent task packets
+- submit: validate and submit Host Agent results (Section 8 Generic Host Protocol)
 - validate: execute schema and gate validation across all available artifacts
 - resume: resume execution from saved state with tamper and invalidation checks
+- memory: full Frozen Research Memory management interface (commit, search, inspect, verify)
 """
 import argparse, json, subprocess, sys
 from pathlib import Path
@@ -137,7 +140,7 @@ def handle_next(args):
     phase = rs.get('phase')
     if phase == 'SOURCE_LOCK':
         if not (out_dir / 'model/paper_model.json').exists():
-            print("Next: Complete tasks/open_reading.json -> model/paper_model.json")
+            print("Next: Complete tasks/open_reading.json -> submit via 'evidentia submit --task TASK-OPEN-READING --result <file>'")
             return
     elif phase == 'BASELINE_LOCK':
         missing = [l for l in ('author', 'reviewer', 'mechanism', 'builder', 'anomaly', 'counterfactual') if not (out_dir / 'lens' / f'{l}.json').exists()]
@@ -145,6 +148,43 @@ def handle_next(args):
             print(f"Next: Complete Lens tasks in tasks/lens/ for: {', '.join(missing)}")
             return
     print(sh(str(HERE / 'phase.py'), '--out', args.out, '--next'))
+
+def handle_submit(args):
+    """Generic Host Protocol: submit Host Agent result and promote state (Section 8)."""
+    out_dir = Path(args.out)
+    result_path = Path(args.result)
+    if not result_path.exists():
+        sys.exit(f"Error: Result file {result_path} does not exist.")
+
+    sys.path.insert(0, str(HERE))
+    from validate_common import load_json, schema_validate
+    res_data = load_json(result_path)
+
+    # If envelope is used
+    payload = res_data.get('result', res_data)
+    task_id = args.task or res_data.get('task_id', '')
+
+    if 'OPEN-READING' in task_id.upper():
+        target = out_dir / 'model/paper_model.json'
+        errs = schema_validate(payload, 'paper_model')
+        if errs:
+            sys.exit(f"Submission failed paper_model schema validation:\n{errs}")
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
+        print(f"OK: Submitted {task_id} -> {target}")
+        # Run next workflow step
+        sh(str(HERE / 'evidentia.py'), 'run', '--out', str(out_dir))
+    elif 'LENS' in task_id.upper():
+        lens_name = payload.get('lens') or (task_id.split('-')[-1].lower() if '-' in task_id else 'author')
+        target = out_dir / 'lens' / f'{lens_name}.json'
+        errs = schema_validate(payload, 'lens')
+        if errs:
+            sys.exit(f"Submission failed lens schema validation:\n{errs}")
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
+        print(f"OK: Submitted {task_id} -> {target}")
+    else:
+        sys.exit(f"Unsupported task submission type: {task_id}")
 
 def handle_validate(args):
     out_dir = Path(args.out)
@@ -175,8 +215,16 @@ def handle_validate(args):
 def handle_resume(args):
     print(sh(str(HERE / 'phase.py'), '--out', args.out, '--resume'))
 
+def handle_memory(args, extra_args):
+    cmd = [PY, str(HERE / 'memory_manager.py'), args.memory_action] + extra_args
+    res = subprocess.run(cmd, capture_output=True, text=True)
+    if res.returncode != 0:
+        sys.stderr.write(res.stdout + res.stderr)
+        sys.exit(res.returncode)
+    print(res.stdout.strip())
+
 def main():
-    ap = argparse.ArgumentParser(description="Evidentia Unified Workflow CLI")
+    ap = argparse.ArgumentParser(description="Evidentia Unified Workflow CLI v1.0")
     sp = ap.add_subparsers(dest='command', required=True)
 
     # run
@@ -194,6 +242,12 @@ def main():
     p_next = sp.add_parser('next', help="Show next task or phase")
     p_next.add_argument('--out', required=True)
 
+    # submit
+    p_sub = sp.add_parser('submit', help="Submit Host Agent result")
+    p_sub.add_argument('--task', required=True, help="Task ID (e.g. TASK-OPEN-READING)")
+    p_sub.add_argument('--result', required=True, help="Path to result JSON")
+    p_sub.add_argument('--out', required=True, help="Output run directory")
+
     # validate
     p_val = sp.add_parser('validate', help="Validate schemas and gates")
     p_val.add_argument('--out', required=True)
@@ -202,17 +256,25 @@ def main():
     p_res = sp.add_parser('resume', help="Resume run with tamper/invalidation check")
     p_res.add_argument('--out', required=True)
 
-    args = ap.parse_args()
+    # memory
+    p_mem = sp.add_parser('memory', help="Frozen Research Memory operations")
+    p_mem.add_argument('memory_action', choices=['commit-paper', 'commit-project', 'record-outcome', 'search', 'verify', 'rebuild-index'])
+
+    args, unknown = ap.parse_known_args()
     if args.command == 'run':
         return run_workflow(args)
     elif args.command == 'status':
         return handle_status(args)
     elif args.command == 'next':
         return handle_next(args)
+    elif args.command == 'submit':
+        return handle_submit(args)
     elif args.command == 'validate':
         return handle_validate(args)
     elif args.command == 'resume':
         return handle_resume(args)
+    elif args.command == 'memory':
+        return handle_memory(args, unknown)
 
 if __name__ == '__main__':
     main()

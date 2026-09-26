@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evidentia.dev/schemas/project_memory.schema.json",
+  "type": "object",
+  "required": [
+    "project_id",
+    "paper_id",
+    "committed_at",
+    "gaps",
+    "transfer_decisions"
+  ],
+  "properties": {
+    "project_id": {
+      "type": "string"
+    },
+    "paper_id": {
+      "type": "string"
+    },
+    "committed_at": {
+      "type": "string"
+    },
+    "gaps": {
+      "type": "array"
+    },
+    "changed_beliefs": {
+      "type": "array"
+    },
+    "transfer_decisions": {
+      "type": "array"
+    },
+    "experiment_proposals": {
+      "type": "array"
+    }
+  },
+  "additionalProperties": false
+}

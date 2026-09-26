@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evidentia.dev/schemas/memory_commit.schema.json",
+  "type": "object",
+  "required": [
+    "commit_id",
+    "commit_type",
+    "paper_id",
+    "paper_model_sha256",
+    "source_sha256",
+    "committed_at",
+    "item_count"
+  ],
+  "properties": {
+    "commit_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "commit_type": {
+      "enum": [
+        "PAPER_COMMIT",
+        "PROJECT_COMMIT",
+        "OUTCOME_COMMIT",
+        "RELATION_COMMIT"
+      ]
+    },
+    "paper_id": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": ["string", "null"]
+    },
+    "paper_model_sha256": {
+      "type": "string"
+    },
+    "source_sha256": {
+      "type": "string"
+    },
+    "committed_at": {
+      "type": "string"
+    },
+    "item_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "manifest_hashes": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": false
+}

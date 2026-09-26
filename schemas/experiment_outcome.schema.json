@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evidentia.dev/schemas/experiment_outcome.schema.json",
+  "type": "object",
+  "required": [
+    "outcome_id",
+    "project_id",
+    "experiment_id",
+    "verdict",
+    "findings",
+    "recorded_at"
+  ],
+  "properties": {
+    "outcome_id": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "experiment_id": {
+      "type": "string"
+    },
+    "verdict": {
+      "enum": [
+        "SUCCESS",
+        "FAILURE",
+        "PARTIAL_SUCCESS",
+        "INCONCLUSIVE"
+      ]
+    },
+    "metrics": {
+      "type": "object"
+    },
+    "conditions": {
+      "type": "string"
+    },
+    "findings": {
+      "type": "string"
+    },
+    "decision_consequence": {
+      "type": "string"
+    },
+    "recorded_at": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

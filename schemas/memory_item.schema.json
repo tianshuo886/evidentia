@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evidentia.dev/schemas/memory_item.schema.json",
+  "type": "object",
+  "required": [
+    "memory_id",
+    "memory_type",
+    "text",
+    "paper_id",
+    "paper_commit_id",
+    "object_id",
+    "source_ids",
+    "epistemic_state",
+    "created_at",
+    "status"
+  ],
+  "properties": {
+    "memory_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "memory_type": {
+      "enum": [
+        "PAPER",
+        "CLAIM",
+        "OBSERVATION",
+        "MECHANISM",
+        "LIMITATION",
+        "ANOMALY",
+        "METHOD",
+        "PORTABLE_COMPONENT",
+        "FINDING",
+        "OPEN_QUESTION",
+        "TRANSFER",
+        "PROJECT_GAP",
+        "PROJECT_DECISION",
+        "EXPERIMENT",
+        "EXPERIMENT_OUTCOME",
+        "CROSS_PAPER_RELATION"
+      ]
+    },
+    "text": {
+      "type": "string",
+      "minLength": 1
+    },
+    "paper_id": {
+      "type": "string"
+    },
+    "paper_commit_id": {
+      "type": "string"
+    },
+    "object_id": {
+      "type": "string"
+    },
+    "source_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "epistemic_state": {
+      "type": "string"
+    },
+    "verification_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "ACTIVE",
+        "SUPERSEDED",
+        "STALE",
+        "REVOKED"
+      ]
+    },
+    "metadata": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": false
+}
