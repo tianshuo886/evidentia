@@ -1,0 +1,16 @@
+{
+  "bundle_type": "PAGE",
+  "page_number": 2,
+  "text": "2. Methodology and Experiments\n2. Methodology\nDetailed experimental evaluations across benchmarks.\n3. Experiments\nDetailed experimental evaluations across benchmarks.\n4. Ablations\nDetailed experimental evaluations across benchmarks.\nTable 1: Accuracy comparisons across dense and sparse variants.",
+  "sections": [],
+  "mentions": [
+    {
+      "label": "Table 1",
+      "kind": "table",
+      "bbox": [],
+      "target_id": "T01",
+      "bound": true
+    }
+  ],
+  "equations": []
+}

@@ -1,5 +1,6 @@
 {
-  "evaluation_version": "1.0",
+  "evaluation_version": "2.0",
+  "validation_truth_level": "SYNTHETIC",
   "conditions_evaluated": [
     "Condition_A_Single_Pass",
     "Condition_B_Evidentia_Standard",
@@ -73,12 +74,62 @@
           "causal_overclaim_detection_rate": 0.0
         }
       }
+    },
+    "CORPUS-02-OVERCLAIM": {
+      "Condition_A": {
+        "grounding": {
+          "claim_evidence_precision": 0.0,
+          "unsupported_claim_rate": 0.5,
+          "oia_leakage_rate": 0.5
+        },
+        "critical": {
+          "weakness_recall": 0.0,
+          "anomaly_recall": 0.0,
+          "causal_overclaim_detection_rate": 0.0
+        }
+      },
+      "Condition_B_Standard": {
+        "source": {
+          "figure_recall": 1.0,
+          "table_recall": 1.0,
+          "caption_binding_accuracy": 1.0,
+          "overall_source_coverage": 1.0
+        },
+        "grounding": {
+          "claim_evidence_precision": 1.0,
+          "unsupported_claim_rate": 0.0,
+          "oia_leakage_rate": 0.0
+        },
+        "critical": {
+          "weakness_recall": 0.0,
+          "anomaly_recall": 0.0,
+          "causal_overclaim_detection_rate": 0.0
+        }
+      },
+      "Condition_C_Ensemble": {
+        "source": {
+          "figure_recall": 1.0,
+          "table_recall": 1.0,
+          "caption_binding_accuracy": 1.0,
+          "overall_source_coverage": 1.0
+        },
+        "grounding": {
+          "claim_evidence_precision": 1.0,
+          "unsupported_claim_rate": 0.0,
+          "oia_leakage_rate": 0.0
+        },
+        "critical": {
+          "weakness_recall": 0.0,
+          "anomaly_recall": 0.0,
+          "causal_overclaim_detection_rate": 0.0
+        }
+      }
     }
   },
   "detection_fingerprints": {
     "CORPUS-01-METHOD": {
       "finding_1": {
-        "statement": "Counterfactual stress-test of claim C01: sensitivity under perturbed distributio",
+        "statement": "[SIMULATED] Removing primary feature normalization degrades convergence under no",
         "lenses": {
           "author": false,
           "reviewer": false,
@@ -88,13 +139,13 @@
           "counterfactual": true
         },
         "models": {
-          "model-alpha": true,
-          "model-beta": true
+          "ensemble-model-1": true,
+          "ensemble-model-2": true
         },
         "fingerprint_type": "Universal"
       },
       "finding_2": {
-        "statement": "Causal mechanism traces component Core Methodology / Algorithmic Block IO mappin",
+        "statement": "[SIMULATED] Mechanistic dependency: Core Methodology Block drives primary repres",
         "lenses": {
           "author": false,
           "reviewer": false,
@@ -104,13 +155,13 @@
           "counterfactual": false
         },
         "models": {
-          "model-alpha": true,
-          "model-beta": true
+          "ensemble-model-1": true,
+          "ensemble-model-2": true
         },
         "fingerprint_type": "Universal"
       },
       "finding_3": {
-        "statement": "Core innovation proposed in Sparse Attention for High-Resolution Visual Represen",
+        "statement": "[SIMULATED] Core innovation proposed in Sparse Attention for High-Resolution Vis",
         "lenses": {
           "author": true,
           "reviewer": false,
@@ -120,8 +171,58 @@
           "counterfactual": false
         },
         "models": {
-          "model-alpha": true,
-          "model-beta": true
+          "ensemble-model-1": true,
+          "ensemble-model-2": true
+        },
+        "fingerprint_type": "Universal"
+      }
+    },
+    "CORPUS-02-OVERCLAIM": {
+      "finding_1": {
+        "statement": "[SIMULATED] Removing primary feature normalization degrades convergence under no",
+        "lenses": {
+          "author": false,
+          "reviewer": false,
+          "mechanism": false,
+          "builder": false,
+          "anomaly": false,
+          "counterfactual": true
+        },
+        "models": {
+          "ensemble-model-1": true,
+          "ensemble-model-2": true
+        },
+        "fingerprint_type": "Universal"
+      },
+      "finding_2": {
+        "statement": "[SIMULATED] Mechanistic dependency: Core Methodology Block drives primary repres",
+        "lenses": {
+          "author": false,
+          "reviewer": false,
+          "mechanism": true,
+          "builder": false,
+          "anomaly": false,
+          "counterfactual": false
+        },
+        "models": {
+          "ensemble-model-1": true,
+          "ensemble-model-2": true
+        },
+        "fingerprint_type": "Universal"
+      },
+      "finding_3": {
+        "statement": "[SIMULATED] Core innovation proposed in Linear Weight Decay Causes Generalizatio",
+        "lenses": {
+          "author": true,
+          "reviewer": false,
+          "mechanism": false,
+          "builder": false,
+          "anomaly": false,
+          "counterfactual": false
+        },
+        "models": {
+          "ensemble-model-1": true,
+          "ensemble-model-2": true
         },
         "fingerprint_type": "Universal"
       }

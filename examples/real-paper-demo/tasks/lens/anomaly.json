@@ -1,0 +1,42 @@
+{
+  "task_id": "TASK-LENS-ANOMALY",
+  "task_type": "LENS",
+  "lens": "anomaly",
+  "required_capability": "SCIENTIFIC_LENS_ANOMALY",
+  "scientific_contract": "Independent anomaly lens rereading bound strictly to frozen baseline.",
+  "description": "Independent anomaly lens rereading pass.",
+  "input_artifacts": {
+    "source_pdf": "source/paper.pdf",
+    "base_model": "model/open_reading_model.json"
+  },
+  "source_pdf": "source/paper.pdf",
+  "base_model": "model/open_reading_model.json",
+  "output": "lens/anomaly.json",
+  "target_output": "lens/anomaly.json",
+  "output_schema": "lens",
+  "source_sha256": "58cdf8f8aae51f41daf1b2e48b96131731893559a508bfeb7354f9cb3c0c01ad",
+  "base_sha256": "3a16b17f808ae4d33777546a6bca2c74f1de4ce7ea8ac79b96d167f4546fc0cf",
+  "base_model_sha256": "3a16b17f808ae4d33777546a6bca2c74f1de4ce7ea8ac79b96d167f4546fc0cf",
+  "contract_version": "1.0",
+  "lens_contract_version": "1.0",
+  "prompt_version": "1.0",
+  "prohibited_context": [
+    "RESEARCH_MEMORY",
+    "cross-paper memory",
+    "project_context",
+    "apply",
+    "prior_deltas"
+  ],
+  "instructions": "Audit anomalous data points, unexplained variance, outliers, negative results, or unexpected behavior in figures, tables, and ablations that contradict the main narrative. Empty findings are valid if none exist.",
+  "executor_template": {
+    "host": "generic-host",
+    "host_version": "UNKNOWN",
+    "provider": "antigravity",
+    "model": "gemini-3.8-flash",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "standard",
+    "tool_profile": "paper-only",
+    "started_at": "2026-09-26T15:49:51.690076+00:00",
+    "completed_at": "2026-09-26T15:49:51.690076+00:00"
+  }
+}

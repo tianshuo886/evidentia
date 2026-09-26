@@ -69,6 +69,16 @@ jobs:
           python scripts/evidentia.py validate --out examples/demo-paper
           python scripts/phase.py --status --out examples/demo-paper
 
+      - name: Validate Real Paper Demo Artifacts
+        run: |
+          python scripts/evidentia.py validate --out examples/real-paper-demo
+          python scripts/phase.py --status --out examples/real-paper-demo
+          python scripts/freeze_check.py --out examples/real-paper-demo
+
+      - name: Validate Generated Production Tasks & Memory Firewall
+        run: |
+          python scripts/task_protocol.py --out /tmp/task_test
+
       - name: CLI Smoke Tests
         run: |
           python scripts/evidentia.py --help
@@ -78,10 +88,29 @@ jobs:
           python scripts/apply_agent.py --help
           python scripts/open_reading_agent.py --help
           python scripts/lens_agent.py --help
+          python scripts/reconciliation_agent.py --help
+          python scripts/scientific_verifier_agent.py --help
+          python scripts/memory_relation.py --help
 
-      - name: Visual QA & Reader Audit Gate
+      - name: Reader Content & Structural Integrity Audit
         run: |
           python scripts/reader_audit.py --out examples/demo-paper
+          python scripts/reader_audit.py --out examples/real-paper-demo
+
+      - name: Optional Kami Visual QA
+        continue-on-error: true
+        run: |
+          python -c "
+          from pathlib import Path
+          import subprocess
+          res = subprocess.run(['which', 'kami'], capture_output=True)
+          if res.returncode == 0:
+              print('Kami CLI available, running visual QA...')
+              import kami_adapter
+              kami_adapter.verify_kami_visual_qa('examples/real-paper-demo')
+          else:
+              print('Kami CLI not installed in standard runner, skipped.')
+          "
 
       - name: Run Empirical Evaluation Benchmark
         run: |

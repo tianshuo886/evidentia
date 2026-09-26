@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "paper_id": "sparse_attention_representation",
+  "dashboard": {
+    "title": "Sparse Attention Mechanisms for Representation Learning",
+    "claim_count": 1
+  },
+  "paper_map": [
+    "1. Introduction",
+    "2. Methodology",
+    "3. Experiments"
+  ],
+  "claim_cards": [
+    "C01"
+  ],
+  "figure_blocks": [
+    "F01"
+  ],
+  "table_blocks": [
+    "T01"
+  ],
+  "delta_projects": []
+}

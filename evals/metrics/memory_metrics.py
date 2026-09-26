@@ -7,18 +7,36 @@ Calculates:
 - Stale memory rejection rate
 """
 
-def compute_memory_metrics(memory_items, open_reading_tasks=None):
-    # 1. Critical invariant: Open Reading contamination rate
+import json
+from pathlib import Path
+
+def compute_memory_metrics(memory_items, open_reading_tasks=None, tasks_dir=None):
+    # 1. Critical invariant: Open Reading / Lens contamination rate (Section 35)
+    tasks = list(open_reading_tasks or [])
+    if tasks_dir and Path(tasks_dir).exists():
+        td = Path(tasks_dir)
+        orp = td / 'open_reading.json'
+        if orp.exists():
+            tasks.append(json.loads(orp.read_text(encoding='utf-8')))
+        lens_d = td / 'lens'
+        if lens_d.exists():
+            for lp in lens_d.glob('*.json'):
+                tasks.append(json.loads(lp.read_text(encoding='utf-8')))
+
     contamination_count = 0
-    total_tasks = len(open_reading_tasks or [])
-    if open_reading_tasks:
-        for t in open_reading_tasks:
+    total_tasks = len(tasks)
+    if tasks:
+        for t in tasks:
+            is_contaminated = False
             # Check inputs
             for k, v in t.get('input_artifacts', {}).items():
-                if 'memory' in str(k).lower() or 'memory' in str(v).lower():
-                    contamination_count += 1
+                if 'memory' in str(k).lower() or 'memory' in str(v).lower() or 'apply' in str(k).lower() or 'project' in str(k).lower():
+                    is_contaminated = True
             # Check prohibited context
-            if 'RESEARCH_MEMORY' not in t.get('prohibited_context', []):
+            prohibited = t.get('prohibited_context', [])
+            if 'RESEARCH_MEMORY' not in prohibited and 'cross-paper memory' not in prohibited:
+                is_contaminated = True
+            if is_contaminated:
                 contamination_count += 1
 
     contamination_rate = contamination_count / max(total_tasks, 1)

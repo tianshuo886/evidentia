@@ -1,0 +1,183 @@
+{
+  "schema_version": "1.0",
+  "run_id": "5145f1af-b58f-4dcd-a1cc-931644ed0b72",
+  "mode": "evidentia",
+  "phase": "COMPLETE",
+  "source_sha256": "58cdf8f8aae51f41daf1b2e48b96131731893559a508bfeb7354f9cb3c0c01ad",
+  "base_sha256": "3a16b17f808ae4d33777546a6bca2c74f1de4ce7ea8ac79b96d167f4546fc0cf",
+  "allowed_inputs": [
+    "working/paper.pdf"
+  ],
+  "artifacts": {},
+  "completed_phases": [
+    "INGEST",
+    "SOURCE_RECONSTRUCTION",
+    "SOURCE_LOCK",
+    "OPEN_READING",
+    "BASELINE_LOCK",
+    "LENS_EXECUTION",
+    "RECONCILIATION",
+    "VERIFICATION",
+    "FINAL_MODEL",
+    "FREEZE",
+    "RENDER"
+  ],
+  "artifact_hashes": {
+    "SOURCE_RECONSTRUCTION": {
+      "model/source_map.json": "564dd0cb4cfb70be24acc81968e08eeafe3044e47b1a5a9ad71b4d937104410f",
+      "model/figure_inventory.json": "b15413e51eb0d703521acd79d8cfc2fafc3fe63ecb9364eb316635b53ca7c613"
+    },
+    "SOURCE_LOCK": {
+      "model/source_map.json": "564dd0cb4cfb70be24acc81968e08eeafe3044e47b1a5a9ad71b4d937104410f",
+      "model/figure_inventory.json": "b15413e51eb0d703521acd79d8cfc2fafc3fe63ecb9364eb316635b53ca7c613",
+      "source/paper.pdf": "58cdf8f8aae51f41daf1b2e48b96131731893559a508bfeb7354f9cb3c0c01ad"
+    },
+    "OPEN_READING": {
+      "model/paper_model.json": "3a16b17f808ae4d33777546a6bca2c74f1de4ce7ea8ac79b96d167f4546fc0cf"
+    },
+    "BASELINE_LOCK": {
+      "model/open_reading_model.json": "3a16b17f808ae4d33777546a6bca2c74f1de4ce7ea8ac79b96d167f4546fc0cf",
+      "model/open_reading_manifest.json": "86ca10032311a56d7023d519f68deb6e807929f178c619dec961473d0a8880b2"
+    },
+    "LENS_EXECUTION": {
+      "lens/author.json": "80a299d40518cd3dcff8a807541a62033c44078e7f0f80b0932fbfc968ca42ad",
+      "lens/reviewer.json": "4f607c26bffdbe04f4b4cea47dcea70ac701a3c6d69ecba20a410603a70d8087",
+      "lens/mechanism.json": "e4509bfcda62f881c04249db47a1b7fb9155a0e2383ea99c7e5aec2f79098e1f",
+      "lens/builder.json": "068c5f861e9db182a2493ed19b891b7eef9f2abad3fb1d53476c8deedc7c36ef",
+      "lens/anomaly.json": "d29a635dc4d619433e95aead3f725cb44d72f35bddd49a88d6ce3b21038d4824",
+      "lens/counterfactual.json": "3784794ff0b1bbf8fa944d650933f22678c79c5a00d4ea170723d3ddb6bf1148"
+    },
+    "RECONCILIATION": {
+      "model/lens_reconciliation.json": "29190df58fa382fd93ea1be70b8e32ffb488ed437dfbb99b917ae160cd2c342b"
+    },
+    "FINAL_MODEL": {
+      "model/paper_model.json": "e8844c5f80a2132dfe4ae861ac05a0c0f6422268a7507e6f8db861f1aeb7b1ab",
+      "model/evidence_graph.json": "5454eba150e06cdf9fdb694122b8da77f2b09755542aec7534c819a403c178e6"
+    },
+    "FREEZE": {
+      "model/manifest.json": "c8c2e08c46358cbd60dc7e0f3e0b53e370f2a7607add699d60bbb066bc0fee33"
+    },
+    "RENDER": {
+      "reader/reader.html": "3ee3e8376a988522875fa2204a46ce071e1290101961d330c2863066af093383"
+    }
+  },
+  "executor": {},
+  "history": [
+    {
+      "phase": "INGEST",
+      "status": "started",
+      "at": "2026-09-26T15:49:50.799518+00:00"
+    },
+    {
+      "phase": "INGEST",
+      "status": "completed",
+      "at": "2026-09-26T15:49:51.234020+00:00"
+    },
+    {
+      "phase": "SOURCE_RECONSTRUCTION",
+      "status": "started",
+      "at": "2026-09-26T15:49:51.234140+00:00"
+    },
+    {
+      "phase": "SOURCE_RECONSTRUCTION",
+      "status": "completed",
+      "at": "2026-09-26T15:49:51.302754+00:00"
+    },
+    {
+      "phase": "SOURCE_LOCK",
+      "status": "started",
+      "at": "2026-09-26T15:49:51.302872+00:00"
+    },
+    {
+      "phase": "SOURCE_LOCK",
+      "status": "completed",
+      "at": "2026-09-26T15:49:51.549782+00:00"
+    },
+    {
+      "phase": "OPEN_READING",
+      "status": "started",
+      "at": "2026-09-26T15:49:51.549924+00:00"
+    },
+    {
+      "phase": "OPEN_READING",
+      "status": "completed",
+      "at": "2026-09-26T15:49:51.683126+00:00"
+    },
+    {
+      "phase": "BASELINE_LOCK",
+      "status": "started",
+      "at": "2026-09-26T15:49:51.683242+00:00"
+    },
+    {
+      "phase": "BASELINE_LOCK",
+      "status": "completed",
+      "at": "2026-09-26T15:49:52.225197+00:00"
+    },
+    {
+      "phase": "LENS_EXECUTION",
+      "status": "started",
+      "at": "2026-09-26T15:49:52.225338+00:00"
+    },
+    {
+      "phase": "LENS_EXECUTION",
+      "status": "completed",
+      "at": "2026-09-26T15:49:52.365179+00:00"
+    },
+    {
+      "phase": "RECONCILIATION",
+      "status": "started",
+      "at": "2026-09-26T15:49:52.365287+00:00"
+    },
+    {
+      "phase": "RECONCILIATION",
+      "status": "completed",
+      "at": "2026-09-26T15:49:52.434940+00:00"
+    },
+    {
+      "phase": "VERIFICATION",
+      "status": "started",
+      "at": "2026-09-26T15:49:52.435062+00:00"
+    },
+    {
+      "phase": "VERIFICATION",
+      "status": "completed",
+      "at": "2026-09-26T15:49:52.571089+00:00"
+    },
+    {
+      "phase": "FINAL_MODEL",
+      "status": "started",
+      "at": "2026-09-26T15:49:52.571203+00:00"
+    },
+    {
+      "phase": "FINAL_MODEL",
+      "status": "completed",
+      "at": "2026-09-26T15:49:52.783298+00:00"
+    },
+    {
+      "phase": "FREEZE",
+      "status": "started",
+      "at": "2026-09-26T15:49:52.783467+00:00"
+    },
+    {
+      "phase": "FREEZE",
+      "status": "completed",
+      "at": "2026-09-26T15:49:53.008945+00:00"
+    },
+    {
+      "phase": "RENDER",
+      "status": "started",
+      "at": "2026-09-26T15:49:53.009133+00:00"
+    },
+    {
+      "phase": "RENDER",
+      "status": "completed",
+      "at": "2026-09-26T15:49:53.144905+00:00"
+    },
+    {
+      "phase": "COMPLETE",
+      "status": "started",
+      "at": "2026-09-26T15:49:53.145031+00:00"
+    }
+  ],
+  "lens_contract_version": "1.0"
+}

@@ -166,6 +166,13 @@
           },
           "origin_type": {
             "enum": [
+              "DIRECT_SOURCE",
+              "AUTHOR_CLAIM",
+              "READER_INFERENCE",
+              "LENS_FINDING",
+              "VERIFIER_RESULT",
+              "PROJECT_INFERENCE",
+              "MEMORY_SYNTHESIS",
               "SOURCE_EXTRACTION",
               "HOST_AGENT",
               "HUMAN",

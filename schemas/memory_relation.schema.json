@@ -19,13 +19,23 @@
     "relation_type": {
       "enum": [
         "AGREES_WITH",
+        "SUPPORTS",
         "CONTRADICTS",
         "EXTENDS",
-        "ALTERNATIVE_TO",
+        "REPLICATES",
+        "FAILS_TO_REPLICATE",
+        "USES_SIMILAR_MECHANISM",
         "SAME_MECHANISM",
+        "USES_DIFFERENT_MECHANISM",
         "SAME_FAILURE_MODE",
+        "DIFFERENT_DATA_REGIME",
         "SAME_DATA_REGIME",
-        "TRANSFER_ANALOG"
+        "TRANSFER_SUCCESS",
+        "TRANSFER_FAILURE",
+        "TRANSFER_ANALOG",
+        "ALTERNATIVE_TO",
+        "RESOLVES_UNKNOWN",
+        "CREATES_NEW_UNKNOWN"
       ]
     },
     "source_memory_id": {

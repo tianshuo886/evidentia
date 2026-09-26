@@ -1,17 +1,17 @@
 {
-  "corpus_version": "1.0",
+  "corpus_version": "2.0",
   "papers": [
     {
       "id": "CORPUS-01-METHOD",
-      "category": "method paper",
+      "category": "ML method paper",
       "title": "Sparse Attention for High-Resolution Visual Representation",
-      "sections": ["Introduction", "Methodology", "Experiments", "Ablations"],
+      "sections": ["1. Introduction", "2. Methodology", "3. Experiments", "4. Ablations"],
       "figures": [
-        {"id": "F01", "paper_label": "Figure 1", "kind": "figure", "page": 1, "caption": "Overview of Sparse Attention block."},
-        {"id": "F02", "paper_label": "Figure 2", "kind": "figure", "page": 3, "caption": "Attention map sparsity pattern."}
+        {"id": "F01", "paper_label": "Figure 1", "kind": "figure", "page": 1, "caption": "Overview of Sparse Attention block and routing graph."},
+        {"id": "F02", "paper_label": "Figure 2", "kind": "figure", "page": 2, "caption": "Attention map sparsity pattern across layers."}
       ],
       "tables": [
-        {"id": "T01", "paper_label": "Table 1", "kind": "table", "page": 4, "caption": "Benchmark accuracy comparisons on ImageNet-1K."}
+        {"id": "T01", "paper_label": "Table 1", "kind": "table", "page": 2, "caption": "Benchmark accuracy comparisons on ImageNet-1K."}
       ],
       "claims": [
         {"id": "C01", "statement": "Sparse Attention reduces memory footprint by 40% while matching dense accuracy.", "evidence": ["T01", "F02"]}
@@ -19,17 +19,62 @@
     },
     {
       "id": "CORPUS-02-OVERCLAIM",
-      "category": "causal-overclaim paper",
+      "category": "ML analysis & causal overclaim",
       "title": "Linear Weight Decay Causes Generalization Improvement",
-      "sections": ["Introduction", "Analysis", "Discussion"],
+      "sections": ["1. Introduction", "2. Correlation Analysis", "3. Discussion"],
       "figures": [
-        {"id": "F01", "paper_label": "Figure 1", "kind": "figure", "page": 2, "caption": "Weight norm correlation with test error."}
+        {"id": "F01", "paper_label": "Figure 1", "kind": "figure", "page": 1, "caption": "Weight norm correlation with test error across architectures."}
       ],
       "tables": [
-        {"id": "T01", "paper_label": "Table 1", "kind": "table", "page": 3, "caption": "Hyperparameter grid test accuracies."}
+        {"id": "T01", "paper_label": "Table 1", "kind": "table", "page": 2, "caption": "Hyperparameter grid test accuracies."}
       ],
       "claims": [
         {"id": "C01", "statement": "Weight decay is the singular causal driver of generalization.", "evidence": ["F01"]}
+      ]
+    },
+    {
+      "id": "CORPUS-03-REMOTE-SENSING",
+      "category": "Remote sensing",
+      "title": "Multispectral Hyperspectral Fusion for Canopy Moisture Retrieval",
+      "sections": ["1. Introduction", "2. Radiative Transfer Model", "3. Field Experiments", "4. Validation"],
+      "figures": [
+        {"id": "F01", "paper_label": "Figure 1", "kind": "figure", "page": 1, "caption": "Dual-sensor geometric alignment and reflectance curves."}
+      ],
+      "tables": [
+        {"id": "T01", "paper_label": "Table 1", "kind": "table", "page": 2, "caption": "Canopy moisture RMSE across forest stands."}
+      ],
+      "claims": [
+        {"id": "C01", "statement": "Band-selective radiative transfer inversion improves canopy moisture RMSE by 18% over Sentinel-2 alone.", "evidence": ["T01", "F01"]}
+      ]
+    },
+    {
+      "id": "CORPUS-04-BIOMEDICAL",
+      "category": "Biomedical & structural biology",
+      "title": "Protein Backbone Inpainting under Cryo-EM Density Constraints",
+      "sections": ["1. Introduction", "2. Density-Guided Diffusion", "3. Results"],
+      "figures": [
+        {"id": "F01", "paper_label": "Figure 1", "kind": "figure", "page": 1, "caption": "Electron density map fitting and backbone RMSD."}
+      ],
+      "tables": [
+        {"id": "T01", "paper_label": "Table 1", "kind": "table", "page": 2, "caption": "Atomic resolution recovery on CASP15 targets."}
+      ],
+      "claims": [
+        {"id": "C01", "statement": "Density-guided inpainting recovers flexible loop conformations with sub-angstrom RMSD.", "evidence": ["F01", "T01"]}
+      ]
+    },
+    {
+      "id": "CORPUS-05-PHYSICS-ABLATION",
+      "category": "Physics & engineering with negative findings",
+      "title": "Sub-Nyquist Optical Sampling via Compressive Interferometry",
+      "sections": ["1. Introduction", "2. Optical Setup", "3. Experimental Ablations"],
+      "figures": [
+        {"id": "F01", "paper_label": "Figure 1", "kind": "figure", "page": 1, "caption": "Interferometric fringe pattern and phase drift under turbulence."}
+      ],
+      "tables": [
+        {"id": "T01", "paper_label": "Table 1", "kind": "table", "page": 2, "caption": "Reconstruction SNR across turbulent conditions."}
+      ],
+      "claims": [
+        {"id": "C01", "statement": "Compressive reconstruction sustains 25dB SNR at 4x undersampling under static conditions.", "evidence": ["T01", "F01"]}
       ]
     }
   ]

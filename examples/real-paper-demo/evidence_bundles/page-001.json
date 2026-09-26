@@ -1,0 +1,16 @@
+{
+  "bundle_type": "PAGE",
+  "page_number": 1,
+  "text": "Sparse Attention Mechanisms for Representation Learning\nAbstract\nThis paper investigates advanced representations and algorithmic trade-offs.\n1. Introduction\nModern visual systems require efficient representations that preserve fine-grained features.\nFig. 1: Attention architecture and perplexity scaling across sequence lengths.",
+  "sections": [],
+  "mentions": [
+    {
+      "label": "Fig. 1",
+      "kind": "figure",
+      "bbox": [],
+      "target_id": "F01",
+      "bound": true
+    }
+  ],
+  "equations": []
+}

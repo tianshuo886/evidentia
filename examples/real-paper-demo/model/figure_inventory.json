@@ -1,0 +1,107 @@
+{
+  "schema_version": "1.0",
+  "source_sha256": "58cdf8f8aae51f41daf1b2e48b96131731893559a508bfeb7354f9cb3c0c01ad",
+  "pdf": "/Users/shentianshuo/.agents/skills/evidentia/examples/real-paper-demo/source/paper.pdf",
+  "pages": 2,
+  "items": [
+    {
+      "id": "F01",
+      "paper_label": "Fig. 1",
+      "kind": "figure",
+      "page": 1,
+      "caption_original": "Fig. 1 Attention architecture and perplexity scaling across sequence lengths.",
+      "caption_status": "OK",
+      "source_location": "p.1",
+      "role": "critical",
+      "depth": "deep",
+      "file": "assets/figures/page_p1_F01_1653x2339.png",
+      "bbox": [
+        50.0,
+        439.25,
+        390.159912109375,
+        452.989990234375
+      ],
+      "caption_bbox": [
+        50.0,
+        439.25,
+        390.159912109375,
+        452.989990234375
+      ],
+      "figure_bbox": [
+        50.0,
+        439.25,
+        390.159912109375,
+        452.989990234375
+      ],
+      "subfigures": [],
+      "asset": "assets/figures/page_p1_F01_1653x2339.png",
+      "extraction_method": "page_crop",
+      "confidence": 0.8,
+      "inspection": "inspected",
+      "inspection_status": "inspected",
+      "reviewed_by": null,
+      "review_note": null,
+      "binding_method": "caption_geometry",
+      "binding_confidence": 0.8,
+      "needs_visual_review": false,
+      "row_count": null,
+      "col_count": null,
+      "structure": null,
+      "parsed_cells": null,
+      "raw_visual_fallback": "assets/figures/page_p1_F01_1653x2339.png"
+    },
+    {
+      "id": "T01",
+      "paper_label": "Table 1",
+      "kind": "table",
+      "page": 2,
+      "caption_original": "Table 1 Accuracy comparisons across dense and sparse variants.",
+      "caption_status": "OK",
+      "source_location": "p.2",
+      "role": "critical",
+      "depth": "deep",
+      "file": "assets/figures/page_p2_T01_1653x2339.png",
+      "bbox": [
+        50.0,
+        289.25,
+        344.5599365234375,
+        302.989990234375
+      ],
+      "caption_bbox": [
+        50.0,
+        289.25,
+        344.5599365234375,
+        302.989990234375
+      ],
+      "figure_bbox": [
+        50.0,
+        289.25,
+        344.5599365234375,
+        302.989990234375
+      ],
+      "subfigures": [],
+      "asset": "assets/figures/page_p2_T01_1653x2339.png",
+      "extraction_method": "page_crop",
+      "confidence": 0.8,
+      "inspection": "inspected",
+      "inspection_status": "inspected",
+      "reviewed_by": null,
+      "review_note": null,
+      "binding_method": "caption_geometry",
+      "binding_confidence": 0.8,
+      "needs_visual_review": false,
+      "row_count": 3,
+      "col_count": 7,
+      "structure": {
+        "estimated_rows": 3,
+        "estimated_cols": 7,
+        "header_detected": true
+      },
+      "parsed_cells": null,
+      "raw_visual_fallback": "assets/figures/page_p2_T01_1653x2339.png"
+    }
+  ],
+  "embedded_saved": 0,
+  "unmatched_assets": [],
+  "review_required": []
+}

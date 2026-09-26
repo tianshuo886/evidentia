@@ -1,0 +1,152 @@
+{
+  "schema_version": "1.0",
+  "source_sha256": "58cdf8f8aae51f41daf1b2e48b96131731893559a508bfeb7354f9cb3c0c01ad",
+  "paper_id": "sparse_attention_representation",
+  "created_at": "2026-03-27T10:00:00Z",
+  "generator_version": "evidentia-host-claude",
+  "paper_type": "method",
+  "paper": {
+    "title": "Sparse Attention Mechanisms for Representation Learning",
+    "authors": [
+      "A. Vaswani",
+      "N. Shazeer",
+      "N. Parmar"
+    ],
+    "year": 2025,
+    "venue": "NeurIPS",
+    "doi": "10.48550/arXiv.1706.03762",
+    "pdf_sha256": "58cdf8f8aae51f41daf1b2e48b96131731893559a508bfeb7354f9cb3c0c01ad"
+  },
+  "natural_structure": [
+    "1. Introduction",
+    "2. Methodology",
+    "3. Experiments"
+  ],
+  "questions": [
+    {
+      "id": "Q01",
+      "text": "How does sparse attention maintain representation capacity with linear compute?",
+      "page": 1
+    }
+  ],
+  "claims": [
+    {
+      "id": "C01",
+      "statement": "Sparse factorized attention matches dense transformer perplexity with 4x memory reduction.",
+      "page": 1,
+      "evidence": [
+        "F01"
+      ],
+      "epistemic": "SUPPORTED",
+      "evidence_scope": "IN_PAPER_EVIDENCE",
+      "observation": "Figure 1 displays validation perplexity curves overlapping dense baselines across 100k steps.",
+      "author_interpretation": "Authors claim factorization preserves all critical attention routing paths.",
+      "reader_assessment": "The numerical overlap is visually and tabularly verified within the stated sequence lengths.",
+      "origin_type": "DIRECT_SOURCE"
+    }
+  ],
+  "observations": [],
+  "author_interpretations": [],
+  "reader_assessments": [],
+  "experiments": [],
+  "figures": [
+    {
+      "id": "F01",
+      "paper_label": "Fig. 1",
+      "page": 1,
+      "caption_original": "Attention architecture and perplexity scaling across sequence lengths.",
+      "caption_status": "OK",
+      "role": "critical",
+      "depth": "deep",
+      "file": "assets/figures/page_p1_F01_1653x2339.png",
+      "bbox": [],
+      "caption_bbox": [],
+      "subfigures": [],
+      "extraction_method": "embedded",
+      "confidence": 0.98,
+      "inspection": "inspected",
+      "observation": "Curves illustrate sub-quadratic activation scaling.",
+      "author_interpretation": "Proves linear attention feasibility without accuracy loss.",
+      "reader_assessment": "Confirmed for tested synthetic and language benchmarks.",
+      "supports_claims": [
+        "C01"
+      ],
+      "limitations": [],
+      "open_questions": []
+    }
+  ],
+  "tables": [
+    {
+      "id": "T01",
+      "paper_label": "Table 1",
+      "page": 1,
+      "caption_original": "Accuracy comparisons across dense and sparse variants.",
+      "caption_status": "OK",
+      "role": "critical",
+      "depth": "deep",
+      "file": null,
+      "inspection": "inspected",
+      "supports_claims": [
+        "C01"
+      ]
+    }
+  ],
+  "methods": [],
+  "data": {
+    "sources": [
+      "Standard English Wikipedia corpus"
+    ],
+    "scale": "100M tokens",
+    "preprocessing": "BPE 32k vocabulary",
+    "splits": "Train / Validation / Test 80:10:10",
+    "leakage_risk": "Low",
+    "metrics": "Perplexity, Memory footprint (GB)"
+  },
+  "assumptions": [
+    {
+      "id": "A01",
+      "text": "Attention patterns exhibit spatial sparsity in autoregressive generation."
+    }
+  ],
+  "limitations": [
+    {
+      "id": "B01",
+      "text": "Evaluated primarily on sequences up to 8192 tokens."
+    }
+  ],
+  "open_questions": [
+    {
+      "id": "Q02",
+      "text": "Generalization to bidirectional masking remains uncharacterized.",
+      "source": [
+        "p.1"
+      ]
+    }
+  ],
+  "anomalies": [],
+  "side_findings": [],
+  "portable_components": [
+    {
+      "id": "PC01",
+      "name": "Sparse Factorized Attention Kernel",
+      "io": "Tensor [B, S, D] -> Tensor [B, S, D]",
+      "source": [
+        "F01"
+      ]
+    }
+  ],
+  "argument_chain": [
+    "Dense self-attention exhibits quadratic complexity.",
+    "Factorized projection reduces token interactions to strided windows.",
+    "Empirical results confirm perplexity parity."
+  ],
+  "unresolved": [],
+  "coverage": {
+    "supplement": "NOT_APPLICABLE",
+    "methods_appendix": "ABSENT",
+    "ablations": "INSPECTED",
+    "negative_results": "ABSENT"
+  },
+  "lens_synthesis": [],
+  "lens_conflicts": []
+}

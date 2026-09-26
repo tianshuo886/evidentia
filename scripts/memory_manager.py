@@ -460,6 +460,94 @@ def rebuild_index(custom_root=None):
     print(f"OK: Rebuilt SQLite memory index ({reindexed_items} items reindexed).")
     return reindexed_items
 
+def inspect_memory(item_id, custom_root=None):
+    root = get_memory_root(custom_root)
+    conn = sqlite3.connect(root / 'memory.sqlite')
+    cur = conn.cursor()
+
+    # 1. Search memory_items
+    cur.execute('''
+    SELECT m.memory_id, m.memory_type, m.text, m.paper_id, m.paper_commit_id, m.object_id,
+           m.source_ids_json, m.epistemic_state, m.created_at, m.status, m.payload_path,
+           c.paper_model_sha256, c.source_sha256
+    FROM memory_items m
+    JOIN memory_commits c ON m.paper_commit_id = c.commit_id
+    WHERE m.memory_id = ? OR m.object_id = ?
+    ''', (item_id, item_id))
+    row = cur.fetchone()
+    if row:
+        conn.close()
+        return {
+            "kind": "MEMORY_ITEM",
+            "memory_id": row[0],
+            "memory_type": row[1],
+            "text": row[2],
+            "paper_id": row[3],
+            "paper_commit_id": row[4],
+            "object_id": row[5],
+            "source_ids": json.loads(row[6]),
+            "epistemic_state": row[7],
+            "created_at": row[8],
+            "status": row[9],
+            "payload_path": row[10],
+            "paper_model_sha256": row[11],
+            "source_sha256": row[12]
+        }
+
+    # 2. Search memory_commits
+    cur.execute('SELECT * FROM memory_commits WHERE commit_id = ? OR paper_id = ?', (item_id, item_id))
+    row = cur.fetchone()
+    if row:
+        conn.close()
+        return {
+            "kind": "MEMORY_COMMIT",
+            "commit_id": row[0],
+            "commit_type": row[1],
+            "paper_id": row[2],
+            "project_id": row[3],
+            "paper_model_sha256": row[4],
+            "source_sha256": row[5],
+            "committed_at": row[6],
+            "payload_path": row[7]
+        }
+
+    # 3. Search memory_relations
+    cur.execute('SELECT * FROM memory_relations WHERE relation_id = ?', (item_id,))
+    row = cur.fetchone()
+    if row:
+        conn.close()
+        return {
+            "kind": "MEMORY_RELATION",
+            "relation_id": row[0],
+            "relation_type": row[1],
+            "source_memory_id": row[2],
+            "target_memory_id": row[3],
+            "source_paper_id": row[4],
+            "target_paper_id": row[5],
+            "reasoning": row[6],
+            "evidence_ids": json.loads(row[7]),
+            "created_at": row[8]
+        }
+
+    # 4. Search experiment_outcomes
+    cur.execute('SELECT * FROM experiment_outcomes WHERE outcome_id = ? OR experiment_id = ?', (item_id, item_id))
+    row = cur.fetchone()
+    if row:
+        conn.close()
+        return {
+            "kind": "EXPERIMENT_OUTCOME",
+            "outcome_id": row[0],
+            "project_id": row[1],
+            "experiment_id": row[2],
+            "verdict": row[3],
+            "findings": row[4],
+            "recorded_at": row[5],
+            "payload_path": row[6]
+        }
+
+    conn.close()
+    return None
+
 def enforce_open_reading_firewall(task_packet):
     """Verify that Open Reading task packet strictly forbids and excludes research memory."""
     task_type = task_packet.get('task_type')
@@ -508,11 +596,23 @@ def main():
     p_v = sp.add_parser('verify')
     p_v.add_argument('--memory-root')
 
+    # inspect
+    p_ins = sp.add_parser('inspect')
+    p_ins.add_argument('--id', required=True)
+    p_ins.add_argument('--memory-root')
+
     # rebuild-index
     p_rb = sp.add_parser('rebuild-index')
     p_rb.add_argument('--memory-root')
 
     args = ap.parse_args()
+    if args.command == 'inspect':
+        res = inspect_memory(args.id, args.memory_root)
+        if res:
+            print(json.dumps(res, indent=2, ensure_ascii=False))
+        else:
+            print(f"Item {args.id} not found in memory.")
+            sys.exit(1)
     if args.command == 'commit-paper':
         commit_paper(args.paper, args.memory_root)
     elif args.command == 'commit-project':

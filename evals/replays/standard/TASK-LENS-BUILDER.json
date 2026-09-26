@@ -1,0 +1,50 @@
+{
+  "task_id": "TASK-LENS-BUILDER",
+  "execution_kind": "HOST_AGENT",
+  "executor": {
+    "kind": "HOST_AGENT",
+    "host": "pi-agent",
+    "host_version": "1.0.0",
+    "provider": "anthropic",
+    "model": "claude-3-7-sonnet",
+    "model_version": "20250219",
+    "reasoning_profile": "high-effort-scientific",
+    "tool_profile": "paper-source-only",
+    "started_at": "2026-03-27T10:00:00Z",
+    "completed_at": "2026-03-27T10:01:30Z"
+  },
+  "started_at": "2026-03-27T10:00:00Z",
+  "completed_at": "2026-03-27T10:01:30Z",
+  "result": {
+    "lens": "builder",
+    "source_sha256": "5194b14568975fcd3d3b9be2c16b9ff571d151834de91196d541c68f96c0b6b6",
+    "base_sha256": "afdb4190917e6680effbeafd544e844f5828e39c6d78b57965d9fe5be3435a1b",
+    "base_model_sha256": "afdb4190917e6680effbeafd544e844f5828e39c6d78b57965d9fe5be3435a1b",
+    "lens_contract_version": "1.0",
+    "prompt_version": "1.0",
+    "findings": [
+      {
+        "id": "L-builder-01",
+        "statement": "Custom CUDA block layout required to achieve reported throughput.",
+        "evidence": [
+          "F01"
+        ],
+        "epistemic": "SUPPORTED",
+        "novel_vs_base": true
+      }
+    ],
+    "notes": "Recorded Host Agent pass for builder lens.",
+    "executor": {
+      "kind": "HOST_AGENT",
+      "host": "pi-agent",
+      "host_version": "1.0.0",
+      "provider": "anthropic",
+      "model": "claude-3-7-sonnet",
+      "model_version": "20250219",
+      "reasoning_profile": "high-effort-scientific",
+      "tool_profile": "paper-source-only",
+      "started_at": "2026-03-27T10:00:00Z",
+      "completed_at": "2026-03-27T10:01:30Z"
+    }
+  }
+}

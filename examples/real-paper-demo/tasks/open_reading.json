@@ -1,0 +1,43 @@
+{
+  "task_id": "TASK-OPEN-READING",
+  "task_type": "OPEN_READING",
+  "required_capability": "SCIENTIFIC_OPEN_READING",
+  "scientific_contract": "Project-independent Open Reading baseline: strict O/I/A separation, source-grounded claims, explicit uncertainty.",
+  "description": "Project-independent initial reading of the reconstructed source paper.",
+  "input_artifacts": {
+    "source_pdf": "source/paper.pdf",
+    "source_map": "model/source_map.json",
+    "figure_inventory": "model/figure_inventory.json"
+  },
+  "target_output": "model/paper_model.json",
+  "output_schema": "paper_model",
+  "instructions": "Read only the supplied paper and its reconstructed source map/inventory. The external project is strictly invisible. Rigidly separate Observation (what the data directly shows), Author Interpretation (what authors claim it means), and Reader Assessment (your objective scientific critique). Ground every claim in concrete figure, table, or experiment IDs from the inventory. Explicitly register uncertainties, limitations, assumptions, and anomalies.",
+  "constraints": [
+    "PROJECT_INVISIBLE",
+    "SOURCE_GROUNDED",
+    "O_I_A_SEPARATION",
+    "EXPLICIT_UNCERTAINTY"
+  ],
+  "prohibited_context": [
+    "RESEARCH_MEMORY",
+    "cross-paper memory",
+    "project_context",
+    "apply",
+    "prior_deltas"
+  ],
+  "source_sha256": "58cdf8f8aae51f41daf1b2e48b96131731893559a508bfeb7354f9cb3c0c01ad",
+  "base_sha256": null,
+  "contract_version": "1.0",
+  "prompt_version": "1.0",
+  "executor_template": {
+    "host": "generic-host",
+    "host_version": "UNKNOWN",
+    "provider": "antigravity",
+    "model": "gemini-3.8-flash",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "standard",
+    "tool_profile": "paper-only",
+    "started_at": "2026-09-26T15:49:51.416975+00:00",
+    "completed_at": "2026-09-26T15:49:51.416975+00:00"
+  }
+}

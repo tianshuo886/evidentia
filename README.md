@@ -47,7 +47,7 @@ Paper Reader (HTML primary, PDF snapshot)
    ↓
 optional contextual apply to one project
    ↓
-Research Delta + Project Gap Map + literature index
+Research Delta + Project Gap Map + Frozen Research Memory (objects/ + memory.sqlite)
 ```
 
 The Paper Model is canonical truth. Renderers, Kami-compatible presentation and project analysis are downstream adapters.
@@ -196,9 +196,9 @@ A valid Research Delta may change a belief, expose an unknown, transfer a compon
 | `source_map.json` | Page, section, equation and in-text mention provenance |
 | `lens/*.json` | Six independent reread outputs |
 | `manifest.json` | Freeze status and SHA-256 hashes |
-| `reader/reader.html` | Primary human reading surface |
+| `reader/reader.html` | Primary human reading surface (Evidence Atlas) |
 | `research_delta.json` | Project-specific consequences kept separate from paper facts |
-| `literature_index.json` | Stable cross-paper memory foundation |
+| `Frozen Research Memory` | Durable cross-paper knowledge layer with typed relations and experiment outcomes (`objects/` + `memory.sqlite`) |
 
 ## Design principles
 

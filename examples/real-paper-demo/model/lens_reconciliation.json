@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "source_sha256": "58cdf8f8aae51f41daf1b2e48b96131731893559a508bfeb7354f9cb3c0c01ad",
+  "base_model_sha256": "3a16b17f808ae4d33777546a6bca2c74f1de4ce7ea8ac79b96d167f4546fc0cf",
+  "items": [
+    {
+      "id": "RF01",
+      "statement": "Sparse attention kernel reduces memory footprint while preserving perplexity.",
+      "status": "AGREEMENT",
+      "relation": "AGREEMENT",
+      "canonical_statement": "Sparse attention kernel reduces memory footprint while preserving perplexity.",
+      "cluster_id": "RFC-01",
+      "members": [
+        "L-author-01",
+        "L-mechanism-01"
+      ],
+      "supporting_lenses": [
+        "author",
+        "mechanism"
+      ],
+      "evidence": [
+        "F01"
+      ],
+      "source": [
+        "F01"
+      ],
+      "epistemic_state": "SUPPORTED",
+      "requires_verification": false,
+      "verifier_status": null
+    }
+  ]
+}

@@ -56,7 +56,7 @@ def create_synthetic_pdf(paper_data, target_path):
     doc.save(str(target_path))
     return str(target_path)
 
-def run_evaluation(corpus_file=None, annotations_file=None, report_out=None, limit=1):
+def run_evaluation(corpus_file=None, annotations_file=None, report_out=None, limit=None, truth_level="SYNTHETIC"):
     corpus_p = Path(corpus_file) if corpus_file else (EVAL_ROOT / 'corpus/synthetic_corpus.json')
     annot_p = Path(annotations_file) if annotations_file else (EVAL_ROOT / 'annotations/ground_truth.json')
 
@@ -65,7 +65,8 @@ def run_evaluation(corpus_file=None, annotations_file=None, report_out=None, lim
     papers_to_eval = corpus.get('papers', [])[:limit] if limit else corpus.get('papers', [])
 
     report = {
-        "evaluation_version": "1.0",
+        "evaluation_version": "2.0",
+        "validation_truth_level": truth_level,
         "conditions_evaluated": [
             "Condition_A_Single_Pass",
             "Condition_B_Evidentia_Standard",
@@ -96,10 +97,15 @@ def run_evaluation(corpus_file=None, annotations_file=None, report_out=None, lim
 
             # --- Condition B: Real Evidentia Standard Run ---
             out_b = tmp_p / f"{pid}_standard"
-            subprocess.run([
+            cmd_b = [
                 sys.executable, str(ROOT / 'scripts/evidentia.py'),
                 'run', '--pdf', str(pdf_file), '--out', str(out_b), '--mode', 'standard'
-            ], check=True, capture_output=True)
+            ]
+            if truth_level == 'SYNTHETIC':
+                cmd_b.append('--fixture')
+            elif truth_level == 'RECORDED_REAL_AGENT':
+                cmd_b.extend(['--replay', str(ROOT / 'evals/replays/standard')])
+            subprocess.run(cmd_b, check=True, capture_output=True)
 
             pm_b = json.loads((out_b / 'model/paper_model.json').read_text())
             inv_b = json.loads((out_b / 'model/figure_inventory.json').read_text())
@@ -116,10 +122,15 @@ def run_evaluation(corpus_file=None, annotations_file=None, report_out=None, lim
 
             # --- Condition C: Real Evidentia Ensemble Run ---
             out_c = tmp_p / f"{pid}_ensemble"
-            subprocess.run([
+            cmd_c = [
                 sys.executable, str(ROOT / 'scripts/evidentia.py'),
                 'run', '--pdf', str(pdf_file), '--out', str(out_c), '--mode', 'ensemble'
-            ], check=True, capture_output=True)
+            ]
+            if truth_level == 'SYNTHETIC':
+                cmd_c.append('--fixture')
+            elif truth_level == 'RECORDED_REAL_AGENT':
+                cmd_c.extend(['--replay', str(ROOT / 'evals/replays/standard')])
+            subprocess.run(cmd_c, check=True, capture_output=True)
 
             findings_c = []
             for lf in (out_c / 'lens').glob('*.json'):
@@ -197,13 +208,14 @@ def run_evaluation(corpus_file=None, annotations_file=None, report_out=None, lim
     return report
 
 def main():
-    ap = argparse.ArgumentParser()
+    ap = argparse.ArgumentParser(description="Evidentia Empirical Evaluation Runner")
     ap.add_argument('--corpus')
     ap.add_argument('--annotations')
     ap.add_argument('--out')
-    ap.add_argument('--limit', type=int, default=1)
+    ap.add_argument('--limit', type=int, default=2)
+    ap.add_argument('--truth-level', choices=["SYNTHETIC", "RECORDED_REAL_AGENT", "LIVE_AGENT", "REAL_PAPER", "HUMAN_REVIEWED"], default="SYNTHETIC")
     a = ap.parse_args()
-    run_evaluation(a.corpus, a.annotations, a.out, a.limit)
+    run_evaluation(a.corpus, a.annotations, a.out, limit=a.limit, truth_level=a.truth_level)
 
 if __name__ == '__main__':
     main()

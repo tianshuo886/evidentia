@@ -20,6 +20,9 @@
       "type": "string",
       "minLength": 1
     },
+    "base_sha256": {
+      "type": "string"
+    },
     "items": {
       "type": "array",
       "items": {

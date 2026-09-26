@@ -1,4 +1,5 @@
 {
+  "annotations_version": "2.0",
   "annotations": {
     "CORPUS-01-METHOD": {
       "figures": [{"id": "F01", "kind": "figure"}, {"id": "F02", "kind": "figure"}],
@@ -7,7 +8,7 @@
         {"id": "C01", "evidence": ["T01", "F02"]}
       ],
       "weaknesses": [
-        {"id": "W01", "kind": "omission", "keywords": ["batch size", "training hardware"]}
+        {"id": "W01", "kind": "omission", "keywords": ["batch size", "training hardware", "ablation missing"]}
       ]
     },
     "CORPUS-02-OVERCLAIM": {
@@ -18,6 +19,36 @@
       ],
       "weaknesses": [
         {"id": "W01", "kind": "causal_overclaim", "keywords": ["correlation vs causation", "confounding variable", "causal driver"]}
+      ]
+    },
+    "CORPUS-03-REMOTE-SENSING": {
+      "figures": [{"id": "F01", "kind": "figure"}],
+      "tables": [{"id": "T01", "kind": "table"}],
+      "claims": [
+        {"id": "C01", "evidence": ["T01", "F01"]}
+      ],
+      "weaknesses": [
+        {"id": "W01", "kind": "atmospheric_confound", "keywords": ["atmospheric correction", "cloud shadow", "viewing angle"]}
+      ]
+    },
+    "CORPUS-04-BIOMEDICAL": {
+      "figures": [{"id": "F01", "kind": "figure"}],
+      "tables": [{"id": "T01", "kind": "table"}],
+      "claims": [
+        {"id": "C01", "evidence": ["F01", "T01"]}
+      ],
+      "weaknesses": [
+        {"id": "W01", "kind": "resolution_boundary", "keywords": ["local resolution", "b-factor variance", "density threshold"]}
+      ]
+    },
+    "CORPUS-05-PHYSICS-ABLATION": {
+      "figures": [{"id": "F01", "kind": "figure"}],
+      "tables": [{"id": "T01", "kind": "table"}],
+      "claims": [
+        {"id": "C01", "evidence": ["T01", "F01"]}
+      ],
+      "weaknesses": [
+        {"id": "W01", "kind": "negative_finding", "keywords": ["phase instability", "turbulence breakdown", "fringe washout"]}
       ]
     }
   }

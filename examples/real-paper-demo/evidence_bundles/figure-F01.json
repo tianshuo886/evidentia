@@ -1,0 +1,41 @@
+{
+  "bundle_type": "FIGURE",
+  "id": "F01",
+  "paper_label": "Fig. 1",
+  "page": 1,
+  "asset_path": "assets/figures/page_p1_F01_1653x2339.png",
+  "caption": "Fig. 1 Attention architecture and perplexity scaling across sequence lengths.",
+  "bbox": [
+    50.0,
+    439.25,
+    390.159912109375,
+    452.989990234375
+  ],
+  "caption_bbox": [
+    50.0,
+    439.25,
+    390.159912109375,
+    452.989990234375
+  ],
+  "figure_bbox": [
+    50.0,
+    439.25,
+    390.159912109375,
+    452.989990234375
+  ],
+  "subfigures": [],
+  "mentions": [
+    {
+      "page": 1,
+      "mention": {
+        "label": "Fig. 1",
+        "kind": "figure",
+        "bbox": [],
+        "target_id": "F01",
+        "bound": true
+      }
+    }
+  ],
+  "binding_method": "caption_geometry",
+  "binding_confidence": 0.8
+}

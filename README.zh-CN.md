@@ -42,7 +42,7 @@ Paper Reader（HTML 主阅读，PDF 快照）
    ↓
 可选的项目 contextual apply
    ↓
-Research Delta + Project Gap Map + literature index
+Research Delta + Project Gap Map + Frozen Research Memory (objects/ + memory.sqlite)
 ```
 
 Paper Model 是事实层。Reader、Kami 兼容展示和项目分析都只能作为下游适配层，不能反过来改变论文结构或论文事实。
@@ -199,9 +199,9 @@ Research Delta 可以记录改变的判断、新证据、新未知、可迁移�
 | `source_map.json` | 页码、章节、公式和文中引用的 provenance |
 | `lens/*.json` | 六个独立 Lens 的重读结果 |
 | `manifest.json` | Frozen 状态和 SHA-256 哈希 |
-| `reader/reader.html` | 人类实际阅读的主界面 |
+| `reader/reader.html` | 人类实际阅读的主界面（Evidence Atlas） |
 | `research_delta.json` | 与具体项目有关的变化，和论文事实分离保存 |
-| `literature_index.json` | 跨论文长期记忆的基础索引 |
+| `Frozen Research Memory` | 跨论文长期研究记忆库（不可变 JSON 对象 `objects/` + 可重建索引 `memory.sqlite`） |
 
 ## 设计原则
 

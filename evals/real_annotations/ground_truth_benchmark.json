@@ -1,0 +1,84 @@
+{
+  "annotations_version": "1.0",
+  "tier": "TIER_4_HUMAN_REVIEWED_GROUND_TRUTH",
+  "reviewer_count": 2,
+  "annotations": {
+    "BENCH-01-VASWANI-ATTENTION": {
+      "major_claims": [
+        {"id": "C01", "statement": "Multi-head self-attention entirely replaces recurrent and convolutional layers.", "grounding_evidence": ["Figure 1", "p.3"]},
+        {"id": "C02", "statement": "Transformer establishes state of the art on English-to-German translation with 28.4 BLEU.", "grounding_evidence": ["Table 2", "p.8"]}
+      ],
+      "known_limitations": [
+        {"id": "L01", "text": "Quadratic memory and compute scaling with sequence length in full self-attention."},
+        {"id": "L02", "text": "Requires extensive warm-up and learning rate scheduling to avoid early instability."}
+      ],
+      "mechanisms": [
+        {"id": "M01", "name": "Scaled Dot-Product Attention", "equation": "softmax(QK^T / sqrt(d_k))V"},
+        {"id": "M02", "name": "Multi-Head Projection", "evidence": ["Figure 2"]}
+      ],
+      "portable_components": [
+        {"id": "PC01", "name": "Multi-Head Attention Layer", "io": "Query, Key, Value tensors -> Context tensor"}
+      ]
+    },
+    "BENCH-02-LORA-ADAPTATION": {
+      "major_claims": [
+        {"id": "C01", "statement": "Low-rank parameter decomposition reduces trainable parameters by 10,000x without quality loss.", "grounding_evidence": ["Table 1", "Figure 1"]}
+      ],
+      "known_limitations": [
+        {"id": "L01", "text": "Inference batching with diverse rank adapters introduces serving overhead."},
+        {"id": "L02", "text": "Rank selection r is empirically chosen per model family."}
+      ],
+      "mechanisms": [
+        {"id": "M01", "name": "Low-Rank Weight Factorization", "equation": "W = W_0 + (B * A) * (alpha / r)"}
+      ],
+      "portable_components": [
+        {"id": "PC01", "name": "LoRA Adapter Matrix Block", "io": "Frozen weights + low-rank A/B matrices -> Adapted forward pass"}
+      ]
+    },
+    "BENCH-03-REMOTE-SENSING-FOREST": {
+      "major_claims": [
+        {"id": "C01", "statement": "Probabilistic fusion of sparse LiDAR GEDI profiles and dense Sentinel-2 imagery enables 10m canopy height estimation.", "grounding_evidence": ["Figure 3", "Table 3"]}
+      ],
+      "known_limitations": [
+        {"id": "L01", "text": "Cloud cover and topographic slope distort LiDAR wave returns."},
+        {"id": "L02", "text": "Optical texture saturation in dense multi-layered tropical canopies."}
+      ],
+      "mechanisms": [
+        {"id": "M01", "name": "Probabilistic Deep Residual Inversion", "evidence": ["Figure 2"]}
+      ],
+      "portable_components": [
+        {"id": "PC01", "name": "Canopy Inversion Convolutional Backbone", "io": "Multispectral 10m bands -> Mean height and uncertainty"}
+      ]
+    },
+    "BENCH-04-ALPHAFOLD2-STRUCTURE": {
+      "major_claims": [
+        {"id": "C01", "statement": "Evoformer neural network predicts protein 3D atomic coordinates from primary sequence.", "grounding_evidence": ["Figure 1", "Figure 2"]}
+      ],
+      "known_limitations": [
+        {"id": "L01", "text": "Limited accuracy on intrinsically disordered regions and orphan proteins without deep MSAs."},
+        {"id": "L02", "text": "Static single-conformation prediction does not capture full protein dynamics."}
+      ],
+      "mechanisms": [
+        {"id": "M01", "name": "Evoformer MSA-Pair Cross-Attention", "evidence": ["Figure 1c"]}
+      ],
+      "portable_components": [
+        {"id": "PC01", "name": "Invariant Point Attention (IPA) Structure Module", "io": "Rigid body frames + pair features -> 3D atom positions"}
+      ]
+    },
+    "BENCH-05-QUANTUM-SUPREMACY-ABLATION": {
+      "major_claims": [
+        {"id": "C01", "statement": "53-qubit superconducting circuit samples random states in 200 seconds.", "grounding_evidence": ["Figure 3", "Table 1"]}
+      ],
+      "known_limitations": [
+        {"id": "L01", "text": "Classical verification fidelity decreases exponentially with circuit depth."},
+        {"id": "L02", "text": "Subsequent classical tensor network simulation advances shortened the classical time gap."}
+      ],
+      "mechanisms": [
+        {"id": "M01", "name": "Cross-Entropy Benchmarking (XEB)", "evidence": ["Figure 4"]}
+      ],
+      "portable_components": [
+        {"id": "PC01", "name": "Linear XEB Fidelity Verifier", "io": "Bitstring samples -> Fidelity estimate"}
+      ]
+    }
+  }
+}

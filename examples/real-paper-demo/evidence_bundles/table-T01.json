@@ -1,0 +1,29 @@
+{
+  "bundle_type": "TABLE",
+  "id": "T01",
+  "paper_label": "Table 1",
+  "page": 2,
+  "asset_path": "assets/figures/page_p2_T01_1653x2339.png",
+  "caption": "Table 1 Accuracy comparisons across dense and sparse variants.",
+  "structure": {
+    "estimated_rows": 3,
+    "estimated_cols": 7,
+    "header_detected": true
+  },
+  "row_count": 3,
+  "col_count": 7,
+  "parsed_cells": null,
+  "mentions": [
+    {
+      "page": 2,
+      "mention": {
+        "label": "Table 1",
+        "kind": "table",
+        "bbox": [],
+        "target_id": "T01",
+        "bound": true
+      }
+    }
+  ],
+  "raw_visual_fallback": "assets/figures/page_p2_T01_1653x2339.png"
+}

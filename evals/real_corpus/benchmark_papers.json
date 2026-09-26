@@ -1,0 +1,66 @@
+{
+  "corpus_version": "1.0",
+  "tier": "TIER_4_HUMAN_ANNOTATED_BENCHMARK",
+  "papers": [
+    {
+      "id": "BENCH-01-VASWANI-ATTENTION",
+      "category": "ML foundational method",
+      "title": "Attention Is All You Need",
+      "authors": ["A. Vaswani", "N. Shazeer", "N. Parmar", "J. Uszkoreit", "L. Jones", "A. N. Gomez", "L. Kaiser", "I. Polosukhin"],
+      "year": 2017,
+      "venue": "NeurIPS",
+      "open_access_doi": "10.48550/arXiv.1706.03762",
+      "license": "CC-BY-4.0",
+      "key_claims": ["C01: Multi-head attention replaces recurrent layers with O(1) sequential operations", "C02: BLEU score 28.4 on WMT 2014 En-De establishes state of the art"],
+      "key_evidence": ["Table 1", "Table 2", "Figure 1", "Figure 2"]
+    },
+    {
+      "id": "BENCH-02-LORA-ADAPTATION",
+      "category": "Parameter-efficient fine-tuning",
+      "title": "LoRA: Low-Rank Adaptation of Large Language Models",
+      "authors": ["E. J. Hu", "Y. Shen", "P. Wallis", "Z. Allen-Zhu", "Y. Li", "S. Wang", "L. Wang", "W. Chen"],
+      "year": 2021,
+      "venue": "ICLR",
+      "open_access_doi": "10.48550/arXiv.2106.09685",
+      "license": "CC-BY-4.0",
+      "key_claims": ["C01: Low-rank parameter decomposition reduces trainable parameters by 10,000x without quality loss"],
+      "key_evidence": ["Table 1", "Table 2", "Figure 1"]
+    },
+    {
+      "id": "BENCH-03-REMOTE-SENSING-FOREST",
+      "category": "Remote sensing & environmental monitoring",
+      "title": "High-Resolution Canopy Height Modeling from GEDI and Sentinel-2",
+      "authors": ["N. Lang", "K. Schindler", "J. Wegner"],
+      "year": 2022,
+      "venue": "Remote Sensing of Environment",
+      "open_access_doi": "10.1016/j.rse.2022.113070",
+      "license": "CC-BY-4.0",
+      "key_claims": ["C01: Probabilistic fusion of spaceborne LiDAR and optical imagery enables global 10m canopy height maps"],
+      "key_evidence": ["Figure 3", "Figure 7", "Table 3"]
+    },
+    {
+      "id": "BENCH-04-ALPHAFOLD2-STRUCTURE",
+      "category": "Biomedical & structural biology",
+      "title": "Highly Accurate Protein Structure Prediction with AlphaFold",
+      "authors": ["J. Jumper", "R. Evans", "A. Pritzel", "et al."],
+      "year": 2021,
+      "venue": "Nature",
+      "open_access_doi": "10.1038/s41586-021-03819-2",
+      "license": "CC-BY-4.0",
+      "key_claims": ["C01: Evoformer attention and structural module predict protein backbone coordinates within experimental error"],
+      "key_evidence": ["Figure 1", "Figure 2", "Extended Data Table 1"]
+    },
+    {
+      "id": "BENCH-05-QUANTUM-SUPREMACY-ABLATION",
+      "category": "Physics & quantum computing with verification limits",
+      "title": "Quantum Supremacy Using a Programmable Superconducting Processor",
+      "authors": ["F. Arute", "K. Arya", "R. Babbush", "et al."],
+      "year": 2019,
+      "venue": "Nature",
+      "open_access_doi": "10.1038/s41586-019-1666-5",
+      "license": "Open Access",
+      "key_claims": ["C01: Sycamore processor executes random circuit sampling in 200s vs 10,000y classical estimation"],
+      "key_evidence": ["Figure 3", "Figure 4", "Table 1"]
+    }
+  ]
+}
