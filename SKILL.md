@@ -4,7 +4,7 @@ description: Evidence-grounded Paper Research OS for one paper at a time. Build 
 license: Apache-2.0
 compatibility: ">=Python 3.9"
 metadata:
-  version: "0.2.0"
+  version: "1.0.0"
   argument-hint: "<paper.pdf> --out <directory> [--supplement ...] | apply --paper <directory> --project <document> [--focus ...]"
 ---
 

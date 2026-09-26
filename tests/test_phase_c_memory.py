@@ -154,3 +154,38 @@ def test_open_reading_memory_firewall():
     ok, msg = memory_manager.enforce_open_reading_firewall(leaked_task)
     assert ok is False
     assert "leaked" in msg
+
+def test_two_stage_apply_with_memory_synthesis(tmp_path):
+    mem_root = tmp_path / 'memory'
+    p_dir = tmp_path / 'paper_run'
+    p_dir.mkdir()
+    fixture(p_dir)
+    run('freeze_check.py', '--out', str(p_dir))
+    memory_manager.commit_paper(p_dir, custom_root=mem_root)
+
+    proj_doc = tmp_path / 'proj.md'
+    proj_doc.write_text("Goal: feature extraction under low lighting conditions.")
+    
+    # Run Apply with --with-memory
+    res = subprocess.run([
+        PY, str(ROOT / 'scripts/apply_agent.py'),
+        '--paper', str(p_dir),
+        '--project', str(proj_doc),
+        '--with-memory',
+        '--memory-root', str(mem_root)
+    ], capture_output=True, text=True)
+    assert res.returncode == 0, res.stdout + res.stderr
+
+    # Stage A artifact exists
+    delta_p = p_dir / 'apply/proj/research_delta.json'
+    assert delta_p.exists()
+
+    # Stage B artifact exists
+    synth_p = p_dir / 'apply/proj/memory_augmented_synthesis.json'
+    assert synth_p.exists()
+
+    synth = json.loads(synth_p.read_text(encoding='utf-8'))
+    assert synth['project_id'] == 'proj'
+    assert 'local_delta_sha256' in synth
+    assert 'retrieved_memory_items' in synth
+

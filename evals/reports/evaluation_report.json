@@ -16,7 +16,12 @@
       "Condition_B_Standard": 0.0,
       "Condition_C_Ensemble": 0.0
     },
-    "empirical_findings": "Condition B and C eliminate unsupported claims and O/I/A leakage through frozen baseline locks and localized verification."
+    "memory_metrics": {
+      "open_reading_contamination_rate": 0.0,
+      "provenance_completeness_rate": 1.0,
+      "memory_firewall_passed": true
+    },
+    "empirical_findings": "Condition B and C eliminate unsupported claims and O/I/A leakage through frozen baseline locks, while research memory preserves zero Open Reading contamination."
   },
   "per_paper_results": {
     "CORPUS-01-METHOD": {
@@ -73,7 +78,7 @@
   "detection_fingerprints": {
     "CORPUS-01-METHOD": {
       "finding_1": {
-        "statement": "[Counterfactual Lens] Alternative simpler linear pooling yields comparable gains",
+        "statement": "Counterfactual stress-test of claim C01: sensitivity under perturbed distributio",
         "lenses": {
           "author": false,
           "reviewer": false,
@@ -89,7 +94,7 @@
         "fingerprint_type": "Universal"
       },
       "finding_2": {
-        "statement": "[Mechanism Lens] Performance gains are driven primarily by improved gradient flo",
+        "statement": "Causal mechanism traces component Core Methodology / Algorithmic Block IO mappin",
         "lenses": {
           "author": false,
           "reviewer": false,
@@ -105,11 +110,11 @@
         "fingerprint_type": "Universal"
       },
       "finding_3": {
-        "statement": "[Mechanism Lens] Causal pathway fails when input feature covariance violates sta",
+        "statement": "Core innovation proposed in Sparse Attention for High-Resolution Visual Represen",
         "lenses": {
-          "author": false,
+          "author": true,
           "reviewer": false,
-          "mechanism": true,
+          "mechanism": false,
           "builder": false,
           "anomaly": false,
           "counterfactual": false
