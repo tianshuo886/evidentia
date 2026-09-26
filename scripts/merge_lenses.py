@@ -1,13 +1,17 @@
 #!/usr/bin/env python3
-"""Cross-Lens Reconciliation for Evidentia v1.1.
+"""Cross-Lens Reconciliation for Evidentia v1.1.1.
 
-Implements Section 14 Two-Layer Separation:
+Implements Section 14 Two-Layer Separation & P0-1 Hardening:
 - Layer 1 (Deterministic): Pre-clusters findings by evidence overlap, normalized strings,
   and exact matching -> model/candidate_clusters.json.
+  Deterministic code NEVER modifies relation, status, or canonical_statement.
 - Layer 2 (Semantic Reasoning): Dispatches to Semantic Reconciliation Agent
   (scripts/reconciliation_agent.py) to assign canonical statements and relations.
-- Automatically triggers Evidence-Localized Verifier for TENSION, CONTRADICTION, or high-uncertainty findings.
-- Enforces Principle 4: NO majority voting.
+- Localized Evidence Verification:
+  Only triggered when semantic agent assigns TENSION, CONTRADICTION, or requires_verification=True.
+  Verifies actual candidate statements (not generated meta-descriptions).
+  If verifier is absent or returns None: verifier_status becomes PENDING_VERIFICATION and workflow
+  pauses at WAITING_FOR_VERIFIERS. Zero fail-open to SUPPORTED.
 """
 import argparse, json, re, sys
 from pathlib import Path
@@ -17,6 +21,7 @@ sys.path.insert(0, str(HERE))
 from validate_common import load_json, schema_validate, sha256
 import task_protocol, verifier
 from reconciliation_agent import run_reconciliation_agent
+from agent_dispatch import is_fixture_enabled
 
 LENSES = ('author', 'reviewer', 'mechanism', 'builder', 'anomaly', 'counterfactual')
 
@@ -35,7 +40,6 @@ def precluster_findings(all_findings):
             if j in assigned:
                 continue
             f2 = all_findings[j]
-            # Exact statement match or high evidence overlap
             same_stmt = f1.get('statement', '').strip().lower() == f2.get('statement', '').strip().lower()
             ev_overlap = bool(set(f1.get('evidence', [])) & set(f2.get('evidence', [])))
             if same_stmt or ev_overlap:
@@ -49,12 +53,14 @@ def precluster_findings(all_findings):
             "member_ids": [m['id'] for m in cluster_members],
             "lenses": sorted({m['origin_lens'] for m in cluster_members}),
             "shared_evidence": all_ev,
-            "statements": [m.get('statement', '') for m in cluster_members]
+            "statements": [m.get('statement', '') for m in cluster_members],
+            "distinct_statement_strings": len({m.get('statement', '').strip().lower() for m in cluster_members}) > 1,
+            "candidate_for_semantic_review": len(cluster_members) > 1
         })
 
     return candidate_clusters
 
-def run_merge(out_dir, fixture=None, replay_dir=None, adapter=None, model=None):
+def run_merge(out_dir, fixture=None, replay_dir=None, adapter=None, model=None, verifier_fixture=None):
     root = Path(out_dir)
     pm = load_json(root / 'model/paper_model.json')
     all_findings = []
@@ -69,7 +75,7 @@ def run_merge(out_dir, fixture=None, replay_dir=None, adapter=None, model=None):
             f_copy['origin_lens'] = lens
             all_findings.append(f_copy)
 
-    # Layer 1: Deterministic Pre-clustering
+    # Layer 1: Deterministic Pre-clustering (Diagnostic only, no semantic mutation)
     candidate_clusters = precluster_findings(all_findings)
     cand_p = root / 'model/candidate_clusters.json'
     cand_p.write_text(json.dumps(candidate_clusters, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
@@ -78,9 +84,7 @@ def run_merge(out_dir, fixture=None, replay_dir=None, adapter=None, model=None):
     t_path = task_protocol.create_reconciliation_task(root)
 
     # Layer 2: Semantic Reconciliation Agent
-    use_fixture = fixture
-    if use_fixture is None:
-        use_fixture = bool(os.environ.get("PYTEST_CURRENT_TEST") or os.environ.get("EVIDENTIA_ALLOW_FIXTURE") == "1")
+    use_fixture = is_fixture_enabled(fixture)
 
     rec_result = run_reconciliation_agent(
         t_path,
@@ -95,57 +99,30 @@ def run_merge(out_dir, fixture=None, replay_dir=None, adapter=None, model=None):
 
     reconciled_items = rec_result.get('items', [])
 
-    # Detect conflicts on shared evidence
+    # Filter items requiring verification based purely on Semantic Agent judgment
+    items_needing_verif = [
+        it for it in reconciled_items
+        if it.get('requires_verification') is True or it.get('status') in ('TENSION', 'CONTRADICTION')
+    ]
+
     conflicts = []
-    by_ev = {}
-    for item in reconciled_items:
-        ev_list = item.get('source', item.get('evidence', []))
-        for e in ev_list:
-            by_ev.setdefault(e, []).append(item['id'])
-
-    for ev, ids in by_ev.items():
-        stmts = {next(m.get('canonical_statement', m.get('statement')) for m in reconciled_items if m['id'] == i) for i in ids}
-        if len(stmts) > 1:
-            for item in reconciled_items:
-                if item['id'] in ids:
-                    item['status'] = 'TENSION'
-                    item['relation'] = 'TENSION'
-                    item['requires_verification'] = True
-            conflicts.append({
-                "id": f"LC-{len(conflicts)+1:03d}",
-                "target": ev,
-                "findings": sorted(ids),
-                "resolution": f"TENSION on {ev}: {len(stmts)} distinct statements share evidence; verified via localized evidence verifier.",
-                "critical": True,
-                "requires_verification": True,
-                "verifier_status": None
-            })
-
-    # Also include any items marked requires_verification that weren't captured by by_ev
-    existing_conf_targets = {c['target'] for c in conflicts}
-    for item in reconciled_items:
-        if (item.get('requires_verification') or item.get('status') in ('TENSION', 'CONTRADICTION')) and item.get('id') not in [f for c in conflicts for f in c['findings']]:
-            ev_ids = item.get('source', item.get('evidence', ['p.1']))
-            primary_ev = ev_ids[0] if ev_ids else 'p.1'
-            conflicts.append({
-                "id": f"LC-{len(conflicts)+1:03d}",
-                "target": primary_ev,
-                "findings": [item['id']],
-                "resolution": f"{item.get('status')} on {primary_ev}: verified via localized evidence verifier.",
-                "critical": True,
-                "requires_verification": True,
-                "verifier_status": None
-            })
-
-    # Execute Verifier on all conflicts
     inv_p = root / 'model/figure_inventory.json'
     inv_items = load_json(inv_p).get('items', []) if inv_p.exists() else []
 
-    for conf in conflicts:
-        ev_id = conf['target']
-        matched_inv = next((x for x in inv_items if x.get('id') == ev_id), {})
+    all_verifications_completed = True
+    use_verifier_fixture = use_fixture if verifier_fixture is None else is_fixture_enabled(verifier_fixture)
+
+    for idx, item in enumerate(items_needing_verif, 1):
+        cid = f"LC-{idx:03d}"
+        ev_ids = item.get('source', item.get('evidence', ['p.1']))
+        primary_ev = ev_ids[0] if ev_ids else 'p.1'
+        matched_inv = next((x for x in inv_items if x.get('id') == primary_ev), {})
+
+        # P0-1 Hardening: Statement verified is the actual candidate scientific claim
+        candidate_claim = item.get('canonical_statement', item.get('statement', ''))
+
         loc_ev = {
-            'source_ids': [ev_id],
+            'source_ids': ev_ids,
             'captions': [matched_inv.get('caption_original', '')] if matched_inv.get('caption_original') else [],
             'page': matched_inv.get('page', 1),
             'surrounding_text': matched_inv.get('caption_original', ''),
@@ -154,17 +131,32 @@ def run_merge(out_dir, fixture=None, replay_dir=None, adapter=None, model=None):
         }
         v_task_p = task_protocol.create_verification_task(
             root,
-            target_id=conf['id'],
-            claim_or_statement=conf['resolution'],
+            target_id=cid,
+            claim_or_statement=candidate_claim,
             localized_evidence=loc_ev,
-            trigger_reason="cross_lens_contradiction" if 'CONTRADICTION' in conf['resolution'] else "high_impact_finding"
+            trigger_reason="cross_lens_contradiction" if item.get('status') == 'CONTRADICTION' else "high_impact_finding"
         )
-        v_res = verifier.run_verification(v_task_p, fixture=use_fixture, replay_dir=replay_dir, adapter=adapter, model=model)
-        verdict = v_res.get('status', 'SUPPORTED') if v_res else 'SUPPORTED'
-        conf['verifier_status'] = verdict
-        for item in reconciled_items:
-            if item['id'] in conf['findings']:
-                item['verifier_status'] = verdict
+        v_res = verifier.run_verification(v_task_p, fixture=use_verifier_fixture, replay_dir=replay_dir, adapter=adapter, model=model)
+
+        # P0-1 Hardening: Fail-closed verification verdict. NEVER default to SUPPORTED!
+        if v_res is None or v_res.get('status') in (None, 'PENDING', 'PENDING_VERIFICATION', 'UNRESOLVED'):
+            verdict = 'PENDING_VERIFICATION'
+            all_verifications_completed = False
+        else:
+            verdict = v_res.get('status')
+
+        item['verifier_status'] = verdict
+
+        conflicts.append({
+            "id": cid,
+            "target": primary_ev,
+            "findings": item.get('members', [item['id']]),
+            "statement": candidate_claim,
+            "resolution": f"{item.get('status')} on {primary_ev}: evaluation status {verdict}.",
+            "critical": True,
+            "requires_verification": True,
+            "verifier_status": verdict
+        })
 
     # Save reconciled items back to lens_reconciliation.json
     rec_result['items'] = reconciled_items
@@ -184,13 +176,23 @@ def run_merge(out_dir, fixture=None, replay_dir=None, adapter=None, model=None):
     pm['lens_conflicts'] = conflicts
     (root / 'model/paper_model.json').write_text(json.dumps(pm, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
 
+    if not all_verifications_completed:
+        rs_p = root / 'run_state.json'
+        if rs_p.exists():
+            rs = load_json(rs_p)
+            rs['phase'] = 'WAITING_FOR_VERIFIERS'
+            rs_p.write_text(json.dumps(rs, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
+        print(f"[WAITING_FOR_VERIFIERS] Verification required for {len(items_needing_verif)} items. Results pending.")
+        return 0
+
     print(f"OK: Cross-lens reconciliation complete ({len(reconciled_items)} items, {len(conflicts)} conflicts verified).")
     return 0
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--out', required=True)
-    ap.add_argument('--fixture', action='store_true')
+    ap.add_argument('--fixture', action='store_true', default=None)
+    ap.add_argument('--no-fixture', dest='fixture', action='store_false')
     ap.add_argument('--replay')
     ap.add_argument('--adapter')
     ap.add_argument('--model')

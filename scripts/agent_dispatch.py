@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
-"""Host Agent Dispatch Layer for Evidentia v1.1.
+"""Host Agent Dispatch Layer for Evidentia v1.1.1.
 
 Host-neutral interface providing:
     dispatch_agent_task(task_path, adapter=None, model=None, replay_dir=None, fixture=False) -> AgentResultEnvelope | None
 
 Implements:
 - Tier 2 Recorded Replay execution (replay_dir)
-- Tier 3 Live Host Agent execution (GenericAdapter / PiAdapter)
+- Tier 3 External Host Bridge (PiHostBridge / GenericAdapter)
 - Tier 1 Isolated Synthetic Fixtures (only when explicitly requested via fixture=True)
+- Explicit AgentDispatchError on broken adapter configurations (zero silent exception swallowing)
 - Clean stop returning None when waiting for external Host Agent submission
 """
 import json, os, sys
@@ -23,10 +24,16 @@ sys.path.insert(0, str(ROOT / 'tests/fixtures/synthetic_agents'))
 
 from validate_common import load_json, schema_validate
 
-def is_fixture_enabled(fixture=False):
-    return bool(fixture or os.environ.get("PYTEST_CURRENT_TEST") or os.environ.get("EVIDENTIA_ALLOW_FIXTURE") == "1")
+class AgentDispatchError(Exception):
+    """Raised when an agent dispatch or adapter configuration fails."""
+    pass
 
-def dispatch_agent_task(task_path, adapter=None, model=None, replay_dir=None, fixture=False):
+def is_fixture_enabled(fixture=None):
+    if fixture is not None:
+        return bool(fixture)
+    return bool(os.environ.get("PYTEST_CURRENT_TEST") or os.environ.get("EVIDENTIA_ALLOW_FIXTURE") == "1")
+
+def dispatch_agent_task(task_path, adapter=None, model=None, replay_dir=None, fixture=None):
     """Dispatch an AgentTask packet and return a validated AgentResultEnvelope, or None if waiting."""
     tp = Path(task_path)
     if not tp.exists():
@@ -115,27 +122,30 @@ def dispatch_agent_task(task_path, adapter=None, model=None, replay_dir=None, fi
             if not proj_doc or not Path(proj_doc).exists():
                 proj_doc = root / task.get('input_artifacts', {}).get('project_document', 'project_document.md')
             return apply_fixture.run_synthetic_apply(root, proj_doc)
+        elif task_type == 'MEMORY_SYNTHESIS':
+            import apply_fixture
+            return apply_fixture.run_synthetic_memory_synthesis(tp)
 
-    # 3. Live Host Agent execution via adapters
-    if adapter == 'pi' or os.environ.get("PI_SESSION_ID"):
+    # 3. External Host Bridges: prepare dispatch and await host submission
+    if adapter == 'pi':
         try:
-            from pi_adapter import PiAdapter
-            pi = PiAdapter(default_model=model)
-            res = pi.dispatch_task(tp, model=model)
-            # If adapter has execution handler:
-            if hasattr(pi, 'execute_task'):
-                return pi.execute_task(res)
-        except Exception:
-            pass
+            from pi_adapter import PiHostBridge
+            pi = PiHostBridge(default_model=model)
+            dispatch_packet = pi.prepare_dispatch(tp, model=model, out_dir=root)
+            print(f"[HOST_BRIDGE] Prepared Pi dispatch packet for {task_id} (Target Model: {dispatch_packet.get('target_model')})")
+            return None
+        except Exception as e:
+            raise AgentDispatchError(f"Pi host bridge preparation failed for {task_id}: {e}")
 
     if adapter == 'generic':
         try:
             from generic_adapter import GenericAdapter
             gen = GenericAdapter(model=model)
-            if hasattr(gen, 'execute_task'):
-                return gen.execute_task(tp)
-        except Exception:
-            pass
+            dispatch_packet = gen.prepare_dispatch(tp, model=model, out_dir=root)
+            print(f"[HOST_BRIDGE] Prepared Generic dispatch packet for {task_id} (Host: {dispatch_packet.get('host_adapter')})")
+            return None
+        except Exception as e:
+            raise AgentDispatchError(f"Generic adapter preparation failed for {task_id}: {e}")
 
     # No automated execution available -> return None to signal WAITING_FOR_AGENT
     return None

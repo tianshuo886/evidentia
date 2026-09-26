@@ -158,6 +158,61 @@ def run_synthetic_apply(paper_dir, project_doc, focus=None):
     }
     return envelope
 
+def run_synthetic_memory_synthesis(task_path):
+    tp = Path(task_path)
+    task = load_json(tp)
+    root = tp.parent.parent
+    if tp.parent.name == 'apply':
+        root = tp.parent.parent.parent
+
+    mb_rel = task.get('input_artifacts', {}).get('memory_bundle', '')
+    mb_file = root / mb_rel if mb_rel else None
+    mb_data = load_json(mb_file) if (mb_file and mb_file.exists()) else {}
+    retrieved = mb_data.get('retrieved_memory_items', [])
+    local_delta_sha = mb_data.get('local_delta_sha256') or task.get('local_delta_sha256', 'UNKNOWN')
+
+    now_iso = datetime.now(timezone.utc).isoformat()
+    insights = []
+    for it in retrieved[:3]:
+        insights.append({
+            "memory_id": it['memory_id'],
+            "relation_to_local_delta": "[SIMULATED] Prior finding provides complementary data regime bounds.",
+            "confidence": 0.85,
+            "epistemic_state": "SUPPORTED"
+        })
+
+    synth = {
+        "schema_version": "1.0",
+        "stage": "STAGE_B_MEMORY_AUGMENTED_SYNTHESIS",
+        "origin_type": "MEMORY_SYNTHESIS",
+        "project_id": task.get('project_id', 'project'),
+        "paper_id": Path(root).name,
+        "local_delta_sha256": local_delta_sha,
+        "based_on_local_delta_sha256": local_delta_sha,
+        "synthesized_at": now_iso,
+        "retrieved_memory_items": retrieved,
+        "cross_paper_insights": insights,
+        "synthesized_experiments": [],
+        "notes": f"[SIMULATED] Synthetic memory synthesis fixture incorporating {len(retrieved)} retrieved memory objects."
+    }
+
+    envelope = {
+        "task_id": task.get('task_id', 'TASK-MEMORY-SYNTHESIS'),
+        "execution_kind": "SIMULATED_FIXTURE",
+        "executor": {
+            "kind": "SIMULATED_FIXTURE",
+            "host": "synthetic-apply-runner",
+            "provider": "evidentia-test-suite",
+            "model": "synthetic-memory-synthesis-v1",
+            "started_at": now_iso,
+            "completed_at": now_iso
+        },
+        "started_at": now_iso,
+        "completed_at": now_iso,
+        "result": synth
+    }
+    return envelope
+
 if __name__ == '__main__':
     if len(sys.argv) < 3:
         sys.exit("Usage: apply_fixture.py <paper_dir> <project_doc> [<out_path>]")

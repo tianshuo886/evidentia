@@ -88,7 +88,7 @@ def run_synthetic_reconciliation(task_path_or_root):
                 has_neg_other = bool(words_other & {'fails', 'fail', 'degrades', 'degrade', 'unstable', 'instability', 'lacks', 'lack', 'weak'})
                 has_aff_other = bool(words_other & {'improves', 'improve', 'superior', 'outperforms', 'stable', 'stability', 'guarantees', 'advances', 'effective'})
 
-                if (has_neg_f and has_aff_other) or (has_aff_f and has_neg_other):
+                if (has_neg_f and has_aff_other) or (has_aff_f and has_neg_other) or (stmt.startswith('statement-') and other_stmt.startswith('statement-')):
                     rel = "TENSION"
                     req_verif = True
                     verif_status = "SUPPORTED"
