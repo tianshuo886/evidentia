@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evidentia.dev/schemas/verification_task.schema.json",
+  "type": "object",
+  "required": [
+    "task_id",
+    "target_id",
+    "target_type",
+    "statement",
+    "localized_evidence",
+    "trigger_reason"
+  ],
+  "properties": {
+    "task_id": {
+      "type": "string"
+    },
+    "target_id": {
+      "type": "string"
+    },
+    "target_type": {
+      "enum": [
+        "claim",
+        "finding",
+        "conflict",
+        "cluster"
+      ]
+    },
+    "statement": {
+      "type": "string"
+    },
+    "localized_evidence": {
+      "type": "object",
+      "required": [
+        "source_ids"
+      ],
+      "properties": {
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "captions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "page": {
+          "type": "integer"
+        },
+        "surrounding_text": {
+          "type": "string"
+        },
+        "figure_asset": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "table_cells": {
+          "type": [
+            "array",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "trigger_reason": {
+      "enum": [
+        "cross_lens_contradiction",
+        "critical_causal_claim",
+        "high_impact_finding",
+        "model_conflict",
+        "model_singleton",
+        "critical_anomaly",
+        "transfer_critical"
+      ]
+    },
+    "verification_criteria": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

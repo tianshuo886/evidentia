@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/tianshuo886/evidentia/blob/main/schemas/run_state.schema.json",
+  "$id": "https://evidentia.dev/schemas/run_state.schema.json",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -31,9 +31,18 @@
         "SOURCE_LOCK",
         "OPEN_READING",
         "BASELINE_LOCK",
+        "LENS_EXECUTION",
+        "RECONCILIATION",
+        "VERIFICATION",
+        "FINAL_MODEL",
         "LENS",
         "FREEZE",
         "RENDER",
+        "APPLY_INIT",
+        "PROJECT_CONTEXT",
+        "CONTEXTUAL_REREAD",
+        "DELTA_VALIDATION",
+        "APPLY_COMPLETE",
         "APPLY",
         "COMPLETE",
         "FAILED"
@@ -84,6 +93,12 @@
       ]
     },
     "base_sha256": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "lens_contract_version": {
       "type": [
         "string",
         "null"

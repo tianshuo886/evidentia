@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "paper_id": "p1",
+  "dashboard": {
+    "title": "T",
+    "claim_count": 1
+  },
+  "paper_map": [
+    "Problem"
+  ],
+  "claim_cards": [
+    "C01"
+  ],
+  "figure_blocks": [
+    "F01"
+  ],
+  "table_blocks": [],
+  "delta_projects": []
+}

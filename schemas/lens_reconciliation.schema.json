@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/tianshuo886/evidentia/blob/main/schemas/lens_reconciliation.schema.json",
+  "$id": "https://evidentia.dev/schemas/lens_reconciliation.schema.json",
   "type": "object",
   "required": [
     "schema_version",
@@ -68,6 +68,47 @@
           },
           "conflict_note": {
             "type": "string"
+          },
+          "cluster_id": {
+            "type": "string"
+          },
+          "members": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "relation": {
+            "enum": [
+              "AGREEMENT",
+              "COMPLEMENTARY",
+              "PARTIAL_AGREEMENT",
+              "TENSION",
+              "CONTRADICTION",
+              "ORTHOGONAL",
+              "UNRESOLVED"
+            ]
+          },
+          "canonical_statement": {
+            "type": "string"
+          },
+          "source": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "epistemic_state": {
+            "type": "string"
+          },
+          "requires_verification": {
+            "type": "boolean"
+          },
+          "verifier_status": {
+            "type": [
+              "string",
+              "null"
+            ]
           }
         },
         "additionalProperties": false

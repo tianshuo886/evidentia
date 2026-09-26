@@ -1,0 +1,24 @@
+{
+  "annotations": {
+    "CORPUS-01-METHOD": {
+      "figures": [{"id": "F01", "kind": "figure"}, {"id": "F02", "kind": "figure"}],
+      "tables": [{"id": "T01", "kind": "table"}],
+      "claims": [
+        {"id": "C01", "evidence": ["T01", "F02"]}
+      ],
+      "weaknesses": [
+        {"id": "W01", "kind": "omission", "keywords": ["batch size", "training hardware"]}
+      ]
+    },
+    "CORPUS-02-OVERCLAIM": {
+      "figures": [{"id": "F01", "kind": "figure"}],
+      "tables": [{"id": "T01", "kind": "table"}],
+      "claims": [
+        {"id": "C01", "evidence": ["F01"]}
+      ],
+      "weaknesses": [
+        {"id": "W01", "kind": "causal_overclaim", "keywords": ["correlation vs causation", "confounding variable", "causal driver"]}
+      ]
+    }
+  }
+}

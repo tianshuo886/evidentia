@@ -6,6 +6,26 @@ from validate_common import *
 LENSES=('author','reviewer','mechanism','builder','anomaly','counterfactual')
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('--out',required=True);a=ap.parse_args();root=Path(a.out);errs=[]
+ existing_manifest_p = root / 'model/manifest.json'
+ if existing_manifest_p.exists():
+  try:
+   ex_m = load_json(existing_manifest_p)
+   if ex_m.get('status') == 'FROZEN':
+    mutated = False
+    for rel, exp_h in (ex_m.get('hashes') or {}).items():
+     fp = root / rel
+     if not fp.exists() or sha256(fp) != exp_h:
+      mutated = True; errs.append(f'post-freeze mutation in {rel}')
+    for lens, exp_h in (ex_m.get('lens_hashes') or {}).items():
+     fp = root / 'lens' / f'{lens}.json'
+     if not fp.exists() or sha256(fp) != exp_h:
+      mutated = True; errs.append(f'post-freeze mutation in lens/{lens}.json')
+    if mutated:
+     errs.insert(0, 'REFUSED: Post-freeze mutation detected. Manifest is already FROZEN and cannot be rewritten.')
+     print(json.dumps({'status': 'FAIL', 'errors': errs}, indent=2))
+     return 1
+  except Exception:
+   pass
  required=['source/paper.pdf','model/paper_model.json','model/evidence_graph.json','model/figure_inventory.json','model/source_map.json']
  for rel in required:
   if not (root/rel).exists():errs.append(f'missing {rel}')
@@ -65,9 +85,11 @@ def main():
   if i.get('role') in (None,'unassigned') or i.get('depth') in (None,'unassigned'):errs.append(f"uninspected {i.get('id')}")
   if i.get('caption_status')=='OK' and not i.get('caption_original'):errs.append(f"missing caption {i.get('id')}")
   if i.get('binding_method') not in ('embedded','page_crop','manual','caption_geometry','none',None):errs.append(f"invalid binding_method {i.get('id')}")
+  if i.get('needs_visual_review') is True:errs.append(f"item {i.get('id')} requires visual review (needs_visual_review == true)")
   if i.get('role')=='critical':
    f=i.get('file');
    if not f or not (root/f).exists():errs.append(f"critical asset missing for {i.get('id')}: {f}")
+ if inv.get('review_required'):errs.append(f"unresolved review_required in figure_inventory: {inv['review_required']}")
  for c in pm.get('claims',[]):
   if not c.get('evidence') and c.get('epistemic') not in ('NOT_STATED','UNRESOLVED'):errs.append(f"claim without evidence {c.get('id')}")
  for r in sorted(refs(pm)):
@@ -93,7 +115,7 @@ def main():
    if actual_src and lrd.get('source_sha256')!=actual_src:errs.append('lens_reconciliation.source_sha256 mismatch actual source/paper.pdf')
    if base_expected and lrd.get('base_model_sha256')!=base_expected:errs.append('lens_reconciliation.base_model_sha256 mismatch open_reading_manifest (stale baseline)')
    # erased-conflict detection: every TENSION group merge_lenses would emit must still be recorded
-   rec_ids={i.get('id') for i in lrd.get('items',[])}
+   rec_ids = {i.get('id') for i in lrd.get('items', [])} | {m for i in lrd.get('items', []) for m in i.get('members', [])}
    for c in pm.get('lens_conflicts',[]) or []:
     for fid in c.get('findings',[]):
      if fid not in rec_ids and fid not in ids:errs.append(f'lens_conflicts references unknown finding {fid} (conflict erased from reconciliation)')
@@ -110,6 +132,34 @@ def main():
   except Exception as e:errs.append(f'unparseable model/lens_reconciliation.json: {e}')
  if not pm.get('unresolved') and any(c.get('epistemic') in ('AMBIGUOUS','INSUFFICIENT_EVIDENCE','UNRESOLVED') for c in pm.get('claims',[])):errs.append('unresolved claims must be explicitly listed')
  if not pm.get('coverage'):errs.append('coverage audit missing')
+ supp_cov = pm.get('coverage',{}).get('supplement')
+ if not supp_cov or supp_cov in ('UNKNOWN','PENDING'):errs.append('supplement disposition is unknown (must be explicit: NOT_APPLICABLE, INCLUDED, ABSENT, REVIEWED)')
+ # verifier status checks on conflicts and claims
+ for c in pm.get('lens_conflicts',[]) or []:
+  if c.get('critical') is True or c.get('requires_verification') is True:
+   v_status = c.get('verifier_status')
+   if not v_status:errs.append(f"critical conflict on {c.get('target', 'unknown')} missing verifier result")
+   elif v_status in ('UNRESOLVED','PENDING'):errs.append(f"critical conflict on {c.get('target', 'unknown')} has unresolved verification status: {v_status}")
+ for cl in pm.get('claims',[]) or []:
+  if cl.get('requires_verification') is True:
+   v_status = cl.get('verifier_status')
+   if not v_status:errs.append(f"claim {cl.get('id')} marked requires_verification is missing verifier result")
+   elif v_status in ('UNRESOLVED','PENDING'):errs.append(f"claim {cl.get('id')} has unresolved verification status: {v_status}")
+ # artifact bundle hash validation from run_state
+ rs_p = root / 'run_state.json'
+ if rs_p.exists():
+  try:
+   rs = load_json(rs_p)
+   for p_name, p_bundle in (rs.get('artifact_hashes') or {}).items():
+    if isinstance(p_bundle, dict):
+     for rel_p, exp_h in p_bundle.items():
+      if p_name == 'OPEN_READING' and rel_p == 'model/paper_model.json':
+       continue
+      fp = root / rel_p
+      if fp.exists() and sha256(fp) != exp_h:
+       errs.append(f"artifact bundle hash mismatch for {rel_p} in phase {p_name}")
+  except Exception as e:
+   errs.append(f"run_state bundle hash check failed: {e}")
  if (root/'model/source_map.json').exists() and (root/'model/figure_inventory.json').exists():
   inv_ids={x.get('id') for x in inv.get('items',[])};model_ids={x.get('id') for x in pm.get('figures',[])+pm.get('tables',[])}
   for ident in sorted(inv_ids-model_ids): errs.append(f'inventory item absent from model {ident}')

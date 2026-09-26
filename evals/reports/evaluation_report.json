@@ -1,0 +1,125 @@
+{
+  "evaluation_version": "1.0",
+  "conditions_evaluated": [
+    "Condition_A_Single_Pass",
+    "Condition_B_Evidentia_Standard",
+    "Condition_C_Evidentia_Ensemble"
+  ],
+  "summary": {
+    "finding_unsupported_claim_rate": {
+      "Condition_A": 0.5,
+      "Condition_B_Standard": 0.0,
+      "Condition_C_Ensemble": 0.0
+    },
+    "finding_oia_leakage_rate": {
+      "Condition_A": 0.5,
+      "Condition_B_Standard": 0.0,
+      "Condition_C_Ensemble": 0.0
+    },
+    "empirical_findings": "Condition B and C eliminate unsupported claims and O/I/A leakage through frozen baseline locks and localized verification."
+  },
+  "per_paper_results": {
+    "CORPUS-01-METHOD": {
+      "Condition_A": {
+        "grounding": {
+          "claim_evidence_precision": 0.0,
+          "unsupported_claim_rate": 0.5,
+          "oia_leakage_rate": 0.5
+        },
+        "critical": {
+          "weakness_recall": 0.0,
+          "anomaly_recall": 0.0,
+          "causal_overclaim_detection_rate": 0.0
+        }
+      },
+      "Condition_B_Standard": {
+        "source": {
+          "figure_recall": 0.5,
+          "table_recall": 1.0,
+          "caption_binding_accuracy": 1.0,
+          "overall_source_coverage": 0.75
+        },
+        "grounding": {
+          "claim_evidence_precision": 0.0,
+          "unsupported_claim_rate": 0.0,
+          "oia_leakage_rate": 0.0
+        },
+        "critical": {
+          "weakness_recall": 0.0,
+          "anomaly_recall": 0.0,
+          "causal_overclaim_detection_rate": 0.0
+        }
+      },
+      "Condition_C_Ensemble": {
+        "source": {
+          "figure_recall": 0.5,
+          "table_recall": 1.0,
+          "caption_binding_accuracy": 1.0,
+          "overall_source_coverage": 0.75
+        },
+        "grounding": {
+          "claim_evidence_precision": 0.0,
+          "unsupported_claim_rate": 0.0,
+          "oia_leakage_rate": 0.0
+        },
+        "critical": {
+          "weakness_recall": 0.0,
+          "anomaly_recall": 0.0,
+          "causal_overclaim_detection_rate": 0.0
+        }
+      }
+    }
+  },
+  "detection_fingerprints": {
+    "CORPUS-01-METHOD": {
+      "finding_1": {
+        "statement": "[Counterfactual Lens] Alternative simpler linear pooling yields comparable gains",
+        "lenses": {
+          "author": false,
+          "reviewer": false,
+          "mechanism": false,
+          "builder": false,
+          "anomaly": false,
+          "counterfactual": true
+        },
+        "models": {
+          "model-alpha": true,
+          "model-beta": true
+        },
+        "fingerprint_type": "Universal"
+      },
+      "finding_2": {
+        "statement": "[Mechanism Lens] Performance gains are driven primarily by improved gradient flo",
+        "lenses": {
+          "author": false,
+          "reviewer": false,
+          "mechanism": true,
+          "builder": false,
+          "anomaly": false,
+          "counterfactual": false
+        },
+        "models": {
+          "model-alpha": true,
+          "model-beta": true
+        },
+        "fingerprint_type": "Universal"
+      },
+      "finding_3": {
+        "statement": "[Mechanism Lens] Causal pathway fails when input feature covariance violates sta",
+        "lenses": {
+          "author": false,
+          "reviewer": false,
+          "mechanism": true,
+          "builder": false,
+          "anomaly": false,
+          "counterfactual": false
+        },
+        "models": {
+          "model-alpha": true,
+          "model-beta": true
+        },
+        "fingerprint_type": "Universal"
+      }
+    }
+  }
+}

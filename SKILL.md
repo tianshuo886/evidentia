@@ -1,7 +1,11 @@
 ---
 name: evidentia
 description: Evidence-grounded Paper Research OS for one paper at a time. Build a source-reconstructed Paper Model and Evidence Graph, perform six independent Lens rereads, freeze the facts, render a unified Paper/Project Reader, and produce a provenance-linked Research Delta for a project. Use when the user asks to deeply read, audit, transfer, or build research memory from a supplied paper PDF. Not for paper search, triage, or multi-paper surveys.
-argument-hint: "<paper.pdf> --out <directory> [--supplement ...] | apply --paper <directory> --project <document> [--focus ...]"
+license: Apache-2.0
+compatibility: ">=Python 3.9"
+metadata:
+  version: "0.2.0"
+  argument-hint: "<paper.pdf> --out <directory> [--supplement ...] | apply --paper <directory> --project <document> [--focus ...]"
 ---
 
 # Evidentia · Evidence-Grounded Paper Research OS
@@ -63,18 +67,18 @@ Open Reading is project-invisible. Apply loads exactly one project document only
 ## Executable workflow
 
 ```bash
-python scripts/pipeline.py read --pdf paper.pdf --out output
-# populate model/paper_model.json as the Open Reading draft (project invisible)
-python scripts/snapshot_baseline.py --out output
-python scripts/lens_runner.py --out output
-# run each lens task independently and write its matching lens/*.json
-python scripts/check_lenses.py --out output
-python scripts/merge_lenses.py --out output
-python scripts/build_graph.py --out output
-python scripts/validate_model.py --out output
-python scripts/freeze_check.py --out output
-python scripts/render_reader.py --out output
-python scripts/reader_audit.py --out output
+# 1. Initialize source reconstruction and generate Open Reading task packet
+python scripts/evidentia.py run --pdf paper.pdf --out output
+
+# 2. Host Agent reads tasks/open_reading.json, reasons over paper facts, writes model/paper_model.json
+# Then advances baseline lock and generates six independent Lens task packets:
+python scripts/evidentia.py run --out output
+
+# 3. Host Agent executes tasks in tasks/lens/*.json independently and writes lens/<lens>.json
+# Then advances reconciliation, evidence graph, freeze, and reader:
+python scripts/evidentia.py run --out output
+
+# 4. Optional Contextual Apply (after Freeze)
 python scripts/pipeline.py apply --paper output --project project.md
 # fill the contextual reread and Research Delta, then:
 python scripts/validate_delta.py --paper output --delta output/apply/project/research_delta.json

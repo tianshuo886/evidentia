@@ -23,7 +23,9 @@ Evidentia 用 Paper Model、Evidence Graph、Source Reconstruction、六 Lens、
 
 ## 系统架构
 
-![Evidentia 工作流程总览](docs/workflow-overview.png)
+> **Target Architecture（目标架构）**：下方流程图展示了 Evidentia 的完整目标架构。Evidentia Standard Mode（标准模式）在单一兼容 Host / Model 上完整运行源码重建、基线锁定、六大独立 Lens 重读、语义对齐、证据局部化验证、不可变冻结与阅读器渲染。Multi-Model Ensemble Mode（多模型集成模式）是在 Standard Mode 基础上的多模型多样性增强层。
+
+![Evidentia 工作流程总览（目标架构）](docs/workflow-overview.png)
 
 ```text
 paper.pdf
@@ -49,7 +51,7 @@ Paper Model 是事实层。Reader、Kami 兼容展示和项目分析都只能作
 
 ### 环境要求
 
-- Python 3.10+
+- Python 3.9+（已在 Python 3.9.6 与 Python 3.10+ 下测试验证）
 - PyMuPDF（抽图/抽表）
 - jsonschema（schema 与冻结门）
 - pytest（跑门禁测试）

@@ -1,0 +1,36 @@
+{
+  "corpus_version": "1.0",
+  "papers": [
+    {
+      "id": "CORPUS-01-METHOD",
+      "category": "method paper",
+      "title": "Sparse Attention for High-Resolution Visual Representation",
+      "sections": ["Introduction", "Methodology", "Experiments", "Ablations"],
+      "figures": [
+        {"id": "F01", "paper_label": "Figure 1", "kind": "figure", "page": 1, "caption": "Overview of Sparse Attention block."},
+        {"id": "F02", "paper_label": "Figure 2", "kind": "figure", "page": 3, "caption": "Attention map sparsity pattern."}
+      ],
+      "tables": [
+        {"id": "T01", "paper_label": "Table 1", "kind": "table", "page": 4, "caption": "Benchmark accuracy comparisons on ImageNet-1K."}
+      ],
+      "claims": [
+        {"id": "C01", "statement": "Sparse Attention reduces memory footprint by 40% while matching dense accuracy.", "evidence": ["T01", "F02"]}
+      ]
+    },
+    {
+      "id": "CORPUS-02-OVERCLAIM",
+      "category": "causal-overclaim paper",
+      "title": "Linear Weight Decay Causes Generalization Improvement",
+      "sections": ["Introduction", "Analysis", "Discussion"],
+      "figures": [
+        {"id": "F01", "paper_label": "Figure 1", "kind": "figure", "page": 2, "caption": "Weight norm correlation with test error."}
+      ],
+      "tables": [
+        {"id": "T01", "paper_label": "Table 1", "kind": "table", "page": 3, "caption": "Hyperparameter grid test accuracies."}
+      ],
+      "claims": [
+        {"id": "C01", "statement": "Weight decay is the singular causal driver of generalization.", "evidence": ["F01"]}
+      ]
+    }
+  ]
+}

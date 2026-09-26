@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/tianshuo886/evidentia/blob/main/schemas/lens.schema.json",
+  "$id": "https://evidentia.dev/schemas/lens.schema.json",
   "type": "object",
   "properties": {
     "lens": {
@@ -57,6 +57,29 @@
           },
           "novel_vs_base": {
             "type": "boolean"
+          },
+          "within_lens_status": {
+            "enum": [
+              "MODEL_SINGLETON",
+              "CROSS_MODEL_CONVERGENCE",
+              "MODEL_CONFLICT",
+              "MODEL_PARTIAL_AGREEMENT"
+            ]
+          },
+          "models": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "run_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "confidence": {
+            "type": "number"
           }
         },
         "required": [

@@ -1,0 +1,88 @@
+name: Evidentia CI
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10", "3.11"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyyaml pytest
+
+      - name: Run Pytest Test Suite
+        run: |
+          python -m pytest -v
+
+      - name: Validate Contract Audit & Capability Matrix
+        run: |
+          python scripts/contract_audit.py --out .
+          git diff --exit-code capability_matrix.json || (echo "capability_matrix.json is out of date with scripts/contract_audit.py" && exit 1)
+
+      - name: Validate All JSON Schemas
+        run: |
+          python -c "
+          import glob, json
+          from jsonschema import Draft202012Validator
+          for sp in glob.glob('schemas/*.schema.json'):
+              with open(sp) as f:
+                  schema = json.load(f)
+              Draft202012Validator.check_schema(schema)
+              print(f'Valid schema: {sp}')
+          "
+
+      - name: Validate SKILL Frontmatter & Invariants
+        run: |
+          python -c "
+          import yaml
+          text = open('SKILL.md').read()
+          assert text.startswith('---\n')
+          end = text.find('\n---\n', 4)
+          fm = yaml.safe_load(text[4:end])
+          assert fm['name'] == 'evidentia'
+          assert 'license' in fm
+          assert 'compatibility' in fm
+          assert 'argument-hint' not in fm
+          assert 'version' in fm.get('metadata', {})
+          print('SKILL.md frontmatter valid!')
+          "
+
+      - name: Validate Demo Example Artifacts
+        run: |
+          python scripts/evidentia.py validate --out examples/demo-paper
+          python scripts/phase.py --status --out examples/demo-paper
+
+      - name: CLI Smoke Tests
+        run: |
+          python scripts/evidentia.py --help
+          python scripts/phase.py --help
+          python scripts/freeze_check.py --help
+          python scripts/verifier.py --help
+          python scripts/apply_agent.py --help
+          python scripts/open_reading_agent.py --help
+          python scripts/lens_agent.py --help
+
+      - name: Visual QA & Reader Audit Gate
+        run: |
+          python scripts/reader_audit.py --out examples/demo-paper
+
+      - name: Run Empirical Evaluation Benchmark
+        run: |
+          python evals/runners/eval_runner.py

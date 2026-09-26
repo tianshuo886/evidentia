@@ -23,7 +23,9 @@ Evidentia addresses these problems with a frozen Paper Model, typed Evidence Gra
 
 ## Core architecture
 
-![Evidentia workflow overview](docs/workflow-overview.png)
+> **Target Architecture**: The workflow diagram below illustrates Evidentia's complete target architecture. Evidentia Standard Mode operates host-agnostically on a single compatible model/host across source reconstruction, baseline lock, six independent lenses, semantic reconciliation, evidence verification, immutable freeze, and reader generation. Multi-Model Ensemble Mode is an optional multi-model extension layer on top of Standard Mode.
+
+![Evidentia workflow overview (Target Architecture)](docs/workflow-overview.png)
 
 ```text
 paper.pdf
@@ -54,7 +56,7 @@ The Paper Model is canonical truth. Renderers, Kami-compatible presentation and 
 
 ### Requirements
 
-- Python 3.10+
+- Python 3.9+ (tested on Python 3.9.6 and 3.10+)
 - PyMuPDF (figure/table extraction)
 - jsonschema (schema + freeze gates)
 - pytest (run the gates)
