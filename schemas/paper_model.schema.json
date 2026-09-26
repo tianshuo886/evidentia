@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/tianshuo886/evidentia/blob/main/schemas/paper_model.schema.json",
+  "$id": "https://evidentia.dev/schemas/paper_model.schema.json",
   "type": "object",
   "properties": {
     "schema_version": {
@@ -949,6 +949,12 @@
       "items": {
         "type": "object",
         "properties": {
+          "id": {
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          },
           "findings": {
             "type": "array",
             "items": {
@@ -959,6 +965,24 @@
           "resolution": {
             "type": "string",
             "minLength": 1
+          },
+          "critical": {
+            "type": "boolean"
+          },
+          "requires_verification": {
+            "type": "boolean"
+          },
+          "verifier_status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "verifier_result": {
+            "type": [
+              "object",
+              "null"
+            ]
           }
         },
         "required": [

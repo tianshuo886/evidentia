@@ -109,9 +109,9 @@ symlink in cwd points here). Verified 2026-09-25 with system python3
 - `python -m pytest -q` works (`python` → system python3.9 shim).
 
 ## 8c. Verification surface (all re-runnable)
-- `python3 -m pytest -q` → **19 passed** (`tests/test_contracts.py`,
-  `tests/test_gates.py` incl. SHA-aware fixture, `tests/test_phase_a.py`:
-  generated-JSON self-validation + 17 fail-closed cases + merge provenance).
+- `python3 -m pytest -q` → **25 passed** (total across `tests/test_contracts.py` [2 passed],
+  `tests/test_gates.py` [4 passed], and `tests/test_phase_a.py` [19 passed]:
+  generated-JSON self-validation + fail-closed matrix + merge provenance).
 - CLI smoke: `--help` rc=0 for snapshot_baseline/phase/freeze_check/
   check_lenses/merge_lenses/build_graph/validate_model/verify_frozen/
   validate_delta/source_audit/reader_audit/init_run/ingest/lens_runner.

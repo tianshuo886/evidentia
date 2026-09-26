@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/tianshuo886/evidentia/blob/main/schemas/source_map.schema.json",
+  "$id": "https://evidentia.dev/schemas/source_map.schema.json",
   "type": "object",
   "properties": {
     "schema_version": {
@@ -21,6 +21,15 @@
             "type": "integer",
             "minimum": 1
           },
+          "text": {
+            "type": "string"
+          },
+          "reading_order": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
           "sections": {
             "type": "array",
             "items": {
@@ -31,8 +40,27 @@
           "equations": {
             "type": "array",
             "items": {
-              "type": "string",
-              "minLength": 1
+              "oneOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "object",
+                  "required": ["equation_id", "page", "raw_text"],
+                  "properties": {
+                    "equation_id": { "type": "string" },
+                    "page": { "type": "integer" },
+                    "raw_text": { "type": "string" },
+                    "latex": { "type": ["string", "null"] },
+                    "bbox": { "type": "array", "items": { "type": "number" } },
+                    "surrounding_text": { "type": "string" },
+                    "section": { "type": "string" },
+                    "referenced_by": { "type": "array", "items": { "type": "string" } },
+                    "confidence": { "type": "number" }
+                  }
+                }
+              ]
             }
           },
           "mentions": {
@@ -47,7 +75,8 @@
                 "kind": {
                   "enum": [
                     "figure",
-                    "table"
+                    "table",
+                    "equation"
                   ]
                 },
                 "bbox": {
@@ -55,6 +84,15 @@
                   "items": {
                     "type": "number"
                   }
+                },
+                "target_id": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "bound": {
+                  "type": "boolean"
                 }
               },
               "required": [
@@ -78,9 +116,46 @@
     "supplements": {
       "type": "array",
       "items": {
-        "type": "string",
-        "minLength": 1
+        "oneOf": [
+          {
+            "type": "string",
+            "minLength": 1
+          },
+          {
+            "type": "object",
+            "required": [
+              "path",
+              "sha256"
+            ],
+            "properties": {
+              "path": {
+                "type": "string"
+              },
+              "sha256": {
+                "type": "string"
+              },
+              "pages": {
+                "type": "integer"
+              },
+              "coverage_state": {
+                "type": "string"
+              },
+              "page_anchors": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "figure_table_inventory": {
+                "type": "array"
+              }
+            }
+          }
+        ]
       }
+    },
+    "quality": {
+      "type": "object"
     }
   },
   "required": [

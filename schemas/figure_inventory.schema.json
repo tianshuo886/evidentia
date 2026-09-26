@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/tianshuo886/evidentia/blob/main/schemas/figure_inventory.schema.json",
+  "$id": "https://evidentia.dev/schemas/figure_inventory.schema.json",
   "type": "object",
   "properties": {
     "schema_version": {
@@ -128,6 +128,64 @@
           },
           "source_location": {
             "type": "string"
+          },
+          "figure_bbox": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "asset": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "inspection_status": {
+            "type": "string"
+          },
+          "reviewed_by": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "review_note": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "row_count": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "col_count": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "structure": {
+            "type": [
+              "object",
+              "array",
+              "null"
+            ]
+          },
+          "parsed_cells": {
+            "type": [
+              "array",
+              "null"
+            ]
+          },
+          "raw_visual_fallback": {
+            "type": [
+              "string",
+              "null"
+            ]
           }
         },
         "required": [

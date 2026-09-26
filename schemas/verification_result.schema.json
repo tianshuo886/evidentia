@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evidentia.dev/schemas/verification_result.schema.json",
+  "type": "object",
+  "required": [
+    "task_id",
+    "target_id",
+    "status",
+    "reasoning",
+    "grounding_evidence"
+  ],
+  "properties": {
+    "task_id": {
+      "type": "string"
+    },
+    "target_id": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "SUPPORTED",
+        "PARTIAL",
+        "REJECTED",
+        "AMBIGUOUS",
+        "INSUFFICIENT_EVIDENCE"
+      ]
+    },
+    "reasoning": {
+      "type": "string",
+      "minLength": 1
+    },
+    "grounding_evidence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "epistemic_impact": {
+      "type": "string"
+    },
+    "executor_metadata": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": false
+}

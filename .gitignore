@@ -1,0 +1,40 @@
+# Temporary / local implementation plan (do not commit)
+IMPLEMENTATION_PLAN.md
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environments
+.venv
+venv/
+ENV/
+
+# OS / Editor
+.DS_Store
+.vscode/
+.idea/

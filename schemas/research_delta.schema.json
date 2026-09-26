@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/tianshuo886/evidentia/blob/main/schemas/research_delta.schema.json",
+  "$id": "https://evidentia.dev/schemas/research_delta.schema.json",
   "type": "object",
   "properties": {
     "schema_version": {
@@ -267,6 +267,78 @@
             "items": {
               "type": "string",
               "minLength": 1
+            }
+          },
+          "source_component": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "required_assumptions": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "string"
+            }
+          },
+          "input_contract": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "output_contract": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "data_regime": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "label_semantics": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "physical_assumptions": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "compute_constraints": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "deployment_constraints": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "expected_benefit": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "known_risks": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "string"
             }
           }
         },

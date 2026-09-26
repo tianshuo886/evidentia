@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/tianshuo886/evidentia/blob/main/schemas/render_ir.schema.json",
+  "$id": "https://evidentia.dev/schemas/render_ir.schema.json",
   "type": "object",
   "properties": {
     "schema_version": {

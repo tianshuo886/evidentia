@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evidentia.dev/schemas/execution_config.schema.json",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "execution"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "execution": {
+      "type": "object",
+      "required": [
+        "mode"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "standard",
+            "ensemble"
+          ]
+        },
+        "default_host": {
+          "type": "string"
+        },
+        "default_model": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ensemble": {
+      "type": "object",
+      "required": [
+        "strategy"
+      ],
+      "properties": {
+        "strategy": {
+          "enum": [
+            "adaptive",
+            "full"
+          ]
+        },
+        "models": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "max_escalations": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "escalation_triggers": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "high_impact",
+              "critical_uncertainty",
+              "causal_ambiguity",
+              "unexpected_anomaly",
+              "weak_evidence",
+              "transfer_critical"
+            ]
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

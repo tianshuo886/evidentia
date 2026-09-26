@@ -10,7 +10,9 @@ def main():
  a=sp.add_parser('apply');a.add_argument('--paper',required=True);a.add_argument('--project',required=True);a.add_argument('--focus')
  n=ap.parse_args()
  if n.cmd=='read':
-  run(HERE/'init_run.py','--pdf',n.pdf,'--out',n.out,*sum((['--supplement',s] for s in n.supplement),[]));run(HERE/'ingest.py','--pdf',n.pdf,'--out',n.out,*sum((['--supplement',s] for s in n.supplement),[]));print('Next: populate model/paper_model.json (Open Reading draft), then run snapshot_baseline.py, lens_runner.py and the six independent Lens tasks, then merge_lenses.py.')
+  run(HERE/'evidentia.py','run','--pdf',n.pdf,'--out',n.out,*sum((['--supplement',s] for s in n.supplement),[]))
  else:
-  run(HERE/'init_apply.py','--paper',n.paper,'--project',n.project,*(['--focus',n.focus] if n.focus else []));print('Next: contextual reread, fill research_delta.json, then validate_delta.py.')
+  run(HERE/'init_apply.py','--paper',n.paper,'--project',n.project,*(['--focus',n.focus] if n.focus else []))
+  run(HERE/'apply_agent.py','--paper',n.paper,'--project',n.project,*(['--focus',n.focus] if n.focus else []))
+  print(f'OK: Completed Contextual Apply for {n.project}.')
 if __name__=='__main__':main()
