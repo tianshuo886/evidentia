@@ -23,6 +23,8 @@ Evidentia addresses these problems with a frozen Paper Model, typed Evidence Gra
 
 ## Core architecture
 
+![Evidentia workflow overview](docs/workflow-overview.png)
+
 ```text
 paper.pdf
    ↓

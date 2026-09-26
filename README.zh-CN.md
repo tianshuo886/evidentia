@@ -23,6 +23,8 @@ Evidentia 用 Paper Model、Evidence Graph、Source Reconstruction、六 Lens、
 
 ## 系统架构
 
+![Evidentia 工作流程总览](docs/workflow-overview.png)
+
 ```text
 paper.pdf
    ↓
