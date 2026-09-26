@@ -64,7 +64,7 @@ def main():
     ap.add_argument('--task', required=True)
     ap.add_argument('--out')
     ap.add_argument('--result')
-    ap.add_argument('--fixture', action='store_true')
+    ap.add_argument('--fixture', action='store_true', default=None)
     ap.add_argument('--replay')
     ap.add_argument('--adapter')
     ap.add_argument('--model')

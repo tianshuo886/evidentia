@@ -30,7 +30,8 @@ def run_workflow(args):
     rs_path = out_dir / 'run_state.json'
     mode = getattr(args, 'mode', 'standard') or 'standard'
     extra_flags = []
-    if getattr(args, 'fixture', False):
+    from agent_dispatch import is_fixture_enabled
+    if is_fixture_enabled(getattr(args, 'fixture', None)):
         extra_flags.append('--fixture')
     if getattr(args, 'replay', None):
         extra_flags.extend(['--replay', args.replay])
@@ -125,7 +126,45 @@ def run_workflow(args):
         print("[6/8] Validating 6 independent Lenses and Reconciling...")
         sh(str(HERE / 'phase.py'), '--out', str(out_dir), '--complete', 'LENS_EXECUTION')
         sh(str(HERE / 'merge_lenses.py'), '--out', str(out_dir), *extra_flags)
+
+        # Artifact completeness gate for RECONCILIATION
+        rec_p = out_dir / 'model/lens_reconciliation.json'
+        if not rec_p.exists():
+            print(">>> Workflow paused in WAITING_FOR_RECONCILIATION_AGENT.")
+            return 0
+        from validate_common import load_json, schema_validate
+        rec_data = load_json(rec_p)
+        rec_errs = schema_validate(rec_data, 'lens_reconciliation')
+        if rec_errs:
+            sys.exit(f"Reconciliation validation failed:\n{rec_errs}")
+
         sh(str(HERE / 'phase.py'), '--out', str(out_dir), '--complete', 'RECONCILIATION')
+
+        # Artifact completeness gate for VERIFICATION
+        pm_p = out_dir / 'model/paper_model.json'
+        pm_data = load_json(pm_p) if pm_p.exists() else {}
+        conflicts = pm_data.get('lens_conflicts', [])
+        items_needing_verif = [
+            it for it in rec_data.get('items', [])
+            if it.get('requires_verification') or it.get('status') in ('TENSION', 'CONTRADICTION')
+        ]
+
+        all_verified = True
+        for it in items_needing_verif:
+            v_stat = it.get('verifier_status')
+            if not v_stat or v_stat in ('PENDING', 'PENDING_VERIFICATION', 'UNRESOLVED'):
+                all_verified = False
+                break
+        for c in conflicts:
+            v_stat = c.get('verifier_status')
+            if not v_stat or v_stat in ('PENDING', 'PENDING_VERIFICATION', 'UNRESOLVED'):
+                all_verified = False
+                break
+
+        if (items_needing_verif or conflicts) and not all_verified:
+            print(">>> Workflow paused in WAITING_FOR_VERIFIERS. Verification results pending.")
+            return 0
+
         sh(str(HERE / 'phase.py'), '--out', str(out_dir), '--complete', 'VERIFICATION')
         
         print("[7/8] Building Evidence Graph and Final Model...")

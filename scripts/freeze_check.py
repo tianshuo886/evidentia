@@ -119,16 +119,14 @@ def main():
    for c in pm.get('lens_conflicts',[]) or []:
     for fid in c.get('findings',[]):
      if fid not in rec_ids and fid not in ids:errs.append(f'lens_conflicts references unknown finding {fid} (conflict erased from reconciliation)')
-   # lens_synthesis/conflict cross-check: merged items sharing evidence with distinct statements must appear in lens_conflicts
-   syn=pm.get('lens_synthesis',[]) or []
-   by_ev={}
-   for m in syn:
-    for e in m.get('source',[]):by_ev.setdefault(e,[]).append(m.get('id'))
-   for ev,mids in by_ev.items():
-    stmts={next((x.get('statement') for x in syn if x.get('id')==i),None) for i in mids}
-    if len(stmts)>1:
-     covered=any(set(mids)<=set(c.get('findings',[])) for c in (pm.get('lens_conflicts',[]) or []))
-     if not covered:errs.append(f'conflict on {ev} not recorded in lens_conflicts (conflict erased)')
+   # erased-conflict detection: every TENSION or CONTRADICTION in lens_reconciliation must appear in lens_conflicts
+   rec_conflicts = [i for i in lrd.get('items', []) if i.get('status') in ('TENSION', 'CONTRADICTION') or i.get('requires_verification')]
+   for rc in rec_conflicts:
+    ev = (rc.get('source') or rc.get('evidence') or ['p.1'])[0]
+    mids = set(rc.get('members', [rc.get('id')])) | {rc.get('id')}
+    covered = any(bool(mids & set(c.get('findings', []))) or c.get('target') == ev for c in (pm.get('lens_conflicts', []) or []))
+    if not covered:
+     errs.append(f'conflict on {ev} not recorded in lens_conflicts (conflict erased)')
   except Exception as e:errs.append(f'unparseable model/lens_reconciliation.json: {e}')
  if not pm.get('unresolved') and any(c.get('epistemic') in ('AMBIGUOUS','INSUFFICIENT_EVIDENCE','UNRESOLVED') for c in pm.get('claims',[])):errs.append('unresolved claims must be explicitly listed')
  if not pm.get('coverage'):errs.append('coverage audit missing')
@@ -139,7 +137,7 @@ def main():
   if c.get('critical') is True or c.get('requires_verification') is True:
    v_status = c.get('verifier_status')
    if not v_status:errs.append(f"critical conflict on {c.get('target', 'unknown')} missing verifier result")
-   elif v_status in ('UNRESOLVED','PENDING'):errs.append(f"critical conflict on {c.get('target', 'unknown')} has unresolved verification status: {v_status}")
+   elif v_status in ('UNRESOLVED','PENDING','PENDING_VERIFICATION'):errs.append(f"critical conflict on {c.get('target', 'unknown')} has unresolved verification status: {v_status}")
  for cl in pm.get('claims',[]) or []:
   if cl.get('requires_verification') is True:
    v_status = cl.get('verifier_status')

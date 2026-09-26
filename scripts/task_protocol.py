@@ -289,6 +289,45 @@ def create_apply_task(root, project_id, project_doc):
     out_p = root / f"tasks/apply/{project_id}.json"
     return validate_and_write_task(task, out_p)
 
+def create_memory_synthesis_task(root, project_id, local_delta_path, memory_bundle_path):
+    root = Path(root)
+    src_sha, base_sha = get_source_and_base_shas(root)
+    delta_p = Path(local_delta_path)
+    mb_p = Path(memory_bundle_path)
+    delta_sha = sha256(delta_p) if delta_p.exists() else "UNKNOWN"
+
+    task = {
+        "task_id": f"TASK-MEMORY-SYNTHESIS-{project_id.upper()}",
+        "task_type": "MEMORY_SYNTHESIS",
+        "project_id": project_id,
+        "required_capability": "MEMORY_AUGMENTED_SYNTHESIS",
+        "scientific_contract": "Synthesize prior frozen research memory against the immutable local Research Delta without altering paper truth or Stage A conclusions.",
+        "description": f"Stage B memory-augmented synthesis for project {project_id}.",
+        "input_artifacts": {
+            "local_research_delta": str(delta_p.relative_to(root) if delta_p.is_relative_to(root) else delta_p),
+            "memory_bundle": str(mb_p.relative_to(root) if mb_p.is_relative_to(root) else mb_p),
+            "project_context": f"apply/{project_id}/project_context.json"
+        },
+        "target_output": f"apply/{project_id}/memory_augmented_synthesis.json",
+        "output_schema": "research_delta",
+        "source_sha256": src_sha,
+        "base_sha256": base_sha,
+        "local_delta_sha256": delta_sha,
+        "contract_version": "1.0",
+        "prompt_version": "1.0",
+        "prohibited_context": [
+            "unfrozen_papers"
+        ],
+        "instructions": (
+            "Analyze retrieved memory items in memory_bundle.json against the immutable local Research Delta. "
+            "Identify cross-paper agreements, contradictions, mechanisms, and transfer implications. "
+            "DO NOT modify Stage A transfer units or beliefs. Output origin_type MUST be MEMORY_SYNTHESIS."
+        ),
+        "executor_template": build_executor_metadata()
+    }
+    out_p = root / f"tasks/apply/{project_id}_memory_synthesis.json"
+    return validate_and_write_task(task, out_p)
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--out', required=True)

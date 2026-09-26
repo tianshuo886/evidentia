@@ -251,4 +251,52 @@ def test_memory_snapshot_export_import(tmp_path):
     hits = memory_manager.search_memory("Attention", custom_root=fresh_root)
     assert len(hits) >= 1
 
+def test_stage_b_memory_synthesis_task_and_sha_binding(tmp_path):
+    """P0-2 Hardening: Stage B constructs memory_bundle.json & AgentTask, binds to local delta SHA, and waits when no agent is active."""
+    mem_root = tmp_path / 'memory'
+    p_dir = tmp_path / 'paper_run'
+    p_dir.mkdir()
+    fixture(p_dir)
+    run('freeze_check.py', '--out', str(p_dir))
+    memory_manager.commit_paper(p_dir, custom_root=mem_root)
+
+    # Initialize run_state.json
+    rs_p = p_dir / 'run_state.json'
+    rs_p.write_text(json.dumps({
+        "schema_version": "1.0",
+        "run_id": "test-run",
+        "mode": "evidentia",
+        "phase": "FREEZE",
+        "allowed_inputs": ["working/paper.pdf"],
+        "artifacts": {}
+    }, indent=2))
+
+    proj_doc = tmp_path / 'proj.md'
+    proj_doc.write_text("Goal: feature extraction under low lighting conditions.")
+
+    import apply_agent
+    # Run Stage A
+    apply_agent.run_local_apply(p_dir, proj_doc, fixture=True)
+    delta_p = p_dir / 'apply/proj/research_delta.json'
+    assert delta_p.exists()
+
+    # Run Stage B with fixture=False (simulating absence of Host Agent)
+    apply_agent.run_memory_synthesis(p_dir, 'proj', memory_root=mem_root, fixture=False)
+
+    # 1. Memory bundle and task packet created
+    bundle_p = p_dir / 'apply/proj/memory_bundle.json'
+    assert bundle_p.exists()
+    task_p = p_dir / 'tasks/apply/proj_memory_synthesis.json'
+    assert task_p.exists()
+
+    # 2. Workflow must pause in WAITING_FOR_MEMORY_SYNTHESIS_AGENT
+    rs_p = p_dir / 'run_state.json'
+    rs = json.loads(rs_p.read_text())
+    assert rs.get('phase') == "WAITING_FOR_MEMORY_SYNTHESIS_AGENT"
+
+    # 3. Memory synthesis not yet created by Python
+    synth_p = p_dir / 'apply/proj/memory_augmented_synthesis.json'
+    assert not synth_p.exists()
+
+
 

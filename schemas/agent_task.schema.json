@@ -118,6 +118,12 @@
     "manifest": {
       "type": "string"
     },
+    "local_delta_sha256": {
+      "type": "string"
+    },
+    "memory_bundle": {
+      "type": "string"
+    },
     "source_sha256": {
       "type": "string"
     },

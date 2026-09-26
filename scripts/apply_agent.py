@@ -129,7 +129,7 @@ def run_local_apply(paper_dir, project_doc, out_dir=None, focus=None, fixture=No
     print(f"  evidentia.py submit --out {p_dir} --task TASK-APPLY-{project_name.upper()} --result <file.json>\n")
     return 0
 
-def run_memory_synthesis(paper_dir, project_name, memory_root=None, fixture=None):
+def run_memory_synthesis(paper_dir, project_name, memory_root=None, fixture=None, replay_dir=None, adapter=None, model=None, result_file=None):
     """Stage B: Memory-Augmented Synthesis (only after Stage A is validated)."""
     p_dir = Path(paper_dir)
     target_apply_dir = p_dir / 'apply' / project_name
@@ -140,7 +140,7 @@ def run_memory_synthesis(paper_dir, project_name, memory_root=None, fixture=None
     local_delta = load_json(delta_file)
     local_delta_sha = sha256(delta_file)
 
-    # Retrieve relevant items from Frozen Research Memory
+    # 1. Deterministic Layer: Retrieve relevant items from Frozen Research Memory
     mem_root = memory_manager.get_memory_root(memory_root)
     query_terms = [local_delta.get('paper_id', '')]
     for g in local_delta.get('project_gap_map', []):
@@ -153,31 +153,57 @@ def run_memory_synthesis(paper_dir, project_name, memory_root=None, fixture=None
             if h['memory_id'] not in {r['memory_id'] for r in retrieved}:
                 retrieved.append(h)
 
-    # Synthesis payload
+    # 2. Deterministic Layer: Construct memory evidence bundle
     now_iso = datetime.now(timezone.utc).isoformat()
-    synth_payload = {
-        "schema_version": "1.0",
-        "stage": "STAGE_B_MEMORY_AUGMENTED_SYNTHESIS",
+    bundle_payload = {
         "project_id": project_name,
-        "paper_id": local_delta.get('paper_id', 'unknown'),
         "local_delta_sha256": local_delta_sha,
-        "synthesized_at": now_iso,
         "retrieved_memory_items": retrieved,
-        "cross_paper_insights": [
-            {
-                "memory_id": it['memory_id'],
-                "relation_to_local_delta": "EXTENDS: Prior experiment outcome informs local transfer risk profile.",
-                "confidence": 0.85
-            }
-            for it in retrieved[:3]
-        ],
-        "synthesized_experiments": [],
-        "notes": f"Stage B memory-augmented synthesis incorporating {len(retrieved)} retrieved memory objects."
+        "retrieved_at": now_iso
     }
+    bundle_file = target_apply_dir / 'memory_bundle.json'
+    bundle_file.write_text(json.dumps(bundle_payload, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
 
-    synth_file = target_apply_dir / 'memory_augmented_synthesis.json'
-    synth_file.write_text(json.dumps(synth_payload, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
-    print(f"OK: Stage B Memory-Augmented Synthesis complete -> {synth_file}")
+    # 3. Create MEMORY_SYNTHESIS AgentTask packet
+    t_path = task_protocol.create_memory_synthesis_task(p_dir, project_name, delta_file, bundle_file)
+
+    # If external result file supplied
+    task_id = f"TASK-MEMORY-SYNTHESIS-{project_name.upper()}"
+    if result_file:
+        submit_agent_result(p_dir, task_id, result_file)
+        return 0
+
+    # 4. Dispatch to Host Agent / Replay / Fixture
+    use_fixture = is_fixture_enabled(fixture)
+    envelope = dispatch_agent_task(t_path, adapter=adapter, model=model, replay_dir=replay_dir, fixture=use_fixture)
+    if envelope is not None:
+        errs = schema_validate(envelope, 'agent_result_envelope')
+        if errs:
+            sys.exit(f"Host Memory Synthesis Agent result failed agent_result_envelope schema validation:\n{errs}")
+
+        synth = envelope['result']
+        # Validate that synthesis is bound to current Stage A local delta hash
+        based_on_sha = synth.get('based_on_local_delta_sha256') or synth.get('local_delta_sha256')
+        if based_on_sha != local_delta_sha:
+            sys.exit(f"REFUSED: Memory synthesis based_on_local_delta_sha256 '{based_on_sha}' does not match current Stage A delta SHA '{local_delta_sha}'.")
+
+        synth['origin_type'] = "MEMORY_SYNTHESIS"
+        synth_file = target_apply_dir / 'memory_augmented_synthesis.json'
+        synth_file.write_text(json.dumps(synth, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
+        print(f"OK: Stage B Memory-Augmented Synthesis complete for project {project_name} -> {synth_file}")
+        return 0
+
+    # Mode B: Submission boundary
+    rs_p = p_dir / 'run_state.json'
+    if rs_p.exists():
+        rs = load_json(rs_p)
+        rs['phase'] = 'WAITING_FOR_MEMORY_SYNTHESIS_AGENT'
+        rs_p.write_text(json.dumps(rs, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
+
+    print(f"\n[WAITING_FOR_AGENT] Memory Synthesis task ready at: {t_path}")
+    print(f"Evidentia has paused in WAITING_FOR_MEMORY_SYNTHESIS_AGENT state.")
+    print(f"Submit completed synthesis via:")
+    print(f"  evidentia.py submit --out {p_dir} --task {task_id} --result <file.json>\n")
     return 0
 
 def main():
@@ -186,7 +212,8 @@ def main():
     ap.add_argument('--project', required=True)
     ap.add_argument('--out')
     ap.add_argument('--focus')
-    ap.add_argument('--fixture', action='store_true')
+    ap.add_argument('--fixture', action='store_true', default=None)
+    ap.add_argument('--no-fixture', dest='fixture', action='store_false')
     ap.add_argument('--replay')
     ap.add_argument('--adapter')
     ap.add_argument('--model')

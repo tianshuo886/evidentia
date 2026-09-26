@@ -69,7 +69,7 @@ def main():
     ap.add_argument('--task', required=True)
     ap.add_argument('--out')
     ap.add_argument('--result')
-    ap.add_argument('--fixture', action='store_true', help="Enable isolated synthetic fixture for testing")
+    ap.add_argument('--fixture', action='store_true', default=None, help="Enable isolated synthetic fixture for testing")
     ap.add_argument('--replay', help="Directory containing recorded replay envelopes")
     ap.add_argument('--adapter')
     ap.add_argument('--model')

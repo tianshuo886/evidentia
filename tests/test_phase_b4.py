@@ -141,3 +141,57 @@ def test_merge_creates_finding_clusters_and_triggers_verification(tmp_path):
     assert len(pm['lens_conflicts']) >= 1
     conf = pm['lens_conflicts'][0]
     assert conf.get('verifier_status') in ('SUPPORTED', 'PARTIAL', 'REJECTED', 'AMBIGUOUS', 'INSUFFICIENT_EVIDENCE')
+
+def test_verifier_absence_never_becomes_supported(tmp_path):
+    """P0-1 Hardening: When Host Verifier is absent, status must become PENDING_VERIFICATION and phase WAITING_FOR_VERIFIERS."""
+    r = fixture(tmp_path)
+    # Write initial run_state at BASELINE_LOCK
+    rs_p = r / 'run_state.json'
+    rs_data = {
+        "schema_version": "1.0",
+        "run_id": "test-run",
+        "mode": "evidentia",
+        "phase": "BASELINE_LOCK",
+        "allowed_inputs": ["working/paper.pdf"],
+        "artifacts": {}
+    }
+    rs_p.write_text(json.dumps(rs_data, indent=2))
+
+    # Inject tension
+    p_rev = r / 'lens/reviewer.json'
+    d_rev = json.loads(p_rev.read_text())
+    d_rev['findings'].append({
+        'id': 'L-reviewer-01',
+        'statement': 'Method exhibits severe instability under perturbation on F01',
+        'evidence': ['F01'],
+        'epistemic': 'SUPPORTED',
+        'novel_vs_base': True
+    })
+    p_rev.write_text(json.dumps(d_rev, indent=2))
+
+    p_auth = r / 'lens/author.json'
+    d_auth = json.loads(p_auth.read_text())
+    d_auth['findings'].append({
+        'id': 'L-author-01',
+        'statement': 'Method maintains stable performance across perturbations on F01',
+        'evidence': ['F01'],
+        'epistemic': 'SUPPORTED',
+        'novel_vs_base': True
+    })
+    p_auth.write_text(json.dumps(d_auth, indent=2))
+
+    # Run merge_lenses with verifier_fixture=False (simulating absence of Host Verifier)
+    import merge_lenses
+    merge_lenses.run_merge(r, verifier_fixture=False)
+
+    pm = json.loads((r / 'model/paper_model.json').read_text())
+    assert len(pm['lens_conflicts']) >= 1
+    conf = pm['lens_conflicts'][0]
+
+    # Critical invariant: must NEVER default to SUPPORTED
+    assert conf.get('verifier_status') != "SUPPORTED"
+    assert conf.get('verifier_status') == "PENDING_VERIFICATION"
+
+    rs = json.loads(rs_p.read_text())
+    assert rs.get('phase') == "WAITING_FOR_VERIFIERS"
+
