@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/tianshuo886/paper-read/blob/master/schemas/source_map.schema.json",
+  "$id": "https://github.com/tianshuo886/evidentia/blob/main/schemas/source_map.schema.json",
   "type": "object",
   "properties": {
     "schema_version": {

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/tianshuo886/paper-read/blob/master/schemas/paper_model.schema.json",
+  "$id": "https://github.com/tianshuo886/evidentia/blob/main/schemas/paper_model.schema.json",
   "type": "object",
   "properties": {
     "schema_version": {
@@ -919,6 +919,20 @@
               "type": "string",
               "minLength": 1
             }
+          },
+          "epistemic": {
+            "enum": [
+              "VERIFIED",
+              "SUPPORTED",
+              "PARTIAL",
+              "NOT_STATED",
+              "AMBIGUOUS",
+              "INSUFFICIENT_EVIDENCE",
+              "MODEL_UNCERTAIN",
+              "NEEDS_SUPPLEMENT",
+              "NEEDS_CITATION_TRACE",
+              "UNRESOLVED"
+            ]
           }
         },
         "required": [
@@ -953,6 +967,10 @@
         ],
         "additionalProperties": false
       }
+    },
+    "source_sha256": {
+      "type": "string",
+      "minLength": 1
     }
   },
   "required": [
@@ -983,7 +1001,8 @@
     "unresolved",
     "coverage",
     "lens_synthesis",
-    "lens_conflicts"
+    "lens_conflicts",
+    "source_sha256"
   ],
   "additionalProperties": false
 }

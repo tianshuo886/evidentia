@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/tianshuo886/evidentia/blob/main/schemas/lens_reconciliation.schema.json",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "source_sha256",
+    "base_model_sha256",
+    "items"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "source_sha256": {
+      "type": "string",
+      "minLength": 1
+    },
+    "base_model_sha256": {
+      "type": "string",
+      "minLength": 1
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "statement",
+          "status",
+          "supporting_lenses",
+          "evidence"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "statement": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "AGREEMENT",
+              "COMPLEMENTARY",
+              "PARTIAL_AGREEMENT",
+              "TENSION",
+              "CONTRADICTION",
+              "ORTHOGONAL",
+              "UNRESOLVED",
+              "MODEL_SINGLETON",
+              "CROSS_MODEL_CONVERGENCE",
+              "CONSENSUS"
+            ]
+          },
+          "supporting_lenses": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "conflict_note": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

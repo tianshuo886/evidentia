@@ -26,13 +26,18 @@ Evidentia addresses these problems with a frozen Paper Model, typed Evidence Gra
 ```text
 paper.pdf
    ↓
-source-only ingest + Figure/Table reconstruction
+source-only ingest + Figure/Table reconstruction (bound to SOURCE_SHA256)
    ↓
-Paper Model + Evidence Graph
+Open Reading draft (project invisible) → Baseline Lock
    ↓
 Author / Reviewer / Mechanism / Builder / Anomaly / Counterfactual
+(bound to source_sha256 + base_model_sha256)
    ↓
-freeze + SHA-256 integrity gate
+cross-lens reconciliation (supporting_lenses preserved, conflicts recorded)
+   ↓
+Final Paper Model + Evidence Graph
+   ↓
+freeze + SHA-256 integrity gate (fail closed on any SHA mismatch)
    ↓
 Paper Reader (HTML primary, PDF snapshot)
    ↓
@@ -114,13 +119,15 @@ python scripts/pipeline.py read \\
 
 This creates the isolated `working/` bundle, copies the source PDF, extracts the Figure/Table inventory, and builds the source map. It does not load any project context.
 
-### 2. Build the six Lens task packets
+### 2. Snapshot the Open Reading baseline, then build the six Lens task packets
 
 ```bash
+# after populating model/paper_model.json as the Open Reading draft:
+python scripts/snapshot_baseline.py --out paper-output
 python scripts/lens_runner.py --out paper-output
 ```
 
-Run the six packets independently against the source PDF and frozen base model. Write the six corresponding files under `paper-output/lens/`.
+Run the six packets independently against the source PDF and frozen baseline model. Write the six corresponding files under `paper-output/lens/`. Every lens output must carry the same `source_sha256` and `base_sha256` — `check_lenses.py` refuses wrong-paper or stale-baseline lenses.
 
 ### 3. Validate and freeze
 
@@ -132,7 +139,7 @@ python scripts/validate_model.py --out paper-output
 python scripts/freeze_check.py --out paper-output
 ```
 
-A freeze fails on missing Lens files, dangling IDs, uninspected Figures/Tables, missing critical assets, invalid coverage declarations, or unsupported claims.
+A freeze fails on missing Lens files, dangling IDs, uninspected Figures/Tables, missing critical assets, invalid coverage declarations, unsupported claims, source/base SHA mismatch, missing baseline snapshot, reconciliation provenance loss, or invalid figure binding.
 
 ### 4. Render and audit the Reader
 
@@ -177,7 +184,10 @@ A valid Research Delta may change a belief, expose an unknown, transfer a compon
 
 | Object | Purpose |
 |---|---|
-| `paper_model.json` | Canonical paper facts and epistemic states |
+| `paper_model.json` | Final reconciled facts and epistemic states |
+| `open_reading_model.json` | Immutable lens baseline snapshot |
+| `open_reading_manifest.json` | Baseline hashes + contract/prompt versions |
+| `lens_reconciliation.json` | Converged findings with supporting_lenses + recorded conflicts |
 | `evidence_graph.json` | Typed links between claims, observations, figures, tables and experiments |
 | `source_map.json` | Page, section, equation and in-text mention provenance |
 | `lens/*.json` | Six independent reread outputs |

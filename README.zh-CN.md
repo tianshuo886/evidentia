@@ -114,13 +114,15 @@ python scripts/pipeline.py read \\
 
 这一步会创建 `working/` 隔离工作区、复制 PDF、提取 Figure/Table inventory、建立 source map。它不会加载项目资料。
 
-### 2. 创建六个独立 Lens 任务包
+### 2. 快照 Open Reading 基线，再创建六个独立 Lens 任务包
 
 ```bash
+# 先填写 model/paper_model.json 作为 Open Reading 草稿，然后：
+python scripts/snapshot_baseline.py --out paper-output
 python scripts/lens_runner.py --out paper-output
 ```
 
-六个 Lens 必须分别针对论文 PDF 和冻结前的 base understanding 执行，并分别写入：
+六个 Lens 必须分别针对论文 PDF 和冻结的基线模型执行，并分别写入：
 
 ```text
 lens/author.json
@@ -143,7 +145,7 @@ python scripts/validate_model.py --out paper-output
 python scripts/freeze_check.py --out paper-output
 ```
 
-如果存在缺失 Lens、悬空 ID、未检查 Figure/Table、关键图文件缺失、覆盖审计缺失或没有证据的 Claim，冻结会失败。
+如果存在缺失 Lens、悬空 ID、未检查 Figure/Table、关键图文件缺失、覆盖审计缺失、没有证据的 Claim、source/base SHA 不一致、缺失基线快照、reconciliation provenance 丢失或非法 figure binding，冻结会失败。
 
 ### 4. 生成和审计 Reader
 

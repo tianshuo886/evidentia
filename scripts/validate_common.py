@@ -31,8 +31,15 @@ def refs(pm):
    for x in v:walk(x)
   elif isinstance(v,dict):
    for k,x in v.items():
-    if k in ('evidence','source','supports','supports_claims','limitations','open_questions','assumptions','component_ids','claim','gap_ids','from_lens'):
+    if k in ('evidence','source','supports','supports_claims','limitations','open_questions','assumptions','component_ids','claim','gap_ids'):
      if isinstance(x,str):out.add(x)
      elif isinstance(x,list):out.update(y for y in x if isinstance(y,str))
     else:walk(x)
  walk(pm);return out
+
+
+def validate_run_state(path):
+    from jsonschema import Draft202012Validator
+    d=load_json(path)
+    sp=ROOT/'schemas'/'run_state.schema.json'; schema=load_json(sp)
+    return [f'{e.json_path}: {e.message}' for e in Draft202012Validator(schema).iter_errors(d)]

@@ -4,11 +4,14 @@ The skill is a state machine, not a single summarization prompt:
 
 ```text
 source-only INGEST
-  → SOURCE_RECONSTRUCTION
-  → OPEN_READING (project invisible)
-  → six independent LENS task packets
-  → merge/dedup with provenance
-  → FREEZE + hash verification
+  → SOURCE_RECONSTRUCTION (source_map + figure_inventory, both bound to SOURCE_SHA256)
+  → SOURCE LOCK (freeze_check SHA chain: actual source/paper.pdf == all references)
+  → OPEN_READING draft (model/paper_model.json, project invisible)
+  → BASELINE LOCK (snapshot_baseline.py → model/open_reading_model.json + open_reading_manifest.json)
+  → six independent LENS task packets (lens_runner.py binds source_sha256/base_sha256/contract+prompt versions)
+  → merge with provenance (merge_lenses.py → model/lens_reconciliation.json; supporting_lenses preserved, conflicts recorded)
+  → FINAL MODEL + evidence_graph (build_graph.py binds source_sha256)
+  → FREEZE + hash verification (freeze_check.py fail-closed; verify_frozen.py)
   → PAPER READER render + content/visual audit
   → optional PROJECT APPLY contextual reread
   → Research Delta + Gap Map + transfer/experiment decisions

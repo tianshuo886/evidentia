@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/tianshuo886/paper-read/blob/master/schemas/research_delta.schema.json",
+  "$id": "https://github.com/tianshuo886/evidentia/blob/main/schemas/research_delta.schema.json",
   "type": "object",
   "properties": {
     "schema_version": {

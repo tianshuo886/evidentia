@@ -9,9 +9,9 @@ argument-hint: "<paper.pdf> --out <directory> [--supplement ...] | apply --paper
 Evidentia turns one supplied paper into a durable research object:
 
 ```text
-PDF → Source Reconstruction → Open Reading → Six Lens Rereads
-→ Frozen Paper Model + Evidence Graph → Unified Reader
-→ Contextual Apply → Research Delta → Literature Memory
+PDF → Source Reconstruction → Source Lock → Open Reading → Baseline Lock
+→ Six Lens Rereads → Reconciliation → Frozen Paper Model + Evidence Graph
+→ Unified Reader → Contextual Apply → Research Delta → Literature Memory
 ```
 
 ## Entries
@@ -30,9 +30,12 @@ Open Reading is project-invisible. Apply loads exactly one project document only
 ├── source/paper.pdf [+ supplements]
 ├── working/                         # source-only Open Reading boundary
 ├── model/
-│   ├── paper_model.json             # canonical paper facts
-│   ├── evidence_graph.json          # typed claim/evidence relations
-│   ├── figure_inventory.json
+│   ├── paper_model.json             # final reconciled model (Open Reading draft → frozen final)
+│   ├── open_reading_model.json      # immutable lens baseline snapshot (snapshot_baseline.py)
+│   ├── open_reading_manifest.json   # baseline hashes + contract/prompt versions
+│   ├── lens_reconciliation.json     # converged findings w/ supporting_lenses + recorded conflicts
+│   ├── evidence_graph.json          # typed claim/evidence relations (bound to SOURCE_SHA256)
+│   ├── figure_inventory.json        # extraction record (bound to SOURCE_SHA256)
 │   ├── source_map.json
 │   └── manifest.json                # freeze hashes and audit status
 ├── lens_tasks/                      # six independent reread packets
@@ -61,6 +64,8 @@ Open Reading is project-invisible. Apply loads exactly one project document only
 
 ```bash
 python scripts/pipeline.py read --pdf paper.pdf --out output
+# populate model/paper_model.json as the Open Reading draft (project invisible)
+python scripts/snapshot_baseline.py --out output
 python scripts/lens_runner.py --out output
 # run each lens task independently and write its matching lens/*.json
 python scripts/check_lenses.py --out output
@@ -76,7 +81,7 @@ python scripts/validate_delta.py --paper output --delta output/apply/project/res
 python scripts/full_audit.py --out output
 ```
 
-`phase.py` prevents skipping phases. `init_run.py` creates the source-only boundary. `init_apply.py` verifies the freeze before copying one project document. Validators fail closed on missing files, duplicate IDs, dangling references, incomplete Lens passes, missing critical assets, hash changes or Reader omissions.
+`phase.py` prevents skipping phases (artifact + schema + hash + dependency checks). `init_run.py` creates the source-only boundary. `snapshot_baseline.py` freezes the lens baseline. `init_apply.py` verifies the freeze before copying one project document. Validators fail closed on missing files, duplicate IDs, dangling references, incomplete Lens passes, missing critical assets, source/base SHA mismatch, reconciliation provenance loss, hash changes or Reader omissions.
 
 ## Lenses
 

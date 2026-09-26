@@ -25,6 +25,13 @@ def main():
   if r not in ids: errs.append(f'dangling model reference: {r}')
  for c in pm.get('claims',[]):
   if not c.get('evidence') and c.get('epistemic') not in ('NOT_STATED','UNRESOLVED'):errs.append(f"claim {c.get('id')} has no evidence")
+ # Phase-A: source SHA binding present (values checked in freeze_check against actual PDF)
+ if not pm.get('source_sha256'):errs.append('paper_model.source_sha256 missing')
+ # Phase-A: reconciliation provenance — every lens_synthesis item must list supporting lenses
+ for m in pm.get('lens_synthesis',[]):
+  if not m.get('from_lens'):errs.append(f"reconciliation provenance loss {m.get('id')} (empty from_lens)")
+ # Phase-A: recorded conflicts must exist in lens_conflicts (conflict not recorded must fail)
+ if pm.get('lens_conflicts') is None:errs.append('lens_conflicts missing (must be [] when no conflicts)')
  if errs:
   print(json.dumps({'status':'FAIL','errors':errs},ensure_ascii=False,indent=2));return 1
  print(json.dumps({'status':'OK','ids':len(ids),'graph_nodes':len(node_ids)}));return 0
