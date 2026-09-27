@@ -22,10 +22,12 @@ PDF → Source Reconstruction → Source Lock → Open Reading (AgentTask) → B
 ## Entries
 
 ```bash
-/evidentia <paper.pdf> --out <directory> [--supplement <supp.pdf>] [--mode standard|ensemble]
+/evidentia <paper.pdf> [--out <directory>] [--supplement <supp.pdf>] [--mode standard|ensemble]
 /evidentia-apply --paper <paper-output-dir> --project <project-document> [--focus <section>]
 /evidentia-memory [commit-paper|commit-project|relation|inspect|snapshot|export|import]
 ```
+
+If `--out` is omitted, output defaults to `./runs/<paper_stem>/`. All workspace artifacts, including `reader/reader.html` and `reader/reader.pdf`, are strictly contained within that single directory for clean inspection and one-command deletion.
 
 Open Reading is project-invisible. Apply loads exactly one project document only after the Paper Model is frozen and its hash is verified. Triage and paper search are outside this skill.
 

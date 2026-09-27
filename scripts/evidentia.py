@@ -26,7 +26,13 @@ def sh(*args):
     return res.stdout.strip()
 
 def run_workflow(args):
-    out_dir = Path(args.out)
+    if getattr(args, 'out', None):
+        out_dir = Path(args.out)
+    elif getattr(args, 'pdf', None):
+        out_dir = Path('./runs') / Path(args.pdf).stem
+    else:
+        sys.exit("Error: Must specify --pdf <path> or --out <dir>")
+    args.out = str(out_dir)
     rs_path = out_dir / 'run_state.json'
     mode = getattr(args, 'mode', 'standard') or 'standard'
     extra_flags = []
@@ -178,11 +184,23 @@ def run_workflow(args):
         sh(str(HERE / 'phase.py'), '--out', str(out_dir), '--complete', 'RENDER')
         sh(str(HERE / 'reader_audit.py'), '--out', str(out_dir))
         sh(str(HERE / 'phase.py'), '--out', str(out_dir), '--complete', 'COMPLETE')
-        print(f"\n>>> Evidentia run COMPLETE! Final Reader ready at {out_dir}/reader/reader.html")
+        html_p = (out_dir / 'reader/reader.html').resolve()
+        pdf_p = (out_dir / 'reader/reader.pdf').resolve()
+        print(f"\n>>> Evidentia run COMPLETE!")
+        print(f"    - Interactive Web Reader : {html_p}")
+        if pdf_p.exists():
+            print(f"    - Printable PDF Snapshot : {pdf_p}")
+        print(f"    - All Workspace Files    : {out_dir.resolve()}")
+        print(f"    - To delete workspace    : rm -rf '{out_dir.resolve()}'\n")
         return 0
 
     if phase == 'COMPLETE':
-        print(f">>> Run is already COMPLETE at {out_dir}. Reader: {out_dir}/reader/reader.html")
+        html_p = (out_dir / 'reader/reader.html').resolve()
+        pdf_p = (out_dir / 'reader/reader.pdf').resolve()
+        print(f">>> Run is already COMPLETE at {out_dir}.")
+        print(f"    - Interactive Web Reader : {html_p}")
+        if pdf_p.exists():
+            print(f"    - Printable PDF Snapshot : {pdf_p}")
         return 0
         
     print(f">>> Current phase: {phase}. Run 'evidentia.py next --out {out_dir}' to inspect next step.")
@@ -309,7 +327,7 @@ def main():
     # run
     p_run = subparsers.add_parser("run")
     p_run.add_argument("--pdf", help="Source paper PDF")
-    p_run.add_argument("--out", required=True, help="Workspace output directory")
+    p_run.add_argument("--out", help="Workspace output directory (default: ./runs/<paper_name>)")
     p_run.add_argument("--mode", choices=["standard", "ensemble"], default="standard")
     p_run.add_argument("--models", help="Comma-separated model identifiers for ensemble mode")
     p_run.add_argument("--supplement", action="append", help="Supplementary PDF files")
