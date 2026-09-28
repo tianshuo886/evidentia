@@ -8,7 +8,7 @@ Phase B6 updates:
 - Verifier status and conflict rendering
 - Kami-compatible presentation boundary & visual QA
 """
-import argparse, json, html, os, sys
+import argparse, json, html, os, re, sys
 from pathlib import Path
 
 def esc(x):
@@ -256,6 +256,12 @@ def main():
     (r / 'reader').mkdir(exist_ok=True)
     (r / 'reader/reader.html').write_text(html_doc, encoding='utf-8')
 
+    # Also create a semantic, paper-named copy for easy identification and sharing
+    paper_id = pm.get('paper_id') or r.name
+    safe_name = re.sub(r'[^a-zA-Z0-9_\-\.]', '_', str(paper_id)).strip('_')
+    if safe_name and safe_name != 'reader':
+        (r / 'reader' / f'{safe_name}.html').write_text(html_doc, encoding='utf-8')
+
     # Render IR
     ir = {
         'schema_version': '1.0',
@@ -274,6 +280,9 @@ def main():
     try:
         from weasyprint import HTML
         HTML(string=html_doc, base_url=str(r / 'reader')).write_pdf(str(pdf_out))
+        if safe_name and safe_name != 'reader' and pdf_out.exists():
+            import shutil
+            shutil.copy2(pdf_out, r / 'reader' / f'{safe_name}.pdf')
     except Exception as e:
         pass
 
