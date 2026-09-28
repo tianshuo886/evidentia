@@ -372,6 +372,12 @@ def main():
         errs = schema_validate(load_json(syn_p), 'scientific_synthesis')
         if errs:
             fail(f'scientific synthesis schema-invalid: {errs}')
+        arg_p = root / 'model/argument_reconstruction.json'
+        if not arg_p.exists():
+            fail('missing model/argument_reconstruction.json')
+        arg_errs = schema_validate(load_json(arg_p), 'argument_reconstruction')
+        if arg_errs:
+            fail(f'argument reconstruction schema-invalid: {arg_errs}')
 
     elif a.complete == 'FINAL_MODEL':
         pm_p = root / 'model/paper_model.json'

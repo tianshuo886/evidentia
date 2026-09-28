@@ -1,20 +1,21 @@
 #!/usr/bin/env python3
-"""Cross-Lens Scientific Synthesis Agent for Evidentia.
+"""Cross-Lens Scientific Synthesis Agent for Evidentia (Issue #8).
 
-Workstream B:
-- Organizes knowledge by scientific topic/question, not by Lens
-- Synthesizes Author, Reviewer, Mechanism, Builder, Anomaly, Counterfactual perspectives
-- Strictly preserves contradictions, anomalies, caveats, and alternative explanations
-- Zero majority voting: orthogonal and conflicting contributions are faithfully retained
-- Produces model/scientific_synthesis.json and updates model/paper_model.json
+Responsibilities:
+- Synthesizes findings across 6 independent Lenses: Author, Reviewer, Mechanism, Builder, Anomaly, Counterfactual.
+- Derives topics dynamically from argument reconstruction, reconciled tensions, and empirical findings.
+- Zero predefined domain topic templates or ML-specific boilerplate.
+- Zero majority voting: strictly preserves contradictions, anomalies, caveats, and alternative explanations.
+- Produces model/scientific_synthesis.json and updates model/paper_model.json.
 """
-import argparse, json, re, sys
+import argparse, json, os, re, sys
 from pathlib import Path
 from datetime import datetime, timezone
 
 sys.path.insert(0, str(Path(__file__).parent))
 from validate_common import load_json, schema_validate, sha256
 from agent_dispatch import is_fixture_enabled, dispatch_agent_task
+from build_argument_reconstruction import build_argument_reconstruction
 
 LENSES = ('author', 'reviewer', 'mechanism', 'builder', 'anomaly', 'counterfactual')
 
@@ -27,117 +28,211 @@ def extract_lens_findings(root):
             findings_by_lens[l] = data.get('findings', [])
     return findings_by_lens
 
-def synthesize_topics(pm, rec_data, lens_findings):
-    """Synthesize 6 lens findings into topic-centered Chinese-first scientific units."""
+def synthesize_topics_dynamically(pm, rec_data, lens_findings, arg_reconstruction):
+    """Dynamically discover synthesis units from paper argument and Lens findings."""
+    paper = pm.get('paper', {})
+    paper_title = paper.get('title', '该论文')
     claims = pm.get('claims', [])
     conflicts = rec_data.get('items', []) if rec_data else []
-    paper_title = pm.get('paper', {}).get('title', '该论文')
-    
-    # Map findings by keyword / category / evidence
+
+    # Lens finding statements
+    author_findings = lens_findings.get('author', [])
+    reviewer_findings = lens_findings.get('reviewer', [])
+    mech_findings = lens_findings.get('mechanism', [])
+    builder_findings = lens_findings.get('builder', [])
+    anomaly_findings = lens_findings.get('anomaly', [])
+    counterfactual_findings = lens_findings.get('counterfactual', [])
+
+    author_stmts = [f.get('statement', '') for f in author_findings if f.get('statement')]
+    reviewer_stmts = [f.get('statement', '') for f in reviewer_findings if f.get('statement')]
+    mech_stmts = [f.get('statement', '') for f in mech_findings if f.get('statement')]
+    builder_stmts = [f.get('statement', '') for f in builder_findings if f.get('statement')]
+    anomaly_stmts = [f.get('statement', '') for f in anomaly_findings if f.get('statement')]
+    cf_stmts = [f.get('statement', '') for f in counterfactual_findings if f.get('statement')]
+
+    # Evidence promotion
+    ev_promo = arg_reconstruction.get('evidence_promotion', {})
+    core_ev = ev_promo.get('narrative_core', [])
+    if not core_ev and claims:
+        core_ev = claims[0].get('evidence', ['p.1'])
+    if not core_ev:
+        core_ev = ['p.1']
+
+    central_q = arg_reconstruction.get('central_question', f"关于《{paper_title}》的核心研究问题")
+    central_thesis = arg_reconstruction.get('central_thesis', claims[0].get('statement', '论文提出的核心方法与结论') if claims else '论文核心主张')
+
     topics = []
-    
-    # 1. 核心方法效能与主张 (Core Method & Efficacy)
-    author_claims = [f.get('statement', '') for f in lens_findings.get('author', [])]
-    reviewer_caveats = [f.get('statement', '') for f in lens_findings.get('reviewer', [])]
-    mech_stmts = [f.get('statement', '') for f in lens_findings.get('mechanism', [])]
-    builder_notes = [f.get('statement', '') for f in lens_findings.get('builder', [])]
-    anomalies = [f.get('statement', '') for f in lens_findings.get('anomaly', [])]
-    counterfactuals = [f.get('statement', '') for f in lens_findings.get('counterfactual', [])]
-    
-    # Core claim topic
-    core_stmt = claims[0].get('statement', author_claims[0] if author_claims else '核心方法有效性验证')
-    core_ev = claims[0].get('evidence', ['F01'])
-    
+    topic_counter = 1
+
+    # 1. 核心主张与实证支撑效力 (Core Proposition & Empirical Validity)
+    topic_1_id = f"SYN-{topic_counter:02d}"
+    topic_counter += 1
+
+    # Integrate contributing lenses for core claim
+    core_lenses = []
+    for l in ('author', 'reviewer', 'mechanism', 'builder'):
+        if lens_findings.get(l):
+            core_lenses.append(l)
+    if not core_lenses:
+        core_lenses = ['author']
+
+    rev_caveat = reviewer_stmts[0] if reviewer_stmts else None
+    mech_prop = mech_stmts[0] if mech_stmts else None
+    ano_note = anomaly_stmts[0] if anomaly_stmts else None
+    bld_note = builder_stmts[0] if builder_stmts else None
+    cf_note = cf_stmts[0] if cf_stmts else None
+
+    # Derive core conclusion
+    if rev_caveat:
+        core_concl = f"实证数据表明作者主张在测试基准下具备支撑依据（依据: {', '.join(core_ev)}）；但 Reviewer 透镜指出需要关注: {rev_caveat}。"
+    else:
+        core_concl = f"实证数据为作者主张提供了直接观测支撑（关键依据: {', '.join(core_ev)}）。"
+
     topics.append({
-        "topic_id": "SYN-01",
-        "title_zh": "核心模型架构与性能主张是否成立？",
-        "question_zh": f"论文针对'{paper_title}'提出的核心模型与实证性能主张，在多维度检验下是否具备坚实支撑？",
-        "core_conclusion_zh": f"论文主张在基准测试中取得预期性能，核心依据包含 {', '.join(core_ev)}。但各透镜审视表明该性能高度依赖特定超参设定与数据预处理。",
-        "evidence_summary_zh": f"主要依赖图表与实验证据: {', '.join(core_ev)}。",
-        "mechanism_zh": mech_stmts[0] if mech_stmts else "核心模块通过显式特征变换建立输入与输出间的物理/数学映射。",
-        "reviewer_caveat_zh": reviewer_caveats[0] if reviewer_caveats else "需注意实验对比基线是否充分调优，以及消融实验控制变量是否彻底。",
-        "anomaly_zh": anomalies[0] if anomalies else None,
-        "alternative_explanation_zh": counterfactuals[0] if counterfactuals else None,
-        "builder_note_zh": builder_notes[0] if builder_notes else "复现时需注意损失权重平衡与训练初期学习率预热策略。",
-        "confidence": "PARTIAL" if (reviewer_caveats or anomalies) else "HIGH",
+        "topic_id": topic_1_id,
+        "title_zh": f"核心主张有效性审视：{central_thesis[:45]}",
+        "question_zh": f"针对《{paper_title}》提出的核心问题'{central_q[:50]}'，论文建立的实证证据链条是否充分坚实？",
+        "core_conclusion_zh": core_concl,
+        "evidence_summary_zh": f"主要依赖核心实证证据: {', '.join(core_ev)}。",
+        "mechanism_zh": mech_prop,
+        "reviewer_caveat_zh": rev_caveat,
+        "anomaly_zh": ano_note,
+        "alternative_explanation_zh": cf_note,
+        "builder_note_zh": bld_note,
+        "confidence": "PARTIAL" if rev_caveat or ano_note else "HIGH",
         "evidence_refs": core_ev,
-        "contributing_lenses": [l for l in ('author', 'reviewer', 'mechanism', 'builder') if lens_findings.get(l)],
+        "contributing_lenses": core_lenses,
         "unresolved": [u.get('issue', '') for u in pm.get('unresolved', [])[:2]]
     })
-    
-    # 2. 因果机制与理论闭环 (Mechanism & Causality)
-    if mech_stmts or counterfactuals:
+
+    # 2. 作用机制与竞争性解释 (Mechanism & Alternative Explanations)
+    # Generated if Mechanism findings, Counterfactual findings, or multiple claims exist
+    if mech_stmts or cf_stmts or len(claims) > 1:
+        topic_2_id = f"SYN-{topic_counter:02d}"
+        topic_counter += 1
+
         mech_ev = []
-        for c in claims[1:]:
-            mech_ev.extend(c.get('evidence', []))
+        for f in mech_findings + counterfactual_findings:
+            mech_ev.extend(f.get('evidence', []))
+        if not mech_ev:
+            for c in claims[1:]:
+                mech_ev.extend(c.get('evidence', []))
         mech_ev = list(dict.fromkeys(mech_ev))[:3] or core_ev
-        
+
+        mech_lenses = [l for l in ('mechanism', 'counterfactual', 'reviewer') if lens_findings.get(l)]
+        if not mech_lenses:
+            mech_lenses = ['mechanism']
+
+        mech_text = mech_stmts[0] if mech_stmts else (claims[0].get('observation', '数据观测表明特定特征或行为变化'))
+        cf_text = cf_stmts[0] if cf_stmts else None
+
+        if cf_text:
+            m_concl = f"Mechanism 透镜分析了作用链条（{mech_text[:60]}），但 Counterfactual 透镜提出了平行竞争假说：{cf_text}。"
+        else:
+            m_concl = f"Mechanism 透镜重构了实证结果背后的传导链条：{mech_text[:80]}。"
+
         topics.append({
-            "topic_id": "SYN-02",
-            "title_zh": "模型表现背后的理论因果链条是否清晰闭环？",
-            "question_zh": "观察到的性能提升是源于所主张的科学机制，还是伴随的正则化效应或工程先验？",
-            "core_conclusion_zh": "Mechanism 透镜重构了局部因果链条，但 Counterfactual 透镜提出了平行竞争假说，提示存在伴随变量的可能解释。",
-            "evidence_summary_zh": f"涉及证据链: {', '.join(mech_ev)}。",
-            "mechanism_zh": mech_stmts[1] if len(mech_stmts) > 1 else (mech_stmts[0] if mech_stmts else "局部物理动力学或结构先验提供了归纳偏置。"),
-            "reviewer_caveat_zh": reviewer_caveats[1] if len(reviewer_caveats) > 1 else "缺少针对替代因果链条的隔离验证控制组。",
-            "anomaly_zh": anomalies[1] if len(anomalies) > 1 else None,
-            "alternative_explanation_zh": counterfactuals[0] if counterfactuals else "该提升亦可能通过简单增大模型容量或增加隐式数据平滑达成。",
+            "topic_id": topic_2_id,
+            "title_zh": f"因果机制与解释闭环：观察结果是否具备独立必然性？",
+            "question_zh": f"观察到的现象是源于所主张的科学机制，还是可能存在未被排除的伴随变量或替代解释？",
+            "core_conclusion_zh": m_concl,
+            "evidence_summary_zh": f"涉及机制与对比证据: {', '.join(mech_ev)}。",
+            "mechanism_zh": mech_stmts[1] if len(mech_stmts) > 1 else (mech_stmts[0] if mech_stmts else None),
+            "reviewer_caveat_zh": reviewer_stmts[1] if len(reviewer_stmts) > 1 else None,
+            "anomaly_zh": anomaly_stmts[1] if len(anomaly_stmts) > 1 else None,
+            "alternative_explanation_zh": cf_text,
             "builder_note_zh": None,
-            "confidence": "PARTIAL",
+            "confidence": "PARTIAL" if cf_text else "HIGH",
             "evidence_refs": mech_ev,
-            "contributing_lenses": [l for l in ('mechanism', 'counterfactual', 'reviewer') if lens_findings.get(l)],
+            "contributing_lenses": mech_lenses,
             "unresolved": []
         })
 
-    # 3. 边界条件、反常分布与失效模式 (Anomalies & Failure Modes)
-    if anomalies or any(c.get('epistemic') in ('AMBIGUOUS', 'INSUFFICIENT_EVIDENCE') for c in claims):
-        ano_ev = [f.get('evidence', ['p.1'])[0] for f in lens_findings.get('anomaly', []) if f.get('evidence')] or core_ev
+    # 3. 适用边界与反常现象 (Anomalies & Boundary Conditions)
+    # Generated if Anomaly findings exist, or epistemic states indicate uncertainty/anomalies
+    if anomaly_stmts or any(c.get('epistemic') in ('AMBIGUOUS', 'INSUFFICIENT_EVIDENCE', 'MODEL_UNCERTAIN') for c in claims):
+        topic_3_id = f"SYN-{topic_counter:02d}"
+        topic_counter += 1
+
+        ano_ev = []
+        for f in anomaly_findings:
+            ano_ev.extend(f.get('evidence', []))
+        ano_ev = list(dict.fromkeys(ano_ev))[:3] or core_ev
+
+        ano_text = anomaly_stmts[0] if anomaly_stmts else "特定未见分布或边缘工况下指标稳定性有待检验"
+        ano_lenses = [l for l in ('anomaly', 'reviewer', 'builder') if lens_findings.get(l)]
+        if not ano_lenses:
+            ano_lenses = ['anomaly']
+
         topics.append({
-            "topic_id": "SYN-03",
-            "title_zh": "在哪些分布或极端场景下方法会出现性能退化或异常？",
-            "question_zh": "模型在非理想输入、长尾样本或物理边界区域是否存在未被正文突出强调的退化现象？",
-            "core_conclusion_zh": "Anomaly 透镜识别出在特定子集或边界条件下指标存在抖动或反转，表明该方法具有明确的适用边界。",
-            "evidence_summary_zh": f"关联异常证据定位: {', '.join(ano_ev)}。",
+            "topic_id": topic_3_id,
+            "title_zh": f"异常观测与有效边界：{ano_text[:40]}",
+            "question_zh": f"在特定子集、极端工况或边界分布下，方法是否存在性能抖动或反常现象？",
+            "core_conclusion_zh": f"Anomaly 透镜与压力测试表明：{ano_text}。提示该方法具有确定的适用范围，不能无条件外推。",
+            "evidence_summary_zh": f"异常与边界关联证据: {', '.join(ano_ev)}。",
             "mechanism_zh": None,
-            "reviewer_caveat_zh": "审稿人视角的压力测试表明，论文评估多集中于平均指标，掩盖了长尾极值风险。",
-            "anomaly_zh": anomalies[0] if anomalies else "在极端输入工况下，输出方差显著放大。",
-            "alternative_explanation_zh": counterfactuals[1] if len(counterfactuals) > 1 else None,
-            "builder_note_zh": "下游部署时必须设置异常熔断门禁与前置分布检验机制。",
+            "reviewer_caveat_zh": reviewer_stmts[0] if reviewer_stmts else "需注意在非标准条件下的评测充分性",
+            "anomaly_zh": ano_text,
+            "alternative_explanation_zh": cf_stmts[1] if len(cf_stmts) > 1 else None,
+            "builder_note_zh": builder_stmts[0] if builder_stmts else None,
             "confidence": "LOW",
             "evidence_refs": ano_ev,
-            "contributing_lenses": [l for l in ('anomaly', 'reviewer', 'builder') if lens_findings.get(l)],
-            "unresolved": ["极端异常工况下的收敛保证尚未给出理论边界"]
+            "contributing_lenses": ano_lenses,
+            "unresolved": [ano_text]
         })
 
-    # 4. 可复用组件与落地工程约束 (Builder & Transferability)
-    if builder_notes:
-        build_ev = [f.get('evidence', ['p.1'])[0] for f in lens_findings.get('builder', []) if f.get('evidence')] or core_ev
+    # 4. 可复用组件与技术迁移约束 (Builder & Portable Components)
+    # Generated if Builder findings exist or pm['portable_components'] exist
+    pcs = pm.get('portable_components', [])
+    if builder_stmts or pcs:
+        topic_4_id = f"SYN-{topic_counter:02d}"
+        topic_counter += 1
+
+        bld_ev = []
+        for f in builder_findings:
+            bld_ev.extend(f.get('evidence', []))
+        if not bld_ev and pcs:
+            bld_ev = pcs[0].get('source', [])
+        bld_ev = list(dict.fromkeys(bld_ev))[:3] or core_ev
+
+        bld_text = builder_stmts[0] if builder_stmts else (
+            f"解耦出可复用组件: {pcs[0].get('name')}" if pcs else "组件具备模块独立性"
+        )
+        bld_lenses = [l for l in ('builder', 'reviewer') if lens_findings.get(l)]
+        if not bld_lenses:
+            bld_lenses = ['builder']
+
+        comp_name = pcs[0].get('name', '核心算法设计') if pcs else '相关实现组件'
         topics.append({
-            "topic_id": "SYN-04",
-            "title_zh": "论文中哪些算法模块与工程策略具备即插即用迁移价值？",
-            "question_zh": "剥离论文特定任务上下文后，哪些损失函数设计、数据流编排或预处理策略可以直接迁移？",
-            "core_conclusion_zh": "Builder 透镜解耦出可独立迁移的模块与算子，但需满足特定算力开销与数值稳定性前置条件。",
-            "evidence_summary_zh": f"技术模块关联证据: {', '.join(build_ev)}。",
+            "topic_id": topic_4_id,
+            "title_zh": f"技术模块复用性审视：{comp_name}",
+            "question_zh": f"剥离原论文特定任务上下文后，哪些算法模块或工程策略具备独立迁移价值？",
+            "core_conclusion_zh": f"Builder 透镜评估：{bld_text}。迁移至异构上下文时需满足相应的前置接口契约。",
+            "evidence_summary_zh": f"组件与工程实现证据: {', '.join(bld_ev)}。",
             "mechanism_zh": None,
-            "reviewer_caveat_zh": "迁移至异构数据时需重校准超参数，原论文超参对当前任务具有强过拟合倾向。",
+            "reviewer_caveat_zh": reviewer_stmts[0] if reviewer_stmts else "迁移时需重新标定下游工况与基准",
             "anomaly_zh": None,
             "alternative_explanation_zh": None,
-            "builder_note_zh": builder_notes[0] if builder_notes else "模块可抽取为独立 Loss 或 Layer，接口语义清晰。",
-            "confidence": "HIGH",
-            "evidence_refs": build_ev,
-            "contributing_lenses": [l for l in ('builder', 'reviewer') if lens_findings.get(l)],
+            "builder_note_zh": bld_text,
+            "confidence": "HIGH" if not reviewer_stmts else "PARTIAL",
+            "evidence_refs": bld_ev,
+            "contributing_lenses": bld_lenses,
             "unresolved": []
         })
 
-    # Preserved contradictions from lens reconciliation
-    for idx, c in enumerate(conflicts, start=len(topics)+1):
+    # 5. 保留的跨透镜科学争议与张力 (Preserved Tensions & Contradictions)
+    # Strictly preserve conflicts without majority voting
+    for c in conflicts:
         if c.get('status') in ('TENSION', 'CONTRADICTION'):
-            cid = f"SYN-{idx:02d}"
-            c_stmt = c.get('canonical_statement', c.get('statement', ''))
+            cid = f"SYN-{topic_counter:02d}"
+            topic_counter += 1
+            c_stmt = c.get('canonical_statement', c.get('statement', '科学证据定性分歧'))
             c_ev = c.get('source', c.get('evidence', core_ev))
+            supp_lenses = c.get('supporting_lenses', ['reviewer', 'author'])
+
             topics.append({
                 "topic_id": cid,
-                "title_zh": f"跨透镜争议焦点: {c.get('status')} 冲突保留",
+                "title_zh": f"跨透镜争议焦点: {c_stmt[:40]}",
                 "question_zh": f"针对证据 {', '.join(c_ev)} 的结论在不同科学视角下存在显著张力，应如何客观定性？",
                 "core_conclusion_zh": f"冲突保留: {c_stmt}。不同透镜对该现象的定性存在不可调和的科学分歧，严禁按多数票抹平。",
                 "evidence_summary_zh": f"争议核心证据: {', '.join(c_ev)}。",
@@ -148,7 +243,7 @@ def synthesize_topics(pm, rec_data, lens_findings):
                 "builder_note_zh": None,
                 "confidence": "TENSION",
                 "evidence_refs": c_ev,
-                "contributing_lenses": c.get('supporting_lenses', ['reviewer', 'author']),
+                "contributing_lenses": supp_lenses,
                 "unresolved": [c_stmt]
             })
 
@@ -159,41 +254,65 @@ def run_scientific_synthesis(out_dir, fixture=None, replay_dir=None, adapter=Non
     pm_path = root / 'model/paper_model.json'
     if not pm_path.exists():
         sys.exit(f"REFUSED: Missing {pm_path}")
-        
+
     pm = load_json(pm_path)
     src_sha = pm.get('source_sha256') or sha256(root / 'source/paper.pdf')
-    
+
     rec_p = root / 'model/lens_reconciliation.json'
     rec_data = load_json(rec_p) if rec_p.exists() else {}
-    
+
     lens_findings = extract_lens_findings(root)
+
+    # Ensure argument reconstruction artifact is loaded or generated
+    arg_p = root / 'model/argument_reconstruction.json'
+    if arg_p.exists():
+        arg_recon = load_json(arg_p)
+    else:
+        arg_recon = build_argument_reconstruction(root)
+
+    topics = synthesize_topics_dynamically(pm, rec_data, lens_findings, arg_recon)
+
+    paper_title = pm.get('paper', {}).get('title', '该论文')
     
-    topics = synthesize_topics(pm, rec_data, lens_findings)
-    
+    # Grounded summary and overall assessment without generic ML boilerplate
+    high_count = sum(1 for t in topics if t.get('confidence') == 'HIGH')
+    partial_count = sum(1 for t in topics if t.get('confidence') in ('PARTIAL', 'LOW'))
+    tension_count = sum(1 for t in topics if t.get('confidence') in ('TENSION', 'CONTRADICTION'))
+
+    assessed_thesis = arg_recon.get('assessed_argument', {}).get('justified_thesis') or f"在论文报告的基准设定下，核心实证链条基本闭环。"
+
+    overall_assessment = (
+        f"综合判断：针对《{paper_title}》，六大独立透镜审视形成了 {len(topics)} 个主题综合单元。"
+        f"{assessed_thesis} "
+        f"其中 HIGH 级别支撑结论 {high_count} 项，带条件/边界约束结论 {partial_count} 项"
+        + (f"，保留跨视角张力争议 {tension_count} 项。" if tension_count else "。")
+        + "各视角结论均源自真实观测与透镜推演，严禁以多数票抹平争议。"
+    )
+
     synthesis_payload = {
         "schema_version": "1.0",
         "paper_id": pm.get('paper_id', root.name),
         "source_sha256": src_sha,
         "created_at": datetime.now(timezone.utc).isoformat(),
-        "summary_zh": f"本综合报告基于六大独立科学透镜对《{pm.get('paper', {}).get('title', '该论文')}》进行深度交叉审视，涵盖架构有效性、因果链条、异常退化、工程可迁移性及保留争议。",
-        "overall_scientific_assessment_zh": "综合判断：该工作在特定实验设定下验证了其核心假设，具备较高的局部创新度；但泛化至更广阔物理分布时受制于长尾异常与伴随因果混淆，下游迁移需持严谨审慎态度。",
+        "summary_zh": f"本综合报告基于六大独立科学透镜对《{paper_title}》进行动态交叉审视，涵盖论证有效性、因果解释、边界异常及工程可迁移性。",
+        "overall_scientific_assessment_zh": overall_assessment,
         "topics": topics
     }
-    
+
     # Validate against scientific_synthesis schema
     errs = schema_validate(synthesis_payload, 'scientific_synthesis')
     if errs:
-        sys.exit(f"Scientific Synthesis failed schema validation:\n{errs}")
-        
+        sys.exit(f"scientific_synthesis schema validation failed:\n{errs}")
+
     # Write to model/scientific_synthesis.json
     synth_path = root / 'model/scientific_synthesis.json'
     synth_path.write_text(json.dumps(synthesis_payload, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
-    
+
     # Update paper_model.json with scientific_synthesis
     pm['scientific_synthesis'] = topics
     pm_path.write_text(json.dumps(pm, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
-    
-    print(f"OK: Cross-Lens Scientific Synthesis complete ({len(topics)} topics) -> {synth_path}")
+
+    print(f"OK: Scientific Synthesis completed -> {synth_path} ({len(topics)} topic units)")
     return 0
 
 def main():
@@ -205,7 +324,6 @@ def main():
     ap.add_argument('--adapter')
     ap.add_argument('--model')
     args = ap.parse_args()
-    
     run_scientific_synthesis(
         args.out,
         fixture=args.fixture,

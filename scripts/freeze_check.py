@@ -29,7 +29,7 @@ def main():
  required=['source/paper.pdf','model/paper_model.json','model/evidence_graph.json','model/figure_inventory.json','model/source_map.json']
  for rel in required:
   if not (root/rel).exists():errs.append(f'missing {rel}')
- for rel in ('model/paper_model.json','model/evidence_graph.json','model/figure_inventory.json','model/source_map.json'):
+ for rel in ('model/paper_model.json','model/evidence_graph.json','model/figure_inventory.json','model/source_map.json','model/argument_reconstruction.json'):
   p=root/rel
   if p.exists():
    try:
@@ -167,7 +167,7 @@ def main():
  if base_expected:man['base_model_sha256']=base_expected
  for rel in required:
   if (root/rel).exists():man['hashes'][rel]=sha256(root/rel)
- for rel in ('model/open_reading_model.json','model/open_reading_manifest.json','model/lens_reconciliation.json'):
+ for rel in ('model/open_reading_model.json','model/open_reading_manifest.json','model/lens_reconciliation.json','model/argument_reconstruction.json','model/scientific_synthesis.json'):
   if (root/rel).exists():man['hashes'][rel]=sha256(root/rel)
  for lens in LENSES:
   p=root/'lens'/f'{lens}.json'

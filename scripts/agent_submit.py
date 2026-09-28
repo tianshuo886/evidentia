@@ -219,6 +219,13 @@ def submit_agent_result(run_dir, task_id, result_path, allow_legacy_raw=False):
     target_output.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
     print(f"OK: Accepted trusted Host Agent result for {task_id} -> {target_output}")
 
+    if target_rel == 'model/paper_model.json' or 'OPEN-READING' in task_id:
+        try:
+            from build_argument_reconstruction import build_argument_reconstruction
+            build_argument_reconstruction(r_dir)
+        except Exception:
+            pass
+
     # 9. Record immutable AgentRun
     runs_dir = r_dir / 'agent_runs' / task.get('task_id', task_id)
     runs_dir.mkdir(parents=True, exist_ok=True)

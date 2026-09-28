@@ -1042,6 +1042,9 @@
     "source_sha256": {
       "type": "string",
       "minLength": 1
+    },
+    "argument_reconstruction": {
+      "type": "object"
     }
   },
   "required": [

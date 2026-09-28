@@ -11,7 +11,7 @@ Phase B6 Reader Audit v2:
 """
 import argparse, json, re, sys
 from pathlib import Path
-from validate_common import sha256
+from validate_common import sha256, schema_validate, load_json
 
 def main():
     ap = argparse.ArgumentParser()
@@ -84,6 +84,93 @@ def main():
                                 errs.append(f'delta transfer unit {tu.get("id")} cites unknown paper evidence: {s_ref}')
                 except Exception as e:
                     errs.append(f'error auditing delta provenance: {e}')
+
+        # 6. Issue #8: Argument Reconstruction Artifact Check
+        arg_p = r / 'model/argument_reconstruction.json'
+        if not arg_p.exists():
+            errs.append('missing model/argument_reconstruction.json')
+        else:
+            try:
+                arg_data = load_json(arg_p)
+                arg_errs = schema_validate(arg_data, 'argument_reconstruction')
+                if arg_errs:
+                    errs.append(f'argument_reconstruction schema invalid: {arg_errs}')
+            except Exception as e:
+                errs.append(f'unparseable model/argument_reconstruction.json: {e}')
+
+        # 7. Issue #8: Renderer Purity & Anti-Contamination Check
+        forbidden_hallucinated_tokens = [
+            "AdamW",
+            "独立同分布高斯分布",
+            "多模态数据时存在的表征瓶颈",
+            "多尺度特征注意力约束损失"
+        ]
+        # Check if source paper genuinely mentions them
+        src_text = ""
+        sm_p = r / 'model/source_map.json'
+        if sm_p.exists():
+            try:
+                sm_data = load_json(sm_p)
+                for pg in sm_data.get('pages', []):
+                    src_text += " " + (pg.get('text', '') or "")
+            except Exception:
+                pass
+
+        for tok in forbidden_hallucinated_tokens:
+            if tok in html_text and tok not in src_text:
+                errs.append(f'Renderer Purity violation: ungrounded boilerplate token "{tok}" leaked into reader HTML')
+
+        # 8. Issue #8: Lens Presentation Check (Lenses must be synthesized, not six mini-reports)
+        lens_report_headings = [
+            "Author Lens 报告",
+            "Reviewer Lens 报告",
+            "Mechanism Lens 报告",
+            "Builder Lens 报告",
+            "Anomaly Lens 报告",
+            "Counterfactual Lens 报告"
+        ]
+        for lh in lens_report_headings:
+            if lh in html_text:
+                errs.append(f'Reader anti-pattern: raw lens mini-report exposed as top-level narrative ({lh})')
+
+        # 9. Issue #8: Narrative Grounding & Provenance Check
+        reader_ir_p = r / 'reader/paper_reader_ir.json'
+        if reader_ir_p.exists():
+            try:
+                reader_ir = load_json(reader_ir_p)
+                narrative_units = reader_ir.get('narrative_units', [])
+                if not narrative_units:
+                    errs.append('missing narrative_units in reader/paper_reader_ir.json')
+                else:
+                    # Validate that argument references resolve to valid units
+                    valid_arg_ids = set()
+                    if (r / 'model/argument_reconstruction.json').exists():
+                        arg_doc = load_json(r / 'model/argument_reconstruction.json')
+                        valid_arg_ids = {u['id'] for u in arg_doc.get('argument_units', [])}
+                    
+                    valid_claim_ids = {c['id'] for c in pm.get('claims', [])}
+                    valid_ev_ids = all_ids | {f"p.{i}" for i in range(1, 100)}
+                    
+                    for nu in narrative_units:
+                        for arg_ref in nu.get('argument_unit_ids', []):
+                            if valid_arg_ids and arg_ref not in valid_arg_ids:
+                                errs.append(f'narrative unit {nu.get("section_id")} references unknown argument unit: {arg_ref}')
+                        for c_ref in nu.get('claim_ids', []):
+                            if c_ref not in valid_claim_ids:
+                                errs.append(f'narrative unit {nu.get("section_id")} references unknown claim: {c_ref}')
+                        for ev_ref in nu.get('evidence_ids', []):
+                            if ev_ref not in valid_ev_ids:
+                                errs.append(f'narrative unit {nu.get("section_id")} references unknown evidence: {ev_ref}')
+
+                    # Verify that central narrative assertions are grounded
+                    has_grounded_unit = any(
+                        nu.get('argument_unit_ids') or nu.get('claim_ids') or nu.get('evidence_ids')
+                        for nu in narrative_units
+                    )
+                    if not has_grounded_unit:
+                        errs.append('narrative units lack argument/claim/evidence grounding references')
+            except Exception as e:
+                errs.append(f'error checking narrative grounding in paper_reader_ir.json: {e}')
 
     if errs:
         print(json.dumps({'status': 'FAIL', 'errors': errs}, indent=2))

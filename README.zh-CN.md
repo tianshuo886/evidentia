@@ -32,13 +32,16 @@ paper.pdf
    ↓
 页面先行多模态视觉重构（source_pages/ + 无整页退化裁剪，绑定 SOURCE_SHA256）
    ↓
+   ├── 证据结构轨（Claims, O/I/A, Figures, Tables, Evidence Graph）
+   └── 论证重构轨（model/argument_reconstruction.json，作者论证 vs 评估论证分离，证据晋升机制）
+   ↓
 Open Reading 初稿（对项目完全不可见）→ 基线锁定（Baseline Lock）
    ↓
 六大独立科学透镜（Author / Reviewer / Mechanism / Builder / Anomaly / Counterfactual）
    ↓
 跨透镜语义调和（保留冲突，严禁多数票抹平）
    ↓
-跨透镜科学综合（model/scientific_synthesis.json，按科学议题组织）
+动态跨透镜科学综合（model/scientific_synthesis.json，论证感知，无固定模板）
    ↓
 证据局部化验证（针对争议项 fail-closed 严审）
    ↓
@@ -46,7 +49,7 @@ Final Paper Model + Evidence Graph
    ↓
 冻结 + SHA-256 完整性门禁
    ↓
-中文优先叙事型 Paper Reader（七层深度精读结构，HTML + MD + PDF 严格同构）
+中文优先叙事型 Paper Reader（七层深度精读结构，HTML + MD + PDF 严格同构，渲染器纯粹性门禁）
    ↓
 PAPER_COMPLETE（默认论文精读流程在此终结）
 

@@ -33,6 +33,7 @@ htmlcov/
 .venv
 venv/
 ENV/
+runs/
 
 # OS / Editor
 .DS_Store
