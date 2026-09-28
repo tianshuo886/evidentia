@@ -210,6 +210,26 @@
       "evidence": "Pre-clustering into Finding Clusters with canonical relations (AGREEMENT, TENSION, etc.) and verification triggers implemented."
     },
     {
+      "id": "argument_reconstruction",
+      "area": "Core",
+      "claim": "First-class argument reconstruction topology separating author argument from Evidentia assessment with evidence promotion",
+      "schema": [
+        "argument_reconstruction"
+      ],
+      "scripts": [
+        "build_argument_reconstruction.py"
+      ],
+      "tests": [
+        "test_argument_reconstruction",
+        "test_argument_recovery",
+        "test_evidence_promotion"
+      ],
+      "implementation_status": "IMPLEMENTED",
+      "validation_status": "UNIT_TESTED",
+      "status": "IMPLEMENTED",
+      "evidence": "build_argument_reconstruction.py reconstructs paper argumentative topology, typed relations, author vs assessed argument, and evidence promotion."
+    },
+    {
       "id": "scientific_synthesis",
       "area": "Core",
       "claim": "Cross-Lens topic-centered scientific synthesis with contradiction and anomaly preservation",
@@ -220,12 +240,13 @@
         "scientific_synthesis_agent.py"
       ],
       "tests": [
-        "test_scientific_synthesis"
+        "test_scientific_synthesis",
+        "test_cross_domain_contamination"
       ],
       "implementation_status": "IMPLEMENTED",
       "validation_status": "UNIT_TESTED",
       "status": "IMPLEMENTED",
-      "evidence": "scientific_synthesis_agent.py synthesizes 6 Lens perspectives into Chinese-first topic units without majority voting."
+      "evidence": "scientific_synthesis_agent.py dynamically discovers topics from argument units and 6 Lens perspectives without majority voting or predefined domain templates."
     },
     {
       "id": "intent_isolation",
@@ -257,12 +278,14 @@
         "render_reader.py"
       ],
       "tests": [
-        "test_chinese_reader"
+        "test_chinese_reader",
+        "test_renderer_purity",
+        "test_narrative_grounding"
       ],
       "implementation_status": "IMPLEMENTED",
       "validation_status": "UNIT_TESTED",
       "status": "IMPLEMENTED",
-      "evidence": "paper_reader_ir.json drives unified Chinese-first narrative HTML and Markdown deep-reading reports."
+      "evidence": "paper_reader_ir.json drives unified Chinese-first narrative HTML and Markdown deep-reading reports with strict renderer purity."
     },
     {
       "id": "evidence_verifier",

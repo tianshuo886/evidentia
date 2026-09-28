@@ -100,7 +100,10 @@
           "what_it_proves_zh": {"type": "string"},
           "what_it_does_not_prove_zh": {"type": "string"},
           "anomalies_caveats_zh": {"type": "string"},
-          "supports_claims": {"type": "array", "items": {"type": "string"}}
+          "supports_claims": {"type": "array", "items": {"type": "string"}},
+          "argument_refs": {"type": "array", "items": {"type": "string"}},
+          "evidence_refs": {"type": "array", "items": {"type": "string"}},
+          "promotion_status": {"type": "string", "enum": ["narrative_core", "narrative_support", "audit_only", "uncertain"]}
         }
       }
     },
@@ -162,6 +165,36 @@
     "table_blocks": {
       "type": "array",
       "items": {"type": "string"}
+    },
+    "argument_refs": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "evidence_promotion": {
+      "type": "object"
+    },
+    "narrative_units": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["section_id", "heading_zh", "narrative_text_zh"],
+        "properties": {
+          "section_id": {"type": "string"},
+          "purpose": {"type": "string"},
+          "heading_zh": {"type": "string"},
+          "narrative_text_zh": {"type": "string"},
+          "argument_unit_ids": {"type": "array", "items": {"type": "string"}},
+          "claim_ids": {"type": "array", "items": {"type": "string"}},
+          "evidence_ids": {"type": "array", "items": {"type": "string"}},
+          "visual_ids": {"type": "array", "items": {"type": "string"}},
+          "equation_ids": {"type": "array", "items": {"type": "string"}},
+          "caveat_ids": {"type": "array", "items": {"type": "string"}},
+          "source_anchors": {"type": "array", "items": {"type": "string"}},
+          "epistemic_status": {"type": "string"},
+          "audit_refs": {"type": "array", "items": {"type": "string"}}
+        },
+        "additionalProperties": false
+      }
     }
   },
   "additionalProperties": false

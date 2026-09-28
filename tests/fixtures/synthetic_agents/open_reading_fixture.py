@@ -11,6 +11,7 @@ from datetime import datetime, timezone
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / 'scripts'))
 from validate_common import load_json, schema_validate, sha256
+from build_argument_reconstruction import build_argument_topology
 
 def sanitize_figure(inv_fig, claims):
     fid = inv_fig.get('id', 'F01')
@@ -208,6 +209,7 @@ def run_synthetic_open_reading(task_path):
         "lens_synthesis": [],
         "lens_conflicts": []
     }
+    result_model["argument_reconstruction"] = build_argument_topology(result_model, inv=inv, sm=sm)
 
     envelope = {
         "task_id": task.get("task_id", "TASK-OPEN-READING"),

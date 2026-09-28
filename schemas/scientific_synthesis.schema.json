@@ -110,10 +110,28 @@
             "items": {
               "type": "object"
             }
+          },
+          "argument_refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "assessed_relation": {
+            "type": "string"
+          },
+          "author_claim_zh": {
+            "type": "string"
+          },
+          "evidentia_assessment_zh": {
+            "type": "string"
           }
         },
         "additionalProperties": false
       }
+    },
+    "argument_synthesis": {
+      "type": "object"
     }
   },
   "additionalProperties": false

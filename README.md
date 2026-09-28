@@ -32,6 +32,9 @@ paper.pdf
    ↓
 page-first source reconstruction (source_pages/ + clean crops, bound to SOURCE_SHA256)
    ↓
+   ├── Evidence Structure Track (Claims, O/I/A, Figures, Tables, Evidence Graph)
+   └── Argument Reconstruction Track (model/argument_reconstruction.json, Author vs Assessed Argument, Evidence Promotion)
+   ↓
 Open Reading draft (project invisible) → Baseline Lock
    ↓
 Six independent Lenses (Author / Reviewer / Mechanism / Builder / Anomaly / Counterfactual)
@@ -39,7 +42,7 @@ Six independent Lenses (Author / Reviewer / Mechanism / Builder / Anomaly / Coun
    ↓
 cross-lens semantic reconciliation (conflicts recorded without majority voting)
    ↓
-cross-lens scientific synthesis (model/scientific_synthesis.json, topic-centered)
+dynamic cross-lens scientific synthesis (model/scientific_synthesis.json, argument-aware)
    ↓
 evidence verification (fail-closed verifier)
    ↓
@@ -47,7 +50,7 @@ Final Paper Model + Evidence Graph
    ↓
 freeze + SHA-256 integrity gate (fail closed on any SHA mismatch)
    ↓
-Chinese-first Paper Reader (HTML + MD + PDF, 7-layer hierarchy, immutable)
+Chinese-first Paper Reader (HTML + MD + PDF, 7-layer hierarchy, renderer purity enforced)
    ↓
 PAPER_COMPLETE (Default run stops here)
 

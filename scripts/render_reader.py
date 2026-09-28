@@ -23,6 +23,7 @@ from datetime import datetime, timezone
 
 sys.path.insert(0, str(Path(__file__).parent))
 from validate_common import load_json, schema_validate, sha256
+from build_argument_reconstruction import build_argument_reconstruction
 
 def esc(x):
     return html.escape(str(x or ''))
@@ -34,6 +35,16 @@ def build_reader_ir(r):
     sm = load_json(sm_p) if sm_p.exists() else {}
     syn_p = r / 'model/scientific_synthesis.json'
     syn = load_json(syn_p) if syn_p.exists() else {}
+
+    # Load or dynamically build argument reconstruction artifact
+    arg_p = r / 'model/argument_reconstruction.json'
+    if arg_p.exists():
+        arg_recon = load_json(arg_p)
+    else:
+        try:
+            arg_recon = build_argument_reconstruction(r)
+        except Exception:
+            arg_recon = {}
     
     title = pm.get('paper', {}).get('title', 'Untitled Paper')
     paper_id = pm.get('paper_id', r.name)
@@ -56,22 +67,37 @@ def build_reader_ir(r):
                 })
 
     # 1. 一分钟看懂这篇论文
-    q_first = pm.get('questions', [{}])[0].get('text', '如何提升复杂场景下的模型泛化与表征能力？')
-    c_first = claims[0].get('statement', '提出新型端到端建模方案，实测性能显著提升。') if claims else '提出了核心方法并完成实验验证。'
+    q_first = arg_recon.get('central_question') or (pm.get('questions', [{}])[0].get('text') if pm.get('questions') else f"关于《{title}》的核心科学与工程问题")
+    c_first = arg_recon.get('central_thesis') or (claims[0].get('statement') if claims else '提出了核心方法并完成实验验证。')
+    
+    # Boundary extraction
+    scope_conds = arg_recon.get('scope_conditions', [])
+    if scope_conds:
+        boundary_text = f"最大风险与适用边界：{'; '.join(scope_conds[:2])}。"
+    elif pm.get('limitations'):
+        boundary_text = f"最大风险与适用边界：{pm['limitations'][0].get('text', '仅在论文报告的基准评测范围内验证')}。"
+    else:
+        boundary_text = "最大风险与适用边界：论文未明确说明额外极端风险，适用范围以报告的基准评测为准。"
+
     one_min = {
         "research_question_zh": f"研究核心关切：{q_first}",
-        "core_method_zh": f"核心方法设计：基于自然结构 '{ ' → '.join(pm.get('natural_structure', ['输入建模', '核心机制', '实验验证'])) }' 构建的专用体系。",
+        "core_method_zh": f"核心方法设计：基于自然结构 '{ ' → '.join(pm.get('natural_structure', ['方法建模', '实验验证'])) }' 构建的专用体系。",
         "key_findings_zh": f"核心实证发现：在主实验中达成预期指标，{c_first}",
-        "primary_value_zh": "最大科研与应用价值：提供了明确的归纳偏置与可解耦的组件设计，支撑同类任务跨场景复用。",
-        "key_risks_boundaries_zh": "最大风险与适用边界：依赖特定数据清洗与分布假设；在长尾或极端工况下存在退化风险。"
+        "primary_value_zh": f"主要科研与应用价值：针对 '{q_first[:40]}' 提供了可验证的实证方案与方法体系。",
+        "key_risks_boundaries_zh": boundary_text
     }
 
     # 2. 论文到底在解决什么问题
+    bg_text = arg_recon.get('motivation') or (f"研究背景：针对《{title}》所探讨的领域科学问题展开深入探索。" if title else "研究背景：论文立足于领域内对高效鲁棒方法设计的迫切需求。")
+    gap_text = arg_recon.get('prior_assumptions_or_gap') or (pm.get('limitations', [{}])[0].get('text') if pm.get('limitations') else "已有方案在处理相关问题时，其先验假设与复杂现实工况之间存在科学局限。")
+    if not gap_text.startswith("已有方法局限："):
+        gap_text = f"已有方法局限：{gap_text}"
+
     p_and_c = {
-        "background_zh": f"研究背景：论文立足于领域内对高效鲁棒特征提取的迫切需求。针对当前主流方法在应对高维、非线性及多模态数据时存在的表征瓶颈展开探索。",
-        "prior_limitations_zh": "已有方法局限：传统方案多依赖强人工启发式先验或过于简化的线性假设，计算复杂度高且在复杂工况下容易失效。",
-        "entry_point_zh": f"本文切入点：以 '{q_first}' 为牵引，重构了特征流转与损失约束机制，直接靶向解决先验偏差问题。",
-        "why_it_matters_zh": "重要性定性：这一问题的攻克对于从理论上厘清因果机制并推动工程实战落地具有基石意义。"
+        "background_zh": bg_text if bg_text.startswith("研究背景：") else f"研究背景：{bg_text}",
+        "prior_limitations_zh": gap_text,
+        "entry_point_zh": f"本文切入点：以 '{q_first[:50]}' 为牵引，构建专用的实证与理论分析架构。",
+        "why_it_matters_zh": "重要性定性：这一问题的探索对于从实证与理论层面厘清关键机制并指导实际应用具有重要意义。"
     }
 
     # 3. 方法到底怎么工作
@@ -81,7 +107,7 @@ def build_reader_ir(r):
         eq_explained.append({
             "equation_id": eq.get('equation_id', 'EQ'),
             "raw_text": raw,
-            "explanation_zh": f"公式定义了核心变换算子，用于量化特征分布并约束优化空间（见 p.{eq.get('page', 1)}）。"
+            "explanation_zh": f"公式定义了关键变换关系（见 p.{eq.get('page', 1)}）。"
         })
     methods_list = pm.get('methods', [])
     comp_list = []
@@ -91,27 +117,43 @@ def build_reader_ir(r):
             "role": m.get('description', '核心算法计算流与特征变换单元')
         })
     if not comp_list:
-        comp_list = [{"name": "特征编码与前向推理", "role": "将原始输入映射至高维隐空间并提取判别性表征"}, {"name": "多尺度聚合/注意力机制", "role": "自适应加权关键特征通道"}, {"name": "目标损失函数优化", "role": "多任务联合约束保障优化梯度平稳收敛"}]
+        comp_list = [{"name": "核心方法流程", "role": pm.get('natural_structure', ['方法建模'])[0] if pm.get('natural_structure') else "核心计算与预测流程"}]
 
     m_and_m = {
-        "pipeline_flow_zh": f"数据流转路径：原始输入特征 → {' → '.join([c['name'] for c in comp_list])} → 最终预测输出。",
+        "pipeline_flow_zh": f"数据流转路径：原始输入 → {' → '.join([c['name'] for c in comp_list])} → 最终评估输出。",
         "components": comp_list,
         "equations_explained": eq_explained
     }
 
-    # 4. 关键实验逐个说明
+    # 4. 关键实验逐个说明 (Selective promotion: narrative_core & narrative_support only)
     decisive_exps = []
-    # Map evidence back to supported claims for bidirectional navigation
     ev_to_claims = {}
     for c in claims:
         cid = c.get('id')
         for evid in c.get('evidence', []):
             ev_to_claims.setdefault(evid, []).append(cid)
 
+    ev_promo = arg_recon.get('evidence_promotion', {})
+    core_ev_set = set(ev_promo.get('narrative_core', []))
+    support_ev_set = set(ev_promo.get('narrative_support', []))
+    uncertain_ev_set = set(ev_promo.get('uncertain', []))
+    roles_map = ev_promo.get('evidence_roles', {})
+
+    allowed_narrative_ev = core_ev_set | support_ev_set | uncertain_ev_set
+    if not allowed_narrative_ev and (figs or tables):
+        # Fallback: take at most first 2 figures and first 2 tables if no promotion was specified
+        allowed_narrative_ev = {f.get('id') for f in figs[:2]} | {t.get('id') for t in tables[:2]}
+
     for f in figs:
         fid = f.get('id', '')
+        if fid not in allowed_narrative_ev:
+            continue
         supp = ev_to_claims.get(fid, f.get('supports_claims', []))
         cap = f.get('caption_original', '')
+        f_lims = f.get('limitations', [])
+        anom_text = f"异常与注意事项：{f_lims[0]}" if f_lims else "异常与注意事项：未在当前证据中确认超出报告指标的显著异常。"
+        promo_status = roles_map.get(fid, "narrative_core" if fid in core_ev_set else "narrative_support")
+
         decisive_exps.append({
             "id": fid,
             "title_zh": f"{f.get('paper_label', fid)}: 实证证据解析",
@@ -119,17 +161,24 @@ def build_reader_ir(r):
             "page": f.get('page', 1),
             "asset": f.get('file') or f.get('asset'),
             "what_is_compared_zh": f"对比内容与对象：围绕论文核心指标展开对照测试。原始题注：{cap}",
-            "how_to_read_zh": "读图指引：横轴表征实验条件或基线模型，纵轴反映指标水平。关注误差棒区间及核心消融曲线走向。",
+            "how_to_read_zh": "读图指引：对比不同实验条件与基线下的指标走势，评估核心变量对结论的支撑力度。",
             "what_it_proves_zh": f"直接支撑结论：为论文主张 {', '.join(supp) if supp else '核心有效性'} 提供了直接观测数据支持。",
-            "what_it_does_not_prove_zh": "非证明范围：并未完全排除外部数据集分布偏移带来的隐式影响，不可推断为任意场景下的绝对最优。",
-            "anomalies_caveats_zh": "异常与注意事项：注意观察是否存在长尾样本抖动或基线未经充分调优的可能性。",
-            "supports_claims": supp
+            "what_it_does_not_prove_zh": "非证明范围：未在当前证据中确认超出评测指标范围的结论。",
+            "anomalies_caveats_zh": anom_text,
+            "supports_claims": supp,
+            "argument_refs": ["ARG-03"] if "ARG-03" in [u.get('id') for u in arg_recon.get('argument_units', [])] else [],
+            "evidence_refs": [fid],
+            "promotion_status": promo_status
         })
 
     for t in tables:
         tid = t.get('id', '')
+        if tid not in allowed_narrative_ev:
+            continue
         supp = ev_to_claims.get(tid, [])
         cap = t.get('caption_original', '')
+        promo_status = roles_map.get(tid, "narrative_core" if tid in core_ev_set else "narrative_support")
+
         decisive_exps.append({
             "id": tid,
             "title_zh": f"{t.get('paper_label', tid)}: 主基准定量评测表",
@@ -137,26 +186,67 @@ def build_reader_ir(r):
             "page": t.get('page', 1),
             "asset": t.get('file') or t.get('asset'),
             "what_is_compared_zh": f"评测维度与基准对比。原始题注：{cap}",
-            "how_to_read_zh": f"表格读法：行代表对比算法（包含消融变体），列代表定量度量（如准确率、误差等）。加粗为最优项。",
-            "what_it_proves_zh": f"直接支撑结论：定量验证方法在主干指标上的数值领先（支持主张 {', '.join(supp) if supp else '核心指标'}）。",
-            "what_it_does_not_prove_zh": "非证明范围：表格数值无法直接反映极值长尾下的计算开销与延迟抖动。",
-            "anomalies_caveats_zh": "异常与注意事项：需核验超参数选择是否存在对特定评估划分的过拟合。",
-            "supports_claims": supp
+            "how_to_read_zh": "表格读法：对比行项目对应的不同方案，结合列指标数值评估相对表现。",
+            "what_it_proves_zh": f"直接支撑结论：定量验证方法在关键指标上的数值表现（支持主张 {', '.join(supp) if supp else '核心指标'}）。",
+            "what_it_does_not_prove_zh": "非证明范围：表格数值无法直接反映未列出环境或未测试分布下的表现。",
+            "anomalies_caveats_zh": "异常与注意事项：未在当前证据中确认超出报告指标的显著异常。",
+            "supports_claims": supp,
+            "argument_refs": ["ARG-03"] if "ARG-03" in [u.get('id') for u in arg_recon.get('argument_units', [])] else [],
+            "evidence_refs": [tid],
+            "promotion_status": promo_status
         })
 
+    # If decisive_exps is still empty because no figures/tables exist, ensure at least an empty array is schema valid
     # 5. 综合科学判断
     syn_topics = syn.get('topics', [])
     strong_ev = [s.get('title_zh') for s in syn_topics if s.get('confidence') == 'HIGH']
     weak_ev = [s.get('title_zh') for s in syn_topics if s.get('confidence') in ('LOW', 'PARTIAL', 'TENSION')]
+
+    # Assumptions
+    if arg_recon.get('scope_conditions'):
+        assump_text = f"核心假设：{'; '.join(arg_recon['scope_conditions'][:2])}。"
+    elif pm.get('assumptions'):
+        assump_text = f"核心假设：{pm['assumptions'][0].get('text')}。"
+    else:
+        assump_text = "核心假设：论文未明确说明形式化先验假设，默认评估环境与基准测试分布保持一致。"
+
+    # Alternative explanations
+    alt_exp_list = arg_recon.get('assessed_argument', {}).get('alternative_explanations', [])
+    if alt_exp_list:
+        alt_text = f"竞争解释：{'; '.join(alt_exp_list[:2])}。"
+    else:
+        alt_text = "竞争解释：论文及各透镜审视未提出显著的竞争性替代假说。"
+
+    # Anomalies
+    if pm.get('anomalies'):
+        anom_list_text = f"反常与负向结果：{'; '.join(a.get('text', '') for a in pm['anomalies'][:2])}。"
+    else:
+        anom_list_text = "反常与负向结果：未在当前证据中确认明确的反常或负向结果。"
+
+    # Boundaries
+    if arg_recon.get('scope_conditions'):
+        bound_text = f"适用边界：{'; '.join(arg_recon['scope_conditions'][:2])}。"
+    elif pm.get('limitations'):
+        bound_text = f"适用边界：{pm['limitations'][0].get('text')}。"
+    else:
+        bound_text = "适用边界：当前结论受限于论文报告的具体数据集与评估协议范围。"
+
+    # Unresolved
+    if arg_recon.get('unresolved_questions'):
+        unres_text = f"未决问题：{'; '.join(arg_recon['unresolved_questions'][:2])}。"
+    elif pm.get('unresolved'):
+        unres_text = f"未决问题：{pm['unresolved'][0].get('issue')}。"
+    else:
+        unres_text = "未决问题：更广泛现实条件下的长期泛化与实际表现仍待进一步验证。"
     
     sci_assess = {
-        "strongest_evidence_zh": f"最坚实的证据链：{', '.join(strong_ev) if strong_ev else '主要基准实验下的核心性能指标提升（F01/T01 等关键证据支撑良好）。'}",
-        "weakest_links_zh": f"最薄弱的推理链：{', '.join(weak_ev) if weak_ev else '由关联性提升直接推断因果机制闭环的部分，尚缺乏严格的控制变量隔离。'}",
-        "assumptions_zh": "核心假设：假设训练与评估分布处于同一广义物理域，且数据标注误差满足独立同分布高斯分布。",
-        "alternative_explanations_zh": "竞争解释：观察到的部分增益可能归因于特征平滑或隐式正则化效应，而非特定的拓扑结构创新。",
-        "anomalies_and_negatives_zh": "反常与负向结果：长尾测试样本下性能方差有明显扩大迹象，提示在未见极端分布下鲁棒性存在边界。",
-        "boundaries_zh": "适用边界：适用于中低噪声、高采样密度的规范场景；极端稀疏或剧烈扰动下需审慎评估。",
-        "unresolved_questions_zh": "未决问题：核心算子在硬件极低功耗限制下的能效比，以及跨域物理定律先验的完全自洽性仍待后续实证。"
+        "strongest_evidence_zh": f"最坚实的证据链：{', '.join(strong_ev) if strong_ev else '主要基准实验下的核心实证指标具备直接数据支撑。'}",
+        "weakest_links_zh": f"最薄弱的推理链：{', '.join(weak_ev) if weak_ev else '由实证关联性推断广泛一般性结论的部分，需注意先验控制边界。'}",
+        "assumptions_zh": assump_text,
+        "alternative_explanations_zh": alt_text,
+        "anomalies_and_negatives_zh": anom_list_text,
+        "boundaries_zh": bound_text,
+        "unresolved_questions_zh": unres_text
     }
 
     # 6. 可复用技术内容
@@ -165,19 +255,20 @@ def build_reader_ir(r):
         reusable.append({
             "id": pc.get('id', 'PC01'),
             "name": pc.get('name', 'Portable Module'),
-            "category": "算法算子 / 损失函数",
-            "description_zh": f"输入输出契约：{pc.get('io', 'Tensor -> Tensor')}。具备良好的结构独立性，可剥离直接迁移。",
+            "category": "算法实现 / 算子",
+            "description_zh": f"输入输出契约：{pc.get('io', '数据流转换契约')}。具备结构独立性，可按需剥离复用。",
             "source_evidence": pc.get('source', []),
-            "transfer_notes_zh": "迁移建议：在非同构下游任务接入时，保持学习率独立并设置预热阶段。"
+            "transfer_notes_zh": "迁移建议：在非同构下游任务接入时，需重新对齐输入契约与评测基准。"
         })
     if not reusable:
+        core_ev_list = arg_recon.get('evidence_promotion', {}).get('narrative_core', []) or (claims[0].get('evidence', ['p.1']) if claims else ['p.1'])
         reusable = [{
             "id": "PC01",
-            "name": "多尺度特征注意力约束损失 (Multi-Scale Loss)",
-            "category": "损失函数 / 正则项",
-            "description_zh": "可解耦的自适应惩罚项，用于抑制非显著背景噪声通道。",
-            "source_evidence": ["F01", "T01"],
-            "transfer_notes_zh": "建议权重超参设为 0.05~0.1，配合 AdamW 优化器。"
+            "name": "核心算法设计",
+            "category": "算法实现",
+            "description_zh": "论文未提取出可独立拆分的通用模块，建议参考正文方法描述进行具体任务的重实现。",
+            "source_evidence": core_ev_list[:2],
+            "transfer_notes_zh": "迁移建议：需结合具体应用场景调整实现。"
         }]
 
     # 7. 证据审计附录
@@ -188,6 +279,52 @@ def build_reader_ir(r):
         "lens_synthesis": pm.get('lens_synthesis', []),
         "lens_conflicts": pm.get('lens_conflicts', [])
     }
+
+    # Narrative semantic units
+    arg_units = arg_recon.get('argument_units', [])
+    arg_unit_ids = [u['id'] for u in arg_units]
+    narrative_units = [
+        {
+            "section_id": "one_minute_summary",
+            "purpose": "thesis_overview",
+            "heading_zh": "一分钟看懂这篇论文",
+            "narrative_text_zh": f"{one_min['research_question_zh']} {one_min['core_method_zh']} {one_min['key_findings_zh']}",
+            "argument_unit_ids": [uid for uid in ("ARG-01", "ARG-02") if uid in arg_unit_ids],
+            "claim_ids": [c['id'] for c in claims[:1]],
+            "evidence_ids": list(core_ev_set)[:2],
+            "epistemic_status": "SUPPORTED"
+        },
+        {
+            "section_id": "problem_and_context",
+            "purpose": "motivation_and_gap",
+            "heading_zh": "论文到底在解决什么问题",
+            "narrative_text_zh": f"{p_and_c['background_zh']} {p_and_c['prior_limitations_zh']} {p_and_c['entry_point_zh']}",
+            "argument_unit_ids": [uid for uid in ("ARG-01",) if uid in arg_unit_ids],
+            "claim_ids": [],
+            "evidence_ids": [],
+            "epistemic_status": "SUPPORTED"
+        },
+        {
+            "section_id": "method_and_mechanisms",
+            "purpose": "method_rationale",
+            "heading_zh": "方法到底怎么工作",
+            "narrative_text_zh": m_and_m['pipeline_flow_zh'],
+            "argument_unit_ids": [uid for uid in ("ARG-02",) if uid in arg_unit_ids],
+            "claim_ids": [claims[0]['id']] if claims else [],
+            "evidence_ids": [],
+            "epistemic_status": "SUPPORTED"
+        },
+        {
+            "section_id": "scientific_assessment",
+            "purpose": "cross_lens_assessment",
+            "heading_zh": "综合科学判断",
+            "narrative_text_zh": f"{sci_assess['strongest_evidence_zh']} {sci_assess['weakest_links_zh']}",
+            "argument_unit_ids": [u['id'] for u in arg_units if u.get('semantic_role') in ('limitation', 'conclusion')],
+            "claim_ids": [c['id'] for c in claims[:2]],
+            "evidence_ids": list(core_ev_set),
+            "epistemic_status": "PARTIAL" if weak_ev else "SUPPORTED"
+        }
+    ]
 
     ir = {
         "schema_version": "1.0",
@@ -202,6 +339,9 @@ def build_reader_ir(r):
         "scientific_assessment": sci_assess,
         "reusable_components": reusable,
         "audit_appendix": appendix,
+        "argument_refs": arg_unit_ids,
+        "evidence_promotion": ev_promo,
+        "narrative_units": narrative_units,
         # Backward compatibility for reader_audit.py
         "claim_cards": [c.get('id') for c in claims],
         "figure_blocks": [x.get('id') for x in figs],

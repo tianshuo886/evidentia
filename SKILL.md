@@ -13,10 +13,13 @@ metadata:
 Evidentia turns one supplied paper into a durable, deeply reasoned research object:
 
 ```text
-PDF → Source Reconstruction (Page-first Visual Track) → Source Lock → Open Reading (AgentTask)
-→ Baseline Lock → Six Independent Lenses (AgentTask) → Semantic Reconciliation
-→ Cross-Lens Scientific Synthesis → Evidence Verification → Frozen Paper Model + Evidence Graph
-→ Chinese-first Narrative Reader (HTML/MD/PDF) → PAPER_COMPLETE (STOP)
+PDF → Source Reconstruction (Page-first Visual Track) → Source Lock
+    ├── Evidence Structure Track (Claims, O/I/A, Figures, Tables, Evidence Graph)
+    └── Argument Reconstruction Track (Problem, Motivation, Gap, Hypothesis, Scope, model/argument_reconstruction.json)
+    → Open Reading (AgentTask) → Baseline Lock → Six Independent Lenses (AgentTask)
+    → Semantic Reconciliation → Argument-Aware Cross-Lens Scientific Synthesis
+    → Evidence Verification → Frozen Paper Model + Evidence Graph
+    → Chinese-first Narrative Reader (HTML/MD/PDF) → PAPER_COMPLETE (STOP)
 
 [Explicit User Request Only]
 → Contextual Apply (/evidentia-apply) → Separate Project Reader (apply/<project>/)
@@ -51,9 +54,10 @@ Supports local PDF files, DOIs (e.g. `10.1038/...`), arXiv IDs (e.g. `1706.03762
 │   ├── paper_model.json             # final reconciled model (Open Reading draft → frozen final)
 │   ├── open_reading_model.json      # immutable lens baseline snapshot (snapshot_baseline.py)
 │   ├── open_reading_manifest.json   # baseline hashes + contract/prompt versions
+│   ├── argument_reconstruction.json # first-class argument topology, author vs assessed argument, evidence promotion
 │   ├── candidate_clusters.json      # Layer 1 deterministic pre-clustering
 │   ├── lens_reconciliation.json     # Layer 2 semantic reconciliation + recorded conflicts
-│   ├── scientific_synthesis.json    # topic-centered cross-lens synthesis
+│   ├── scientific_synthesis.json    # dynamic topic-centered cross-lens synthesis
 │   ├── evidence_graph.json          # typed claim/evidence relations (bound to SOURCE_SHA256)
 │   ├── figure_inventory.json        # extraction record (bound to SOURCE_SHA256)
 │   ├── source_map.json
@@ -77,14 +81,16 @@ Supports local PDF files, DOIs (e.g. `10.1038/...`), arXiv IDs (e.g. `1706.03762
 
 1. **Source before interpretation.** Reconstruct pages, sections, captions, figures, tables, equations, experiments and in-text mentions before writing claims.
 2. **Paper reading is default; project isolation is absolute.** Default run runs `PAPER_READING` intent and terminates at `PAPER_COMPLETE`. Project files, chats, plans and memory are strictly forbidden during paper reading. Zero `apply/` artifacts created by default.
-3. **Natural structure first.** Recover the paper's own argument before mapping to canonical fields.
-4. **Page-first visual reconstruction; zero whole-page fallbacks.** Render complete PDF pages first, visually localize evidence second, deterministically crop third, verify fourth. Never publish a whole-page screenshot as a Figure/Table asset. Low-confidence visual binding fails closed to `NEEDS_REVIEW`.
-5. **Claim discipline.** Keep Observation, Author Interpretation and Reader Assessment separate. Distinguish in-paper evidence from cited evidence.
-6. **Independent Lens passes.** Author, Reviewer, Mechanism, Builder, Anomaly and Counterfactual are separate rereads of the frozen base understanding. One combined summary is not a Lens pass.
-7. **Cross-lens scientific synthesis without majority voting.** Synthesize Lens findings into topic-centered units (`scientific_synthesis.json`). Contradictions, anomalies, caveats and counterfactuals must be preserved, never erased.
-8. **Chinese-first human reader; source preserved underneath.** Reader outputs are Chinese-first by default for human deep reading. Technical English terms and source evidence are preserved in parentheses.
-9. **Apply is EXPLICIT-REQUEST-ONLY.** Project Apply is not the next phase of a normal read; it runs only upon explicit user request. Paper outputs (`reader/`) and project outputs (`apply/<project>/`) are physically separate. The Paper Reader is immutable.
-10. **Uncertainty is data.** NOT_STATED, AMBIGUOUS, INSUFFICIENT_EVIDENCE, MODEL_UNCERTAIN and UNRESOLVED remain visible. Fail closed on uncertain tables (`STRUCTURE_UNCERTAIN`).
+3. **Natural structure and argument reconstruction first.** Recover the paper's own argumentative topology (`model/argument_reconstruction.json`) before mapping to canonical fields. Explicitly distinguish Author Argument (what authors argue) from Evidentia-Assessed Argument (what evidence actually justifies).
+4. **Extraction does not imply presentation (Evidence promotion).** Selectively promote decisive evidence (`narrative_core`, `narrative_support`) to the main narrative; keep catalog and supplementary evidence in the audit appendix (`audit_only`, `uncertain`).
+5. **Renderer purity: renderers must be scientifically dumb.** Production renderers format presentation, typography, and layout, but must never invent mechanisms, limitations, hyperparameters, optimizers, or domain boilerplate. When evidence is absent, state explicitly or omit.
+6. **Page-first visual reconstruction; zero whole-page fallbacks.** Render complete PDF pages first, visually localize evidence second, deterministically crop third, verify fourth. Never publish a whole-page screenshot as a Figure/Table asset. Low-confidence visual binding fails closed to `NEEDS_REVIEW`.
+7. **Claim discipline.** Keep Observation, Author Interpretation and Reader Assessment separate. Distinguish in-paper evidence from cited evidence.
+8. **Independent Lens passes.** Author, Reviewer, Mechanism, Builder, Anomaly and Counterfactual are separate rereads of the frozen base understanding. One combined summary is not a Lens pass.
+9. **Cross-lens scientific synthesis without majority voting.** Dynamically derive synthesis units from reconstructed arguments and Lens findings (`scientific_synthesis.json`), free of hardcoded domain templates. Contradictions, anomalies, caveats and counterfactuals must be preserved, never erased.
+10. **Chinese-first human reader; source preserved underneath.** Reader outputs are Chinese-first by default for human deep reading. Technical English terms and source evidence are preserved in parentheses.
+11. **Apply is EXPLICIT-REQUEST-ONLY.** Project Apply is not the next phase of a normal read; it runs only upon explicit user request. Paper outputs (`reader/`) and project outputs (`apply/<project>/`) are physically separate. The Paper Reader is immutable.
+12. **Uncertainty is data.** NOT_STATED, AMBIGUOUS, INSUFFICIENT_EVIDENCE, MODEL_UNCERTAIN and UNRESOLVED remain visible. Fail closed on uncertain tables (`STRUCTURE_UNCERTAIN`).
 
 ## Executable workflow
 

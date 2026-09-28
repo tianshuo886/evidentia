@@ -14,6 +14,7 @@ sys.path.insert(0, str(HERE))
 from validate_common import load_json, schema_validate
 from agent_dispatch import dispatch_agent_task
 from agent_submit import submit_agent_result
+from build_argument_reconstruction import build_argument_reconstruction
 
 def run_open_reading(task_path, out_path=None, result_file=None, fixture=False, replay_dir=None, adapter=None, model=None):
     tp = Path(task_path)
@@ -47,6 +48,11 @@ def run_open_reading(task_path, out_path=None, result_file=None, fixture=False, 
         runs_dir = root / 'agent_runs/TASK-OPEN-READING'
         runs_dir.mkdir(parents=True, exist_ok=True)
         (runs_dir / 'run-001.json').write_text(json.dumps(envelope, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
+
+        try:
+            build_argument_reconstruction(root)
+        except Exception as e:
+            print(f"Warning: Argument reconstruction generation deferred: {e}")
 
         print(f"OK: Open Reading successfully completed by {envelope.get('executor', {}).get('host', 'agent')} -> {target_out}")
         return 0

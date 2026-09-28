@@ -83,8 +83,8 @@ def create_open_reading_task(root):
         "task_id": "TASK-OPEN-READING",
         "task_type": "OPEN_READING",
         "required_capability": "SCIENTIFIC_OPEN_READING",
-        "scientific_contract": "Project-independent Open Reading baseline: strict O/I/A separation, source-grounded claims, explicit uncertainty.",
-        "description": "Project-independent initial reading of the reconstructed source paper.",
+        "scientific_contract": "Project-independent Open Reading baseline: preliminary argument reconstruction, strict O/I/A separation, source-grounded claims, explicit uncertainty.",
+        "description": "Project-independent initial reading and preliminary argument reconstruction of the reconstructed source paper.",
         "input_artifacts": {
             "source_pdf": "source/paper.pdf",
             "source_map": "model/source_map.json",
@@ -95,8 +95,13 @@ def create_open_reading_task(root):
         "instructions": (
             "Read only the supplied paper and its reconstructed source map/inventory. "
             "The external project is strictly invisible. "
+            "Reconstruct the paper's scientific reasoning topology and preliminary argument map: "
+            "Problem → Motivation / Prior Limitations → Scientific Gap → Hypothesis / Proposition / Design Move → "
+            "Method Rationale (why the method addresses the gap) → Experiment / Observation → "
+            "Author Interpretation → What the result changes in the argument → "
+            "Remaining Uncertainty / Alternative Explanations → Conclusion and Scope Boundaries. "
             "Rigidly separate Observation (what the data directly shows), Author Interpretation (what authors claim it means), "
-            "and Reader Assessment (your objective scientific critique). "
+            "and Reader Assessment (objective scientific critique). "
             "Ground every claim in concrete figure, table, or experiment IDs from the inventory. "
             "Explicitly register uncertainties, limitations, assumptions, and anomalies."
         ),
@@ -104,7 +109,8 @@ def create_open_reading_task(root):
             "PROJECT_INVISIBLE",
             "SOURCE_GROUNDED",
             "O_I_A_SEPARATION",
-            "EXPLICIT_UNCERTAINTY"
+            "EXPLICIT_UNCERTAINTY",
+            "ARGUMENT_RECONSTRUCTION"
         ],
         "prohibited_context": [
             "RESEARCH_MEMORY",

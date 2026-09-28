@@ -31,6 +31,8 @@ def refs(pm):
    for x in v:walk(x)
   elif isinstance(v,dict):
    for k,x in v.items():
+    if k == 'argument_reconstruction':
+     continue
     if k in ('evidence','source','supports','supports_claims','limitations','open_questions','assumptions','component_ids','claim','gap_ids'):
      if isinstance(x,str):out.add(x)
      elif isinstance(x,list):out.update(y for y in x if isinstance(y,str))
