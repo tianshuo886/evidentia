@@ -20,6 +20,7 @@ Command: `/evidentia-apply --paper <paper-output-dir> --project <project-main-do
 4. Each experiment proposal: Source (which evidence) / Delta vs current plan /
    Hypothesis / Integration point / Cost / Risk / Decision Value (what success
    AND failure each change — mandatory, not "may improve R²").
-5. Write `apply/<project>/research_delta.json`; same frozen paper supports
-   many projects (`apply/project_A|B|C/`); update unified reader; re-verify
-   links. Report delta counts + paths in chat, not the full reader.
+5. Write `apply/<project>/research_delta.json` and render separate
+   `apply/<project>/project_reader.html` and `.md`; same frozen paper supports
+   many projects (`apply/project_A|B|C/`); the Paper Reader in `reader/` remains
+   completely immutable. Report delta counts + paths in chat, not the full reader.

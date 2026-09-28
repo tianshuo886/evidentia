@@ -10,13 +10,17 @@ metadata:
 
 # Evidentia · Evidence-Grounded Paper Research OS
 
-Evidentia turns one supplied paper into a durable research object:
+Evidentia turns one supplied paper into a durable, deeply reasoned research object:
 
 ```text
-PDF → Source Reconstruction → Source Lock → Open Reading (AgentTask) → Baseline Lock
-→ Six Independent Lenses (AgentTask) → Semantic Reconciliation → Evidence Verification
-→ Frozen Paper Model + Evidence Graph → Unified Reader → Contextual Apply (AgentTask)
-→ Research Delta → Frozen Research Memory (objects/ + memory.sqlite)
+PDF → Source Reconstruction (Page-first Visual Track) → Source Lock → Open Reading (AgentTask)
+→ Baseline Lock → Six Independent Lenses (AgentTask) → Semantic Reconciliation
+→ Cross-Lens Scientific Synthesis → Evidence Verification → Frozen Paper Model + Evidence Graph
+→ Chinese-first Narrative Reader (HTML/MD/PDF) → PAPER_COMPLETE (STOP)
+
+[Explicit User Request Only]
+→ Contextual Apply (/evidentia-apply) → Separate Project Reader (apply/<project>/)
+→ Optional Frozen Research Memory (/evidentia-memory)
 ```
 
 ## Entries
@@ -27,15 +31,16 @@ PDF → Source Reconstruction → Source Lock → Open Reading (AgentTask) → B
 /evidentia-memory [commit-paper|commit-project|relation|inspect|snapshot|export|import]
 ```
 
-Supports local PDF files, DOIs (e.g. `10.1038/...`), arXiv IDs (e.g. `1706.03762`), and direct paper URLs. Automatically acquires paper metadata, overview markdown, and open-access source PDF via `pa` (Paper Acquire), CrossRef, and Unpaywall. If `--out` is omitted, output defaults to `./runs/<paper_stem>/`. All workspace artifacts, including `reader/reader.html` and `reader/reader.pdf`, are strictly contained within that single directory for clean inspection and one-command deletion.
+Supports local PDF files, DOIs (e.g. `10.1038/...`), arXiv IDs (e.g. `1706.03762`), and direct paper URLs. Automatically acquires paper metadata, overview markdown, and open-access source PDF via `pa` (Paper Acquire), CrossRef, and Unpaywall. If `--out` is omitted, output defaults to `./runs/<paper_stem>/`. All workspace artifacts are strictly contained within that single directory for clean inspection and one-command deletion.
 
-Open Reading is project-invisible. Apply loads exactly one project document only after the Paper Model is frozen and its hash is verified. Triage and paper search are outside this skill.
+**Paper reading is the default contract**: Default execution terminates at `PAPER_COMPLETE` after producing the frozen paper understanding and Chinese-first Paper Reader (`reader/paper_reader.html`, `paper_reader.md`, `paper_reader.pdf`). Apply loads exactly one project document **only after explicit user intent** and writes exclusively to `apply/<project>/`.
 
 ## Required output
 
 ```text
 <out>/
 ├── source/paper.pdf [+ supplements]
+├── source_pages/                    # full-page high-res rasterization (page-001.png, ...)
 ├── working/                         # source-only Open Reading boundary
 ├── tasks/                           # schema-valid AgentTask packets
 │   ├── open_reading.json
@@ -48,15 +53,22 @@ Open Reading is project-invisible. Apply loads exactly one project document only
 │   ├── open_reading_manifest.json   # baseline hashes + contract/prompt versions
 │   ├── candidate_clusters.json      # Layer 1 deterministic pre-clustering
 │   ├── lens_reconciliation.json     # Layer 2 semantic reconciliation + recorded conflicts
+│   ├── scientific_synthesis.json    # topic-centered cross-lens synthesis
 │   ├── evidence_graph.json          # typed claim/evidence relations (bound to SOURCE_SHA256)
 │   ├── figure_inventory.json        # extraction record (bound to SOURCE_SHA256)
 │   ├── source_map.json
 │   └── manifest.json                # freeze hashes and audit status
 ├── lens/{author,reviewer,mechanism,builder,anomaly,counterfactual}.json
-├── reader/{reader.html,reader.pdf,render_ir.json}
-├── apply/<project>/                 # created only by Apply
+├── reader/                          # Chinese-first Paper Reader (immutable & project-independent)
+│   ├── paper_reader_ir.json         # single synthesis-rich content IR (and render_ir.json)
+│   ├── paper_reader.html            # interactive deep-reading report (and reader.html)
+│   ├── paper_reader.md              # complete Markdown deep-reading report (and reader.md)
+│   └── paper_reader.pdf             # print snapshot (and reader.pdf)
+├── apply/<project>/                 # created ONLY after explicit Apply request
 │   ├── project_context.json
 │   ├── research_delta.json
+│   ├── project_reader.html
+│   ├── project_reader.md
 │   └── memory_augmented_synthesis.json
 └── notes.md
 ```
@@ -64,15 +76,15 @@ Open Reading is project-invisible. Apply loads exactly one project document only
 ## Non-negotiable rules
 
 1. **Source before interpretation.** Reconstruct pages, sections, captions, figures, tables, equations, experiments and in-text mentions before writing claims.
-2. **Project isolation.** Open Reading can access only the paper bundle, supplements and skill resources. Project files, plans, repositories, chats and memory are forbidden.
+2. **Paper reading is default; project isolation is absolute.** Default run runs `PAPER_READING` intent and terminates at `PAPER_COMPLETE`. Project files, chats, plans and memory are strictly forbidden during paper reading. Zero `apply/` artifacts created by default.
 3. **Natural structure first.** Recover the paper's own argument before mapping to canonical fields.
-4. **Full visual coverage.** Every Figure and Table receives a role, depth, inspection record and provenance. Depth changes effort, never coverage.
+4. **Page-first visual reconstruction; zero whole-page fallbacks.** Render complete PDF pages first, visually localize evidence second, deterministically crop third, verify fourth. Never publish a whole-page screenshot as a Figure/Table asset. Low-confidence visual binding fails closed to `NEEDS_REVIEW`.
 5. **Claim discipline.** Keep Observation, Author Interpretation and Reader Assessment separate. Distinguish in-paper evidence from cited evidence.
 6. **Independent Lens passes.** Author, Reviewer, Mechanism, Builder, Anomaly and Counterfactual are separate rereads of the frozen base understanding. One combined summary is not a Lens pass.
-7. **Freeze means immutable.** Apply refuses a missing or changed Paper Model, graph, source PDF or Lens output.
-8. **Reader is an adapter.** The Paper Model is truth; HTML/PDF and Kami-compatible presentation are downstream renderings. Do not reshape the science to fit a template.
-9. **Apply is a Research Delta.** It may produce Changed Belief, New Evidence, New Unknown, Transfer Unit, Invalidated Plan, or New Experiment. It must be allowed to produce `NO_NEW_ACTIONABLE_EXPERIMENT`.
-10. **Uncertainty is data.** NOT_STATED, AMBIGUOUS, INSUFFICIENT_EVIDENCE, MODEL_UNCERTAIN and UNRESOLVED remain visible.
+7. **Cross-lens scientific synthesis without majority voting.** Synthesize Lens findings into topic-centered units (`scientific_synthesis.json`). Contradictions, anomalies, caveats and counterfactuals must be preserved, never erased.
+8. **Chinese-first human reader; source preserved underneath.** Reader outputs are Chinese-first by default for human deep reading. Technical English terms and source evidence are preserved in parentheses.
+9. **Apply is EXPLICIT-REQUEST-ONLY.** Project Apply is not the next phase of a normal read; it runs only upon explicit user request. Paper outputs (`reader/`) and project outputs (`apply/<project>/`) are physically separate. The Paper Reader is immutable.
+10. **Uncertainty is data.** NOT_STATED, AMBIGUOUS, INSUFFICIENT_EVIDENCE, MODEL_UNCERTAIN and UNRESOLVED remain visible. Fail closed on uncertain tables (`STRUCTURE_UNCERTAIN`).
 
 ## Executable workflow
 
@@ -85,12 +97,13 @@ python scripts/evidentia.py run --pdf paper.pdf --out output
 python scripts/evidentia.py run --out output
 
 # 3. Host Agent executes tasks in tasks/lens/*.json independently and writes lens/<lens>.json
-# Then advances reconciliation, evidence graph, freeze, and reader:
+# Then advances reconciliation, scientific synthesis, evidence graph, freeze, and reader:
 python scripts/evidentia.py run --out output
+# Terminated at PAPER_COMPLETE!
 
-# 4. Optional Contextual Apply (after Freeze)
+# 4. Explicit Contextual Apply (ONLY when user explicitly requests project application)
 python scripts/pipeline.py apply --paper output --project project.md
-# fill the contextual reread and Research Delta, then:
+# Produces apply/project/project_reader.html & research_delta.json
 python scripts/validate_delta.py --paper output --delta output/apply/project/research_delta.json
 python scripts/full_audit.py --out output
 ```
@@ -106,13 +119,17 @@ python scripts/full_audit.py --out output
 - **Anomaly:** real failures, subgroup flips, negative results and downplayed findings; empty is valid.
 - **Counterfactual:** serious alternative explanations that reuse the paper's evidence.
 
-## Reader depth
+## Reader structure (Seven-layer hierarchy)
 
-- **30 seconds:** dashboard, one-line model, decisive claims and limitations.
-- **5 minutes:** Paper Map, argument chain, Claim Cards and decisive figures.
-- **30–60 minutes:** Evidence Atlas with original figures, captions, page anchors, experiments, weakest links, anomalies and unresolved questions.
+1. **一分钟看懂这篇论文:** 研究问题、核心方法、核心发现、最大价值、最大风险/边界。
+2. **论文到底在解决什么问题:** 背景痛点、已有先验局限、切入点、重要度判定。
+3. **方法到底怎么工作:** 端到端流程、核心组件拆解、公式中文通俗解读与物理意义。
+4. **关键实验逐个说明:** 核心图表逐一精读（对比内容、读图指引、证明范围、盲区、异常信号）。
+5. **综合科学判断:** 最坚实证据链、最薄弱推理链、先验假设、替代解释、反常现象、适用边界。
+6. **可复用技术内容:** 可解耦算法组件、损失函数、预处理策略、迁移落地建议。
+7. **证据审计附录:** 主张与 O/I/A 证据卡片列表、跨透镜争议焦点、页面锚点、验证状态（次级可折叠）。
 
-Project Delta appears in the same HTML surface with a separate visual treatment and separate data files. Every Delta item links back to Paper Claim, Figure, Table, Experiment or page IDs.
+Project Delta appears exclusively in `apply/<project>/project_reader.html` and `.md`. Every Delta item links back to Paper Claim, Figure, Table, Experiment or page IDs.
 
 ## Out of scope
 

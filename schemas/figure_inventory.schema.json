@@ -97,6 +97,7 @@
             "enum": [
               "page_crop",
               "embedded",
+              "deterministic_crop",
               "manual",
               "none"
             ]
@@ -115,7 +116,9 @@
               "page_crop",
               "manual",
               "none",
-              "caption_geometry"
+              "caption_geometry",
+              "MULTIMODAL_PAGE_LOCALIZATION",
+              "VISUAL_BINDING_UNCERTAIN"
             ]
           },
           "binding_confidence": {
@@ -130,7 +133,10 @@
             "type": "string"
           },
           "figure_bbox": {
-            "type": "array",
+            "type": [
+              "array",
+              "null"
+            ],
             "items": {
               "type": "number"
             }
@@ -184,6 +190,66 @@
           "raw_visual_fallback": {
             "type": [
               "string",
+              "null"
+            ]
+          },
+          "visual_elements": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "headers": {
+            "type": [
+              "array",
+              "null"
+            ]
+          },
+          "rows": {
+            "type": [
+              "array",
+              "null"
+            ]
+          },
+          "footnotes": {
+            "type": [
+              "array",
+              "null"
+            ]
+          },
+          "emphasis": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "structure_status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "localization_method": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "localization_confidence": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "reconstruction_confidence": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "needs_review": {
+            "type": [
+              "boolean",
               "null"
             ]
           }

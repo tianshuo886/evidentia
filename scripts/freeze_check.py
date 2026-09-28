@@ -84,7 +84,7 @@ def main():
  for i in inv.get('items',[]):
   if i.get('role') in (None,'unassigned') or i.get('depth') in (None,'unassigned'):errs.append(f"uninspected {i.get('id')}")
   if i.get('caption_status')=='OK' and not i.get('caption_original'):errs.append(f"missing caption {i.get('id')}")
-  if i.get('binding_method') not in ('embedded','page_crop','manual','caption_geometry','none',None):errs.append(f"invalid binding_method {i.get('id')}")
+  if i.get('binding_method') not in ('embedded','page_crop','manual','caption_geometry','none','MULTIMODAL_PAGE_LOCALIZATION','VISUAL_BINDING_UNCERTAIN',None):errs.append(f"invalid binding_method {i.get('id')}")
   if i.get('needs_visual_review') is True:errs.append(f"item {i.get('id')} requires visual review (needs_visual_review == true)")
   if i.get('role')=='critical':
    f=i.get('file');

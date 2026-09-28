@@ -160,6 +160,10 @@ def run_workflow(args):
 
         sh(str(HERE / 'phase.py'), '--out', str(out_dir), '--complete', 'RECONCILIATION')
 
+        print("[6.5/8] Performing Cross-Lens Scientific Synthesis...")
+        sh(str(HERE / 'scientific_synthesis_agent.py'), '--out', str(out_dir), *extra_flags)
+        sh(str(HERE / 'phase.py'), '--out', str(out_dir), '--complete', 'SYNTHESIS')
+
         # Artifact completeness gate for VERIFICATION
         pm_p = out_dir / 'model/paper_model.json'
         pm_data = load_json(pm_p) if pm_p.exists() else {}
@@ -197,14 +201,14 @@ def run_workflow(args):
         sh(str(HERE / 'render_reader.py'), '--out', str(out_dir))
         sh(str(HERE / 'phase.py'), '--out', str(out_dir), '--complete', 'RENDER')
         sh(str(HERE / 'reader_audit.py'), '--out', str(out_dir))
-        sh(str(HERE / 'phase.py'), '--out', str(out_dir), '--complete', 'COMPLETE')
+        sh(str(HERE / 'phase.py'), '--out', str(out_dir), '--complete', 'PAPER_COMPLETE')
         import re
         html_p = (out_dir / 'reader/reader.html').resolve()
         pdf_p = (out_dir / 'reader/reader.pdf').resolve()
         paper_id = pm_data.get('paper_id') or out_dir.name
         safe_name = re.sub(r'[^a-zA-Z0-9_\-\.]', '_', str(paper_id)).strip('_')
         named_html = (out_dir / f'reader/{safe_name}.html').resolve()
-        print(f"\n>>> Evidentia run COMPLETE!")
+        print(f"\n>>> Evidentia run COMPLETE! Paper Reading COMPLETE (PAPER_COMPLETE). (Frozen paper understanding achieved. Apply runs only upon explicit request.)")
         print(f"    - Interactive Web Reader : {html_p}")
         if named_html.exists() and named_html != html_p:
             print(f"      (Paper-named copy)     : {named_html}")
@@ -214,7 +218,7 @@ def run_workflow(args):
         print(f"    - To delete workspace    : rm -rf '{out_dir.resolve()}'\n")
         return 0
 
-    if phase == 'COMPLETE':
+    if phase in ('COMPLETE', 'PAPER_COMPLETE'):
         import re
         html_p = (out_dir / 'reader/reader.html').resolve()
         pdf_p = (out_dir / 'reader/reader.pdf').resolve()

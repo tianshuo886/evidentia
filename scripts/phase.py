@@ -24,11 +24,14 @@ STANDARD_ORDER = {
     'OPEN_READING': 'BASELINE_LOCK',
     'BASELINE_LOCK': 'LENS_EXECUTION',
     'LENS_EXECUTION': 'RECONCILIATION',
-    'RECONCILIATION': 'VERIFICATION',
+    'RECONCILIATION': 'SYNTHESIS',
+    'SYNTHESIS': 'VERIFICATION',
     'VERIFICATION': 'FINAL_MODEL',
     'FINAL_MODEL': 'FREEZE',
     'FREEZE': 'RENDER',
-    'RENDER': 'COMPLETE',
+    'RENDER': 'PAPER_COMPLETE',
+    'COMPLETE': 'PAPER_COMPLETE',
+    'PAPER_COMPLETE': 'PAPER_COMPLETE',
 }
 
 # Compatibility aliases
@@ -39,9 +42,17 @@ COMPAT_NEXT = {
     ('LENS', 'FREEZE'): True,
     ('LENS_EXECUTION', 'FREEZE'): True,
     ('FINAL_MODEL', 'FREEZE'): True,
+    ('RECONCILIATION', 'VERIFICATION'): True,
+    ('RECONCILIATION', 'SYNTHESIS'): True,
+    ('SYNTHESIS', 'VERIFICATION'): True,
+    ('RENDER', 'COMPLETE'): True,
+    ('RENDER', 'PAPER_COMPLETE'): True,
+    ('COMPLETE', 'PAPER_COMPLETE'): True,
+    ('PAPER_COMPLETE', 'COMPLETE'): True,
     ('WAITING_FOR_OPEN_READING_AGENT', 'OPEN_READING'): True,
     ('WAITING_FOR_LENS_AGENTS', 'LENS_EXECUTION'): True,
     ('WAITING_FOR_RECONCILIATION_AGENT', 'RECONCILIATION'): True,
+    ('WAITING_FOR_SYNTHESIS_AGENT', 'SYNTHESIS'): True,
     ('WAITING_FOR_VERIFIERS', 'VERIFICATION'): True,
 }
 
@@ -87,6 +98,9 @@ PHASE_BUNDLES = {
     ],
     'RECONCILIATION': [
         'model/lens_reconciliation.json',
+    ],
+    'SYNTHESIS': [
+        'model/scientific_synthesis.json',
     ],
     'VERIFICATION': [],
     'FINAL_MODEL': [
@@ -153,19 +167,20 @@ def check_preexisting_bundles(root, s, next_phase=None):
 
 def handle_status(root, s):
     current = s.get('phase', 'UNKNOWN')
-    expected = STANDARD_ORDER.get(current, 'COMPLETE')
+    expected = STANDARD_ORDER.get(current, 'PAPER_COMPLETE')
     print(json.dumps({
         "phase": current,
         "next": expected,
         "completed_phases": s.get('completed_phases', []),
         "source_sha256": s.get('source_sha256'),
         "base_sha256": s.get('base_sha256'),
+        "intent": s.get('intent', 'PAPER_READING'),
     }, indent=2))
     return 0
 
 def handle_next(root, s):
     current = s.get('phase', 'UNKNOWN')
-    expected = STANDARD_ORDER.get(current, 'COMPLETE')
+    expected = STANDARD_ORDER.get(current, 'PAPER_COMPLETE')
     print(expected)
     return 0
 
@@ -350,6 +365,14 @@ def main():
         if errs:
             fail(f'lens reconciliation schema-invalid: {errs}')
 
+    elif a.complete == 'SYNTHESIS':
+        syn_p = root / 'model/scientific_synthesis.json'
+        if not syn_p.exists():
+            fail('missing model/scientific_synthesis.json')
+        errs = schema_validate(load_json(syn_p), 'scientific_synthesis')
+        if errs:
+            fail(f'scientific synthesis schema-invalid: {errs}')
+
     elif a.complete == 'FINAL_MODEL':
         pm_p = root / 'model/paper_model.json'
         eg_p = root / 'model/evidence_graph.json'
@@ -382,6 +405,13 @@ def main():
         import subprocess
         if subprocess.run([sys.executable, str(Path(__file__).with_name('reader_audit.py')), '--out', str(root)]).returncode != 0:
             fail('Reader audit failed')
+
+    elif a.complete in ('COMPLETE', 'PAPER_COMPLETE'):
+        intent = s.get('intent', 'PAPER_READING')
+        if intent == 'PAPER_READING':
+            apply_dir = root / 'apply'
+            if apply_dir.exists() and list(apply_dir.glob('*/research_delta.json')):
+                fail('project isolation violated: default paper reading run must not create apply artifacts')
 
     # Record history and update state
     s['history'].append({'phase': current, 'status': 'completed', 'at': datetime.now(timezone.utc).isoformat()})

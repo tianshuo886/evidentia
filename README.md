@@ -30,24 +30,34 @@ Evidentia addresses these problems with a frozen Paper Model, typed Evidence Gra
 ```text
 paper.pdf
    ↓
-source-only ingest + Figure/Table reconstruction (bound to SOURCE_SHA256)
+page-first source reconstruction (source_pages/ + clean crops, bound to SOURCE_SHA256)
    ↓
 Open Reading draft (project invisible) → Baseline Lock
    ↓
-Author / Reviewer / Mechanism / Builder / Anomaly / Counterfactual
+Six independent Lenses (Author / Reviewer / Mechanism / Builder / Anomaly / Counterfactual)
 (bound to source_sha256 + base_model_sha256)
    ↓
-cross-lens reconciliation (supporting_lenses preserved, conflicts recorded)
+cross-lens semantic reconciliation (conflicts recorded without majority voting)
+   ↓
+cross-lens scientific synthesis (model/scientific_synthesis.json, topic-centered)
+   ↓
+evidence verification (fail-closed verifier)
    ↓
 Final Paper Model + Evidence Graph
    ↓
 freeze + SHA-256 integrity gate (fail closed on any SHA mismatch)
    ↓
-Paper Reader (HTML primary, PDF snapshot)
+Chinese-first Paper Reader (HTML + MD + PDF, 7-layer hierarchy, immutable)
    ↓
-optional contextual apply to one project
+PAPER_COMPLETE (Default run stops here)
+
+[Explicit user intent only]
    ↓
-Research Delta + Project Gap Map + Frozen Research Memory (objects/ + memory.sqlite)
+contextual apply to one project (/evidentia-apply)
+   ↓
+separate Project Reader + Research Delta (apply/<project>/)
+   ↓
+optional Frozen Research Memory (objects/ + memory.sqlite)
 ```
 
 The Paper Model is canonical truth. Renderers, Kami-compatible presentation and project analysis are downstream adapters.

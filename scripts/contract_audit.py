@@ -101,6 +101,42 @@ CAPABILITIES = [
         "evidence": "Pre-clustering into Finding Clusters with canonical relations (AGREEMENT, TENSION, etc.) and verification triggers implemented."
     },
     {
+        "id": "scientific_synthesis",
+        "area": "Core",
+        "claim": "Cross-Lens topic-centered scientific synthesis with contradiction and anomaly preservation",
+        "schema": ["scientific_synthesis"],
+        "scripts": ["scientific_synthesis_agent.py"],
+        "tests": ["test_scientific_synthesis"],
+        "implementation_status": "IMPLEMENTED",
+        "validation_status": "UNIT_TESTED",
+        "status": "IMPLEMENTED",
+        "evidence": "scientific_synthesis_agent.py synthesizes 6 Lens perspectives into Chinese-first topic units without majority voting."
+    },
+    {
+        "id": "intent_isolation",
+        "area": "Core",
+        "claim": "Strict intent isolation between PAPER_READING and PROJECT_APPLY",
+        "schema": ["run_state"],
+        "scripts": ["phase.py", "render_project_reader.py"],
+        "tests": ["test_intent_isolation"],
+        "implementation_status": "IMPLEMENTED",
+        "validation_status": "UNIT_TESTED",
+        "status": "IMPLEMENTED",
+        "evidence": "State machine enforces PAPER_COMPLETE termination and prevents implicit project context access during paper reading."
+    },
+    {
+        "id": "chinese_deep_reader",
+        "area": "Presentation",
+        "claim": "Seven-layer Chinese-first narrative deep-reading report with dual HTML/MD generation",
+        "schema": ["paper_reader_ir"],
+        "scripts": ["render_reader.py"],
+        "tests": ["test_chinese_reader"],
+        "implementation_status": "IMPLEMENTED",
+        "validation_status": "UNIT_TESTED",
+        "status": "IMPLEMENTED",
+        "evidence": "paper_reader_ir.json drives unified Chinese-first narrative HTML and Markdown deep-reading reports."
+    },
+    {
         "id": "evidence_verifier",
         "area": "Verification",
         "claim": "Evidence-localized verifier with SUPPORTED/REJECTED/AMBIGUOUS verdicts",

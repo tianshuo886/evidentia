@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evidentia.dev/schemas/paper_reader_ir.schema.json",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "paper_id",
+    "title",
+    "one_minute_summary",
+    "problem_and_context",
+    "method_and_mechanisms",
+    "decisive_experiments",
+    "scientific_assessment",
+    "reusable_components",
+    "audit_appendix"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "enum": ["1.0", "2.0"]
+    },
+    "paper_id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "source_sha256": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "one_minute_summary": {
+      "type": "object",
+      "required": [
+        "research_question_zh",
+        "core_method_zh",
+        "key_findings_zh",
+        "primary_value_zh",
+        "key_risks_boundaries_zh"
+      ],
+      "properties": {
+        "research_question_zh": {"type": "string"},
+        "core_method_zh": {"type": "string"},
+        "key_findings_zh": {"type": "string"},
+        "primary_value_zh": {"type": "string"},
+        "key_risks_boundaries_zh": {"type": "string"}
+      }
+    },
+    "problem_and_context": {
+      "type": "object",
+      "required": [
+        "background_zh",
+        "prior_limitations_zh",
+        "entry_point_zh",
+        "why_it_matters_zh"
+      ],
+      "properties": {
+        "background_zh": {"type": "string"},
+        "prior_limitations_zh": {"type": "string"},
+        "entry_point_zh": {"type": "string"},
+        "why_it_matters_zh": {"type": "string"}
+      }
+    },
+    "method_and_mechanisms": {
+      "type": "object",
+      "required": [
+        "pipeline_flow_zh",
+        "components",
+        "equations_explained"
+      ],
+      "properties": {
+        "pipeline_flow_zh": {"type": "string"},
+        "components": {"type": "array"},
+        "equations_explained": {"type": "array"}
+      }
+    },
+    "decisive_experiments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title_zh",
+          "what_is_compared_zh",
+          "how_to_read_zh",
+          "what_it_proves_zh",
+          "what_it_does_not_prove_zh",
+          "anomalies_caveats_zh"
+        ],
+        "properties": {
+          "id": {"type": "string"},
+          "title_zh": {"type": "string"},
+          "paper_label": {"type": "string"},
+          "page": {"type": "integer"},
+          "asset": {"type": ["string", "null"]},
+          "what_is_compared_zh": {"type": "string"},
+          "how_to_read_zh": {"type": "string"},
+          "what_it_proves_zh": {"type": "string"},
+          "what_it_does_not_prove_zh": {"type": "string"},
+          "anomalies_caveats_zh": {"type": "string"},
+          "supports_claims": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "scientific_assessment": {
+      "type": "object",
+      "required": [
+        "strongest_evidence_zh",
+        "weakest_links_zh",
+        "assumptions_zh",
+        "alternative_explanations_zh",
+        "anomalies_and_negatives_zh",
+        "boundaries_zh",
+        "unresolved_questions_zh"
+      ],
+      "properties": {
+        "strongest_evidence_zh": {"type": "string"},
+        "weakest_links_zh": {"type": "string"},
+        "assumptions_zh": {"type": "string"},
+        "alternative_explanations_zh": {"type": "string"},
+        "anomalies_and_negatives_zh": {"type": "string"},
+        "boundaries_zh": {"type": "string"},
+        "unresolved_questions_zh": {"type": "string"}
+      }
+    },
+    "reusable_components": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "category", "description_zh"],
+        "properties": {
+          "id": {"type": "string"},
+          "name": {"type": "string"},
+          "category": {"type": "string"},
+          "description_zh": {"type": "string"},
+          "source_evidence": {"type": "array", "items": {"type": "string"}},
+          "transfer_notes_zh": {"type": "string"}
+        }
+      }
+    },
+    "audit_appendix": {
+      "type": "object",
+      "required": ["claims", "figures", "tables"],
+      "properties": {
+        "claims": {"type": "array"},
+        "figures": {"type": "array"},
+        "tables": {"type": "array"},
+        "lens_synthesis": {"type": "array"},
+        "lens_conflicts": {"type": "array"}
+      }
+    },
+    "claim_cards": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "figure_blocks": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "table_blocks": {
+      "type": "array",
+      "items": {"type": "string"}
+    }
+  },
+  "additionalProperties": false
+}

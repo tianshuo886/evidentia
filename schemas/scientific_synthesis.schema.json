@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evidentia.dev/schemas/scientific_synthesis.schema.json",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "source_sha256",
+    "topics"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "enum": ["1.0", "2.0"]
+    },
+    "paper_id": {
+      "type": "string"
+    },
+    "source_sha256": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "summary_zh": {
+      "type": "string"
+    },
+    "overall_scientific_assessment_zh": {
+      "type": "string"
+    },
+    "topics": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "topic_id",
+          "title_zh",
+          "core_conclusion_zh",
+          "evidence_summary_zh",
+          "confidence",
+          "evidence_refs",
+          "contributing_lenses"
+        ],
+        "properties": {
+          "topic_id": {
+            "type": "string",
+            "pattern": "^SYN-[0-9]{2,}$"
+          },
+          "title_zh": {
+            "type": "string",
+            "minLength": 1
+          },
+          "question_zh": {
+            "type": "string"
+          },
+          "core_conclusion_zh": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence_summary_zh": {
+            "type": "string"
+          },
+          "mechanism_zh": {
+            "type": ["string", "null"]
+          },
+          "reviewer_caveat_zh": {
+            "type": ["string", "null"]
+          },
+          "anomaly_zh": {
+            "type": ["string", "null"]
+          },
+          "alternative_explanation_zh": {
+            "type": ["string", "null"]
+          },
+          "builder_note_zh": {
+            "type": ["string", "null"]
+          },
+          "confidence": {
+            "type": "string",
+            "enum": [
+              "HIGH",
+              "PARTIAL",
+              "LOW",
+              "UNCERTAIN",
+              "SUPPORTED",
+              "TENSION",
+              "CONTRADICTION"
+            ]
+          },
+          "evidence_refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "contributing_lenses": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "unresolved": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "contradictions_preserved": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

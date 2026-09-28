@@ -449,6 +449,7 @@
             "enum": [
               "page_crop",
               "embedded",
+              "deterministic_crop",
               "manual",
               "none"
             ]
@@ -1034,6 +1035,9 @@
         ],
         "additionalProperties": false
       }
+    },
+    "scientific_synthesis": {
+      "type": "array"
     },
     "source_sha256": {
       "type": "string",
