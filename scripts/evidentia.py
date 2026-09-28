@@ -25,29 +25,104 @@ def sh(*args):
         sys.exit(res.returncode)
     return res.stdout.strip()
 
+def resolve_paper_workspace(raw_input, explicit_out=None):
+    """Resolve paper workspace path: create/use folder alongside original article."""
+    if explicit_out:
+        return Path(explicit_out).resolve()
+        
+    import re
+    # 1. If raw_input is an existing local PDF file, build folder alongside original article
+    if raw_input and Path(raw_input).exists() and Path(raw_input).is_file():
+        pdf_p = Path(raw_input).resolve()
+        clean_stem = re.sub(r'[^a-zA-Z0-9_\-]', '_', pdf_p.stem).strip('_')
+        parent = pdf_p.parent
+        # If parent is already a dedicated paper directory
+        if (parent / '.evidentia').exists() or (parent / 'reader').exists() or parent.name == clean_stem or clean_stem.startswith(parent.name):
+            return parent
+        # Otherwise, create a dedicated folder alongside the original article
+        return parent / clean_stem
+
+    # 2. Check local literature libraries if input is a DOI, ArXiv ID, or clean stem
+    clean_stem = re.sub(r'[^a-zA-Z0-9_\-]', '_', str(raw_input or 'paper')).strip('_')
+    stems_to_check = [clean_stem]
+
+    from paper_acquire_bridge import is_doi, is_arxiv, extract_doi, extract_arxiv_id, query_crossref
+    if is_doi(str(raw_input)):
+        try:
+            cr = query_crossref(str(raw_input))
+            if cr and cr.get('title'):
+                title_stem = re.sub(r'[^a-zA-Z0-9_\-]', '_', cr['title']).strip('_')
+                # Take primary title words
+                short_stem = "_".join([w for w in title_stem.split('_') if w][:6])
+                stems_to_check.extend([title_stem, short_stem])
+        except Exception:
+            pass
+
+    candidate_lit_dirs = [
+        Path.cwd() / 'literature',
+        Path.cwd().parent / 'literature',
+    ]
+    home_code = Path.home() / 'Code'
+    if home_code.exists():
+        for p in home_code.glob('*/literature'):
+            if p.is_dir():
+                candidate_lit_dirs.append(p)
+                
+    for lit_dir in candidate_lit_dirs:
+        if lit_dir.exists():
+            for s_stem in stems_to_check:
+                if not s_stem:
+                    continue
+                # Check if matching folder already exists
+                for sub in lit_dir.iterdir():
+                    if sub.is_dir() and (s_stem.lower() in sub.name.lower() or sub.name.lower() in s_stem.lower()):
+                        return sub
+                # Check if matching pdf exists in literature
+                for f in lit_dir.glob('*.pdf'):
+                    if s_stem.lower() in f.stem.lower() or f.stem.lower() in s_stem.lower():
+                        return lit_dir / re.sub(r'[^a-zA-Z0-9_\-]', '_', f.stem).strip('_')
+                    
+    # 3. Default literature directory or fallback runs directory
+    target_stem = stems_to_check[-1] if len(stems_to_check) > 1 else clean_stem
+    if (Path.cwd() / 'literature').exists():
+        return Path.cwd() / 'literature' / target_stem
+    return Path('./runs') / target_stem
+
+def sync_top_level_readers(out_dir: Path):
+    """Synchronize user-facing reading artifacts to paper root alongside original PDF."""
+    reader_dir = out_dir / 'reader'
+    if not reader_dir.exists():
+        return
+    import shutil
+    for fname in ('paper_reader.html', 'reader.html', 'evidence_atlas.html'):
+        rf = reader_dir / fname
+        if rf.exists():
+            text = rf.read_text(encoding='utf-8')
+            text_top = text.replace('../assets/', 'assets/')
+            (out_dir / fname).write_text(text_top, encoding='utf-8')
+    for fname in ('paper_reader.pdf', 'reader.pdf', 'paper_reader.md', 'reader.md'):
+        rf = reader_dir / fname
+        if rf.exists():
+            shutil.copy2(str(rf), str(out_dir / fname))
+    if (reader_dir / 'paper_reader.md').exists():
+        shutil.copy2(str(reader_dir / 'paper_reader.md'), str(out_dir / 'reading_notes_zh.md'))
+
 def run_workflow(args):
     # Auto-acquire paper if DOI, ArXiv ID, or URL is passed
     raw_input = getattr(args, 'doi', None) or getattr(args, 'pdf', None)
+    out_dir = resolve_paper_workspace(raw_input, explicit_out=getattr(args, 'out', None))
+    args.out = str(out_dir)
+
     if raw_input and (getattr(args, 'doi', None) or not Path(raw_input).exists()):
         from paper_acquire_bridge import is_doi, is_arxiv, is_url, acquire_paper
         if is_doi(raw_input) or is_arxiv(raw_input) or is_url(raw_input):
-            import re
-            if not getattr(args, 'out', None):
-                clean_stem = re.sub(r'[^a-zA-Z0-9_\-]', '_', str(raw_input)).strip('_')
-                args.out = str(Path('./runs') / clean_stem)
-            out_dir = Path(args.out)
             target_pdf = out_dir / 'source/paper.pdf'
             pdf_path, meta = acquire_paper(raw_input, out_dir=out_dir, target_pdf_path=target_pdf)
             args.pdf = str(pdf_path)
 
-    if getattr(args, 'out', None):
-        out_dir = Path(args.out)
-    elif getattr(args, 'pdf', None):
-        out_dir = Path('./runs') / Path(args.pdf).stem
-    else:
-        sys.exit("Error: Must specify --pdf <path>, --doi <doi>, or --out <dir>")
-    args.out = str(out_dir)
     rs_path = out_dir / 'run_state.json'
+    if not rs_path.exists() and (out_dir / '.evidentia/run_state.json').exists():
+        rs_path = out_dir / '.evidentia/run_state.json'
     mode = getattr(args, 'mode', 'standard') or 'standard'
     extra_flags = []
     from agent_dispatch import is_fixture_enabled
@@ -210,11 +285,12 @@ def run_workflow(args):
         sh(str(HERE / 'phase.py'), '--out', str(out_dir), '--complete', 'RENDER')
         sh(str(HERE / 'reader_audit.py'), '--out', str(out_dir))
         sh(str(HERE / 'phase.py'), '--out', str(out_dir), '--complete', 'PAPER_COMPLETE')
+        sync_top_level_readers(out_dir)
         import re
-        paper_html_p = (out_dir / 'reader/paper_reader.html').resolve()
+        paper_html_p = (out_dir / 'paper_reader.html').resolve() if (out_dir / 'paper_reader.html').exists() else (out_dir / 'reader/paper_reader.html').resolve()
         html_p = paper_html_p if paper_html_p.exists() else (out_dir / 'reader/reader.html').resolve()
-        atlas_p = (out_dir / 'reader/evidence_atlas.html').resolve()
-        paper_pdf_p = (out_dir / 'reader/paper_reader.pdf').resolve()
+        atlas_p = (out_dir / 'evidence_atlas.html').resolve() if (out_dir / 'evidence_atlas.html').exists() else (out_dir / 'reader/evidence_atlas.html').resolve()
+        paper_pdf_p = (out_dir / 'paper_reader.pdf').resolve() if (out_dir / 'paper_reader.pdf').exists() else (out_dir / 'reader/paper_reader.pdf').resolve()
         pdf_p = paper_pdf_p if paper_pdf_p.exists() else (out_dir / 'reader/reader.pdf').resolve()
         paper_id = pm_data.get('paper_id') or out_dir.name
         safe_name = re.sub(r'[^a-zA-Z0-9_\-\.]', '_', str(paper_id)).strip('_')
@@ -227,16 +303,16 @@ def run_workflow(args):
             print(f"      (Paper-named copy)     : {named_html}")
         if pdf_p.exists():
             print(f"    - Printable PDF Snapshot : {pdf_p}")
-        print(f"    - All Workspace Files    : {out_dir.resolve()}")
-        print(f"    - To delete workspace    : rm -rf '{out_dir.resolve()}'\n")
+        print(f"    - Paper Literature Folder: {out_dir.resolve()}\n")
         return 0
 
     if phase in ('COMPLETE', 'PAPER_COMPLETE'):
+        sync_top_level_readers(out_dir)
         import re
-        paper_html_p = (out_dir / 'reader/paper_reader.html').resolve()
+        paper_html_p = (out_dir / 'paper_reader.html').resolve() if (out_dir / 'paper_reader.html').exists() else (out_dir / 'reader/paper_reader.html').resolve()
         html_p = paper_html_p if paper_html_p.exists() else (out_dir / 'reader/reader.html').resolve()
-        atlas_p = (out_dir / 'reader/evidence_atlas.html').resolve()
-        paper_pdf_p = (out_dir / 'reader/paper_reader.pdf').resolve()
+        atlas_p = (out_dir / 'evidence_atlas.html').resolve() if (out_dir / 'evidence_atlas.html').exists() else (out_dir / 'reader/evidence_atlas.html').resolve()
+        paper_pdf_p = (out_dir / 'paper_reader.pdf').resolve() if (out_dir / 'paper_reader.pdf').exists() else (out_dir / 'reader/paper_reader.pdf').resolve()
         pdf_p = paper_pdf_p if paper_pdf_p.exists() else (out_dir / 'reader/reader.pdf').resolve()
         pm_f = out_dir / 'model/paper_model.json'
         p_id = json.loads(pm_f.read_text()).get('paper_id', out_dir.name) if pm_f.exists() else out_dir.name
@@ -250,6 +326,7 @@ def run_workflow(args):
             print(f"      (Paper-named copy)     : {named_html}")
         if pdf_p.exists():
             print(f"    - Printable PDF Snapshot : {pdf_p}")
+        print(f"    - Paper Literature Folder: {out_dir.resolve()}\n")
         return 0
         
     print(f">>> Current phase: {phase}. Run 'evidentia.py next --out {out_dir}' to inspect next step.")
