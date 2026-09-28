@@ -184,10 +184,16 @@ def run_workflow(args):
         sh(str(HERE / 'phase.py'), '--out', str(out_dir), '--complete', 'RENDER')
         sh(str(HERE / 'reader_audit.py'), '--out', str(out_dir))
         sh(str(HERE / 'phase.py'), '--out', str(out_dir), '--complete', 'COMPLETE')
+        import re
         html_p = (out_dir / 'reader/reader.html').resolve()
         pdf_p = (out_dir / 'reader/reader.pdf').resolve()
+        paper_id = pm_data.get('paper_id') or out_dir.name
+        safe_name = re.sub(r'[^a-zA-Z0-9_\-\.]', '_', str(paper_id)).strip('_')
+        named_html = (out_dir / f'reader/{safe_name}.html').resolve()
         print(f"\n>>> Evidentia run COMPLETE!")
         print(f"    - Interactive Web Reader : {html_p}")
+        if named_html.exists() and named_html != html_p:
+            print(f"      (Paper-named copy)     : {named_html}")
         if pdf_p.exists():
             print(f"    - Printable PDF Snapshot : {pdf_p}")
         print(f"    - All Workspace Files    : {out_dir.resolve()}")
@@ -195,10 +201,17 @@ def run_workflow(args):
         return 0
 
     if phase == 'COMPLETE':
+        import re
         html_p = (out_dir / 'reader/reader.html').resolve()
         pdf_p = (out_dir / 'reader/reader.pdf').resolve()
+        pm_f = out_dir / 'model/paper_model.json'
+        p_id = json.loads(pm_f.read_text()).get('paper_id', out_dir.name) if pm_f.exists() else out_dir.name
+        safe_name = re.sub(r'[^a-zA-Z0-9_\-\.]', '_', str(p_id)).strip('_')
+        named_html = (out_dir / f'reader/{safe_name}.html').resolve()
         print(f">>> Run is already COMPLETE at {out_dir}.")
         print(f"    - Interactive Web Reader : {html_p}")
+        if named_html.exists() and named_html != html_p:
+            print(f"      (Paper-named copy)     : {named_html}")
         if pdf_p.exists():
             print(f"    - Printable PDF Snapshot : {pdf_p}")
         return 0
