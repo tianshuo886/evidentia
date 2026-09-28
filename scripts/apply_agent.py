@@ -113,6 +113,9 @@ def run_local_apply(paper_dir, project_doc, out_dir=None, focus=None, fixture=No
         if val_res.returncode != 0:
             sys.exit(f"Research Delta failed semantic validation:\n{val_res.stdout + val_res.stderr}")
 
+        from render_project_reader import render_project_reader
+        render_project_reader(p_dir, target_apply_dir)
+
         print(f"OK: Stage A Local Apply complete for project {project_name} -> {delta_file}")
         return 0
 

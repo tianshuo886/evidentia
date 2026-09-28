@@ -4,18 +4,23 @@ The skill is a state machine, not a single summarization prompt:
 
 ```text
 source-only INGEST
-  → SOURCE_RECONSTRUCTION (source_map + figure_inventory, both bound to SOURCE_SHA256)
+  → SOURCE_RECONSTRUCTION (page-first: source_pages/ + source_map + figure_inventory, bound to SOURCE_SHA256)
   → SOURCE LOCK (freeze_check SHA chain: actual source/paper.pdf == all references)
   → OPEN_READING draft (model/paper_model.json, project invisible)
   → BASELINE LOCK (snapshot_baseline.py → model/open_reading_model.json + open_reading_manifest.json)
   → six independent LENS task packets (lens_runner.py binds source_sha256/base_sha256/contract+prompt versions)
   → merge with provenance (merge_lenses.py → model/lens_reconciliation.json; supporting_lenses preserved, conflicts recorded)
+  → CROSS-LENS SCIENTIFIC SYNTHESIS (scientific_synthesis_agent.py → model/scientific_synthesis.json)
+  → EVIDENCE VERIFICATION (verifier.py on tension/contradictions without majority voting)
   → FINAL MODEL + evidence_graph (build_graph.py binds source_sha256)
   → FREEZE + hash verification (freeze_check.py fail-closed; verify_frozen.py)
-  → PAPER READER render + content/visual audit
-  → optional PROJECT APPLY contextual reread
-  → Research Delta + Gap Map + transfer/experiment decisions
-  → optional cross-paper index
+  → CHINESE-FIRST PAPER READER render (paper_reader.html + paper_reader.md + paper_reader.pdf)
+  → PAPER_COMPLETE (Stop here)
+
+Explicit user request only:
+  → PROJECT APPLY contextual reread (/evidentia-apply)
+  → separate apply/<project>/project_reader.html + research_delta.json
+  → optional cross-paper memory index (/evidentia-memory)
 ```
 
 `pipeline.py`, `init_run.py`, `phase.py`, and `init_apply.py` make the boundary explicit. The scripts never invent paper facts or pretend to have run an LLM pass: each generated artifact is a required, schema-validated input. This preserves the distinction between an execution contract and the model that performs the reading.

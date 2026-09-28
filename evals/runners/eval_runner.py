@@ -17,7 +17,7 @@ ROOT = EVAL_ROOT.parent
 
 sys.path.insert(0, str(EVAL_ROOT / 'metrics'))
 sys.path.insert(0, str(EVAL_ROOT / 'baselines'))
-import source_metrics, grounding_metrics, critical_metrics, memory_metrics, single_pass_baseline
+import source_metrics, grounding_metrics, critical_metrics, memory_metrics, single_pass_baseline, direct_ai_baseline
 
 def create_synthetic_pdf(paper_data, target_path):
     import fitz
@@ -69,6 +69,7 @@ def run_evaluation(corpus_file=None, annotations_file=None, report_out=None, lim
         "validation_truth_level": truth_level,
         "conditions_evaluated": [
             "Condition_A_Single_Pass",
+            "Condition_A_Direct_AI_Kami",
             "Condition_B_Evidentia_Standard",
             "Condition_C_Evidentia_Ensemble"
         ],
@@ -90,8 +91,8 @@ def run_evaluation(corpus_file=None, annotations_file=None, report_out=None, lim
             pdf_file = tmp_p / f"{pid}.pdf"
             create_synthetic_pdf(paper, pdf_file)
 
-            # --- Condition A: Single Pass ---
-            res_a = single_pass_baseline.run_single_pass_reading(paper)
+            # --- Condition A: Direct AI + Kami Baseline ---
+            res_a = direct_ai_baseline.run_direct_ai_baseline(paper)
             m_a_grounding = grounding_metrics.compute_grounding_metrics(res_a['claims'], gt_claims)
             m_a_critical = critical_metrics.compute_critical_metrics(res_a['findings'], gt_weaknesses)
 

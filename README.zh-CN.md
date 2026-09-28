@@ -30,19 +30,33 @@ Evidentia 用 Paper Model、Evidence Graph、Source Reconstruction、六 Lens、
 ```text
 paper.pdf
    ↓
-只包含论文的隔离工作区 + Figure/Table 重建
+页面先行多模态视觉重构（source_pages/ + 无整页退化裁剪，绑定 SOURCE_SHA256）
    ↓
-Paper Model + Evidence Graph
+Open Reading 初稿（对项目完全不可见）→ 基线锁定（Baseline Lock）
    ↓
-Author / Reviewer / Mechanism / Builder / Anomaly / Counterfactual
+六大独立科学透镜（Author / Reviewer / Mechanism / Builder / Anomaly / Counterfactual）
+   ↓
+跨透镜语义调和（保留冲突，严禁多数票抹平）
+   ↓
+跨透镜科学综合（model/scientific_synthesis.json，按科学议题组织）
+   ↓
+证据局部化验证（针对争议项 fail-closed 严审）
+   ↓
+Final Paper Model + Evidence Graph
    ↓
 冻结 + SHA-256 完整性门禁
    ↓
-Paper Reader（HTML 主阅读，PDF 快照）
+中文优先叙事型 Paper Reader（七层深度精读结构，HTML + MD + PDF 严格同构）
    ↓
-可选的项目 contextual apply
+PAPER_COMPLETE（默认论文精读流程在此终结）
+
+[仅在用户显式请求时]
    ↓
-Research Delta + Project Gap Map + Frozen Research Memory (objects/ + memory.sqlite)
+项目迁移研报（/evidentia-apply）
+   ↓
+物理隔离的项目报告 + Research Delta（apply/<project>/）
+   ↓
+可选持久化科研记忆（/evidentia-memory）
 ```
 
 Paper Model 是事实层。Reader、Kami 兼容展示和项目分析都只能作为下游适配层，不能反过来改变论文结构或论文事实。

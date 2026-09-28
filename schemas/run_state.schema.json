@@ -24,6 +24,13 @@
         "evidentia"
       ]
     },
+    "intent": {
+      "enum": [
+        "PAPER_READING",
+        "PROJECT_APPLY",
+        "MEMORY_OPERATION"
+      ]
+    },
     "phase": {
       "enum": [
         "INGEST",
@@ -47,10 +54,15 @@
         "WAITING_FOR_VERIFIERS",
         "VERIFICATION",
         "VERIFICATION_COMPLETE",
+        "SYNTHESIS",
+        "SYNTHESIS_TASK_READY",
+        "WAITING_FOR_SYNTHESIS_AGENT",
+        "SYNTHESIS_COMPLETE",
         "FINAL_MODEL",
         "LENS",
         "FREEZE",
         "RENDER",
+        "PAPER_COMPLETE",
         "APPLY_INIT",
         "PROJECT_CONTEXT",
         "APPLY_LOCAL_TASK_READY",

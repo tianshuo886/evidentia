@@ -21,5 +21,5 @@ def main():
          shutil.copy2(s, r/'working'/Path(s).name)
      if s_pdf != (r/'source'/Path(s).name).resolve():
          shutil.copy2(s, r/'source'/Path(s).name)
- state={'schema_version':'1.0','run_id':str(uuid.uuid4()),'mode':'evidentia','phase':'INGEST','source_sha256':sha(a.pdf),'base_sha256':None,'allowed_inputs':['working/paper.pdf']+[f'working/{Path(s).name}' for s in a.supplement],'artifacts':{},'completed_phases':[],'artifact_hashes':{},'executor':{},'history':[{'phase':'INGEST','status':'started','at':datetime.now(timezone.utc).isoformat()}]};(r/'run_state.json').write_text(json.dumps(state,indent=2,ensure_ascii=False)+'\n');print(f'initialized {r}/run_state.json')
+ state={'schema_version':'1.0','run_id':str(uuid.uuid4()),'mode':'evidentia','intent':'PAPER_READING','phase':'INGEST','source_sha256':sha(a.pdf),'base_sha256':None,'allowed_inputs':['working/paper.pdf']+[f'working/{Path(s).name}' for s in a.supplement],'artifacts':{},'completed_phases':[],'artifact_hashes':{},'executor':{},'history':[{'phase':'INGEST','status':'started','at':datetime.now(timezone.utc).isoformat()}]};(r/'run_state.json').write_text(json.dumps(state,indent=2,ensure_ascii=False)+'\n');print(f'initialized {r}/run_state.json')
 if __name__=='__main__':main()
