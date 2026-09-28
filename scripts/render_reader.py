@@ -559,12 +559,22 @@ details summary {
     for c in claims:
         if c.get('page'):
             page_numbers.add(c['page'])
+        for ev in c.get('evidence', []):
+            m = re.match(r'^p\.([0-9]+)$', str(ev))
+            if m:
+                page_numbers.add(int(m.group(1)))
     for f in app.get('figures', []):
         if f.get('page'):
             page_numbers.add(f['page'])
     for t in app.get('tables', []):
         if t.get('page'):
             page_numbers.add(t['page'])
+    sm_p = workspace_root / 'model/source_map.json'
+    if sm_p.exists():
+        sm_data = load_json(sm_p)
+        for pg in sm_data.get('pages', []):
+            if pg.get('number'):
+                page_numbers.add(pg['number'])
     
     page_anchors_html = " ".join([
         f"<a href='#p.{p}' id='p.{p}' class='badge page-anchor-link'>p.{p}</a>"
