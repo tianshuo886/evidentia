@@ -140,13 +140,13 @@ CAPABILITIES = [
         "id": "chinese_deep_reader",
         "area": "Presentation",
         "claim": "Seven-layer Chinese-first narrative deep-reading report with dual HTML/MD generation",
-        "schema": ["paper_reader_ir"],
-        "scripts": ["render_reader.py"],
-        "tests": ["test_chinese_reader", "test_renderer_purity", "test_narrative_grounding"],
+        "schema": ["paper_reader_ir", "narrative_manuscript"],
+        "scripts": ["render_reader.py", "render_paper_reader.py", "narrative_composer_agent.py"],
+        "tests": ["test_chinese_reader", "test_renderer_purity", "test_narrative_grounding", "test_narrative_composer"],
         "implementation_status": "IMPLEMENTED",
         "validation_status": "UNIT_TESTED",
         "status": "IMPLEMENTED",
-        "evidence": "paper_reader_ir.json drives unified Chinese-first narrative HTML and Markdown deep-reading reports with strict renderer purity."
+        "evidence": "narrative_manuscript.json drives unified Chinese-first narrative HTML and Markdown deep-reading reports with Kami presentation backend."
     },
     {
         "id": "evidence_verifier",
@@ -201,20 +201,20 @@ CAPABILITIES = [
         "area": "Presentation",
         "claim": "Bidirectional Evidence Atlas navigable across Claim, Evidence, Figure, Table, and Experiment",
         "schema": ["render_ir"],
-        "scripts": ["render_reader.py", "reader_audit.py"],
-        "tests": ["test_phase_b6"],
+        "scripts": ["render_reader.py", "render_evidence_atlas.py", "reader_audit.py"],
+        "tests": ["test_phase_b6", "test_chinese_reader"],
         "implementation_status": "IMPLEMENTED",
         "validation_status": "UNIT_TESTED",
         "status": "IMPLEMENTED",
-        "evidence": "Claim-centric Evidence Atlas HTML reader with O/I/A grid, bidirectional return links, and broken anchor auditing implemented."
+        "evidence": "Dedicated Evidence Atlas HTML reader with O/I/A grid, bidirectional return links, and broken anchor auditing implemented."
     },
     {
         "id": "reader_visual_qa",
         "area": "Presentation",
         "claim": "Kami-backed visual QA boundary for typography, layout, and rendering",
         "schema": ["render_ir"],
-        "scripts": ["kami_adapter.py"],
-        "tests": ["test_phase_b6"],
+        "scripts": ["kami_adapter.py", "render_paper_reader.py"],
+        "tests": ["test_phase_b6", "test_chinese_reader"],
         "implementation_status": "IMPLEMENTED",
         "validation_status": "UNIT_TESTED",
         "status": "IMPLEMENTED",

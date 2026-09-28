@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evidentia.dev/schemas/narrative_manuscript.schema.json",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "paper_id",
+    "source_sha256",
+    "created_at",
+    "document"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "enum": ["1.0", "2.0"]
+    },
+    "paper_id": {
+      "type": "string"
+    },
+    "source_sha256": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "document": {
+      "type": "object",
+      "required": [
+        "title",
+        "paper_meta",
+        "executive_summary",
+        "chapters"
+      ],
+      "properties": {
+        "title": { "type": "string" },
+        "subtitle": { "type": "string" },
+        "paper_meta": {
+          "type": "object",
+          "properties": {
+            "authors": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "venue": { "type": "string" },
+            "year": { "type": ["integer", "string", "null"] },
+            "doi": { "type": "string" },
+            "pdf_sha256": { "type": "string" }
+          }
+        },
+        "executive_summary": {
+          "type": "object",
+          "required": [
+            "lead",
+            "takeaways"
+          ],
+          "properties": {
+            "lead": { "type": "string" },
+            "takeaways": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "key_question": { "type": "string" },
+            "core_finding": { "type": "string" },
+            "core_boundary": { "type": "string" }
+          }
+        },
+        "chapters": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "title",
+              "blocks"
+            ],
+            "properties": {
+              "id": { "type": "string" },
+              "chapter_num": { "type": ["string", "integer"] },
+              "title": { "type": "string" },
+              "lead": { "type": "string" },
+              "blocks": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["type"],
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": ["paragraph", "callout", "figure", "equation", "table", "takeaway", "list"]
+                    },
+                    "text": { "type": "string" },
+                    "evidence_refs": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    },
+                    "argument_refs": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    },
+                    "evidence_id": { "type": "string" },
+                    "caption": { "type": "string" },
+                    "analysis": { "type": "string" },
+                    "explanation": { "type": "string" },
+                    "raw_text": { "type": "string" },
+                    "asset": { "type": ["string", "null"] },
+                    "page": { "type": "integer" },
+                    "items": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "appendix_summary": {
+          "type": "object",
+          "properties": {
+            "claims_count": { "type": "integer" },
+            "figures_count": { "type": "integer" },
+            "tables_count": { "type": "integer" },
+            "conflicts_count": { "type": "integer" },
+            "unresolved_count": { "type": "integer" },
+            "evidence_atlas_ref": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

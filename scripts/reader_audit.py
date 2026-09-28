@@ -172,6 +172,34 @@ def main():
             except Exception as e:
                 errs.append(f'error checking narrative grounding in paper_reader_ir.json: {e}')
 
+        # 10. Issue #9: Narrative Manuscript IR & Evidence Atlas Audit
+        man_p = r / 'reader/narrative_manuscript.json'
+        if man_p.exists():
+            try:
+                man_data = load_json(man_p)
+                m_errs = schema_validate(man_data, 'narrative_manuscript')
+                if m_errs:
+                    errs.append(f'narrative_manuscript schema invalid: {m_errs}')
+            except Exception as e:
+                errs.append(f'unparseable narrative_manuscript.json: {e}')
+
+        atlas_p = r / 'reader/evidence_atlas.html'
+        if atlas_p.exists():
+            atlas_text = atlas_p.read_text(encoding='utf-8')
+            if '{{' in atlas_text or '}}' in atlas_text:
+                errs.append('unresolved template placeholder in evidence_atlas.html')
+            atlas_ids = set(re.findall(r'\bid=["\']([^"\']+)["\']', atlas_text))
+            atlas_hrefs = set(re.findall(r'\bhref=["\']#([^"\']+)["\']', atlas_text))
+            atlas_broken = {a for a in (atlas_hrefs - atlas_ids) if a not in ('top', '')}
+            if atlas_broken:
+                errs.append(f'broken anchor links in evidence_atlas.html: {sorted(atlas_broken)}')
+            # Verify O/I/A completeness in atlas
+            for c in pm.get('claims', []):
+                cid = c.get('id')
+                if cid in atlas_ids:
+                    if 'Observation' not in atlas_text or 'Author Interpretation' not in atlas_text or 'Reader Assessment' not in atlas_text:
+                        errs.append(f'O/I/A structure missing in evidence_atlas for claim {cid}')
+
     if errs:
         print(json.dumps({'status': 'FAIL', 'errors': errs}, indent=2))
         return 1

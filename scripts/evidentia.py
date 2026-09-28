@@ -203,13 +203,18 @@ def run_workflow(args):
         sh(str(HERE / 'reader_audit.py'), '--out', str(out_dir))
         sh(str(HERE / 'phase.py'), '--out', str(out_dir), '--complete', 'PAPER_COMPLETE')
         import re
-        html_p = (out_dir / 'reader/reader.html').resolve()
-        pdf_p = (out_dir / 'reader/reader.pdf').resolve()
+        paper_html_p = (out_dir / 'reader/paper_reader.html').resolve()
+        html_p = paper_html_p if paper_html_p.exists() else (out_dir / 'reader/reader.html').resolve()
+        atlas_p = (out_dir / 'reader/evidence_atlas.html').resolve()
+        paper_pdf_p = (out_dir / 'reader/paper_reader.pdf').resolve()
+        pdf_p = paper_pdf_p if paper_pdf_p.exists() else (out_dir / 'reader/reader.pdf').resolve()
         paper_id = pm_data.get('paper_id') or out_dir.name
         safe_name = re.sub(r'[^a-zA-Z0-9_\-\.]', '_', str(paper_id)).strip('_')
         named_html = (out_dir / f'reader/{safe_name}.html').resolve()
         print(f"\n>>> Evidentia run COMPLETE! Paper Reading COMPLETE (PAPER_COMPLETE). (Frozen paper understanding achieved. Apply runs only upon explicit request.)")
         print(f"    - Interactive Web Reader : {html_p}")
+        if atlas_p.exists():
+            print(f"    - Audit Evidence Atlas   : {atlas_p}")
         if named_html.exists() and named_html != html_p:
             print(f"      (Paper-named copy)     : {named_html}")
         if pdf_p.exists():
@@ -220,14 +225,19 @@ def run_workflow(args):
 
     if phase in ('COMPLETE', 'PAPER_COMPLETE'):
         import re
-        html_p = (out_dir / 'reader/reader.html').resolve()
-        pdf_p = (out_dir / 'reader/reader.pdf').resolve()
+        paper_html_p = (out_dir / 'reader/paper_reader.html').resolve()
+        html_p = paper_html_p if paper_html_p.exists() else (out_dir / 'reader/reader.html').resolve()
+        atlas_p = (out_dir / 'reader/evidence_atlas.html').resolve()
+        paper_pdf_p = (out_dir / 'reader/paper_reader.pdf').resolve()
+        pdf_p = paper_pdf_p if paper_pdf_p.exists() else (out_dir / 'reader/reader.pdf').resolve()
         pm_f = out_dir / 'model/paper_model.json'
         p_id = json.loads(pm_f.read_text()).get('paper_id', out_dir.name) if pm_f.exists() else out_dir.name
         safe_name = re.sub(r'[^a-zA-Z0-9_\-\.]', '_', str(p_id)).strip('_')
         named_html = (out_dir / f'reader/{safe_name}.html').resolve()
         print(f">>> Run is already COMPLETE at {out_dir}.")
         print(f"    - Interactive Web Reader : {html_p}")
+        if atlas_p.exists():
+            print(f"    - Audit Evidence Atlas   : {atlas_p}")
         if named_html.exists() and named_html != html_p:
             print(f"      (Paper-named copy)     : {named_html}")
         if pdf_p.exists():

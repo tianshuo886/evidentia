@@ -101,13 +101,13 @@ def build_argument_topology(pm, inv=None, sm=None, rec_data=None, lens_findings=
         central_q = f"论文针对'{paper_title}'探讨的核心问题是什么？"
 
     if limitations:
-        motivation = f"已有研究在特定假设或工况下存在局限：{limitations[0].get('text', '现有方案泛化性与保真度受限')}。"
+        motivation = f"已有研究在特定假设或工况下存在局限：{limitations[0].get('text', '论文未明确说明额外局限')}。"
     elif arg_chain:
         motivation = f"研究出发点：{arg_chain[0]}。"
     else:
         motivation = "论文提出针对领域内既有方法局限性的改进关切。"
 
-    gap = assumptions[0].get('text') if assumptions else "已有方法对复杂现实条件的先验假设与实际表现之间存在科学间隙。"
+    gap = assumptions[0].get('text') if assumptions else "论文未明确说明前置理论假设与基准条件间隙。"
 
     # 2. Central thesis
     if claims and claims[0].get('statement'):
@@ -130,7 +130,7 @@ def build_argument_topology(pm, inv=None, sm=None, rec_data=None, lens_findings=
         "id": u_prob_id,
         "semantic_role": "problem",
         "proposition": central_q,
-        "explanatory_narrative": f"论文立足于如下核心关切展开：{central_q}，旨在突破既有研究面临的瓶颈与局限。",
+        "explanatory_narrative": f"论文立足于如下核心关切展开：{central_q}，旨在解决既有方案的科学局限与未决问题。",
         "source_anchors": [f"p.{questions[0].get('page', 1)}"] if questions else ["p.1"],
         "linked_claim_ids": [],
         "linked_evidence_ids": [],
@@ -236,7 +236,7 @@ def build_argument_topology(pm, inv=None, sm=None, rec_data=None, lens_findings=
     if limitations or anomalies:
         u_lim_id = f"ARG-{unit_idx:02d}"
         unit_idx += 1
-        lim_text = limitations[0].get('text') if limitations else anomalies[0].get('text', '特定极端条件下的退化风险')
+        lim_text = limitations[0].get('text') if limitations else (anomalies[0].get('text') if anomalies else '论文未明确说明额外局限与极端风险')
         units.append({
             "id": u_lim_id,
             "semantic_role": "limitation",

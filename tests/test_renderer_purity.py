@@ -26,15 +26,25 @@ FORBIDDEN_FALLBACK_STRINGS = [
 ]
 
 def test_renderer_static_code_purity():
-    """Verify that scripts/render_reader.py does not contain hardcoded domain scientific boilerplate."""
-    render_src = (ROOT / 'scripts/render_reader.py').read_text(encoding='utf-8')
+    """Verify that scripts/render_reader.py and related presentation/narrative scripts do not contain hardcoded domain scientific boilerplate."""
+    target_scripts = [
+        ROOT / 'scripts/render_reader.py',
+        ROOT / 'scripts/render_paper_reader.py',
+        ROOT / 'scripts/render_evidence_atlas.py',
+        ROOT / 'scripts/narrative_composer_agent.py',
+        ROOT / 'scripts/kami_adapter.py'
+    ]
     
     violations = []
-    for s in FORBIDDEN_FALLBACK_STRINGS:
-        if s in render_src:
-            violations.append(s)
+    for script_p in target_scripts:
+        if not script_p.exists():
+            continue
+        src = script_p.read_text(encoding='utf-8')
+        for s in FORBIDDEN_FALLBACK_STRINGS:
+            if s in src:
+                violations.append((script_p.name, s))
             
-    assert not violations, f"Renderer Purity violation: render_reader.py contains hardcoded scientific boilerplate: {violations}"
+    assert not violations, f"Renderer Purity violation: scripts contain hardcoded scientific boilerplate: {violations}"
 
 def test_renderer_runtime_purity_on_minimal_paper(tmp_path):
     """Verify that rendering a minimal non-ML paper produces no fabricated domain concepts."""
