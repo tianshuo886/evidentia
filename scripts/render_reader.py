@@ -348,17 +348,17 @@ def render_reader(workspace_root: Path, kami_root: Path = None) -> dict:
     # 5. Create backward compatibility symlinks/copies
     paper_html = reader_dir / 'paper_reader.html'
     compat_html = reader_dir / 'reader.html'
-    if paper_html.exists() and not compat_html.exists():
+    if paper_html.exists():
         shutil.copy2(str(paper_html), str(compat_html))
 
     paper_md = reader_dir / 'paper_reader.md'
     compat_md = reader_dir / 'reader.md'
-    if paper_md.exists() and not compat_md.exists():
+    if paper_md.exists():
         shutil.copy2(str(paper_md), str(compat_md))
 
     paper_pdf = reader_dir / 'paper_reader.pdf'
     compat_pdf = reader_dir / 'reader.pdf'
-    if paper_pdf.exists() and not compat_pdf.exists():
+    if paper_pdf.exists():
         shutil.copy2(str(paper_pdf), str(compat_pdf))
 
     # Paper-named copy if title/id exists

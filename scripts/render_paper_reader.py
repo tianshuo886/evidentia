@@ -574,6 +574,30 @@ def render_paper_reader_html(manuscript: dict, root: Path) -> str:
         </div>
         """)
         
+    figs_appendix_html = []
+    for f in pm.get('figures', []):
+        fid = f.get('id')
+        if fid:
+            cap = f.get('caption_original') or f.get('title') or ''
+            figs_appendix_html.append(f"""
+            <div class="evidence-item" id="{esc(fid)}" style="margin-bottom:6pt; font-size:9pt;">
+              <strong>{esc(f.get('paper_label', fid))}</strong>: {esc(cap[:120])}
+              <a href="evidence_atlas.html#{esc(fid)}" style="margin-left:6pt; font-size:8.5pt;">[图谱详情 →]</a>
+            </div>
+            """)
+
+    tables_appendix_html = []
+    for t in pm.get('tables', []):
+        tid = t.get('id')
+        if tid:
+            cap = t.get('caption_original') or t.get('title') or ''
+            tables_appendix_html.append(f"""
+            <div class="evidence-item" id="{esc(tid)}" style="margin-bottom:6pt; font-size:9pt;">
+              <strong>{esc(t.get('paper_label', tid))}</strong>: {esc(cap[:120])}
+              <a href="evidence_atlas.html#{esc(tid)}" style="margin-left:6pt; font-size:8.5pt;">[图谱详情 →]</a>
+            </div>
+            """)
+
     page_numbers = {1}
     for c in pm_claims:
         if c.get('page'):
@@ -582,8 +606,24 @@ def render_paper_reader_html(manuscript: dict, root: Path) -> str:
             m = re.match(r'^p\.([0-9]+)$', str(ev))
             if m:
                 page_numbers.add(int(m.group(1)))
-    page_anchors_html = " ".join([
-        f"<a id='p.{p}' href='#p.{p}' style='font-size:8pt; color:var(--stone); margin-right:4pt;'>p.{p}</a>"
+    for f in pm.get('figures', []):
+        if f.get('page'):
+            page_numbers.add(f['page'])
+    for t in pm.get('tables', []):
+        if t.get('page'):
+            page_numbers.add(t['page'])
+    sm_p = root / 'model/source_map.json'
+    if sm_p.exists():
+        try:
+            sm_data = load_json(sm_p)
+            for pg in sm_data.get('pages', []):
+                if pg.get('number'):
+                    page_numbers.add(pg['number'])
+        except Exception:
+            pass
+
+    page_anchors_html = "、".join([
+        f"<a id='p.{p}' href='#p.{p}' style='font-size:8pt; color:var(--stone);'>p.{p}</a>"
         for p in sorted(page_numbers)
     ])
 
@@ -614,6 +654,13 @@ def render_paper_reader_html(manuscript: dict, root: Path) -> str:
         </div>
       </details>
       {f"<details open><summary>点击展开：跨透镜争议焦点与验证记录 ({len(pm_conflicts)} 个)</summary><div style='font-size:9.5pt; margin-top:10pt; line-height:1.55;'>{''.join(conflicts_appendix_html)}</div></details>" if pm_conflicts else ""}
+      <details>
+        <summary>点击展开：全景图表与数据表索引 ({len(pm.get('figures', [])) + len(pm.get('tables', []))} 项)</summary>
+        <div style="font-size:9pt; margin-top:10pt; line-height:1.55;">
+          {''.join(figs_appendix_html)}
+          {''.join(tables_appendix_html)}
+        </div>
+      </details>
       <div style="margin-top:12pt;">
         <strong>Page Anchors:</strong> {page_anchors_html}
       </div>

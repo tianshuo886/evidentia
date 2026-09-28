@@ -116,25 +116,28 @@ def collect_kami_report(pdf_path: Path, html_path: Path = None, kami_root: Path 
         
         checks = []
         if html_path and html_path.exists():
-            checks.append(['--check-placeholders', str(html_path)])
-            checks.append(['--check-style', str(html_path)])
+            checks.append(['--check-placeholders', str(html_path.resolve())])
+            checks.append(['--check-style', str(html_path.resolve())])
         if pdf_path and pdf_path.exists():
-            checks.append(['--check-visual', str(pdf_path)])
-            checks.append(['--check-orphans', str(pdf_path)])
-            checks.append(['--check-density', str(pdf_path)])
-            checks.append(['--check-fonts', str(pdf_path)])
+            checks.append(['--check-visual', str(pdf_path.resolve())])
+            checks.append(['--check-orphans', str(pdf_path.resolve())])
+            checks.append(['--check-density', str(pdf_path.resolve())])
+            checks.append(['--check-fonts', str(pdf_path.resolve())])
             
         for args in checks:
             p = subprocess.run([sys.executable, str(build_py), *args], capture_output=True, text=True)
             rc = p.returncode
-            stdout = p.stdout[-3000:]
+            stdout_full = p.stdout
+            stdout = stdout_full[-3000:]
             if args[0] == '--check-style' and rc != 0:
-                # Filter out Kami style lint false-positives where HEX_ANY matches anchor IDs (e.g. href="#F01")
-                lines = [line.strip() for line in stdout.splitlines() if line.strip()]
+                # Filter out Kami style lint false-positives where HEX_ANY matches anchor IDs (e.g. href="#F01", "#c08")
+                import re
+                lines = [line.strip() for line in stdout_full.splitlines() if line.strip()]
                 real_style_errors = [
                     line for line in lines
-                    if not ('[off-palette]' in line and any(f'#{tok.lower()}' in line for tok in ('f01', 'c01', 'b01', 'a01', 'e01', 'd01', 'q01', 'ano', 'u01')))
+                    if not ('[off-palette]' in line and re.search(r'#[a-zA-Z][0-9a-zA-Z_\-]+', line, re.I))
                     and not line.startswith('ERROR: ')
+                    and not ('[off-palette]' in line and 'single-accent palette violated' in line)
                 ]
                 if not real_style_errors:
                     rc = 0

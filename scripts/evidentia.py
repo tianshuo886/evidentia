@@ -110,8 +110,8 @@ def run_workflow(args):
         rs = json.loads(rs_path.read_text(encoding='utf-8'))
         phase = rs.get('phase')
 
-    # 3. Six Lens Execution (Standard Mode or Ensemble Mode)
-    if phase in ('BASELINE_LOCK', 'LENS_TASKS_READY', 'WAITING_FOR_LENS_AGENTS', 'WAITING_FOR_RECONCILIATION_AGENT', 'LENS_EXECUTION', 'WAITING_FOR_VERIFIERS'):
+    # 3. Six Lens Execution, Reconciliation, Synthesis, Verification, Final Model, Freeze, Render
+    if phase in ('BASELINE_LOCK', 'LENS_TASKS_READY', 'WAITING_FOR_LENS_AGENTS', 'WAITING_FOR_RECONCILIATION_AGENT', 'LENS_EXECUTION', 'WAITING_FOR_VERIFIERS', 'RECONCILIATION', 'SYNTHESIS', 'VERIFICATION', 'FINAL_MODEL', 'FREEZE', 'RENDER'):
         lenses = ('author', 'reviewer', 'mechanism', 'builder', 'anomaly', 'counterfactual')
         if mode == 'ensemble':
             print("[5/8] Executing Multi-Model Ensemble Mode across independent models...")
@@ -132,20 +132,23 @@ def run_workflow(args):
             # Adaptive Model Escalation
             sh(str(HERE / 'adaptive_escalation.py'), '--lens-dir', str(out_dir / 'lens'), '--out', str(out_dir / 'model/escalations.json'))
         else:
-            print("[5/8] Executing Six Independent Lenses (Standard Mode)...")
-            for l in lenses:
-                lp = out_dir / 'lens' / f'{l}.json'
-                if not lp.exists():
-                    sh(str(HERE / 'lens_agent.py'), '--task', str(out_dir / 'tasks/lens' / f'{l}.json'), '--out', str(lp), *extra_flags)
+            if 'LENS_EXECUTION' not in rs.get('completed_phases', []) and phase not in ('WAITING_FOR_RECONCILIATION_AGENT', 'RECONCILIATION', 'SYNTHESIS', 'VERIFICATION', 'FINAL_MODEL', 'FREEZE', 'RENDER'):
+                print("[5/8] Executing Six Independent Lenses (Standard Mode)...")
+                for l in lenses:
+                    lp = out_dir / 'lens' / f'{l}.json'
+                    if not lp.exists():
+                        sh(str(HERE / 'lens_agent.py'), '--task', str(out_dir / 'tasks/lens' / f'{l}.json'), '--out', str(lp), *extra_flags)
 
         missing_lenses = [l for l in lenses if not (out_dir / 'lens' / f'{l}.json').exists()]
         if missing_lenses:
             print(f">>> Workflow paused in WAITING_FOR_LENS_AGENTS. Missing: {', '.join(missing_lenses)}")
             return 0
 
-        print("[6/8] Validating 6 independent Lenses and Reconciling...")
-        sh(str(HERE / 'phase.py'), '--out', str(out_dir), '--complete', 'LENS_EXECUTION')
-        sh(str(HERE / 'merge_lenses.py'), '--out', str(out_dir), *extra_flags)
+        if 'LENS_EXECUTION' not in rs.get('completed_phases', []) and phase not in ('WAITING_FOR_RECONCILIATION_AGENT', 'RECONCILIATION', 'SYNTHESIS', 'VERIFICATION', 'FINAL_MODEL', 'FREEZE', 'RENDER'):
+            print("[6/8] Validating 6 independent Lenses and Reconciling...")
+            sh(str(HERE / 'phase.py'), '--out', str(out_dir), '--complete', 'LENS_EXECUTION')
+        if not (out_dir / 'model/lens_reconciliation.json').exists():
+            sh(str(HERE / 'merge_lenses.py'), '--out', str(out_dir), *extra_flags)
 
         # Artifact completeness gate for RECONCILIATION
         rec_p = out_dir / 'model/lens_reconciliation.json'
@@ -158,11 +161,13 @@ def run_workflow(args):
         if rec_errs:
             sys.exit(f"Reconciliation validation failed:\n{rec_errs}")
 
-        sh(str(HERE / 'phase.py'), '--out', str(out_dir), '--complete', 'RECONCILIATION')
+        if 'RECONCILIATION' not in rs.get('completed_phases', []):
+            sh(str(HERE / 'phase.py'), '--out', str(out_dir), '--complete', 'RECONCILIATION')
 
-        print("[6.5/8] Performing Cross-Lens Scientific Synthesis...")
-        sh(str(HERE / 'scientific_synthesis_agent.py'), '--out', str(out_dir), *extra_flags)
-        sh(str(HERE / 'phase.py'), '--out', str(out_dir), '--complete', 'SYNTHESIS')
+        if 'SYNTHESIS' not in rs.get('completed_phases', []):
+            print("[6.5/8] Performing Cross-Lens Scientific Synthesis...")
+            sh(str(HERE / 'scientific_synthesis_agent.py'), '--out', str(out_dir), *extra_flags)
+            sh(str(HERE / 'phase.py'), '--out', str(out_dir), '--complete', 'SYNTHESIS')
 
         # Artifact completeness gate for VERIFICATION
         pm_p = out_dir / 'model/paper_model.json'
@@ -189,15 +194,18 @@ def run_workflow(args):
             print(">>> Workflow paused in WAITING_FOR_VERIFIERS. Verification results pending.")
             return 0
 
-        sh(str(HERE / 'phase.py'), '--out', str(out_dir), '--complete', 'VERIFICATION')
+        if 'VERIFICATION' not in rs.get('completed_phases', []):
+            sh(str(HERE / 'phase.py'), '--out', str(out_dir), '--complete', 'VERIFICATION')
         
-        print("[7/8] Building Evidence Graph and Final Model...")
-        sh(str(HERE / 'build_graph.py'), '--out', str(out_dir))
-        sh(str(HERE / 'phase.py'), '--out', str(out_dir), '--complete', 'FINAL_MODEL')
+        if 'FINAL_MODEL' not in rs.get('completed_phases', []) and phase != 'FINAL_MODEL':
+            print("[7/8] Building Evidence Graph and Final Model...")
+            sh(str(HERE / 'build_graph.py'), '--out', str(out_dir))
+            sh(str(HERE / 'phase.py'), '--out', str(out_dir), '--complete', 'FINAL_MODEL')
         
         print("[8/8] Hardened Freeze Check & Rendering Reader...")
-        sh(str(HERE / 'freeze_check.py'), '--out', str(out_dir))
-        sh(str(HERE / 'phase.py'), '--out', str(out_dir), '--complete', 'FREEZE')
+        if 'FREEZE' not in rs.get('completed_phases', []) and phase != 'FREEZE':
+            sh(str(HERE / 'freeze_check.py'), '--out', str(out_dir))
+            sh(str(HERE / 'phase.py'), '--out', str(out_dir), '--complete', 'FREEZE')
         sh(str(HERE / 'render_reader.py'), '--out', str(out_dir))
         sh(str(HERE / 'phase.py'), '--out', str(out_dir), '--complete', 'RENDER')
         sh(str(HERE / 'reader_audit.py'), '--out', str(out_dir))
