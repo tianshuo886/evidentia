@@ -39,6 +39,10 @@ COMPAT_NEXT = {
     ('LENS', 'FREEZE'): True,
     ('LENS_EXECUTION', 'FREEZE'): True,
     ('FINAL_MODEL', 'FREEZE'): True,
+    ('WAITING_FOR_OPEN_READING_AGENT', 'OPEN_READING'): True,
+    ('WAITING_FOR_LENS_AGENTS', 'LENS_EXECUTION'): True,
+    ('WAITING_FOR_RECONCILIATION_AGENT', 'RECONCILIATION'): True,
+    ('WAITING_FOR_VERIFIERS', 'VERIFICATION'): True,
 }
 
 APPLY_ORDER = {
@@ -297,8 +301,10 @@ def main():
 
     elif a.complete == 'OPEN_READING':
         # Must have completed SOURCE_LOCK
-        if current != 'SOURCE_LOCK' and 'SOURCE_LOCK' not in s.get('completed_phases', []):
+        if current not in ('SOURCE_LOCK', 'WAITING_FOR_OPEN_READING_AGENT') and 'SOURCE_LOCK' not in s.get('completed_phases', []):
             fail('SOURCE_LOCK phase is required before OPEN_READING')
+        if 'SOURCE_LOCK' not in s.get('completed_phases', []):
+            s.setdefault('completed_phases', []).append('SOURCE_LOCK')
         pm_p = root / 'model/paper_model.json'
         if not pm_p.exists():
             fail('missing model/paper_model.json')
@@ -324,13 +330,19 @@ def main():
 
     elif a.complete in ('LENS_EXECUTION', 'LENS'):
         # Must have completed BASELINE_LOCK
-        if current != 'BASELINE_LOCK' and 'BASELINE_LOCK' not in s.get('completed_phases', []):
+        if current not in ('BASELINE_LOCK', 'WAITING_FOR_LENS_AGENTS') and 'BASELINE_LOCK' not in s.get('completed_phases', []):
             fail('BASELINE_LOCK phase is required before LENS_EXECUTION')
+        if 'BASELINE_LOCK' not in s.get('completed_phases', []):
+            s.setdefault('completed_phases', []).append('BASELINE_LOCK')
         import subprocess
         if subprocess.run([sys.executable, str(Path(__file__).with_name('check_lenses.py')), '--out', str(root)]).returncode != 0:
             fail('Lens gate failed')
 
     elif a.complete == 'RECONCILIATION':
+        if current not in ('LENS_EXECUTION', 'WAITING_FOR_RECONCILIATION_AGENT') and 'LENS_EXECUTION' not in s.get('completed_phases', []):
+            fail('LENS_EXECUTION phase is required before RECONCILIATION')
+        if 'LENS_EXECUTION' not in s.get('completed_phases', []):
+            s.setdefault('completed_phases', []).append('LENS_EXECUTION')
         rec_p = root / 'model/lens_reconciliation.json'
         if not rec_p.exists():
             fail('missing model/lens_reconciliation.json (run merge_lenses.py)')

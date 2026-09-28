@@ -91,7 +91,7 @@ def run_synthetic_reconciliation(task_path_or_root):
                 if (has_neg_f and has_aff_other) or (has_aff_f and has_neg_other) or (stmt.startswith('statement-') and other_stmt.startswith('statement-')):
                     rel = "TENSION"
                     req_verif = True
-                    verif_status = "SUPPORTED"
+                    verif_status = None
                     break
 
         items.append({

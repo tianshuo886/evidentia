@@ -26,12 +26,26 @@ def sh(*args):
     return res.stdout.strip()
 
 def run_workflow(args):
+    # Auto-acquire paper if DOI, ArXiv ID, or URL is passed
+    raw_input = getattr(args, 'doi', None) or getattr(args, 'pdf', None)
+    if raw_input and (getattr(args, 'doi', None) or not Path(raw_input).exists()):
+        from paper_acquire_bridge import is_doi, is_arxiv, is_url, acquire_paper
+        if is_doi(raw_input) or is_arxiv(raw_input) or is_url(raw_input):
+            import re
+            if not getattr(args, 'out', None):
+                clean_stem = re.sub(r'[^a-zA-Z0-9_\-]', '_', str(raw_input)).strip('_')
+                args.out = str(Path('./runs') / clean_stem)
+            out_dir = Path(args.out)
+            target_pdf = out_dir / 'source/paper.pdf'
+            pdf_path, meta = acquire_paper(raw_input, out_dir=out_dir, target_pdf_path=target_pdf)
+            args.pdf = str(pdf_path)
+
     if getattr(args, 'out', None):
         out_dir = Path(args.out)
     elif getattr(args, 'pdf', None):
         out_dir = Path('./runs') / Path(args.pdf).stem
     else:
-        sys.exit("Error: Must specify --pdf <path> or --out <dir>")
+        sys.exit("Error: Must specify --pdf <path>, --doi <doi>, or --out <dir>")
     args.out = str(out_dir)
     rs_path = out_dir / 'run_state.json'
     mode = getattr(args, 'mode', 'standard') or 'standard'
@@ -97,7 +111,7 @@ def run_workflow(args):
         phase = rs.get('phase')
 
     # 3. Six Lens Execution (Standard Mode or Ensemble Mode)
-    if phase in ('BASELINE_LOCK', 'LENS_TASKS_READY', 'WAITING_FOR_LENS_AGENTS'):
+    if phase in ('BASELINE_LOCK', 'LENS_TASKS_READY', 'WAITING_FOR_LENS_AGENTS', 'WAITING_FOR_RECONCILIATION_AGENT', 'LENS_EXECUTION', 'WAITING_FOR_VERIFIERS'):
         lenses = ('author', 'reviewer', 'mechanism', 'builder', 'anomaly', 'counterfactual')
         if mode == 'ensemble':
             print("[5/8] Executing Multi-Model Ensemble Mode across independent models...")
@@ -339,7 +353,8 @@ def main():
 
     # run
     p_run = subparsers.add_parser("run")
-    p_run.add_argument("--pdf", help="Source paper PDF")
+    p_run.add_argument("--pdf", help="Source paper PDF, DOI, arXiv ID, or URL")
+    p_run.add_argument("--doi", help="DOI or paper identifier to auto-acquire (e.g. 10.1038/... or 1706.03762)")
     p_run.add_argument("--out", help="Workspace output directory (default: ./runs/<paper_name>)")
     p_run.add_argument("--mode", choices=["standard", "ensemble"], default="standard")
     p_run.add_argument("--models", help="Comma-separated model identifiers for ensemble mode")
