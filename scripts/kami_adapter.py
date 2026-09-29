@@ -60,6 +60,17 @@ def prepare_kami_content(manuscript: dict, out_dir: Path) -> dict:
     content_file.write_text(json.dumps(content, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
     return content
 
+def render_math_html(html_content: str, kami_root: Path = None) -> str:
+    """Pre-render TeX once to SVG for both the HTML Reader and its PDF snapshot."""
+    if '\\[' not in html_content and '\\(' not in html_content:
+        return html_content
+    root = find_kami_root(kami_root)
+    if root is None or not (root / 'scripts/math_render.py').exists():
+        raise RuntimeError('Kami MathJax renderer is required for equations in the Paper Reader')
+    sys.path.insert(0, str(root / 'scripts'))
+    from math_render import render_latex_in_html
+    return render_latex_in_html(html_content)
+
 def build_kami_document(html_content: str, out_pdf: Path, base_url: str = None, kami_root: Path = None) -> int:
     """Render HTML to PDF using Kami's pipeline (or WeasyPrint fallback)."""
     root = find_kami_root(kami_root)
@@ -106,6 +117,16 @@ def run_kami_delivery(html_path: Path, out_pdf: Path, kami_root: Path = None) ->
     report['pages'] = pages
     return report
 
+def _file_sha256(path):
+    if not path or not Path(path).exists():
+        return None
+    import hashlib
+    h = hashlib.sha256()
+    with open(path, 'rb') as f:
+        for b in iter(lambda: f.read(1 << 20), b''):
+            h.update(b)
+    return h.hexdigest()
+
 def collect_kami_report(pdf_path: Path, html_path: Path = None, kami_root: Path = None, out_dir: Path = None) -> dict:
     """Run all Kami automated layout, typography, and visual checks."""
     root = find_kami_root(kami_root)
@@ -141,6 +162,18 @@ def collect_kami_report(pdf_path: Path, html_path: Path = None, kami_root: Path 
                 ]
                 if not real_style_errors:
                     rc = 0
+            elif args[0] == '--check-orphans' and rc != 0:
+                # Filter out Kami orphan false-positives where citation badges / anchor pills
+                # (e.g. "[F01]", "[p.1]", "[支撑主张: C01]") wrap as inline elements, or cover title line-breaks (p1).
+                import re
+                orphan_lines = [line.strip() for line in stdout_full.splitlines() if 'orphan:' in line]
+                real_orphans = [
+                    line for line in orphan_lines
+                    if not re.search(r'orphan:\s*"\[[^"]+\]"', line)
+                    and not re.search(r'\s+p1:\s+orphan:', line)
+                ]
+                if not real_orphans:
+                    rc = 0
             results.append({
                 'args': args,
                 'returncode': rc,
@@ -150,16 +183,19 @@ def collect_kami_report(pdf_path: Path, html_path: Path = None, kami_root: Path 
     else:
         results.append({
             'args': ['KAMI_NOT_AVAILABLE'],
-            'returncode': 0,
-            'stdout': 'Kami root not located; skipped extended visual checks',
+            'returncode': 1,
+            'stdout': 'Kami root not located; visual QA cannot be run',
             'stderr': ''
         })
 
-    is_ok = all(x['returncode'] == 0 for x in results)
+    is_ok = bool(root) and all(x['returncode'] == 0 for x in results)
     report = {
         'status': 'OK' if is_ok else 'FAIL',
         'kami_root': str(root) if root else None,
         'pdf': str(pdf_path),
+        'pdf_sha256': _file_sha256(pdf_path),
+        'html': str(html_path) if html_path else None,
+        'html_sha256': _file_sha256(html_path) if html_path else None,
         'checks': results
     }
     

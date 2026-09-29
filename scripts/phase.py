@@ -412,13 +412,23 @@ def main():
         import subprocess
         if subprocess.run([sys.executable, str(Path(__file__).with_name('reader_audit.py')), '--out', str(root)]).returncode != 0:
             fail('Reader audit failed')
+        if subprocess.run([sys.executable, str(Path(__file__).with_name('reader_acceptance.py')), '--out', str(root)]).returncode != 0:
+            fail('Reader acceptance gate failed; status is NEEDS_REVIEW')
 
     elif a.complete in ('COMPLETE', 'PAPER_COMPLETE'):
         intent = s.get('intent', 'PAPER_READING')
-        if intent == 'PAPER_READING':
+        allowed = s.get('allowed_inputs', [])
+        for item in allowed:
+            for forbidden in ('apply/', 'project/', 'memory/project/'):
+                if forbidden in item:
+                    fail(f'input firewall violated: forbidden item {item!r} found in allowed_inputs')
+        if intent in ('PAPER_READING', 'PAPER_TECHNICAL_EXTRACTION'):
             apply_dir = root / 'apply'
-            if apply_dir.exists() and list(apply_dir.glob('*/research_delta.json')):
-                fail('project isolation violated: default paper reading run must not create apply artifacts')
+            if apply_dir.exists():
+                fail(f'project isolation violated: apply/ directory must not exist under {intent}')
+        import subprocess
+        if subprocess.run([sys.executable, str(Path(__file__).with_name('reader_acceptance.py')), '--out', str(root)]).returncode != 0:
+            fail('Reader acceptance gate failed; PAPER_COMPLETE refused')
 
     # Record history and update state
     s['history'].append({'phase': current, 'status': 'completed', 'at': datetime.now(timezone.utc).isoformat()})

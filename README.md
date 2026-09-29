@@ -163,9 +163,10 @@ A freeze fails on missing Lens files, dangling IDs, uninspected Figures/Tables, 
 ```bash
 python scripts/render_reader.py --out paper-output
 python scripts/reader_audit.py --out paper-output
+python scripts/reader_acceptance.py --out paper-output
 ```
 
-The Reader has three reading depths: a 30-second dashboard, a 5-minute argument view, and a 30–60-minute Evidence Atlas. HTML is the primary surface; PDF is an archive snapshot.
+The Reader is one coherent Chinese-first paper narrative: question → method → experiments → evidence assessment → conclusion and boundaries. Evidence Atlas is an audit appendix, not a prerequisite for understanding the paper. HTML, Markdown, and PDF are rendered from the same semantic manuscript. The default `PAPER_READING` intent has no project-transfer or reuse chapter; request `--intent PAPER_TECHNICAL_EXTRACTION` explicitly for paper-scoped technical extraction. Project application remains an explicit Apply operation and never mutates the frozen Paper Reader.
 
 ### 4b. Kami visual QA (required for a shippable Reader)
 
@@ -176,7 +177,7 @@ export KAMI_ROOT=~/.agents/skills/kami   # or /path/to/Kami
 python scripts/kami_adapter.py --out paper-output --kami-root "$KAMI_ROOT"
 ```
 
-The adapter refuses to run without `KAMI_ROOT` and fails if `reader/reader.pdf` is missing, so the PDF snapshot (hence WeasyPrint) is required at this stage. A Reader without `kami_audit.json` status OK is draft-only, not shippable. After the machine checks pass, still open the page images and confirm figure clarity, caption binding, page breaks, math, and the Paper/Project visual distinction by eye.
+The adapter refuses to run without `KAMI_ROOT` and fails if `reader/reader.pdf` is missing, so the PDF snapshot (hence WeasyPrint) is required at this stage. A Reader without `kami_audit.json` status OK is draft-only, not shippable. `reader_acceptance.py` additionally requires the semantic story spine, Lens/Atlas invisibility in the main body, local figure/table bindings, formula safety, intent isolation, and HTML/Markdown/PDF parity. After the machine checks pass, still open the page images and confirm figure clarity, caption binding, page breaks, math, and the Paper/Project visual distinction by eye.
 
 ### 5. Apply the frozen paper to a project
 

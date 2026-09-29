@@ -232,9 +232,9 @@ def synthesize_topics_dynamically(pm, rec_data, lens_findings, arg_reconstructio
 
             topics.append({
                 "topic_id": cid,
-                "title_zh": f"跨透镜争议焦点: {c_stmt[:40]}",
+                "title_zh": f"科学争议焦点: {c_stmt[:40]}",
                 "question_zh": f"针对证据 {', '.join(c_ev)} 的结论在不同科学视角下存在显著张力，应如何客观定性？",
-                "core_conclusion_zh": f"冲突保留: {c_stmt}。不同透镜对该现象的定性存在不可调和的科学分歧，严禁按多数票抹平。",
+                "core_conclusion_zh": f"冲突保留: {c_stmt}。不同证据视角对该现象的定性存在不可调和的科学分歧，严禁按多数票抹平。",
                 "evidence_summary_zh": f"争议核心证据: {', '.join(c_ev)}。",
                 "mechanism_zh": None,
                 "reviewer_caveat_zh": f"争议状态: {c.get('status')}",
@@ -282,7 +282,7 @@ def run_scientific_synthesis(out_dir, fixture=None, replay_dir=None, adapter=Non
     assessed_thesis = arg_recon.get('assessed_argument', {}).get('justified_thesis') or f"在论文报告的基准设定下，核心实证链条基本闭环。"
 
     overall_assessment = (
-        f"综合判断：针对《{paper_title}》，六大独立透镜审视形成了 {len(topics)} 个主题综合单元。"
+        f"综合判断：针对《{paper_title}》，多角度实证审视形成了 {len(topics)} 个主题综合单元。"
         f"{assessed_thesis} "
         f"其中 HIGH 级别支撑结论 {high_count} 项，带条件/边界约束结论 {partial_count} 项"
         + (f"，保留跨视角张力争议 {tension_count} 项。" if tension_count else "。")

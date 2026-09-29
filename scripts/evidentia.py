@@ -142,7 +142,7 @@ def run_workflow(args):
             supp_args.extend(['--supplement', s])
             
         print("[1/8] Initializing source-only workspace...")
-        sh(str(HERE / 'init_run.py'), '--pdf', args.pdf, '--out', str(out_dir), *supp_args)
+        sh(str(HERE / 'init_run.py'), '--pdf', args.pdf, '--out', str(out_dir), '--intent', getattr(args, 'intent', 'PAPER_READING'), *supp_args)
         
         print("[2/8] Reconstructing paper source evidence (text + visual track)...")
         sh(str(HERE / 'extract_structure.py'), '--pdf', str(out_dir / 'source/paper.pdf'), '--out', str(out_dir / 'model/source_map.json'), *supp_args)
@@ -456,6 +456,7 @@ def main():
     p_run.add_argument("--doi", help="DOI or paper identifier to auto-acquire (e.g. 10.1038/... or 1706.03762)")
     p_run.add_argument("--out", help="Workspace output directory (default: ./runs/<paper_name>)")
     p_run.add_argument("--mode", choices=["standard", "ensemble"], default="standard")
+    p_run.add_argument("--intent", choices=["PAPER_READING", "PAPER_TECHNICAL_EXTRACTION"], default="PAPER_READING")
     p_run.add_argument("--models", help="Comma-separated model identifiers for ensemble mode")
     p_run.add_argument("--supplement", action="append", help="Supplementary PDF files")
     p_run.add_argument("--fixture", action="store_true", help="Use isolated synthetic test fixtures")

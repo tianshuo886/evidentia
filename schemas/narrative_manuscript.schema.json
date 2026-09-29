@@ -65,6 +65,21 @@
             "core_boundary": { "type": "string" }
           }
         },
+        "story_spine": {
+          "type": "object",
+          "properties": {
+            "central_question": { "type": "string" },
+            "motivation": { "type": "string" },
+            "prior_gap": { "type": "string" },
+            "central_move": { "type": "string" },
+            "method_logic": { "type": "string" },
+            "experimental_questions": { "type": "array", "items": { "type": "string" } },
+            "major_findings": { "type": "array", "items": { "type": "string" } },
+            "justified_conclusion": { "type": "string" },
+            "scope_and_limits": { "type": "array", "items": { "type": "string" } }
+          },
+          "additionalProperties": false
+        },
         "chapters": {
           "type": "array",
           "minItems": 1,
@@ -102,6 +117,10 @@
                     "evidence_id": { "type": "string" },
                     "caption": { "type": "string" },
                     "analysis": { "type": "string" },
+                    "question": { "type": "string" },
+                    "supports": { "type": "array", "items": { "type": "string" } },
+                    "limits": { "type": "array", "items": { "type": "string" } },
+                    "presentation_role": { "type": "string", "enum": ["narrative_core", "narrative_support", "audit_only", "uncertain"] },
                     "explanation": { "type": "string" },
                     "raw_text": { "type": "string" },
                     "asset": { "type": ["string", "null"] },

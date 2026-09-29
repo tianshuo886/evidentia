@@ -84,4 +84,4 @@ def test_argument_recovery_from_markdown_alone(tmp_path):
     assert "## 1. 一分钟看懂这篇论文" in md_content
     assert "## 2. 论文到底在解决什么问题" in md_content
     assert "## 4. 关键实验逐个说明" in md_content
-    assert "## 5. 综合科学判断" in md_content
+    assert "## 5. 证据最终支持了什么" in md_content or "## 5. 综合科学判断" in md_content

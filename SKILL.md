@@ -125,15 +125,19 @@ python scripts/full_audit.py --out output
 - **Anomaly:** real failures, subgroup flips, negative results and downplayed findings; empty is valid.
 - **Counterfactual:** serious alternative explanations that reuse the paper's evidence.
 
-## Reader structure (Seven-layer hierarchy)
+## Reader structure (six narrative chapters + audit appendix)
 
 1. **一分钟看懂这篇论文:** 研究问题、核心方法、核心发现、最大价值、最大风险/边界。
 2. **论文到底在解决什么问题:** 背景痛点、已有先验局限、切入点、重要度判定。
-3. **方法到底怎么工作:** 端到端流程、核心组件拆解、公式中文通俗解读与物理意义。
-4. **关键实验逐个说明:** 核心图表逐一精读（对比内容、读图指引、证明范围、盲区、异常信号）。
-5. **综合科学判断:** 最坚实证据链、最薄弱推理链、先验假设、替代解释、反常现象、适用边界。
-6. **可复用技术内容:** 可解耦算法组件、损失函数、预处理策略、迁移落地建议。
-7. **证据审计附录:** 主张与 O/I/A 证据卡片列表、跨透镜争议焦点、页面锚点、验证状态（次级可折叠）。
+3. **方法到底怎么工作:** 端到端流程、核心组件拆解、公式与假设；可分析的图表就地呈现。
+4. **关键实验逐个说明:** 核心图表逐一精读（实验问题、观测结果、证明范围、盲区、异常信号）。
+5. **证据最终支持了什么:** 最坚实证据链、最薄弱推理链、替代解释、反常现象与适用边界。
+6. **结论与边界:** 已建立的结论、证据边界和未决问题。
+7. **证据审计附录:** 主张与 O/I/A 证据卡片列表、争议焦点、页面锚点、验证状态（次级可折叠）。
+
+默认 Reader 不包含“可复用技术内容”或项目迁移章节。论文技术细节提取是单独的显式意图（`PAPER_TECHNICAL_EXTRACTION`）；项目迁移仍只通过显式 `/evidentia-apply` 请求产生，且永不改写冻结 Paper Reader。
+
+技术细节提取是单独的显式意图（`PAPER_TECHNICAL_EXTRACTION`）；项目迁移仍只通过显式 `/evidentia-apply` 请求产生，默认 `PAPER_READING` 不创建复用章节。
 
 Project Delta appears exclusively in `apply/<project>/project_reader.html` and `.md`. Every Delta item links back to Paper Claim, Figure, Table, Experiment or page IDs.
 

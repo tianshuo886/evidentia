@@ -30,15 +30,15 @@ Evidentia outputs two distinct reading surfaces from every paper reading run:
 - **Flow**:
   - Cover with clean title, subtitle, author/venue metadata (no internal hashes or machine IDs)
   - Kami-native Table of Contents
-  - 7 Narrative Chapters:
-    1. 一分钟理解这篇论文 (Executive summary with lead paragraph and key takeaways)
-    2. 论文为什么要做这件事 (Motivation, existing gap, entry point, significance in continuous prose)
-    3. 方法是怎么工作的 (End-to-end mechanism, components, equations, assumptions)
-    4. 哪些实验真正决定了论文是否成立 (Decisive experiments with inline figures/tables and caveats)
-    5. 六个 Lens 合起来，我们应该怎样理解这篇论文 (Synthesized across lenses by scientific topic, not by lens headings)
-    6. 哪些东西值得复用 (Source-grounded portable methods, losses, evaluation protocols)
-    7. 结论与边界 (Established findings, unproven boundaries, practical precautions)
+  - 6 Narrative Chapters:
+    1. 一分钟看懂这篇论文 (Executive summary with lead paragraph and key takeaways)
+    2. 论文到底在解决什么问题 (Motivation, existing gap, entry point, significance in continuous prose)
+    3. 方法到底怎么工作 (End-to-end mechanism, components, equations, assumptions)
+    4. 关键实验逐个说明 (Decisive experiments with inline figures/tables and caveats)
+    5. 证据最终支持了什么 (Integrated evidence assessment, alternatives, anomalies, and scope)
+    6. 结论与边界 (Established findings, unproven boundaries, unresolved questions)
   - Quiet Appendix linking to the Evidence Atlas
+  - Paper-scoped technical extraction is a separate explicit intent; project transfer is explicit Apply-only and never changes the frozen Paper Reader.
 - **Evidence References**: Quiet, local citations (e.g. `[E: F01]`, `[Claim C01]`), never noisy dashboard badges.
 - **Chrome**: Zero dashboard grids, verifier badges, or hash status in the primary reading flow.
 

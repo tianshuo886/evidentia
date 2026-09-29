@@ -123,17 +123,39 @@ def main():
         # Structured equation detection
         equations = []
         current_sec = sections[-1] if sections else "General"
+        workspace_root = Path(a.out).resolve().parent.parent
+        equation_dir = workspace_root / 'assets/equations'
         for line in txt.splitlines():
             line_s = line.strip()
             if re.search(r'[=∑∫]|\(\s*\d+\s*\)', line_s) and 5 < len(line_s) < 300:
                 eq_counter += 1
                 eq_id = f"EQ-{eq_counter:02d}"
+                hits = p.search_for(line_s)
+                fallback_asset = None
+                bbox = []
+                if hits:
+                    # A tight crop preserves the source formula when text is not
+                    # reliable LaTeX. A missing geometric match stays explicit.
+                    hit = hits[0]
+                    crop = fitz.Rect(hit.x0 - 8, hit.y0 - 6, hit.x1 + 8, hit.y1 + 6) & p.rect
+                    if crop.width > 4 and crop.height > 4 and crop.width < p.rect.width * 0.95:
+                        equation_dir.mkdir(parents=True, exist_ok=True)
+                        asset_path = equation_dir / f'{eq_id}.png'
+                        p.get_pixmap(matrix=fitz.Matrix(2, 2), clip=crop, alpha=False).save(asset_path)
+                        fallback_asset = f'assets/equations/{eq_id}.png'
+                        bbox = [crop.x0, crop.y0, crop.x1, crop.y1]
                 equations.append({
                     'equation_id': eq_id,
                     'page': n,
+                    'source_page': n,
                     'raw_text': line_s,
                     'latex': None,
-                    'bbox': [],
+                    'bbox': bbox,
+                    'display_mode': True,
+                    'symbols': [],
+                    'role_zh': '',
+                    'source_confidence': 'UNCERTAIN',
+                    'fallback_asset': fallback_asset,
                     'surrounding_text': line_s,
                     'section': current_sec,
                     'referenced_by': [],
