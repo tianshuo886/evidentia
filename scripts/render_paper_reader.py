@@ -20,11 +20,42 @@ from datetime import datetime, timezone
 
 sys.path.insert(0, str(Path(__file__).parent))
 from validate_common import load_json, sha256
-from narrative_composer_agent import compose_narrative_manuscript
+from narrative_composer_agent import compose_narrative_manuscript, clean_visible_narrative
 import kami_adapter
 
 def esc(x):
     return html.escape(str(x or ''))
+
+FORBIDDEN_MAIN_READER_PHRASES = ('详情见图谱', '图谱详情', '六大透镜', '跨透镜', '六个 Lens', '六个Lens')
+
+def normalize_latex(raw):
+    """Normalize a source equation without inventing missing mathematics."""
+    value = str(raw or '').strip()
+    if value.startswith('\\[') and value.endswith('\\]'):
+        value = value[2:-2].strip()
+    if value.startswith('$$') and value.endswith('$$'):
+        value = value[2:-2].strip()
+    depth = 0
+    escaped = False
+    for ch in value:
+        if escaped:
+            escaped = False
+            continue
+        if ch == '\\':
+            escaped = True
+        elif ch == '{':
+            depth += 1
+        elif ch == '}':
+            depth -= 1
+            if depth < 0:
+                return None
+    return value if value and depth == 0 else None
+
+def _inline_evidence_cites(ev_refs):
+    if not ev_refs:
+        return ''
+    cites = ' '.join(f'<a href="#{esc(e)}" class="evidence-cite" aria-label="证据 {esc(e)}">[{esc(e)}]</a>' for e in ev_refs)
+    return f' <span class="evidence-cites">{cites}</span>'
 
 KAMI_LONG_DOC_CSS = """
 /* Regular weight */
@@ -306,6 +337,9 @@ figcaption {
   font-size: 11pt;
   margin: 6pt 0;
 }
+.math-source { display: inline-block; max-width: 100%; overflow-wrap: anywhere; }
+.equation-fallback, .table-asset { max-width: 100%; height: auto; display: block; margin: 6pt auto; }
+.equation-uncertain { color: var(--stone); font-style: italic; }
 .eq-explanation {
   font-size: 9pt;
   color: var(--stone);
@@ -330,6 +364,7 @@ figcaption {
 .evidence-cite:hover {
   text-decoration: underline;
 }
+.evidence-binding { font-family: var(--sans); font-size: 8pt; color: var(--brand); margin-right: 5pt; }
 
 /* ========== APPENDIX ========== */
 .appendix {
@@ -378,7 +413,7 @@ figcaption {
 def render_block_html(b: dict, root: Path) -> str:
     b_type = b.get('type')
     ev_refs = b.get('evidence_refs', [])
-    cites = "".join([f'<a href="#{esc(e)}" class="evidence-cite">[实证依据: {esc(e)} · 详情见图谱]</a>' for e in ev_refs]) if ev_refs else ""
+    cites = _inline_evidence_cites(ev_refs) if ev_refs else ""
     
     if b_type == 'paragraph':
         text = esc(b.get('text', ''))
@@ -406,33 +441,42 @@ def render_block_html(b: dict, root: Path) -> str:
         analysis = esc(b.get('analysis', ''))
         analysis = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', analysis)
         analysis = analysis.replace('\n\n', '<br>')
+        binding = f"<span class='evidence-binding'>证据：{esc(fid)}</span>"
         asset = b.get('asset')
         img_html = ""
         if asset and (root / asset).exists():
             img_html = f"<img src='../{esc(asset)}' alt='{cap}' />"
             
         supp_claims = [e for e in b.get('evidence_refs', []) if e.startswith('C')]
-        supp_links = " ".join([f'<a href="#{esc(c)}" class="evidence-cite">[对应支撑主张: {esc(c)} · 详情见附录]</a>' for c in supp_claims]) if supp_claims else "<em>None</em>"
-        supp_row = f"<div style='font-size:8.5pt; color:var(--stone); margin-top:4pt;'><strong>Supports Claims:</strong> {supp_links}</div>"
+        if not supp_claims and b.get('supports'):
+            supp_claims = [c for c in b.get('supports', []) if c.startswith('C')]
+        supp_links = " ".join([f'<a href="#{esc(c)}" class="evidence-cite">[支撑主张: {esc(c)}]</a>' for c in supp_claims]) if supp_claims else "<em>None</em>"
+        supp_row = f"<div class='supports-claims' style='font-size:8.5pt; color:var(--stone); margin-top:4pt;'><strong>Supports Claims:</strong> {supp_links}</div>"
         
         return f"""
         <figure class="kami-figure" id="{esc(fid)}">
           {img_html}
-          <figcaption>{cap} {cites}</figcaption>
-          <div class="figure-analysis">{analysis}</div>
+          <figcaption>{cap}</figcaption>
+          <div class="figure-analysis">{binding}{analysis}</div>
           {supp_row}
         </figure>
         """
         
     elif b_type == 'equation':
-        raw = b.get('raw_text', '')
+        raw = normalize_latex(b.get('latex')) if b.get('source_confidence') == 'VERIFIED' else None
         exp = esc(b.get('explanation', ''))
         eq_id = b.get('evidence_id', 'EQ')
-        math_repr = raw if raw.startswith('\\(') or raw.startswith('\\[') else f"\\[ {raw} \\]"
+        fallback = b.get('fallback_asset')
+        if raw:
+            math_html = f"<span class='math-source'>\\[ {esc(raw)} \\]</span>"
+        elif fallback and (root / fallback).exists():
+            math_html = f"<img class='equation-fallback' src='../{esc(fallback)}' alt='公式源图 {esc(eq_id)}' />"
+        else:
+            math_html = "<span class='equation-uncertain'>公式无法可靠重建；已保留源证据状态。</span>"
         return f"""
         <div class='equation-block' id='{esc(eq_id)}'>
-          <div class='math-display'>{esc(math_repr)}</div>
-          <div class='eq-explanation'>{exp} {cites}</div>
+          <div class='math-display'>{math_html}</div>
+          <div class='eq-explanation'>{cites}{exp}</div>
         </div>
         """
         
@@ -440,11 +484,23 @@ def render_block_html(b: dict, root: Path) -> str:
         tid = b.get('evidence_id', 'TAB')
         cap = esc(b.get('caption', ''))
         analysis = esc(b.get('analysis', ''))
+        binding = f"<span class='evidence-binding'>证据：{esc(tid)}</span>"
         analysis = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', analysis)
+        img_html = ''
+        asset = b.get('asset')
+        if asset and (root / asset).exists():
+            img_html = f"<img src='../{esc(asset)}' alt='{cap}' class='table-asset' />"
+        supp_claims = [e for e in b.get('evidence_refs', []) if e.startswith('C')]
+        if not supp_claims and b.get('supports'):
+            supp_claims = [c for c in b.get('supports', []) if c.startswith('C')]
+        supp_links = " ".join([f'<a href="#{esc(c)}" class="evidence-cite">[支撑主张: {esc(c)}]</a>' for c in supp_claims]) if supp_claims else "<em>None</em>"
+        supp_row = f"<div class='supports-claims' style='font-size:8.5pt; color:var(--stone); margin-top:4pt;'><strong>Supports Claims:</strong> {supp_links}</div>"
         return f"""
-        <div class='takeaway' id='{esc(tid)}'>
-          <div class='takeaway-label'>定量评测表: {cap} {cites}</div>
-          <div style='font-size:9.5pt; margin-top:6pt;'>{analysis}</div>
+        <div class="takeaway" id="{esc(tid)}">
+          <div class="takeaway-label">定量评测表: {cap}</div>
+          {img_html}
+          <div style="font-size:9.5pt; margin-top:6pt;">{binding}{analysis}</div>
+          {supp_row}
         </div>
         """
         
@@ -475,8 +531,8 @@ def render_paper_reader_html(manuscript: dict, root: Path) -> str:
         "problem": "背景与科学缺口",
         "method": "算法架构与计算流",
         "experiments": "实证对比与研判",
-        "synthesis": "六大透镜合并审视",
-        "reusable": "模块与迁移建议",
+        "synthesis": "证据与结论",
+        "technical_extraction": "论文技术细节",
         "conclusions": "确立事实与开放问题",
         "appendix": "数据溯源与工作台"
     }
@@ -509,8 +565,8 @@ def render_paper_reader_html(manuscript: dict, root: Path) -> str:
         "problem": "背景动机与科学缺口",
         "method": "算法架构与理论假设",
         "experiments": "实证对比与反常审视",
-        "synthesis": "六大透镜汇聚与替代解释",
-        "reusable": "模块设计与工程迁移",
+        "synthesis": "证据、解释与边界",
+        "technical_extraction": "论文技术细节",
         "conclusions": "确立事实与开放问题",
         "appendix": "数据溯源与检验元数据"
     }
@@ -544,9 +600,12 @@ def render_paper_reader_html(manuscript: dict, root: Path) -> str:
     claims_appendix_html = []
     for c in pm_claims:
         cid = c.get('id', '')
-        c_stmt = c.get('statement', '')
+        c_stmt = clean_visible_narrative(c.get('statement', ''))
         c_ev = c.get('evidence', [])
-        c_ev_links = " ".join([f'<a href="#{esc(e)}" class="evidence-cite">[实证依据: {esc(e)} · 详情见图谱]</a>' for e in c_ev])
+        c_ev_links = " ".join([f'<a href="#{esc(e)}" class="evidence-cite">[实证依据: {esc(e)}]</a>' for e in c_ev])
+        c_obs = clean_visible_narrative(c.get('observation', 'Direct empirical observation.'))
+        c_auth = clean_visible_narrative(c.get('author_interpretation', 'Intended author interpretation.'))
+        c_read = clean_visible_narrative(c.get('reader_assessment', 'Evaluated reader assessment.'))
         claims_appendix_html.append(f"""
         <article class="claim-card" id="{esc(cid)}" style="background:var(--ivory); border:1pt solid var(--border); border-radius:4pt; padding:10pt; margin-bottom:10pt;">
           <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -557,9 +616,9 @@ def render_paper_reader_html(manuscript: dict, root: Path) -> str:
             <strong>Linked Evidence:</strong> {c_ev_links if c_ev_links else '<em>None</em>'} · <a href="#p.{esc(c.get('page', 1))}">p.{esc(c.get('page', 1))}</a>
           </div>
           <div style="font-size:9pt; margin-top:6pt;">
-            <p><strong>Observation (客观数据):</strong> {esc(c.get('observation', 'Direct empirical observation.'))}</p>
-            <p><strong>Author Interpretation (作者推断):</strong> {esc(c.get('author_interpretation', 'Intended author interpretation.'))}</p>
-            <p><strong>Reader Assessment (读者研判):</strong> {esc(c.get('reader_assessment', 'Evaluated reader assessment.'))}</p>
+            <p><strong>Observation (客观数据):</strong> {esc(c_obs)}</p>
+            <p><strong>Author Interpretation (作者推断):</strong> {esc(c_auth)}</p>
+            <p><strong>Reader Assessment (读者研判):</strong> {esc(c_read)}</p>
           </div>
         </article>
         """)
@@ -567,10 +626,12 @@ def render_paper_reader_html(manuscript: dict, root: Path) -> str:
     conflicts_appendix_html = []
     for conf in pm_conflicts:
         cid = conf.get('id', '')
+        c_stmt = clean_visible_narrative(conf.get('statement', ''))
+        c_res = clean_visible_narrative(conf.get('resolution', ''))
         conflicts_appendix_html.append(f"""
         <div class="conflict-card" id="{esc(cid)}" style="background:var(--ivory); border-left:2.5pt solid var(--brand); padding:8pt 10pt; margin-bottom:8pt;">
-          <strong>{esc(cid)}: {esc(conf.get('statement', ''))}</strong>
-          <p style="font-size:9pt; margin-top:4pt;">{esc(conf.get('resolution', ''))}</p>
+          <strong>{esc(cid)}: {esc(c_stmt)}</strong>
+          <p style="font-size:9pt; margin-top:4pt;">{esc(c_res)}</p>
         </div>
         """)
         
@@ -582,7 +643,7 @@ def render_paper_reader_html(manuscript: dict, root: Path) -> str:
             figs_appendix_html.append(f"""
             <div class="evidence-item" id="{esc(fid)}" style="margin-bottom:6pt; font-size:9pt;">
               <strong>{esc(f.get('paper_label', fid))}</strong>: {esc(cap[:120])}
-              <a href="evidence_atlas.html#{esc(fid)}" style="margin-left:6pt; font-size:8.5pt;">[图谱详情 →]</a>
+              <a href="evidence_atlas.html#{esc(fid)}" style="margin-left:6pt; font-size:8.5pt;">[证据节点 →]</a>
             </div>
             """)
 
@@ -594,7 +655,7 @@ def render_paper_reader_html(manuscript: dict, root: Path) -> str:
             tables_appendix_html.append(f"""
             <div class="evidence-item" id="{esc(tid)}" style="margin-bottom:6pt; font-size:9pt;">
               <strong>{esc(t.get('paper_label', tid))}</strong>: {esc(cap[:120])}
-              <a href="evidence_atlas.html#{esc(tid)}" style="margin-left:6pt; font-size:8.5pt;">[图谱详情 →]</a>
+              <a href="evidence_atlas.html#{esc(tid)}" style="margin-left:6pt; font-size:8.5pt;">[证据节点 →]</a>
             </div>
             """)
 
@@ -639,7 +700,7 @@ def render_paper_reader_html(manuscript: dict, root: Path) -> str:
           当前论文模型共沉淀 <strong>{app_sum.get('claims_count', len(pm_claims))}</strong> 项主张、
           <strong>{app_sum.get('figures_count', 0)}</strong> 组图表、
           <strong>{app_sum.get('tables_count', 0)}</strong> 个数据表、
-          以及 <strong>{app_sum.get('conflicts_count', len(pm_conflicts))}</strong> 个跨透镜张力焦点。
+          以及 <strong>{app_sum.get('conflicts_count', len(pm_conflicts))}</strong> 个证据张力与未决争议焦点。
         </p>
         <a href="evidence_atlas.html" class="btn-atlas">打开完整证据图谱 (Evidence Atlas) →</a>
       </div>
@@ -647,13 +708,13 @@ def render_paper_reader_html(manuscript: dict, root: Path) -> str:
       <details open>
         <summary>点击展开：核心主张与 O/I/A 证据卡片列表 ({len(pm_claims)} 个)</summary>
         <div style="font-size:9.5pt; margin-top:10pt; line-height:1.55;">
-          <p>Evidentia 严格执行 <strong>Observation</strong>（客观实证数据）、<strong>Author Interpretation</strong>（作者主观推断）与 <strong>Reader Assessment</strong>（读者中立研判）三权分立原则。所有结论均通过独立透镜与实证网格交叉互审。</p>
+          <p>Evidentia 严格执行 <strong>Observation</strong>（客观实证数据）、<strong>Author Interpretation</strong>（作者主观推断）与 <strong>Reader Assessment</strong>（读者中立研判）三权分立原则。所有结论均通过多源证据网格交叉互审。</p>
           <div style="margin-top:10pt;">
             {''.join(claims_appendix_html)}
           </div>
         </div>
       </details>
-      {f"<details open><summary>点击展开：跨透镜争议焦点与验证记录 ({len(pm_conflicts)} 个)</summary><div style='font-size:9.5pt; margin-top:10pt; line-height:1.55;'>{''.join(conflicts_appendix_html)}</div></details>" if pm_conflicts else ""}
+      {f"<details open><summary>点击展开：多源证据争议焦点与验证记录 ({len(pm_conflicts)} 个)</summary><div style='font-size:9.5pt; margin-top:10pt; line-height:1.55;'>{''.join(conflicts_appendix_html)}</div></details>" if pm_conflicts else ""}
       <details>
         <summary>点击展开：全景图表与数据表索引 ({len(pm.get('figures', [])) + len(pm.get('tables', []))} 项)</summary>
         <div style="font-size:9pt; margin-top:10pt; line-height:1.55;">
@@ -763,9 +824,18 @@ def render_paper_reader_md(manuscript: dict) -> str:
                     lines.append(f"![{b.get('caption', '')}]({b.get('asset')})\n")
                 lines.append(f"{b.get('analysis', '')}\n")
             elif b_type == 'equation':
-                lines.append(f"$$\n{b.get('raw_text', '')}\n$$\n*{b.get('explanation', '')}*{cite_str}\n")
+                eq = normalize_latex(b.get('latex')) if b.get('source_confidence') == 'VERIFIED' else None
+                if eq:
+                    lines.append(f"$$\n{eq}\n$$\n*{b.get('explanation', '')}*{cite_str}\n")
+                elif b.get('fallback_asset'):
+                    lines.append(f"![公式源图 {b.get('evidence_id', 'EQ')}]({b.get('fallback_asset')})\n*公式结构化表示不可用；保留源图。*{cite_str}\n")
+                else:
+                    lines.append(f"*公式结构化表示不可用；保留不确定状态。*{cite_str}\n")
             elif b_type == 'table':
-                lines.append(f"### {b.get('caption', '实证评测表')}{cite_str}\n{b.get('analysis', '')}\n")
+                lines.append(f"### {b.get('caption', '实证评测表')}{cite_str}\n")
+                if b.get('asset'):
+                    lines.append(f"![{b.get('caption', '实证评测表')}]({b.get('asset')})\n")
+                lines.append(f"{b.get('analysis', '')}\n")
             elif b_type == 'list':
                 for it in b.get('items', []):
                     lines.append(f"- {it}")
@@ -773,12 +843,12 @@ def render_paper_reader_md(manuscript: dict) -> str:
                 
     # Appendix
     lines.append(f"## {len(chapters)+1}. 证据审计附录 (Claim-Centric Evidence Atlas) <a id='appendix'></a>\n")
-    lines.append("完整的主张列表、O/I/A 证据卡片、跨透镜争议与双向锚点跳转已解耦部署于独立的证据图谱中：\n")
+    lines.append("完整的主张列表、O/I/A 证据卡片、多源证据争议与双向锚点跳转已解耦部署于独立的证据图谱中：\n")
     lines.append("- [进入证据图谱工作台 (evidence_atlas.html)](evidence_atlas.html)\n")
     lines.append("### 核心原则")
     lines.append("- **Observation (客观数据)**: 严守实验与源文本直接观测事实。")
     lines.append("- **Author Interpretation (作者推断)**: 记录作者提出的假说与外推判断。")
-    lines.append("- **Reader Assessment (读者研判)**: Evidentia 独立透镜对主张支撑力度的客观审视。\n")
+    lines.append("- **Reader Assessment (读者研判)**: Evidentia 证据审视系统对主张支撑力度的客观研判。\n")
     
     return "\n".join(lines) + "\n"
 
@@ -794,7 +864,7 @@ def render_paper_reader(root: Path, kami_root: Path = None) -> dict:
         manuscript = compose_narrative_manuscript(root)
         manuscript_p.write_text(json.dumps(manuscript, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
         
-    html_content = render_paper_reader_html(manuscript, root)
+    html_content = kami_adapter.render_math_html(render_paper_reader_html(manuscript, root), kami_root=kami_root)
     html_file = reader_dir / 'paper_reader.html'
     html_file.write_text(html_content, encoding='utf-8')
     

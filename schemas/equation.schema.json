@@ -15,6 +15,10 @@
       "type": "integer",
       "minimum": 1
     },
+    "source_page": {
+      "type": "integer",
+      "minimum": 1
+    },
     "bbox": {
       "type": "array",
       "items": {
@@ -30,6 +34,22 @@
         "null"
       ]
     },
+    "display_mode": { "type": "boolean" },
+    "symbols": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["symbol", "meaning_zh"],
+        "properties": {
+          "symbol": { "type": "string" },
+          "meaning_zh": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "role_zh": { "type": "string" },
+    "source_confidence": { "enum": ["VERIFIED", "UNCERTAIN", "AMBIGUOUS", "NOT_STATED"] },
+    "fallback_asset": { "type": ["string", "null"] },
     "surrounding_text": {
       "type": "string"
     },

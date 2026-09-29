@@ -346,11 +346,27 @@ def build_argument_topology(pm, inv=None, sm=None, rec_data=None, lens_findings=
     inv_items = inv.get('items', []) if inv else []
     evidence_promotion = classify_evidence_promotion(pm, inv_items)
 
+    # A first-class, paper-centric story spine keeps composition driven by the
+    # reconstructed argument rather than by schema field order.  Values are
+    # copied only from source/model fields; unsupported roles stay explicit.
+    story_spine = {
+        "central_question": central_q,
+        "motivation": motivation,
+        "prior_gap": gap,
+        "central_move": method_desc,
+        "method_logic": " → ".join(arg_chain) if arg_chain else (method_desc or "NOT_STATED"),
+        "experimental_questions": [q.get('text', '') for q in questions[:4] if q.get('text')] or ["NOT_STATED"],
+        "major_findings": [c.get('statement', '') for c in claims[:4] if c.get('statement')] or ["NOT_STATED"],
+        "justified_conclusion": assessed_arg["justified_thesis"],
+        "scope_and_limits": [x for x in (scope_conditions + limits_list + unres_list) if x]
+    }
+
     return {
         "central_question": central_q,
         "motivation": motivation,
         "prior_assumptions_or_gap": gap,
         "central_thesis": central_thesis,
+        "story_spine": story_spine,
         "argument_units": units,
         "argument_relations": relations,
         "turning_points": turning_points,

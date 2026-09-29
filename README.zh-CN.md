@@ -17,7 +17,7 @@ Evidentia 是一个面向单篇论文的深度研究 Skill。它把用户提供�
 - AI 顺着作者叙事复述，没有主动检查薄弱证据、替代解释和失败条件；
 - 项目目标过早进入阅读，导致论文被读成“支持当前计划”的材料；
 - 过一段时间后只能翻聊天记录，无法快速恢复论文判断；
-- 固定模板诱导章节复述，容易漏掉异常、负结果和可复用技术构件。
+- 固定模板诱导章节复述，容易漏掉异常、负结果和论文自身的证据边界。
 
 Evidentia 用 Paper Model、Evidence Graph、Source Reconstruction、六 Lens、Frozen Model、Unified Reader 和 Research Delta 解决这些问题。
 
@@ -173,9 +173,12 @@ python scripts/freeze_check.py --out paper-output
 ```bash
 python scripts/render_reader.py --out paper-output
 python scripts/reader_audit.py --out paper-output
+python scripts/reader_acceptance.py --out paper-output
 ```
 
-Reader 包含三个阅读层级：30 秒 Dashboard、5 分钟 Paper Map/Claim Cards、30–60 分钟 Evidence Atlas。HTML 是主阅读界面，PDF 是存档快照。
+Reader 是一篇完整的中文论文精读稿：问题 → 方法 → 实验 → 证据判断 → 结论与边界；Evidence Atlas 只作为审计附录，不是理解正文的前置页面。HTML、Markdown 和 PDF 共享同一份语义稿件。`reader_acceptance.py` 是进入 `PAPER_COMPLETE` 前的发布门禁，检查 Story Spine、Lens/Atlas 隐身、内联证据、公式安全、意图隔离和三种输出视图的一致性。
+
+默认 `PAPER_READING` 不输出项目迁移或“可复用技术内容”章节。若明确需要论文技术细节，可使用 `--intent PAPER_TECHNICAL_EXTRACTION`；项目适配仍只通过显式 Apply 完成。
 
 ### 4b. Kami 视觉质检（可交付 Reader 的必需步骤）
 

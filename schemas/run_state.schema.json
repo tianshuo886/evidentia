@@ -27,6 +27,7 @@
     "intent": {
       "enum": [
         "PAPER_READING",
+        "PAPER_TECHNICAL_EXTRACTION",
         "PROJECT_APPLY",
         "MEMORY_OPERATION"
       ]

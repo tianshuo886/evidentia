@@ -21,13 +21,13 @@ sys.path.insert(0, str(ROOT / 'scripts'))
 from test_gates import fixture
 from validate_common import schema_validate, load_json
 
-SEVEN_LAYERS = [
+DEFAULT_LAYERS = [
     "一分钟看懂这篇论文",
     "论文到底在解决什么问题",
     "方法到底怎么工作",
     "关键实验逐个说明",
-    "综合科学判断",
-    "可复用技术内容",
+    "证据最终支持了什么",
+    "结论与边界",
     "证据审计附录"
 ]
 
@@ -61,7 +61,7 @@ def test_chinese_reader_ir_and_dual_rendering(tmp_path):
     html_p = reader_dir / 'paper_reader.html'
     assert html_p.exists()
     html_text = html_p.read_text(encoding='utf-8')
-    for layer in SEVEN_LAYERS:
+    for layer in DEFAULT_LAYERS:
         assert layer in html_text, f"Missing narrative section in HTML: {layer}"
     
     # Verify Kami long-doc elements
@@ -87,7 +87,7 @@ def test_chinese_reader_ir_and_dual_rendering(tmp_path):
     md_p = reader_dir / 'paper_reader.md'
     assert md_p.exists()
     md_text = md_p.read_text(encoding='utf-8')
-    for layer in SEVEN_LAYERS:
+    for layer in DEFAULT_LAYERS:
         assert layer in md_text, f"Missing narrative section in MD: {layer}"
 
     # 5. Backward compatibility aliases

@@ -45,13 +45,15 @@ def test_narrative_composer_schema_and_chapters(tmp_path):
     doc = manuscript['document']
     assert doc['title'] == pm['paper']['title']
 
-    # 3. Check 7 editorial chapters
+    # 3. Default faithful reading has six narrative chapters plus the audit appendix.
     chapters = doc['chapters']
-    assert len(chapters) == 7, "Must contain exactly 7 editorial narrative chapters"
+    assert len(chapters) == 6
     
-    expected_ids = ["one_minute", "problem", "method", "experiments", "synthesis", "reusable", "conclusions"]
+    expected_ids = ["one_minute", "problem", "method", "experiments", "synthesis", "conclusions"]
     actual_ids = [ch['id'] for ch in chapters]
     assert actual_ids == expected_ids
+    assert doc['story_spine']['central_question']
+    assert 'reusable' not in actual_ids
 
     # 4. Check chapter blocks and evidence citations
     all_valid_ev_ids = {c['id'] for c in pm.get('claims', [])} | {f['id'] for f in pm.get('figures', [])} | {t['id'] for t in pm.get('tables', [])} | {"p.1"}

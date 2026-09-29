@@ -40,6 +40,22 @@
       "type": "string",
       "minLength": 1
     },
+    "story_spine": {
+      "type": "object",
+      "description": "Paper-centric semantic spine used by narrative composition. Missing source support stays explicit.",
+      "properties": {
+        "central_question": { "type": "string" },
+        "motivation": { "type": "string" },
+        "prior_gap": { "type": "string" },
+        "central_move": { "type": "string" },
+        "method_logic": { "type": "string" },
+        "experimental_questions": { "type": "array", "items": { "type": "string" } },
+        "major_findings": { "type": "array", "items": { "type": "string" } },
+        "justified_conclusion": { "type": "string" },
+        "scope_and_limits": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
     "turning_points": {
       "type": "array",
       "items": {

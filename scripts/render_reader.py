@@ -193,7 +193,7 @@ def build_legacy_reader_ir(r, manuscript=None):
     elif pm.get('assumptions'):
         assump_text = f"核心假设：{pm['assumptions'][0].get('text')}。"
     else:
-        assump_text = "核心假设：假设输入特征分布与训练评测基准保持一致。"
+        assump_text = "核心假设：源材料未明确说明。"
 
     alt_exp_list = arg_recon.get('assessed_argument', {}).get('alternative_explanations', [])
     if alt_exp_list:
@@ -211,7 +211,7 @@ def build_legacy_reader_ir(r, manuscript=None):
     elif pm.get('limitations'):
         bound_text = f"适用边界：{pm['limitations'][0].get('text')}。"
     else:
-        bound_text = "适用边界：论文未明确说明额外极端风险，适用范围以报告的基准评测为准。"
+        bound_text = "适用边界：源材料未明确说明额外范围。"
 
     if arg_recon.get('unresolved_questions'):
         unres_text = f"未决问题：{'; '.join(arg_recon['unresolved_questions'][:2])}。"
@@ -230,17 +230,18 @@ def build_legacy_reader_ir(r, manuscript=None):
         "unresolved_questions_zh": unres_text
     }
 
+    allow_technical = any(ch.get('id') == 'technical_extraction' for ch in (manuscript or {}).get('document', {}).get('chapters', []))
     reusable = []
-    for pc in pm.get('portable_components', []):
+    for pc in (pm.get('portable_components', []) if allow_technical else []):
         reusable.append({
             "id": pc.get('id', 'PC01'),
             "name": pc.get('name', 'Portable Module'),
             "category": "算法构件",
             "description_zh": f"输入输出契约：{pc.get('io', '数据流转换契约')}。具备结构独立性，可按需剥离复用。",
             "source_evidence": pc.get('source', []),
-            "transfer_notes_zh": "建议在目标领域保持相同的预处理与归一化准则，重新校准输入维度。"
+            "transfer_notes_zh": "论文未提供迁移说明；此条仅记录论文技术事实。"
         })
-    if not reusable:
+    if not reusable and allow_technical:
         core_ev_list = arg_recon.get('evidence_promotion', {}).get('narrative_core', []) or (claims[0].get('evidence', ['p.1']) if claims else ['p.1'])
         reusable = [{
             "id": "PC01",
@@ -323,14 +324,14 @@ def build_legacy_reader_ir(r, manuscript=None):
     }
     return ir
 
-def render_reader(workspace_root: Path, kami_root: Path = None) -> dict:
+def render_reader(workspace_root: Path, kami_root: Path = None, intent=None) -> dict:
     """Master rendering entrypoint orchestrating narrative, presentation, and atlas."""
     r = Path(workspace_root)
     reader_dir = r / 'reader'
     reader_dir.mkdir(parents=True, exist_ok=True)
 
     # 1. Compose semantic narrative manuscript
-    manuscript = compose_narrative_manuscript(r)
+    manuscript = compose_narrative_manuscript(r, intent=intent)
     manuscript_file = reader_dir / 'narrative_manuscript.json'
     manuscript_file.write_text(json.dumps(manuscript, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
 
@@ -388,8 +389,9 @@ def main():
     ap = argparse.ArgumentParser(description="Render Chinese-first Scientific Reader and Evidence Atlas.")
     ap.add_argument('--out', required=True, help="Workspace run directory")
     ap.add_argument('--kami-root', default=None, help="Path to Kami skill/clone")
+    ap.add_argument('--intent', choices=('PAPER_READING', 'PAPER_TECHNICAL_EXTRACTION'), default=None)
     args = ap.parse_args()
-    render_reader(Path(args.out), kami_root=args.kami_root)
+    render_reader(Path(args.out), kami_root=args.kami_root, intent=args.intent)
     return 0
 
 if __name__ == '__main__':
