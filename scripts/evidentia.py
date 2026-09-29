@@ -145,8 +145,15 @@ def run_workflow(args):
         for s in (getattr(args, 'supplement', []) or []):
             supp_args.extend(['--supplement', s])
             
-        print("[1/8] Initializing source-only workspace...")
-        sh(str(HERE / 'init_run.py'), '--pdf', args.pdf, '--out', str(out_dir), '--intent', getattr(args, 'intent', 'PAPER_READING'), *supp_args)
+        from intent_router import route_intent
+        target_intent = route_intent(prompt=getattr(args, 'prompt', None), explicit=getattr(args, 'intent', None))
+        if target_intent == "PROJECT_APPLY":
+            sys.exit("Error: PROJECT_APPLY must be invoked via 'evidentia-apply' or 'pipeline.py apply' on a frozen paper workspace.")
+        if target_intent == "MEMORY_OPERATION":
+            sys.exit("Error: MEMORY_OPERATION must be invoked via 'evidentia.py memory ...'.")
+
+        print(f"[1/8] Initializing source-only workspace (intent: {target_intent})...")
+        sh(str(HERE / 'init_run.py'), '--pdf', args.pdf, '--out', str(out_dir), '--intent', target_intent, *supp_args)
         
         print("[2/8] Reconstructing paper source evidence (text + visual track)...")
         sh(str(HERE / 'extract_structure.py'), '--pdf', str(out_dir / 'source/paper.pdf'), '--out', str(out_dir / 'model/source_map.json'), *supp_args)
@@ -285,7 +292,11 @@ def run_workflow(args):
         if 'FREEZE' not in rs.get('completed_phases', []) and phase != 'FREEZE':
             sh(str(HERE / 'freeze_check.py'), '--out', str(out_dir))
             sh(str(HERE / 'phase.py'), '--out', str(out_dir), '--complete', 'FREEZE')
-        sh(str(HERE / 'render_reader.py'), '--out', str(out_dir))
+        render_args = ['--out', str(out_dir)]
+        run_intent = rs.get('intent') or getattr(args, 'intent', None)
+        if run_intent in ('PAPER_READING', 'PAPER_TECHNICAL_EXTRACTION'):
+            render_args.extend(['--intent', run_intent])
+        sh(str(HERE / 'render_reader.py'), *render_args)
         sh(str(HERE / 'phase.py'), '--out', str(out_dir), '--complete', 'RENDER')
         sh(str(HERE / 'reader_audit.py'), '--out', str(out_dir))
         sh(str(HERE / 'phase.py'), '--out', str(out_dir), '--complete', 'PAPER_COMPLETE')
@@ -460,7 +471,8 @@ def main():
     p_run.add_argument("--doi", help="DOI or paper identifier to auto-acquire (e.g. 10.1038/... or 1706.03762)")
     p_run.add_argument("--out", help="Workspace output directory (default: ./runs/<paper_name>)")
     p_run.add_argument("--mode", choices=["standard", "ensemble"], default="standard")
-    p_run.add_argument("--intent", choices=["PAPER_READING", "PAPER_TECHNICAL_EXTRACTION"], default="PAPER_READING")
+    p_run.add_argument("--intent", choices=["PAPER_READING", "PAPER_TECHNICAL_EXTRACTION"], default=None)
+    p_run.add_argument("--prompt", help="Natural language prompt to route intent (e.g. '帮我深读这篇论文')")
     p_run.add_argument("--models", help="Comma-separated model identifiers for ensemble mode")
     p_run.add_argument("--supplement", action="append", help="Supplementary PDF files")
     p_run.add_argument("--fixture", action="store_true", help="Use isolated synthetic test fixtures")
@@ -548,9 +560,16 @@ def main():
     # memory rebuild-index
     mem_subs.add_parser("rebuild-index")
 
+    # route
+    p_rt = subparsers.add_parser("route", help="Route prompt to intent")
+    p_rt.add_argument("--prompt", required=True, help="User prompt to classify")
+
     args = parser.parse_args()
     if args.command == "run":
         run_workflow(args)
+    elif args.command == "route":
+        from intent_router import route_intent
+        print(route_intent(prompt=args.prompt))
     elif args.command == "status":
         handle_status(args)
     elif args.command == "next":

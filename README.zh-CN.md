@@ -178,7 +178,9 @@ python scripts/reader_acceptance.py --out paper-output
 
 Reader 是一篇完整的中文论文精读稿：问题 → 方法 → 实验 → 证据判断 → 结论与边界；Evidence Atlas 只作为审计附录，不是理解正文的前置页面。HTML、Markdown 和 PDF 共享同一份语义稿件。`reader_acceptance.py` 是进入 `PAPER_COMPLETE` 前的发布门禁，检查 Story Spine、Lens/Atlas 隐身、内联证据、公式安全、意图隔离和三种输出视图的一致性。
 
-默认 `PAPER_READING` 不输出项目迁移或“可复用技术内容”章节。若明确需要论文技术细节，可使用 `--intent PAPER_TECHNICAL_EXTRACTION`；项目适配仍只通过显式 Apply 完成。
+默认 `PAPER_READING` 不输出项目迁移或“可复用技术内容”章节。若明确需要论文技术细节，可使用 `--intent PAPER_TECHNICAL_EXTRACTION`（或提示词“把论文中可复现的技术细节整理出来”）；项目适配仍只通过显式 Apply 完成。
+
+> **永久设计原则：First understand the paper on its own terms. Only transfer it when the user asks. Relevance is not permission.** 系统在阅读阶段物理隔离 `apply/`、`project/` 与项目记忆，绝不因材料相关性而擅自推断迁移。
 
 ### 4b. Kami 视觉质检（可交付 Reader 的必需步骤）
 

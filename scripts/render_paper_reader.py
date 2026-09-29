@@ -550,11 +550,12 @@ def render_paper_reader_html(manuscript: dict, root: Path) -> str:
         </div>
         """)
         
+    app_num = f"{len(chapters) + 1:02d}"
     # Append appendix to TOC
     toc_items.append(f"""
     <div class="toc-item">
       <a class="toc-title" href="#ch-appendix">
-        <span class="toc-num">08</span> · 证据审计附录 · 数据溯源与工作台
+        <span class="toc-num">{esc(app_num)}</span> · 证据审计附录 · 数据溯源与工作台
       </a>
     </div>
     """)

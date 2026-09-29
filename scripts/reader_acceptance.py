@@ -150,9 +150,10 @@ def evaluate(root: Path):
         state = load_json(state_p)
         intent = state.get("intent", "PAPER_READING")
         allowed = state.get("allowed_inputs", [])
+        forbidden = state.get("forbidden_inputs", ["apply/", "project/", "memory/project/"])
         for item in allowed:
-            for f in ("apply/", "project/", "memory/project/"):
-                if f in str(item):
+            for f in forbidden:
+                if f in str(item) or str(item).startswith(f):
                     errors.append(f"input firewall violated: {item!r} present in allowed_inputs")
     else:
         intent = "PAPER_READING"
@@ -170,6 +171,15 @@ def evaluate(root: Path):
         transfer_terms = ("可复用技术内容", "迁移复用建议", "迁移到你的项目", "建议用于项目", "项目适配")
         if any(term in view for view in main_views for term in transfer_terms):
             errors.append("default PAPER_READING contains unsolicited transfer prose")
+        if (root / "reader/technical_extraction.md").exists() or (root / "reader/technical_extraction.html").exists():
+            errors.append("default PAPER_READING contains standalone technical extraction artifact")
+
+    if intent == "PAPER_TECHNICAL_EXTRACTION":
+        if not any(c.get("id") == "technical_extraction" for c in chapters):
+            errors.append("PAPER_TECHNICAL_EXTRACTION missing technical_extraction chapter")
+        transfer_terms = ("迁移到你的项目", "建议用于项目", "项目适配")
+        if any(term in view for view in main_views for term in transfer_terms):
+            errors.append("PAPER_TECHNICAL_EXTRACTION leaked project-directed transfer prose")
 
     # 5. Cross-render semantic parity
     views = {"HTML": _plain_text(main_html), "Markdown": _plain_text(main_md), "PDF": _plain_text(pdf_text)}
