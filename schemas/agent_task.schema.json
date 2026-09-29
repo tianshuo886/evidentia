@@ -64,6 +64,18 @@
         "type": "string"
       }
     },
+    "allowed_inputs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "forbidden_inputs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
     "description": {
       "type": "string"
     },

@@ -21,6 +21,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 from validate_common import load_json, schema_validate, sha256
 from executor_meta import build_executor_metadata
+from intent_router import enforce_task_firewall
 import memory_manager
 
 LENSES = ('author', 'reviewer', 'mechanism', 'builder', 'anomaly', 'counterfactual')
@@ -53,7 +54,7 @@ LENS_PROMPTS = {
 }
 
 def validate_and_write_task(task, out_path):
-    """Validate task against agent_task.schema.json and Memory Firewall before writing."""
+    """Validate task against agent_task.schema.json, Memory Firewall, and Intent Firewall before writing."""
     errs = schema_validate(task, 'agent_task')
     if errs:
         raise ValueError(f"Task {task.get('task_id')} failed agent_task schema validation:\n{errs}")
@@ -62,6 +63,12 @@ def validate_and_write_task(task, out_path):
     if not ok:
         raise ValueError(f"Task {task.get('task_id')} failed Memory Firewall:\n{reason}")
     
+    task_type = task.get('task_type')
+    task_intent = "PROJECT_APPLY" if task_type == 'APPLY_LOCAL' else ("MEMORY_OPERATION" if task_type == 'MEMORY_SYNTHESIS' else "PAPER_READING")
+    ok_fw, reason_fw = enforce_task_firewall(task, intent=task_intent)
+    if not ok_fw:
+        raise ValueError(f"Task {task.get('task_id')} failed Intent Firewall:\n{reason_fw}")
+
     out_path = Path(out_path)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(task, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
@@ -119,6 +126,17 @@ def create_open_reading_task(root):
             "apply",
             "prior_deltas"
         ],
+        "allowed_inputs": [
+            "source/",
+            "supplement/",
+            "model/",
+            "lens/"
+        ],
+        "forbidden_inputs": [
+            "apply/",
+            "project/",
+            "memory/project/"
+        ],
         "source_sha256": src_sha,
         "base_sha256": None,
         "contract_version": "1.0",
@@ -171,6 +189,17 @@ def create_lens_tasks(root):
                 "apply",
                 "prior_deltas"
             ],
+            "allowed_inputs": [
+                "source/",
+                "supplement/",
+                "model/",
+                "lens/"
+            ],
+            "forbidden_inputs": [
+                "apply/",
+                "project/",
+                "memory/project/"
+            ],
             "instructions": LENS_PROMPTS[lens],
             "executor_template": build_executor_metadata()
         }
@@ -204,6 +233,17 @@ def create_reconciliation_task(root):
             "RESEARCH_MEMORY",
             "project_context",
             "apply"
+        ],
+        "allowed_inputs": [
+            "source/",
+            "supplement/",
+            "model/",
+            "lens/"
+        ],
+        "forbidden_inputs": [
+            "apply/",
+            "project/",
+            "memory/project/"
         ],
         "instructions": (
             "Analyze findings from all six independent lenses and candidate clusters. "
@@ -245,6 +285,17 @@ def create_verification_task(root, target_id, claim_or_statement, localized_evid
         "prohibited_context": [
             "project_context",
             "external_speculation"
+        ],
+        "allowed_inputs": [
+            "source/",
+            "supplement/",
+            "model/",
+            "lens/"
+        ],
+        "forbidden_inputs": [
+            "apply/",
+            "project/",
+            "memory/project/"
         ],
         "instructions": (
             "Verify the candidate statement against the localized evidence ONLY. "

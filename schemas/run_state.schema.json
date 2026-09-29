@@ -87,6 +87,12 @@
         "type": "string"
       }
     },
+    "forbidden_inputs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
     "artifacts": {
       "type": "object",
       "additionalProperties": {

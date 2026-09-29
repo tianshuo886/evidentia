@@ -418,14 +418,18 @@ def main():
     elif a.complete in ('COMPLETE', 'PAPER_COMPLETE'):
         intent = s.get('intent', 'PAPER_READING')
         allowed = s.get('allowed_inputs', [])
+        forbidden_list = list(s.get('forbidden_inputs', [])) or ['apply/', 'project/', 'memory/project/']
         for item in allowed:
-            for forbidden in ('apply/', 'project/', 'memory/project/'):
-                if forbidden in item:
-                    fail(f'input firewall violated: forbidden item {item!r} found in allowed_inputs')
+            for forbidden in forbidden_list:
+                if forbidden in str(item) or str(item).startswith(forbidden):
+                    fail(f'input firewall violated: forbidden item {item!r} found in allowed_inputs ({forbidden})')
         if intent in ('PAPER_READING', 'PAPER_TECHNICAL_EXTRACTION'):
             apply_dir = root / 'apply'
             if apply_dir.exists():
                 fail(f'project isolation violated: apply/ directory must not exist under {intent}')
+            project_dir = root / 'project'
+            if project_dir.exists():
+                fail(f'project isolation violated: project/ directory must not exist under {intent}')
         import subprocess
         if subprocess.run([sys.executable, str(Path(__file__).with_name('reader_acceptance.py')), '--out', str(root)]).returncode != 0:
             fail('Reader acceptance gate failed; PAPER_COMPLETE refused')

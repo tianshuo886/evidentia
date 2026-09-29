@@ -21,9 +21,9 @@ from datetime import datetime, timezone
 sys.path.insert(0, str(Path(__file__).parent))
 from validate_common import load_json, schema_validate, sha256
 from build_argument_reconstruction import build_argument_reconstruction
+from intent_router import INTENTS, route_intent
 
 LENSES = ('author', 'reviewer', 'mechanism', 'builder', 'anomaly', 'counterfactual')
-INTENTS = ('PAPER_READING', 'PAPER_TECHNICAL_EXTRACTION', 'PROJECT_APPLY')
 
 def resolve_intent(root: Path, explicit=None) -> str:
     """Resolve an explicit output intent without reading project context."""
@@ -40,6 +40,8 @@ def resolve_intent(root: Path, explicit=None) -> str:
     if intent == 'PROJECT_APPLY':
         # Apply has its own renderer and must never mutate the frozen paper reader.
         raise ValueError('PROJECT_APPLY must be rendered under apply/<project>/ by the Apply pipeline')
+    if intent == 'MEMORY_OPERATION':
+        raise ValueError('MEMORY_OPERATION is managed by evidentia memory command')
     return intent
 
 def story_spine_from(arg_recon, *, question, motivation, gap, method_logic, claims, limitations, unresolved, experimental_questions=None):
@@ -559,11 +561,15 @@ def compose_narrative_manuscript(root: Path, intent=None) -> dict:
     if intent == 'PAPER_TECHNICAL_EXTRACTION':
         chapters.insert(-1, {
             "id": "technical_extraction",
-            "chapter_num": str(len(chapters) + 1).zfill(2),
+            "chapter_num": "06",
             "title": "论文技术细节提取",
             "lead": "仅整理论文明确给出的算法、输入输出与实验设置；严格局限于论文自身技术范围。",
             "blocks": ch6_blocks
         })
+
+    # Ensure sequential two-digit chapter numbers
+    for idx, ch in enumerate(chapters, 1):
+        ch["chapter_num"] = f"{idx:02d}"
 
     meta_authors = paper.get('authors', [])
     if isinstance(meta_authors, str):

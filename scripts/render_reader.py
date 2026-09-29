@@ -27,8 +27,9 @@ sys.path.insert(0, str(Path(__file__).parent))
 from validate_common import load_json, schema_validate, sha256
 from build_argument_reconstruction import build_argument_reconstruction
 from narrative_composer_agent import compose_narrative_manuscript
-from render_paper_reader import render_paper_reader
+from render_paper_reader import render_paper_reader, render_block_html
 from render_evidence_atlas import render_evidence_atlas
+from intent_router import route_intent, INTENTS
 import kami_adapter
 
 def esc(x):
@@ -374,6 +375,55 @@ def render_reader(workspace_root: Path, kami_root: Path = None, intent=None) -> 
         if paper_pdf.exists():
             shutil.copy2(str(paper_pdf), str(named_pdf))
 
+    # Dedicated standalone technical extraction artifacts (Issue #12)
+    tech_md_p = reader_dir / 'technical_extraction.md'
+    tech_html_p = reader_dir / 'technical_extraction.html'
+    tech_ch = next((ch for ch in manuscript.get('document', {}).get('chapters', []) if ch.get('id') == 'technical_extraction'), None)
+    if tech_ch:
+        p_title = manuscript.get('document', {}).get('title', '论文')
+        lines = [
+            f"# {p_title} · 论文技术细节提取 (Technical Extraction)",
+            f"\n> 声明：本报告仅整理论文自身明确给出的算法、输入输出与实验设置，严格局限于论文自身技术范围，不包含用户项目适配或迁移建议。\n",
+            f"## {tech_ch.get('title', '论文技术细节提取')}",
+            f"{tech_ch.get('lead', '')}\n"
+        ]
+        for b in tech_ch.get('blocks', []):
+            if b.get('type') == 'paragraph':
+                lines.append(f"{b.get('text', '')}\n")
+            elif b.get('type') == 'callout':
+                lines.append(f"> {b.get('text', '')}\n")
+        tech_md_p.write_text("\n".join(lines) + "\n", encoding='utf-8')
+
+        body_blocks = "\n".join([render_block_html(b, r) for b in tech_ch.get('blocks', [])])
+        tech_html = f"""<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>{html.escape(p_title)} · 论文技术细节提取</title>
+<style>
+body {{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", sans-serif; line-height: 1.6; max-width: 860px; margin: 0 auto; padding: 32px 24px; color: #1e293b; background: #faf9f5; }}
+h1 {{ color: #1B365D; border-bottom: 2px solid #1B365D; padding-bottom: 12px; }}
+.lead {{ font-size: 1.1em; color: #475569; margin-bottom: 24px; font-style: italic; }}
+.callout {{ background: #f1f5f9; border-left: 4px solid #1B365D; padding: 16px; margin: 16px 0; border-radius: 4px; }}
+.back-link {{ margin-bottom: 16px; font-size: 0.9em; }}
+</style>
+</head>
+<body>
+<div class="back-link"><a href="paper_reader.html">← 返回全文研读报告</a></div>
+<h1>{html.escape(p_title)}</h1>
+<p class="lead">{html.escape(tech_ch.get('lead', ''))}</p>
+<div class="content">
+{body_blocks}
+</div>
+</body>
+</html>"""
+        tech_html_p.write_text(tech_html, encoding='utf-8')
+    else:
+        if tech_md_p.exists():
+            tech_md_p.unlink()
+        if tech_html_p.exists():
+            tech_html_p.unlink()
+
     # 6. Collect Kami audit report
     kami_adapter.collect_kami_report(paper_pdf, html_path=paper_html, kami_root=kami_root, out_dir=r)
 
@@ -390,8 +440,10 @@ def main():
     ap.add_argument('--out', required=True, help="Workspace run directory")
     ap.add_argument('--kami-root', default=None, help="Path to Kami skill/clone")
     ap.add_argument('--intent', choices=('PAPER_READING', 'PAPER_TECHNICAL_EXTRACTION'), default=None)
+    ap.add_argument('--prompt', default=None, help="User prompt to route intent from")
     args = ap.parse_args()
-    render_reader(Path(args.out), kami_root=args.kami_root, intent=args.intent)
+    intent = route_intent(prompt=args.prompt, explicit=args.intent)
+    render_reader(Path(args.out), kami_root=args.kami_root, intent=intent)
     return 0
 
 if __name__ == '__main__':

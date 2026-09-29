@@ -34,12 +34,22 @@ def render_project_reader(paper_dir, project_dir):
     
     # HTML generation
     tu_rows = "".join([
-        f"<tr><td><strong>{esc(u.get('id'))}</strong></td><td><span class='badge verdict-{esc(u.get('verdict','').lower())}'>{esc(u.get('verdict'))}</span></td><td>{esc(u.get('source_component') or u.get('reason'))}</td><td>{esc(', '.join(u.get('source', [])))}</td></tr>"
+        f"<tr>"
+        f"<td><strong>{esc(u.get('id'))}</strong></td>"
+        f"<td><span class='badge verdict-{esc(u.get('verdict','').lower())}'>{esc(u.get('verdict'))}</span></td>"
+        f"<td>{esc(u.get('source_component') or u.get('reason'))}</td>"
+        f"<td>{esc('; '.join(u.get('required_assumptions', []) or ['与论文基准条件一致']))}</td>"
+        f"<td>{esc(u.get('expected_benefit') or u.get('reason'))}</td>"
+        f"<td>{esc(', '.join(u.get('source', [])))}</td>"
+        f"</tr>"
         for u in tus
     ])
     
     exp_cards = "".join([
-        f"<div class='card'><h4>{esc(e.get('id', 'EXP'))}: {esc(e.get('hypothesis', ''))}</h4><p><strong>Delta vs Plan:</strong> {esc(e.get('delta_vs_current_plan', ''))}</p><p><strong>Source Evidence:</strong> {esc(', '.join(e.get('source', [])))}</p><p><strong>Decision Value:</strong> {esc(e.get('decision_value', ''))}</p></div>"
+        f"<div class='card'><h4>{esc(e.get('id', 'EXP'))}: {esc(e.get('hypothesis', ''))}</h4>"
+        f"<p><strong>建议适配与基线对比:</strong> {esc(e.get('delta_vs_current_plan', ''))}</p>"
+        f"<p><strong>来源证据 (Paper Evidence):</strong> {esc(', '.join(e.get('source', [])))}</p>"
+        f"<p><strong>决策价值与假设改变:</strong> {esc(e.get('decision_value', ''))}</p></div>"
         for e in exp
     ])
     
@@ -58,6 +68,7 @@ h1 {{ color: #0f172a; margin: 0 0 8px 0; }}
 .verdict-adapt {{ background: #fef9c3; color: #854d0e; }}
 .verdict-inspiration_only {{ background: #e0e7ff; color: #3730a3; }}
 .verdict-reject {{ background: #fee2e2; color: #991b1b; }}
+.epistemic-callout {{ background: #eff6ff; border-left: 4px solid #0284c7; padding: 12px 16px; margin: 16px 0; border-radius: 4px; font-size: 0.95em; color: #1e3a8a; }}
 table {{ width: 100%; border-collapse: collapse; margin: 16px 0; background: #fff; border-radius: 6px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }}
 th, td {{ padding: 10px 14px; border: 1px solid #e2e8f0; text-align: left; }}
 th {{ background: #f1f5f9; font-weight: 600; }}
@@ -69,13 +80,18 @@ th {{ background: #f1f5f9; font-weight: 600; }}
   <div class="meta">EVIDENTIA PROJECT RESEARCH DELTA · CONTEXTUAL APPLY</div>
   <h1>项目迁移研报: {esc(project_name)}</h1>
   <div class="meta">关联论文: {esc(paper_title)} · 冻结模型 SHA: <code>{esc(delta.get('paper_model_sha256', '')[:12])}</code></div>
+  <div class="epistemic-callout">
+    <strong>认识论分层原则：</strong>
+    论文事实 (Paper Fact) → 推断与机制 (Interpretation) → 可迁移原理 (Transferable Principle) → 适用条件与项目映射 (Applicability & Mapping) → 建议适配方案 (Proposed Adaptation)。<br>
+    <em>声明：项目适配方案仅属于迁移建议，绝不改写论文自身事实；所有推荐均追溯源论文证据，并明确项目假设改变。</em>
+  </div>
 </header>
 
 <section>
   <h2>迁移单元 (Transfer Units)</h2>
   <table>
-    <thead><tr><th>ID</th><th>判定 (Verdict)</th><th>组件 / 理由</th><th>来源证据</th></tr></thead>
-    <tbody>{tu_rows if tu_rows else "<tr><td colspan='4'>无显式迁移组件</td></tr>"}</tbody>
+    <thead><tr><th>ID</th><th>判定 (Verdict)</th><th>组件 / 原理</th><th>适用条件与假设</th><th>建议适配方案</th><th>来源证据</th></tr></thead>
+    <tbody>{tu_rows if tu_rows else "<tr><td colspan='6'>无显式迁移组件</td></tr>"}</tbody>
   </table>
 </section>
 
@@ -101,14 +117,17 @@ th {{ background: #f1f5f9; font-weight: 600; }}
         f"\n- **关联论文**: {paper_title}",
         f"- **论文冻结 SHA**: `{delta.get('paper_model_sha256', '')}`",
         f"- **生成时间**: {delta.get('created_at', '')}",
-        "\n## 1. 迁移单元 (Transfer Units)",
-        "| ID | 判定 | 组件 / 理由 | 来源证据 |",
-        "|---|---|---|---|"
+        "\n> **认识论分层原则**：论文事实 → 机制与推断 → 可迁移原理 → 适用条件与项目映射 → 建议适配方案。项目适配属于迁移建议，绝不改写论文自身事实；建议均追溯论文证据。\n",
+        "## 1. 迁移单元 (Transfer Units)",
+        "| ID | 判定 | 组件 / 原理 | 适用条件与假设 | 建议适配方案 | 来源证据 |",
+        "|---|---|---|---|---|---|"
     ]
     for u in tus:
-        md_lines.append(f"| {u.get('id')} | **{u.get('verdict')}** | {u.get('source_component') or u.get('reason')} | {', '.join(u.get('source', []))} |")
+        assump = "; ".join(u.get('required_assumptions', []) or ['与论文基准一致'])
+        benefit = u.get('expected_benefit') or u.get('reason')
+        md_lines.append(f"| {u.get('id')} | **{u.get('verdict')}** | {u.get('source_component') or u.get('reason')} | {assump} | {benefit} | {', '.join(u.get('source', []))} |")
     if not tus:
-        md_lines.append("| - | NONE | 无显式迁移组件 | - |")
+        md_lines.append("| - | NONE | 无显式迁移组件 | - | - | - |")
         
     md_lines.append("\n## 2. 认知变化 (Changed Beliefs)")
     if cb:

@@ -168,6 +168,8 @@ python scripts/reader_acceptance.py --out paper-output
 
 The Reader is one coherent Chinese-first paper narrative: question → method → experiments → evidence assessment → conclusion and boundaries. Evidence Atlas is an audit appendix, not a prerequisite for understanding the paper. HTML, Markdown, and PDF are rendered from the same semantic manuscript. The default `PAPER_READING` intent has no project-transfer or reuse chapter; request `--intent PAPER_TECHNICAL_EXTRACTION` explicitly for paper-scoped technical extraction. Project application remains an explicit Apply operation and never mutates the frozen Paper Reader.
 
+> **Permanent Design Rule: First understand the paper on its own terms. Only transfer it when the user asks. Relevance is not permission.** During paper reading, the input firewall physically isolates `apply/`, `project/`, and project memory. Evidentia never infers project transfer from relevance alone.
+
 ### 4b. Kami visual QA (required for a shippable Reader)
 
 Evidentia's own `reader_audit.py` checks content links (claims/figures/tables present, no placeholders, assets exist). It does not check visual quality. That is Kami's job — `kami_adapter.py` runs Kami's orphan/density/font/visual checks against `reader/reader.pdf` and writes `reader/kami_audit.json`:

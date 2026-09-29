@@ -24,3 +24,23 @@ Command: `/evidentia-apply --paper <paper-output-dir> --project <project-main-do
    `apply/<project>/project_reader.html` and `.md`; same frozen paper supports
    many projects (`apply/project_A|B|C/`); the Paper Reader in `reader/` remains
    completely immutable. Report delta counts + paths in chat, not the full reader.
+
+## Epistemic Labeling Contract
+
+Even after explicit transfer intent, keep these layers distinct:
+
+```text
+Paper fact (论文实证)
+↓
+Evidentia interpretation (机制与研判)
+↓
+Transferable principle (可迁移原理)
+↓
+Applicability condition (适用条件与边界)
+↓
+Project mapping (项目映射与假设变化)
+↓
+Proposed adaptation (建议适配方案)
+```
+
+Never rewrite a proposed adaptation as if it were a paper contribution. Every project recommendation must point back to the paper evidence/principle it derives from and explicitly state where the project context changes assumptions.

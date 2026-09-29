@@ -96,7 +96,19 @@ def test_chinese_reader_ir_and_dual_rendering(tmp_path):
     assert (reader_dir / 'reader.pdf').exists()
     assert (reader_dir / 'render_ir.json').exists()
 
-    # 6. Run reader audit
+    # 6. Negative assertions (Issue #12 Faithful-reading firewall)
+    assert "可复用技术内容" not in html_text
+    assert "可复用技术内容" not in md_text
+    assert "迁移到你的项目" not in html_text
+    assert "迁移到你的项目" not in md_text
+    assert "建议用于项目" not in html_text
+    assert "建议用于项目" not in md_text
+    assert "项目适配" not in html_text
+    assert not (r / 'apply').exists(), "apply/ must not exist after PAPER_READING"
+    assert not (reader_dir / 'technical_extraction.md').exists()
+    assert not (reader_dir / 'technical_extraction.html').exists()
+
+    # 7. Run reader audit
     res_audit = subprocess.run([
         PY, str(ROOT / 'scripts/reader_audit.py'),
         '--out', str(r)
@@ -151,3 +163,88 @@ def test_kami_presentation_backend_and_audit(tmp_path):
     assert audit_p.exists(), "Kami audit report must be written"
     report = load_json(audit_p)
     assert report['status'] == 'OK', f"Kami audit failed: {report}"
+
+def test_technical_extraction_mode_positive(tmp_path):
+    """Explicit-mode positive test: technical extraction appears only when requested."""
+    r = fixture(tmp_path)
+    (r / 'run_state.json').write_text(json.dumps({
+        "schema_version": "1.0",
+        "run_id": "test-run",
+        "mode": "evidentia",
+        "intent": "PAPER_TECHNICAL_EXTRACTION",
+        "phase": "FREEZE",
+        "allowed_inputs": ["working/paper.pdf"],
+        "forbidden_inputs": ["apply/", "project/", "memory/project/"],
+        "artifacts": {}
+    }))
+
+    res = subprocess.run([
+        PY, str(ROOT / 'scripts/render_reader.py'),
+        '--out', str(r),
+        '--intent', 'PAPER_TECHNICAL_EXTRACTION'
+    ], capture_output=True, text=True)
+    assert res.returncode == 0, res.stdout + res.stderr
+
+    reader_dir = r / 'reader'
+    html_p = reader_dir / 'paper_reader.html'
+    html_text = html_p.read_text(encoding='utf-8')
+    assert "论文技术细节提取" in html_text
+    assert not (r / 'apply').exists()
+
+    # Dedicated standalone technical extraction artifacts
+    assert (reader_dir / 'technical_extraction.md').exists()
+    assert (reader_dir / 'technical_extraction.html').exists()
+    tech_md = (reader_dir / 'technical_extraction.md').read_text(encoding='utf-8')
+    assert "论文技术细节提取" in tech_md
+    assert "迁移到你的项目" not in tech_md
+
+def test_project_apply_mode_and_frozen_reader_hash_immutability(tmp_path):
+    """Explicit-mode positive test: Project Apply runs only upon request and preserves reader hash."""
+    import hashlib
+    r = fixture(tmp_path)
+
+    # Build argument reconstruction and freeze paper model
+    from build_argument_reconstruction import build_argument_reconstruction
+    build_argument_reconstruction(r)
+
+    res_freeze = subprocess.run([
+        PY, str(ROOT / 'scripts/freeze_check.py'),
+        '--out', str(r)
+    ], capture_output=True, text=True)
+    assert res_freeze.returncode == 0, res_freeze.stdout + res_freeze.stderr
+
+    # 1. Render default paper reader
+    res = subprocess.run([
+        PY, str(ROOT / 'scripts/render_reader.py'),
+        '--out', str(r)
+    ], capture_output=True, text=True)
+    assert res.returncode == 0, res.stdout + res.stderr
+
+    reader_dir = r / 'reader'
+    html_sha = hashlib.sha256((reader_dir / 'paper_reader.html').read_bytes()).hexdigest()
+    md_sha = hashlib.sha256((reader_dir / 'paper_reader.md').read_bytes()).hexdigest()
+
+    # 2. Create project document
+    proj_doc = tmp_path / 'nebula_project.md'
+    proj_doc.write_text("# Project Nebula\nObjective: Nighttime autonomous driving with low compute.", encoding='utf-8')
+
+    # 3. Explicit Apply
+    res_apply = subprocess.run([
+        PY, str(ROOT / 'scripts/pipeline.py'),
+        'apply', '--paper', str(r), '--project', str(proj_doc)
+    ], capture_output=True, text=True)
+    assert res_apply.returncode == 0, res_apply.stdout + res_apply.stderr
+
+    # 4. Project outputs exist exclusively under apply/nebula_project
+    apply_dir = r / 'apply/nebula_project'
+    assert apply_dir.exists()
+    assert (apply_dir / 'project_reader.html').exists()
+    assert (apply_dir / 'project_reader.md').exists()
+    assert (apply_dir / 'research_delta.json').exists()
+
+    # 5. Crucially, the frozen paper reader hash remains 100% byte-for-byte identical!
+    new_html_sha = hashlib.sha256((reader_dir / 'paper_reader.html').read_bytes()).hexdigest()
+    new_md_sha = hashlib.sha256((reader_dir / 'paper_reader.md').read_bytes()).hexdigest()
+    assert new_html_sha == html_sha, "Paper Reader HTML was mutated by Apply!"
+    assert new_md_sha == md_sha, "Paper Reader Markdown was mutated by Apply!"
+

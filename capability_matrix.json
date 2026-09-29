@@ -251,21 +251,24 @@
     {
       "id": "intent_isolation",
       "area": "Core",
-      "claim": "Strict intent isolation between PAPER_READING and PROJECT_APPLY",
+      "claim": "Strict intent isolation between PAPER_READING, PAPER_TECHNICAL_EXTRACTION, and PROJECT_APPLY with input firewall",
       "schema": [
         "run_state"
       ],
       "scripts": [
+        "intent_router.py",
         "phase.py",
-        "render_project_reader.py"
+        "render_project_reader.py",
+        "reader_acceptance.py"
       ],
       "tests": [
-        "test_intent_isolation"
+        "test_intent_isolation",
+        "test_reader_acceptance"
       ],
       "implementation_status": "IMPLEMENTED",
       "validation_status": "UNIT_TESTED",
       "status": "IMPLEMENTED",
-      "evidence": "State machine enforces PAPER_COMPLETE termination and prevents implicit project context access during paper reading."
+      "evidence": "Faithful-reading firewall enforces PAPER_READING default, paper-scoped PAPER_TECHNICAL_EXTRACTION, explicit-only PROJECT_APPLY, and physical input boundaries forbidding apply/ and project/ during paper reading."
     },
     {
       "id": "chinese_deep_reader",

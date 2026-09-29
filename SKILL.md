@@ -137,7 +137,33 @@ python scripts/full_audit.py --out output
 
 默认 Reader 不包含“可复用技术内容”或项目迁移章节。论文技术细节提取是单独的显式意图（`PAPER_TECHNICAL_EXTRACTION`）；项目迁移仍只通过显式 `/evidentia-apply` 请求产生，且永不改写冻结 Paper Reader。
 
-技术细节提取是单独的显式意图（`PAPER_TECHNICAL_EXTRACTION`）；项目迁移仍只通过显式 `/evidentia-apply` 请求产生，默认 `PAPER_READING` 不创建复用章节。
+### Intent Model & Faithful-reading Firewall
+
+> **永久设计原则：First understand the paper on its own terms. Only transfer it when the user asks. Relevance is not permission.**
+
+系统通过 `scripts/intent_router.py` 严格区分四类意图，默认意图为 `PAPER_READING`：
+- `PAPER_READING` (默认)：严禁从项目材料、研究记忆或相关性中推断迁移意图。严禁在阅读阶段访问 `apply/`、`project/` 或 `memory/project/`。
+- `PAPER_TECHNICAL_EXTRACTION` (显式技术提取)：当且仅当用户明确请求可复现算法/组件时触发，严格限于论文技术范畴，产生独立工件 `reader/technical_extraction.md` 和 `.html`。
+- `PROJECT_APPLY` (显式项目适配)：当且仅当用户明确要求结合项目时触发，工件严格隔离于 `apply/<project>/`，冻结 Paper Reader 哈希绝对不变。
+- `MEMORY_OPERATION` (显式记忆操作)：管理和检索长期跨论文记忆。
+
+### 认识论分层契约 (Epistemic Labeling)
+
+即使在显式项目迁移中，也必须保持分层边界：
+```text
+Paper fact (论文实证)
+↓
+Evidentia interpretation (机制与研判)
+↓
+Transferable principle (可迁移原理)
+↓
+Applicability condition (适用条件与边界)
+↓
+Project mapping (项目映射与假设变化)
+↓
+Proposed adaptation (建议适配方案)
+```
+严禁将建议适配方案混淆为原论文贡献；所有推荐必须追溯论文证据，并明确项目假设的改变。
 
 Project Delta appears exclusively in `apply/<project>/project_reader.html` and `.md`. Every Delta item links back to Paper Claim, Figure, Table, Experiment or page IDs.
 
