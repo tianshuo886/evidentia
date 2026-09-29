@@ -412,6 +412,9 @@ def build_argument_reconstruction(root_dir):
         payload.setdefault('paper_id', paper_id)
         payload.setdefault('source_sha256', src_sha)
         payload.setdefault('created_at', datetime.now(timezone.utc).isoformat())
+        if not payload.get('story_spine'):
+            topo = build_argument_topology(pm, inv=inv, sm=sm, rec_data=rec_data, lens_findings=lens_findings)
+            payload['story_spine'] = topo.get('story_spine')
     else:
         topo = build_argument_topology(pm, inv=inv, sm=sm, rec_data=rec_data, lens_findings=lens_findings)
         payload = {
