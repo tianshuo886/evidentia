@@ -15,6 +15,7 @@ import argparse, json, subprocess, sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
 PY = sys.executable
 
 def sh(*args):
