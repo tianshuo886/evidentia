@@ -87,6 +87,9 @@ def resolve_paper_workspace(raw_input, explicit_out=None):
     target_stem = stems_to_check[-1] if len(stems_to_check) > 1 else clean_stem
     if (Path.cwd() / 'literature').exists():
         return Path.cwd() / 'literature' / target_stem
+    for lit_dir in candidate_lit_dirs:
+        if lit_dir.exists():
+            return lit_dir / target_stem
     return Path('./runs') / target_stem
 
 def sync_top_level_readers(out_dir: Path):
