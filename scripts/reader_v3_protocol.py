@@ -228,7 +228,12 @@ def create_lead_writer_task(root: Path) -> Path:
         "base_sha256": sha256(draft_p),
         "contract_version": "3.0",
         "prompt_version": "3.0",
-        "allowed_inputs": ["source/", "source_pages/", "assets/", "model/", "lens_v3/"],
+        "allowed_inputs": [
+            "source/", "source_pages/", "assets/",
+            "model/source_map.json", "model/figure_inventory.json",
+            "model/paper_understanding_draft.json", "model/revision_memo.json",
+            "model/lens_v3_manifest.json", "lens_v3/"
+        ],
         "forbidden_inputs": ["apply/", "project/", "memory/project/"],
         "prohibited_context": ["PROJECT_APPLY", "RESEARCH_MEMORY"],
         "constraints": [
