@@ -26,7 +26,10 @@ def run(task_path, adapter=None, model=None, replay_dir=None, fixture=None):
         errs = schema_validate(payload, out_schema)
         if errs:
             raise SystemExit(f"{out_schema} validation failed:\n" + "\n".join(errs))
-    root = tp.parents[2] if tp.parent.name in ("lens", "visual") else tp.parents[1]
+    tasks_ancestor = next((p for p in tp.parents if p.name == "tasks"), None)
+    if tasks_ancestor is None:
+        raise SystemExit(f"Task path is not inside a workspace tasks/ directory: {tp}")
+    root = tasks_ancestor.parent
     target = root / task["target_output"]
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
