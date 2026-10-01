@@ -527,6 +527,19 @@ def main():
     p_res = subparsers.add_parser("resume")
     p_res.add_argument("--out", required=True)
 
+    # Reader v3 migration path
+    p_v3 = subparsers.add_parser("reader-v3", help="Strong-model-first Reader v3 workflow")
+    p_v3.add_argument("--out", required=True)
+    p_v3.add_argument("--action", choices=["prepare", "status", "render"], default="status")
+
+    p_vis3 = subparsers.add_parser("visual-v3", help="Semantic visual-localization workflow")
+    p_vis3.add_argument("--out", required=True)
+    p_vis3.add_argument("--action", choices=["prepare", "apply"], default="prepare")
+
+    p_bench3 = subparsers.add_parser("benchmark-v3", help="Real Direct-AI vs Reader-v3 benchmark tasks")
+    p_bench3.add_argument("--out", required=True)
+    p_bench3.add_argument("--action", choices=["direct", "evaluate"], required=True)
+
     # memory
     p_mem = subparsers.add_parser("memory")
     p_mem.add_argument("--memory-root")
@@ -606,6 +619,39 @@ def main():
         handle_validate(args)
     elif args.command == "resume":
         handle_resume(args)
+    elif args.command == "reader-v3":
+        import reader_v3
+        root = Path(args.out)
+        if args.action == "status":
+            print(json.dumps(reader_v3._status(root), indent=2, ensure_ascii=False))
+        elif args.action == "prepare":
+            task = reader_v3.prepare_next(root)
+            if task:
+                print(f"NEXT_TASK={task}")
+            else:
+                st = reader_v3._status(root)
+                if st.get("lens_manifest") and not st.get("all_lenses"):
+                    missing = [x for x, ok in st.get("lenses", {}).items() if not ok]
+                    print("WAITING_FOR_LENSES=" + ",".join(missing))
+                elif st.get("lead_writer"):
+                    print("READY_TO_RENDER")
+                else:
+                    print("NO_ACTION")
+        else:
+            reader_v3.render(root)
+    elif args.command == "visual-v3":
+        if args.action == "prepare":
+            from visual_localization_protocol import create_visual_tasks
+            tasks = create_visual_tasks(Path(args.out))
+            print(f"VISUAL_TASKS={len(tasks)}")
+        else:
+            from apply_visual_verification import apply
+            apply(Path(args.out))
+    elif args.command == "benchmark-v3":
+        from reader_v3_benchmark import create_direct_task, create_evaluation_task
+        root = Path(args.out)
+        task = create_direct_task(root) if args.action == "direct" else create_evaluation_task(root)
+        print(task)
     elif args.command == "memory":
         handle_memory(args)
 
