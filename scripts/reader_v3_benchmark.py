@@ -73,6 +73,7 @@ def create_evaluation_task(root: Path) -> Path:
       "base_sha256":None,"contract_version":"3.0","prompt_version":"3.0",
       "allowed_inputs":["source/paper.pdf",f"evals/reader_v3/{safe}/direct_ai.json","reader/narrative_manuscript.json"],
       "forbidden_inputs":["apply/","project/","memory/"],
+      "prohibited_context":["PROJECT_APPLY","RESEARCH_MEMORY"],
       "constraints":["DIMENSION_LEVEL_EVALUATION","NO_SINGLE_OVERALL_SCORE","SOURCE_ASSISTED"],
       "instructions":(
         "Evaluate Direct AI and Evidentia v3 against the source paper. Score each requested dimension 1-5 and provide a concrete evidence note. "
