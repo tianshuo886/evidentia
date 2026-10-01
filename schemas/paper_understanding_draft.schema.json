@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evidentia.dev/schemas/paper_understanding_draft.schema.json",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "paper_id",
+    "source_sha256",
+    "paper_type",
+    "story_spine",
+    "narrative",
+    "decisive_evidence",
+    "uncertainties"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "paper_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_sha256": {
+      "type": "string",
+      "minLength": 1
+    },
+    "paper_type": {
+      "type": "string",
+      "minLength": 1
+    },
+    "story_spine": {
+      "type": "object",
+      "required": [
+        "central_question",
+        "motivation",
+        "prior_gap",
+        "central_move",
+        "method_logic",
+        "major_findings",
+        "justified_conclusion",
+        "scope_and_limits"
+      ],
+      "properties": {
+        "central_question": {
+          "type": "string"
+        },
+        "motivation": {
+          "type": "string"
+        },
+        "prior_gap": {
+          "type": "string"
+        },
+        "central_move": {
+          "type": "string"
+        },
+        "method_logic": {
+          "type": "string"
+        },
+        "major_findings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "justified_conclusion": {
+          "type": "string"
+        },
+        "scope_and_limits": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "narrative": {
+      "type": "string",
+      "minLength": 200
+    },
+    "decisive_evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "evidence",
+          "why_it_matters"
+        ],
+        "properties": {
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "claim": {
+            "type": "string"
+          },
+          "why_it_matters": {
+            "type": "string"
+          },
+          "does_not_establish": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "uncertainties": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "open_questions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}
