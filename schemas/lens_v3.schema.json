@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evidentia.dev/schemas/lens_v3.schema.json",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "lens",
+    "lens_kind",
+    "source_sha256",
+    "base_sha256",
+    "findings",
+    "summary"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "lens": {
+      "type": "string",
+      "minLength": 1
+    },
+    "lens_kind": {
+      "enum": [
+        "core",
+        "specialist"
+      ]
+    },
+    "source_sha256": {
+      "type": "string",
+      "minLength": 1
+    },
+    "base_sha256": {
+      "type": "string",
+      "minLength": 1
+    },
+    "summary": {
+      "type": "string"
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "statement",
+          "evidence",
+          "epistemic",
+          "action"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "statement": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "epistemic": {
+            "enum": [
+              "VERIFIED",
+              "SUPPORTED",
+              "PARTIAL",
+              "NOT_STATED",
+              "AMBIGUOUS",
+              "INSUFFICIENT_EVIDENCE",
+              "MODEL_UNCERTAIN",
+              "UNRESOLVED"
+            ]
+          },
+          "action": {
+            "enum": [
+              "KEEP",
+              "EXPAND",
+              "CORRECT",
+              "QUALIFY",
+              "VERIFY",
+              "NONE"
+            ]
+          },
+          "importance": {
+            "enum": [
+              "CRITICAL",
+              "MAJOR",
+              "MINOR"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          },
+          "cross_cutting_checks": {
+            "type": "object",
+            "properties": {
+              "anomaly": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "counterfactual": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
