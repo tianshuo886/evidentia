@@ -65,6 +65,9 @@ def build_allowed_source_ids(run_dir):
         sm = load_json(sm_p)
         for pg in sm.get('pages', []):
             allowed.add(f"p.{pg.get('number', 1)}")
+            for eq in pg.get('equations', []) if isinstance(pg.get('equations', []), list) else []:
+                if isinstance(eq, dict) and eq.get('equation_id'):
+                    allowed.add(str(eq['equation_id']))
 
     # 2. Figure and Table inventory
     inv_p = r_dir / 'model/figure_inventory.json'
@@ -90,10 +93,12 @@ def validate_evidence_ids(payload, allowed_ids):
         found = []
         if isinstance(obj, dict):
             for k, v in obj.items():
-                if k in ('evidence', 'source', 'grounding_evidence', 'evidence_ids') and isinstance(v, list):
+                if k in ('evidence', 'source', 'grounding_evidence', 'evidence_ids', 'evidence_refs') and isinstance(v, list):
                     for item in v:
                         if isinstance(item, str):
                             found.append(item)
+                elif k == 'evidence_id' and isinstance(v, str):
+                    found.append(v)
                 else:
                     found.extend(extract_evidence_ids(v))
         elif isinstance(obj, list):
