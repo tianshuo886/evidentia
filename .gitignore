@@ -35,6 +35,11 @@ venv/
 ENV/
 runs/
 
+# Evidentia local execution artifacts
+audit_report.json
+model/
+evals/reader_regression/
+
 # OS / Editor
 .DS_Store
 .vscode/

@@ -23,6 +23,20 @@
     "base_sha256": {
       "type": "string"
     },
+    "cross_examination_requests": {
+      "type": "array",
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["target_item_id", "question"],
+        "properties": {
+          "target_item_id": {"type": "string"},
+          "question": {"type": "string"},
+          "challenger_lens": {"type": "string"}
+        },
+        "additionalProperties": false
+      }
+    },
     "items": {
       "type": "array",
       "items": {

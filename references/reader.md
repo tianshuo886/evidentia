@@ -5,14 +5,10 @@
 ## Physical Separation from Project Apply
 The Paper Reader is strictly project-independent and immutable. Project Apply deltas are never merged into `reader/paper_reader.html`. Instead, explicit Apply requests generate separate reports under `apply/<project>/project_reader.html` and `.md`.
 
-## Six-Chapter Scientific Narrative + Audit Appendix
-1. **一分钟看懂这篇论文:** 研究问题、核心方法、核心发现、最大价值、最大风险与适用边界。
-2. **论文到底在解决什么问题:** 研究背景、已有先验局限、切入视角、重要度定性。
-3. **方法到底怎么工作:** 端到端流程、核心组件拆解、公式与假设；相关图表就地呈现。
-4. **关键实验逐个说明:** 核心图表逐一精读（实验问题、观测结果、证明范围、盲区、异常信号）。
-5. **证据最终支持了什么:** 最坚实证据链、最薄弱推理链、竞争解释、反常现象、适用边界。
-6. **结论与边界:** 已建立的结论、证据边界和未决问题。
-7. **证据审计附录:** 主张与 O/I/A 证据卡片列表、争议焦点、页面锚点、验证状态（次级可折叠）。
+## Paper-specific Story Spine + quiet provenance appendix
+The manuscript is composed from the paper's reconstructed argument. Section count, titles, and order follow the paper's question, method, decisive results, assessment, and boundaries; they are not a fixed six-chapter template. Every section is Chinese-first prose with local evidence links and figures placed where the argument needs them.
+
+The final section records what the evidence establishes and what remains open. A quiet provenance appendix links to the separate Evidence Atlas for claim-level inspection; audit roles and O/I/A cards never appear in the human narrative.
 
 默认 `PAPER_READING` 不输出复用/迁移章节。论文技术细节提取通过显式 `PAPER_TECHNICAL_EXTRACTION` 意图请求；项目迁移只通过显式 Apply，且不改写冻结 Paper Reader。
 
@@ -35,4 +31,3 @@ The Paper Reader is strictly project-independent and immutable. Project Apply de
 在 `PAPER_READING` 与 `PAPER_TECHNICAL_EXTRACTION` 阶段，工作区与任务输入严格禁止访问 `apply/**`、项目文档与项目记忆。
 
 Kami owns pixels, typography, page rasterization and PDF rendering; Evidentia owns scientific meaning and information architecture.
-

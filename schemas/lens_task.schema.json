@@ -54,6 +54,12 @@
     },
     "base_model_sha256": {
       "type": "string"
+    },
+    "evidence_package_sha256": {
+      "type": "string"
+    },
+    "evidence_package": {
+      "type": "string"
     }
   }
 }

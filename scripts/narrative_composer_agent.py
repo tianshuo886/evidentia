@@ -1,635 +1,409 @@
 #!/usr/bin/env python3
-"""Dedicated Narrative Composer Agent for Evidentia (Issue #9).
+"""Compose the human Paper Reader from the paper's reconstructed argument.
 
-Principle: "Evidentia owns truth. AI owns narrative. Kami owns presentation."
-
-Responsibilities:
-- Synthesizes frozen models, evidence graph, source map, and six independent Lenses
-  into a semantic narrative manuscript IR: reader/narrative_manuscript.json.
-- Runs strictly AFTER scientific synthesis and verification.
-- Strictly isolated from project Apply context (never touches apply/).
-- Zero domain-specific Python fallback boilerplate (no fabricated optimizers,
-  attention losses, Gaussian i.i.d. assumptions, or generic ML caveats).
-- Reconstructs scientific argument in natural editorial flow.
-- Synthesizes all six Lenses by scientific topic, never as disjoint mini-reports.
-- Cites evidence IDs internally for every non-trivial interpretation.
+The composer is paper-centric. It consumes frozen paper truth, the reconstructed
+argument, Council synthesis, and promoted evidence, then writes a semantic
+manuscript whose section titles and order follow that paper rather than a
+pipeline dashboard. Audit roles remain in the Evidence Atlas.
 """
-import argparse, json, os, re, sys
-from pathlib import Path
+import argparse
+import json
+import sys
 from datetime import datetime, timezone
+from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from validate_common import load_json, schema_validate, sha256
-from build_argument_reconstruction import build_argument_reconstruction
-from intent_router import INTENTS, route_intent
+from intent_router import INTENTS
+from lens_council import load_council
+from validate_common import load_json, schema_validate
 
-LENSES = ('author', 'reviewer', 'mechanism', 'builder', 'anomaly', 'counterfactual')
+UNCERTAIN = "论文未明确说明"
+
 
 def resolve_intent(root: Path, explicit=None) -> str:
-    """Resolve an explicit output intent without reading project context."""
     intent = explicit
-    state_p = root / 'run_state.json'
+    state_p = root / "run_state.json"
     if intent is None and state_p.exists():
         try:
-            intent = load_json(state_p).get('intent')
+            intent = load_json(state_p).get("intent")
         except Exception as exc:
-            raise ValueError(f"cannot read run intent from {state_p}: {exc}")
-    intent = (intent or 'PAPER_READING').upper()
+            raise ValueError(f"cannot read run intent from {state_p}: {exc}") from exc
+    intent = (intent or "PAPER_READING").upper()
     if intent not in INTENTS:
         raise ValueError(f"unsupported narrative intent {intent!r}; expected one of {INTENTS}")
-    if intent == 'PROJECT_APPLY':
-        # Apply has its own renderer and must never mutate the frozen paper reader.
-        raise ValueError('PROJECT_APPLY must be rendered under apply/<project>/ by the Apply pipeline')
-    if intent == 'MEMORY_OPERATION':
-        raise ValueError('MEMORY_OPERATION is managed by evidentia memory command')
+    if intent == "PROJECT_APPLY":
+        raise ValueError("PROJECT_APPLY must be rendered under apply/<project>/ by the Apply pipeline")
+    if intent == "MEMORY_OPERATION":
+        raise ValueError("MEMORY_OPERATION is managed by evidentia memory command")
     return intent
 
-def story_spine_from(arg_recon, *, question, motivation, gap, method_logic, claims, limitations, unresolved, experimental_questions=None):
-    """Return a complete semantic spine while preserving explicit missing states."""
-    existing = arg_recon.get('story_spine') if isinstance(arg_recon, dict) else None
-    if isinstance(existing, dict):
-        spine = dict(existing)
-    else:
-        spine = {}
-    spine.setdefault('central_question', question or 'NOT_STATED')
-    spine.setdefault('motivation', motivation or 'NOT_STATED')
-    spine.setdefault('prior_gap', gap or 'NOT_STATED')
-    spine.setdefault('central_move', method_logic or 'NOT_STATED')
-    spine.setdefault('method_logic', method_logic or 'NOT_STATED')
-    exp_qs = [q for q in (experimental_questions or []) if str(q).strip()] or [q.get('text', '') for q in (arg_recon.get('questions') or []) if q.get('text')] or [c.get('statement', '') for c in claims if c.get('statement')]
-    spine.setdefault('experimental_questions', exp_qs or ['NOT_STATED'])
-    spine.setdefault('major_findings', [c.get('statement', '') for c in claims if c.get('statement')] or ['NOT_STATED'])
-    spine.setdefault('justified_conclusion', arg_recon.get('assessed_argument', {}).get('justified_thesis') or (claims[0].get('statement') if claims else 'NOT_STATED'))
-    spine.setdefault('scope_and_limits', [x for x in (limitations + unresolved) if x] or ['NOT_STATED'])
-    return spine
 
 def clean_visible_narrative(value):
-    """Hide internal analytical role names from the default human narrative."""
-    text = str(value or '')
+    """Remove internal role vocabulary from text supplied by analytical agents."""
+    text = str(value or "")
     replacements = {
-        'Author Lens': '作者分析', 'Reviewer Lens': '证据审查',
-        'Mechanism Lens': '机制分析', 'Builder Lens': '技术分析',
-        'Anomaly Lens': '异常分析', 'Counterfactual Lens': '替代解释分析',
-        'Author 透镜': '作者分析', 'Reviewer 透镜': '证据审查',
-        'Mechanism 透镜': '机制分析', 'Builder 透镜': '技术分析',
-        'Anomaly 透镜': '异常分析', 'Counterfactual 透镜': '替代解释分析',
-        '跨透镜': '不同证据之间', '六大透镜': '多角度证据', '六个 Lens': '多角度证据',
+        "Author Lens": "作者的解释", "Reviewer Lens": "证据审查",
+        "Mechanism Lens": "机制解释", "Builder Lens": "方法细节",
+        "Anomaly Lens": "异常现象", "Counterfactual Lens": "替代解释",
+        "Author 透镜": "作者的解释", "Reviewer 透镜": "证据审查",
+        "Mechanism 透镜": "机制解释", "Builder 透镜": "方法细节",
+        "Anomaly 透镜": "异常现象", "Counterfactual 透镜": "替代解释",
+        "跨透镜": "不同证据之间", "六大透镜": "多角度证据", "六个 Lens": "多角度证据",
+        "Observation": "直接观测", "Author Interpretation": "作者解释",
+        "Reader Assessment": "证据研判", "O/I/A": "证据层次",
+        "claim-card": "证据项", "Supports Claims": "支撑关系",
     }
     for old, new in replacements.items():
         text = text.replace(old, new)
-    return text.replace('Lens', '分析视角').replace('透镜', '证据视角')
+    return text.replace("Lens", "分析视角").replace("透镜", "证据视角")
 
-def extract_lens_findings(root):
-    findings_by_lens = {}
-    for l in LENSES:
-        lp = root / 'lens' / f'{l}.json'
-        if lp.exists():
-            try:
-                data = load_json(lp)
-                findings_by_lens[l] = data.get('findings', [])
-            except Exception:
-                findings_by_lens[l] = []
-    return findings_by_lens
+
+def _clean(value, fallback=UNCERTAIN):
+    value = clean_visible_narrative(value).strip()
+    return value if value else fallback
+
+
+def _clause(value, fallback=UNCERTAIN):
+    """Use source text as a clause without stacking terminal punctuation."""
+    return _clean(value, fallback).rstrip("。！？；： ")
+
+
+def _items(value):
+    return value if isinstance(value, list) else []
+
+
+def _first_text(values, fallback=UNCERTAIN):
+    for value in values:
+        if isinstance(value, dict):
+            value = value.get("text") or value.get("statement") or value.get("proposition")
+        if str(value or "").strip():
+            return _clean(value)
+    return fallback
+
+
+def _truncate(text, limit=18):
+    text = _clean(text)
+    return text if len(text) <= limit else text[: limit - 1].rstrip("，。；： ") + "…"
+
+
+def story_spine_from(arg_recon, *, question, motivation, gap, method_logic,
+                     claims, limitations, unresolved, experimental_questions=None):
+    """Return a complete paper-specific spine while preserving missing states."""
+    existing = arg_recon.get("story_spine") if isinstance(arg_recon, dict) else None
+    spine = dict(existing) if isinstance(existing, dict) else {}
+    # Older argument-reconstruction artifacts stored story-spine sections as
+    # title strings.  The current manuscript contract requires section
+    # objects, so normalize that legacy form at the boundary before the spine
+    # is embedded in the rendered manuscript.
+    raw_sections = spine.get("sections")
+    if isinstance(raw_sections, list):
+        normalized_sections = []
+        for idx, item in enumerate(raw_sections, 1):
+            if isinstance(item, str):
+                normalized_sections.append({
+                    "id": f"spine-{idx:02d}",
+                    "title": item,
+                    "lead": item,
+                    "blocks": [],
+                })
+            elif isinstance(item, dict):
+                normalized_sections.append(item)
+        spine["sections"] = normalized_sections
+    spine.setdefault("central_question", _clean(question))
+    spine.setdefault("motivation", _clean(motivation))
+    spine.setdefault("prior_gap", _clean(gap))
+    spine.setdefault("central_move", _clean(method_logic))
+    spine.setdefault("method_logic", _clean(method_logic))
+    qs = [str(q).strip() for q in (experimental_questions or []) if str(q).strip()]
+    if not qs:
+        qs = [_clean(q.get("text")) for q in _items(arg_recon.get("questions")) if isinstance(q, dict) and q.get("text")]
+    if not qs:
+        qs = [_clean(c.get("statement")) for c in claims if c.get("statement")]
+    spine.setdefault("experimental_questions", qs or [UNCERTAIN])
+    spine.setdefault("major_findings", [_clean(c.get("statement")) for c in claims if c.get("statement")] or [UNCERTAIN])
+    assessed = arg_recon.get("assessed_argument") if isinstance(arg_recon, dict) else {}
+    spine.setdefault("justified_conclusion", _clean((assessed or {}).get("justified_thesis") or (claims[0].get("statement") if claims else "")))
+    limits = [_clean(x) for x in limitations + unresolved if str(x or "").strip()]
+    spine.setdefault("scope_and_limits", limits or [UNCERTAIN])
+    return spine
+
+
+def _evidence_roles(arg_recon):
+    promo = arg_recon.get("evidence_promotion") if isinstance(arg_recon, dict) else {}
+    return (promo or {}).get("evidence_roles", {}) if isinstance(promo, dict) else {}
+
+
+def _merge_evidence_items(items, inventory_items, kind):
+    """Fill presentation fields from the canonical inventory without inventing data."""
+    inv_by_id = {
+        str(item.get("id")): item for item in _items(inventory_items)
+        if isinstance(item, dict) and item.get("id") and item.get("kind") in (kind, None)
+    }
+    merged = []
+    seen = set()
+    for item in _items(items):
+        if not isinstance(item, dict):
+            continue
+        eid = str(item.get("id") or "")
+        base = dict(inv_by_id.get(eid, {}))
+        base.update(item)
+        if not base.get("file"):
+            base["file"] = base.get("asset") or base.get("raw_visual_fallback")
+        merged.append(base)
+        if eid:
+            seen.add(eid)
+    for eid, item in inv_by_id.items():
+        if eid not in seen:
+            base = dict(item)
+            base.setdefault("file", base.get("asset") or base.get("raw_visual_fallback"))
+            merged.append(base)
+    return merged
+
+
+def _default_refs(claims, figs, tables):
+    refs = []
+    if claims:
+        refs.extend(claims[0].get("evidence", []))
+    if not refs and figs:
+        refs.append(figs[0].get("id"))
+    if not refs and tables:
+        refs.append(tables[0].get("id"))
+    return [str(x) for x in refs if x] or ["p.1"]
+
+
+def _figure_block(item, claims, roles, *, question=None, section_refs=None):
+    eid = item.get("id") or item.get("paper_label") or "figure"
+    claim_ids = item.get("supports_claims") or []
+    observation = _clean(item.get("observation"))
+    author = _clean(item.get("author_interpretation"))
+    assessment = _clean(item.get("reader_assessment"))
+    analysis = f"图中直接呈现：{_clause(observation)}。作者将这一结果解释为：{_clause(author)}。结合现有证据，可以确认到的范围是：{_clause(assessment)}。"
+    limits = item.get("limitations") or [UNCERTAIN]
+    return {
+        "type": "figure", "evidence_id": str(eid),
+        "asset": item.get("file") or item.get("asset"),
+        "caption": _clean(item.get("caption_original") or item.get("paper_label") or eid),
+        "analysis": analysis,
+        "evidence_refs": list(dict.fromkeys([str(eid)] + list(section_refs or []) + [str(x) for x in claim_ids if x])),
+        "question": _clean(question or item.get("question"), "论文用这一图表检验什么问题？"),
+        "supports": [str(x) for x in claim_ids if x] or ["NOT_STATED"],
+        "limits": [_clean(x) for x in limits],
+        "presentation_role": roles.get(eid, "narrative_support"),
+    }
+
+
+def _table_block(item, claims, roles, *, question=None, section_refs=None):
+    block = _figure_block(item, claims, roles, question=question, section_refs=section_refs)
+    block["type"] = "table"
+    return block
+
+
+def _equation_blocks(source_map):
+    result = []
+    for page in _items(source_map.get("pages")):
+        for eq in _items(page.get("equations")):
+            if isinstance(eq, str):
+                eq = {"equation_id": f"EQ-p{page.get('number', 1)}-{len(result)+1}", "raw_text": eq}
+            # Keep an unrenderable equation as an explicit block.  The release
+            # gate will reject it unless a verified LaTeX source or a decodable
+            # source crop is available; silently dropping it would hide a core
+            # extraction failure.
+            if not isinstance(eq, dict):
+                continue
+            if eq.get("display_mode") is False and not eq.get("latex") and not eq.get("fallback_asset"):
+                continue
+            eid = eq.get("equation_id") or f"EQ-{len(result)+1}"
+            result.append({
+                "type": "equation", "evidence_id": str(eid),
+                "raw_text": eq.get("raw_text") or eq.get("latex") or "",
+                "latex": eq.get("latex"), "display_mode": bool(eq.get("display_mode", True)),
+                "source_confidence": eq.get("source_confidence") or "UNCERTAIN",
+                "fallback_asset": eq.get("fallback_asset"),
+                "explanation": _clean(eq.get("role_zh") or eq.get("surrounding_text")),
+                "evidence_refs": [f"p.{eq.get('page', page.get('number', 1))}"],
+            })
+    return result
+
+
+def _custom_sections(spine):
+    custom = spine.get("sections") or spine.get("narrative_sections") or spine.get("nodes")
+    if not isinstance(custom, list):
+        return []
+    # A legacy spine may contain only section-title strings.  Those titles are
+    # structural hints, not complete narrative sections; let the paper-aware
+    # derivation below build evidence-bearing sections instead.
+    if custom and not any(isinstance(item, dict) for item in custom):
+        return []
+    out = []
+    for idx, item in enumerate(custom, 1):
+        if isinstance(item, str):
+            out.append({"id": f"spine-{idx:02d}", "title": item, "lead": item, "blocks": []})
+        elif isinstance(item, dict):
+            out.append({
+                "id": item.get("id") or f"spine-{idx:02d}",
+                "title": _clean(item.get("title") or item.get("heading") or item.get("proposition"), f"论证节点 {idx}"),
+                "lead": _clean(item.get("lead") or item.get("summary") or item.get("proposition")),
+                "blocks": item.get("blocks") if isinstance(item.get("blocks"), list) else [],
+                "argument_refs": item.get("argument_refs", []), "evidence_refs": item.get("evidence_refs", []),
+            })
+    return out
+
+
+def _derived_sections(pm, arg_recon, spine, claims, figs, tables, source_map, roles, default_refs):
+    """Derive sections from this paper's argument units and evidence."""
+    sections = []
+    units = _items(arg_recon.get("argument_units"))
+    methods = _items(pm.get("methods"))
+    question = _clean(spine.get("central_question")); motivation = _clean(spine.get("motivation"))
+    move = _clean(spine.get("central_move")); logic = _clean(spine.get("method_logic"))
+    sections.append({
+        "id": "spine-01", "title": f"研究问题：{_truncate(question)}",
+        "lead": f"{motivation} 这篇论文试图回答这一问题，并将判断交给后续方法与证据。",
+        "blocks": [
+            {"type": "paragraph", "text": f"{_clause(question)}。{_clause(motivation)}。", "evidence_refs": default_refs},
+            {"type": "paragraph", "text": f"论文的核心推进是{_clause(move)}；作者把它组织成{_clause(logic)}。", "evidence_refs": default_refs},
+        ],
+    })
+    method_text = [_clean(m.get("description")) for m in methods if m.get("description")]
+    if not method_text and logic and logic != UNCERTAIN:
+        method_text.append(logic)
+    method_text = [x for x in method_text if x and x != UNCERTAIN]
+    method_sentence = "；".join(_clause(x) for x in method_text) if method_text else UNCERTAIN
+    method_blocks = [{"type": "paragraph", "text": f"方法沿着论文给出的顺序展开：{_clause(method_sentence)}。", "evidence_refs": default_refs}]
+    claim_evidence = {str(e) for c in claims for e in c.get("evidence", [])}
+    method_figs = [f for f in figs if roles.get(f.get("id"), "narrative_support") in ("narrative_core", "narrative_support") and str(f.get("id")) not in claim_evidence]
+    for figure in method_figs:
+        method_blocks.append(_figure_block(figure, claims, roles, question="这张图如何把核心方法连接起来？", section_refs=default_refs))
+    method_tables = [t for t in tables if roles.get(t.get("id"), "narrative_support") in ("narrative_core", "narrative_support") and str(t.get("id")) not in claim_evidence]
+    for table in method_tables:
+        method_blocks.append(_table_block(table, claims, roles, question="这张表如何把核心方法连接起来？", section_refs=default_refs))
+    method_blocks.extend(_equation_blocks(source_map))
+    sections.append({"id": "spine-02", "title": f"研究路径：{_truncate(move)}", "lead": "这里说明作者如何把研究问题转成可执行的方法，并指出方法依赖的前提。", "blocks": method_blocks})
+
+    for idx, claim in enumerate(claims, 1):
+        cid = claim.get("id") or f"claim-{idx}"; ev = [str(x) for x in claim.get("evidence", []) if x]
+        q_list = spine.get("experimental_questions") or [UNCERTAIN]; q_text = q_list[min(idx - 1, len(q_list) - 1)]
+        blocks = [{"type": "paragraph", "text": f"这项实验关注“{_clause(q_text)}”。结果是：{_clause(claim.get('observation') or claim.get('statement'))}。作者据此认为：{_clause(claim.get('author_interpretation'))}。从当前材料可以确认：{_clause(claim.get('reader_assessment'))}。", "evidence_refs": ev or default_refs, "argument_refs": [u.get("id") for u in units if cid in _items(u.get("linked_claim_ids"))]}]
+        for item in figs + tables:
+            if item.get("id") in ev or cid in _items(item.get("supports_claims")):
+                block = _table_block(item, claims, roles, question=q_text, section_refs=ev) if item in tables else _figure_block(item, claims, roles, question=q_text, section_refs=ev)
+                blocks.append(block)
+        sections.append({"id": f"spine-{len(sections)+1:02d}", "title": f"关键结果：{_truncate(claim.get('statement') or cid)}", "lead": "这一组结果决定了论文主张在当前实验条件下能成立到什么程度。", "blocks": blocks})
+    return sections
+
 
 def compose_narrative_manuscript(root: Path, intent=None) -> dict:
-    """Generate the semantic narrative manuscript IR from frozen paper models."""
     intent = resolve_intent(root, intent)
-    # Intent isolation check: must not read or depend on apply/
-    pm_path = root / 'model/paper_model.json'
+    pm_path = root / "model/paper_model.json"
     if not pm_path.exists():
         raise FileNotFoundError(f"Missing {pm_path}")
     pm = load_json(pm_path)
-    
-    source_sha = pm.get('source_sha256', '')
-    paper_id = pm.get('paper_id', root.name)
-    paper = pm.get('paper', {})
-    paper_title = paper.get('title', 'Untitled Paper')
-    
-    # Load supporting models if present
-    inv_path = root / 'model/figure_inventory.json'
-    inv = load_json(inv_path) if inv_path.exists() else {}
-    
-    sm_path = root / 'model/source_map.json'
-    sm = load_json(sm_path) if sm_path.exists() else {}
-    
-    syn_path = root / 'model/scientific_synthesis.json'
-    syn = load_json(syn_path) if syn_path.exists() else {}
-    
-    rec_path = root / 'model/lens_reconciliation.json'
-    rec = load_json(rec_path) if rec_path.exists() else {}
-    
-    arg_path = root / 'model/argument_reconstruction.json'
-    if arg_path.exists():
-        arg_recon = load_json(arg_path)
-    else:
-        try:
-            arg_recon = build_argument_reconstruction(root)
-        except Exception:
-            arg_recon = {}
-            
-    lens_findings = extract_lens_findings(root)
+    inv = load_json(root / "model/figure_inventory.json") if (root / "model/figure_inventory.json").exists() else {}
+    source_map = load_json(root / "model/source_map.json") if (root / "model/source_map.json").exists() else {}
+    synthesis = load_json(root / "model/scientific_synthesis.json") if (root / "model/scientific_synthesis.json").exists() else {}
+    council = load_council(root, allow_compat=not (root / "model/frozen_evidence_package.json").exists())
+    arg_recon = load_json(root / "model/argument_reconstruction.json") if (root / "model/argument_reconstruction.json").exists() else (pm.get("argument_reconstruction") or {})
+    claims = _items(pm.get("claims"))
+    inv_items = _items(inv.get("items"))
+    figs = _merge_evidence_items(pm.get("figures"), inv_items, "figure")
+    tables = _merge_evidence_items(pm.get("tables"), inv_items, "table")
+    limitations = [_clean(x.get("text")) for x in _items(pm.get("limitations")) if isinstance(x, dict) and x.get("text")]; unresolved = [_clean(x.get("issue")) for x in _items(pm.get("unresolved")) if isinstance(x, dict) and x.get("issue")]
+    anomalies = [_clean(x.get("text") or x.get("description") or x.get("issue")) for x in _items(pm.get("anomalies")) if isinstance(x, dict) and (x.get("text") or x.get("description") or x.get("issue"))]
+    methods = _items(pm.get("methods")); natural = [str(x) for x in _items(pm.get("natural_structure")) if str(x).strip()]; method_logic = " → ".join(natural) or _first_text([m.get("description") for m in methods])
+    questions = [q.get("question") or q.get("name") for q in _items(pm.get("experiments")) if isinstance(q, dict) and (q.get("question") or q.get("name"))]; questions += [q.get("text") for q in _items(pm.get("questions")) if isinstance(q, dict) and q.get("text")]
+    paper = pm.get("paper") or {}; title = _clean(paper.get("title"), "未命名论文")
+    question = _first_text([arg_recon.get("central_question"), *[q.get("text") for q in _items(pm.get("questions")) if isinstance(q, dict)]])
+    spine = story_spine_from(arg_recon, question=question, motivation=arg_recon.get("motivation"), gap=arg_recon.get("prior_assumptions_or_gap"), method_logic=method_logic, claims=claims, limitations=limitations, unresolved=unresolved, experimental_questions=questions)
+    roles = _evidence_roles(arg_recon); default_refs = _default_refs(claims, figs, tables)
+    sections = _custom_sections(spine) or _derived_sections(pm, arg_recon, spine, claims, figs, tables, source_map, roles, default_refs)
 
-    claims = pm.get('claims', [])
-    figs = pm.get('figures', []) or [x for x in inv.get('items', []) if x.get('kind') == 'figure']
-    tables = pm.get('tables', []) or [x for x in inv.get('items', []) if x.get('kind') == 'table']
-    conflicts = pm.get('lens_conflicts', []) or rec.get('items', [])
-    unresolved = pm.get('unresolved', [])
-    assumptions = pm.get('assumptions', [])
-    limitations = pm.get('limitations', [])
-    anomalies = pm.get('anomalies', [])
-    portable = pm.get('portable_components', [])
-    evidence_roles = (arg_recon.get('evidence_promotion') or {}).get('evidence_roles', {})
-    
-    # Extract equations
-    equations = []
-    for page_entry in sm.get('pages', []):
-        for eq in page_entry.get('equations', []):
-            if isinstance(eq, dict):
-                equations.append(eq)
-            elif isinstance(eq, str):
-                equations.append({
-                    "equation_id": f"EQ-p{page_entry.get('number', 1)}-{len(equations)+1}",
-                    "page": page_entry.get('number', 1),
-                    "raw_text": eq
-                })
-
-    # Evidence mapping
-    all_evidence_ids = set()
-    for c in claims:
-        all_evidence_ids.update(c.get('evidence', []))
-    for f in figs:
-        if f.get('id'):
-            all_evidence_ids.add(f.get('id'))
-    for t in tables:
-        if t.get('id'):
-            all_evidence_ids.add(t.get('id'))
-    default_ev = sorted(list(all_evidence_ids))[:2] if all_evidence_ids else ['p.1']
-
-    # --- Semantic story spine (paper-centric; never Lens-centric) ---
-    q_first = arg_recon.get('central_question') or (pm.get('questions', [{}])[0].get('text') if pm.get('questions') else f"关于《{paper_title}》的核心科学与工程问题")
-    c_first = arg_recon.get('central_thesis') or (claims[0].get('statement') if claims else 'NOT_STATED')
-    
-    scope_conds = arg_recon.get('scope_conditions', [])
-    if scope_conds:
-        boundary_summary = f"适用边界与主要约束：{'; '.join(scope_conds[:2])}。"
-    elif limitations:
-        boundary_summary = f"适用边界与主要约束：{limitations[0].get('text', '以论文报告的基准评测场景为准')}。"
-    else:
-        boundary_summary = "适用边界与主要约束：论文未明确说明额外约束，有效性范围以报告的基准实验为准。"
-
-    ch1_takeaways = []
-    if q_first:
-        ch1_takeaways.append(f"核心研究问题：{q_first}")
-    if claims:
-        ch1_takeaways.append(f"核心实证结论：{claims[0].get('statement')}")
-    nat_struct = pm.get('natural_structure', [])
-    if nat_struct:
-        ch1_takeaways.append(f"方法架构脉络：{' → '.join(nat_struct[:4])}")
-    elif pm.get('methods'):
-        ch1_takeaways.append(f"主要提出方法：{pm['methods'][0].get('name', '核心算法设计')}")
-    ch1_takeaways.append(boundary_summary)
-
-    exp_questions = []
-    for exp in pm.get('experiments', []):
-        if isinstance(exp, dict) and (exp.get('question') or exp.get('name')):
-            exp_questions.append(exp.get('question') or exp.get('name'))
-        elif isinstance(exp, str) and exp.strip():
-            exp_questions.append(exp.strip())
-    if not exp_questions:
-        for q in pm.get('questions', []):
-            if isinstance(q, dict) and q.get('text'):
-                exp_questions.append(q['text'])
-            elif isinstance(q, str) and q.strip():
-                exp_questions.append(q.strip())
-
-    method_logic = ' → '.join(nat_struct[:6]) if nat_struct else (methods_list[0].get('description', '') if (methods_list := pm.get('methods', [])) else '')
-    story_spine = story_spine_from(
-        arg_recon,
-        question=q_first,
-        motivation=arg_recon.get('motivation', ''),
-        gap=arg_recon.get('prior_assumptions_or_gap', ''),
-        method_logic=method_logic,
-        claims=claims,
-        limitations=[l.get('text', '') for l in limitations if isinstance(l, dict)],
-        unresolved=[u.get('issue', '') for u in unresolved if isinstance(u, dict)],
-        experimental_questions=exp_questions
-    )
-
-    # --- Chapter 1: 一分钟理解这篇论文 ---
-    ch1_blocks = [
-        {
-            "type": "paragraph",
-            "text": f"本文围绕“{story_spine['central_question']}”展开。研究切入点是：{story_spine['motivation']} 核心方法/主张是：{story_spine['central_move']} 实验结果显示：{c_first}",
-            "evidence_refs": claims[0].get('evidence', default_ev) if claims else default_ev,
-            "argument_refs": ["ARG-01"] if "ARG-01" in [u.get('id') for u in arg_recon.get('argument_units', [])] else []
-        },
-        {
-            "type": "takeaway",
-            "text": f"这篇论文的中心推进是：{story_spine['central_move']} 其证据边界是：{boundary_summary}",
-            "evidence_refs": claims[0].get('evidence', default_ev) if claims else default_ev
-        },
-        {
-            "type": "callout",
-            "text": "【研读导读】下文按问题、方法、实验和结论的关系展开；源材料未支持的环节会保留为未说明或未决状态。",
-            "evidence_refs": []
-        }
-    ]
-
-    # --- Chapter 2: 论文为什么要做这件事 ---
-    motivation = story_spine.get('motivation') or 'NOT_STATED'
-    gap = story_spine.get('prior_gap') or 'NOT_STATED'
-    entry_point = story_spine.get('central_move') or 'NOT_STATED'
-    why_matters = arg_recon.get('why_it_matters') or 'NOT_STATED'
-
-    ch2_blocks = [
-        {
-            "type": "paragraph",
-            "text": f"【研究背景与动机】{motivation}",
-            "evidence_refs": ["p.1"]
-        },
-        {
-            "type": "paragraph",
-            "text": f"【既有局限与科学缺口】{gap}",
-            "evidence_refs": ["p.1"]
-        },
-        {
-            "type": "callout",
-            "text": f"本文核心切入点：{entry_point}",
-            "evidence_refs": []
-        },
-        {
-            "type": "paragraph",
-            "text": f"【研究意义】{why_matters}",
-            "evidence_refs": []
-        }
-    ]
-
-    # --- Chapter 3: 方法是怎么工作的 ---
-    ch3_blocks = []
-    methods_list = pm.get('methods', [])
-    if methods_list:
-        m_desc_items = []
-        for m in methods_list:
-            m_desc_items.append(f"**{m.get('name', '核心模块')}**：{m.get('description') or 'NOT_STATED'}")
-        ch3_blocks.append({
-            "type": "paragraph",
-            "text": f"作者提出的整体方法由多个核心组件构成：\n" + "\n".join(f"- {it}" for it in m_desc_items),
-            "evidence_refs": default_ev
-        })
-    elif nat_struct:
-        ch3_blocks.append({
-            "type": "paragraph",
-            "text": f"根据论文展开脉络，核心方法沿以下计算流推进：{' → '.join(nat_struct)}。各阶段紧密衔接，共同支撑最终实证主张。",
-            "evidence_refs": default_ev
-        })
-    else:
-        ch3_blocks.append({
-            "type": "paragraph",
-            "text": "【方法结构】源材料未提供可进一步拆分的方法组件；请以原文方法段落和页面证据为准。",
-            "evidence_refs": default_ev
-        })
-
-    # Integrate system / workflow figures inline into Chapter 3 if available
-    system_figs = [f for f in figs if evidence_roles.get(f.get('id')) not in ('audit_only', 'uncertain') and (f.get('role') in ('critical', 'architecture', 'overview') or '流程' in f.get('caption_original', '') or 'Figure 1' in f.get('paper_label', ''))]
-    if not system_figs and figs:
-        promotable = [f for f in figs if evidence_roles.get(f.get('id'), 'narrative_support') in ('narrative_core', 'narrative_support')]
-        system_figs = promotable[:1]
-    for sf in system_figs[:1]:
-        sf_id = sf.get('id', 'F01')
-        ch3_blocks.append({
-            "type": "figure",
-            "evidence_id": sf_id,
-            "asset": sf.get('file') or sf.get('asset'),
-            "caption": f"{sf.get('paper_label', sf_id)}: {sf.get('caption_original', '方法整体架构与工作流示意图')}",
-            "analysis": sf.get('author_interpretation') or sf.get('observation') or "源材料未提供可核验的图内解释。",
-            "evidence_refs": [sf_id],
-            "presentation_role": evidence_roles.get(sf_id, 'narrative_support'),
-            "question": sf.get('question') or "该架构图如何支撑核心方法的数据流与处理逻辑？",
-            "supports": sf.get('supports_claims') or (claims and [claims[0].get('id', 'C01')]) or ['NOT_STATED'],
-            "limits": sf.get('limitations') or ['NOT_STATED']
-        })
-
-    # Integrate equations into Chapter 3
-    for eq in equations[:3]:
-        if not eq.get('latex') and not eq.get('fallback_asset'):
-            # Unverified OCR/text extraction remains in the source map, not main narrative.
-            continue
-        raw_eq = eq.get('raw_text') or eq.get('latex') or ''
-        ch3_blocks.append({
-            "type": "equation",
-            "evidence_id": eq.get('equation_id', 'EQ'),
-            "raw_text": raw_eq,
-            "explanation": eq.get('role_zh') or eq.get('surrounding_text') or "源材料未提供该公式的完整语义说明。",
-            "latex": eq.get('latex'),
-            "display_mode": bool(eq.get('display_mode', True)),
-            "source_confidence": eq.get('source_confidence') or ('VERIFIED' if eq.get('latex') else 'UNCERTAIN'),
-            "fallback_asset": eq.get('fallback_asset'),
-            "evidence_refs": [eq.get('equation_id', 'EQ'), f"p.{eq.get('page', 1)}"]
-        })
-
-    if assumptions:
-        assump_texts = [a.get('text', '') for a in assumptions if a.get('text')]
-        ch3_blocks.append({
-            "type": "callout",
-            "text": f"【理论前提与假设】方法有效性依赖如下前提：{'; '.join(assump_texts)}。",
-            "evidence_refs": default_ev
-        })
-
-    # --- Chapter 4: 哪些实验真正决定了论文是否成立 ---
-    ch4_blocks = [
-        {
-            "type": "paragraph",
-            "text": "科学评估的核心在于辨析决定论文结论真伪的关键实验。下述实验与图表构成了论文最主要的实证支柱：",
-            "evidence_refs": default_ev
-        }
-    ]
-
-    # Decisive experiments from argument reconstruction or figs/tables
-    decisive_items = []
-    for f in figs:
-        if evidence_roles.get(f.get('id'), 'narrative_support') in ('narrative_core', 'narrative_support'):
-            decisive_items.append(('figure', f))
-    for t in tables:
-        if evidence_roles.get(t.get('id'), 'narrative_support') in ('narrative_core', 'narrative_support'):
-            decisive_items.append(('table', t))
-    
-    if not decisive_items:
-        ch4_blocks.append({
-            "type": "paragraph",
-            "text": "当前模型未提取到可独立呈现的图表资产；正文证据仍保留在页面锚点和主张卡片中。",
-            "evidence_refs": default_ev
-        })
-    else:
-        for kind, item in decisive_items[:3]:
-            iid = item.get('id', '')
-            label = item.get('paper_label', iid)
-            cap = item.get('caption_original', '实证评测结果')
-            obs = item.get('observation') or "源材料未提供可核验的客观观测说明。"
-            auth = item.get('author_interpretation') or "源材料未提供作者解释。"
-            read = item.get('reader_assessment') or "当前证据不足以给出独立研判。"
-            
-            analysis_text = f"**实证观测 (Observation)**：{obs}\n\n**作者推断 (Author Interpretation)**：{auth}\n\n**读者研判 (Reader Assessment)**：{read}"
-            
-            if kind == 'figure':
-                ch4_blocks.append({
-                    "type": "figure",
-                    "evidence_id": iid,
-                    "asset": item.get('file') or item.get('asset'),
-                    "caption": f"{label}: {cap}",
-                    "analysis": analysis_text,
-                    "evidence_refs": [iid] + item.get('supports_claims', []),
-                    "presentation_role": evidence_roles.get(iid, 'narrative_support'),
-                    "question": item.get('question') or "这个实验在检验什么核心问题？",
-                    "supports": item.get('supports_claims') or (claims and [claims[0].get('id', 'C01')]) or ['NOT_STATED'],
-                    "limits": item.get('limitations') or ['NOT_STATED']
-                })
-            else:
-                ch4_blocks.append({
-                    "type": "table",
-                    "evidence_id": iid,
-                    "asset": item.get('file') or item.get('asset'),
-                    "caption": f"{label}: {cap}",
-                    "analysis": analysis_text,
-                    "evidence_refs": [iid] + item.get('supports_claims', []),
-                    "presentation_role": evidence_roles.get(iid, 'narrative_support'),
-                    "question": item.get('question') or "该定量评测检验什么核心指标与主张？",
-                    "supports": item.get('supports_claims') or (claims and [claims[0].get('id', 'C01')]) or ['NOT_STATED'],
-                    "limits": item.get('limitations') or ['NOT_STATED']
-                })
-
-    # --- Chapter 5: 证据最终支持了什么 ---
-    ch5_blocks = [
-        {
-            "type": "paragraph",
-            "text": "本节把实验结果、解释、替代解释和适用边界放回同一条科学论证链，回答证据到底支持了什么。",
-            "evidence_refs": default_ev
-        },
-        {
-            "type": "paragraph",
-            "text": f"【证据支持的结论】{story_spine['justified_conclusion']}",
-            "evidence_refs": default_ev
-        }
-    ]
-
-    syn_topics = syn.get('topics', [])
-    if syn_topics:
-        for top in syn_topics:
-            t_title = clean_visible_narrative(top.get('title_zh', '科学议题审视'))
-            t_concl = clean_visible_narrative(top.get('core_conclusion_zh', ''))
-            t_ev = top.get('evidence_refs', default_ev)
-            t_mech = clean_visible_narrative(top.get('mechanism_zh'))
-            t_rev = clean_visible_narrative(top.get('reviewer_caveat_zh'))
-            t_ano = clean_visible_narrative(top.get('anomaly_zh'))
-            t_alt = clean_visible_narrative(top.get('alternative_explanation_zh'))
-            
-            topic_narrative = [f"**{t_title}**", t_concl]
-            if t_mech:
-                topic_narrative.append(f"- **机制解释**：{t_mech}")
-            if t_rev:
-                topic_narrative.append(f"- **证据限制**：{t_rev}")
-            if t_ano:
-                topic_narrative.append(f"- **反常与负例**：{t_ano}")
-            if t_alt:
-                topic_narrative.append(f"- **替代解释**：{t_alt}")
-                
-            ch5_blocks.append({
-                "type": "callout" if top.get('confidence') in ('PARTIAL', 'LOW', 'TENSION') else "paragraph",
-                "text": "\n\n".join(topic_narrative),
-                "evidence_refs": t_ev
-            })
-    else:
-        # Dynamic cross-lens synthesis when scientific_synthesis artifact is light
-        core_claim_stmt = claims[0].get('statement') if claims else '核心主张'
-        ch5_blocks.append({
-            "type": "paragraph",
-            "text": f"【核心主张有效性综合审视】围绕主张“{core_claim_stmt}”，当前证据支持范围以已报告的实验条件为准；未测试场景的证据强度仍未确定。",
-            "evidence_refs": default_ev
-        })
-        if anomalies:
-            anom_text = "; ".join(a.get('text', '') for a in anomalies[:2])
-            ch5_blocks.append({
-                "type": "callout",
-                "text": f"【反常现象与负例】{anom_text}",
-                "evidence_refs": default_ev
-            })
-        else:
-            ch5_blocks.append({
-                "type": "paragraph",
-                "text": "【反常与边界】当前材料未报告可核验的显著反常负例；这不等同于已证明不存在反常。",
-                "evidence_refs": default_ev
-            })
-
-    # --- Optional technical extraction (explicit intent only) ---
-    ch6_blocks = [
-        {
-            "type": "paragraph",
-            "text": "从论文技术结构视角，提取论文中描述完整、具备明确输入输出的技术实现细节：",
-            "evidence_refs": default_ev
-        }
-    ]
-
-    if portable:
-        for p_item in portable:
-            p_name = p_item.get('name', '技术组件')
-            p_io = p_item.get('io', '数据输入输出契约')
-            p_src = p_item.get('source', default_ev)
-            p_notes = clean_visible_narrative(p_item.get('description_zh') or p_item.get('description') or p_item.get('transfer_notes') or '论文未提供额外实现说明。')
-            ch6_blocks.append({
-                "type": "callout",
-                "text": f"**{p_name}**\n- **I/O 契约**: {p_io}\n- **来源依据**: {', '.join(p_src)}\n- **技术实现说明**: {p_notes}",
-                "evidence_refs": p_src
-            })
-    else:
-        ch6_blocks.append({
-            "type": "paragraph",
-            "text": "当前证据未确认可独立拆分的技术组件；论文没有提供可独立提取的组件边界。",
-            "evidence_refs": default_ev
-        })
-
-    # --- Chapter 7: 结论与边界 ---
-    established_points = [c.get('statement') for c in claims if c.get('epistemic') in ('SUPPORTED', 'VERIFIED')]
-    if not established_points and claims:
-        established_points = [claims[0].get('statement')]
-    
-    unproven_points = []
-    if limitations:
-        unproven_points.extend([l.get('text') for l in limitations if l.get('text')])
-    if unresolved:
-        unproven_points.extend([u.get('issue') for u in unresolved if u.get('issue')])
-    if not unproven_points:
-        unproven_points = ["未在当前证据中确认超出基准范围的外推泛化性能。"]
-
-    concl_text = "【已确立的科学事实】\n" + "\n".join(f"- {p}" for p in established_points) + "\n\n【未验证边界与开放问题】\n" + "\n".join(f"- {u}" for u in unproven_points)
-    ch7_blocks = [
-        {
-            "type": "paragraph",
-            "text": concl_text,
-            "evidence_refs": default_ev
-        },
-        {
-            "type": "takeaway",
-            "text": f"【总结】《{paper_title}》在所设定的基准评测下得到上述结果；对未报告场景的结论仍需保持未决。",
-            "evidence_refs": default_ev
-        }
-    ]
-
-    chapters = [
-        {
-            "id": "one_minute",
-            "chapter_num": "01",
-            "title": "一分钟看懂这篇论文",
-            "lead": "快速全景概览：科学问题、核心突破、实证结论与边界约束。",
-            "blocks": ch1_blocks
-        },
-        {
-            "id": "problem",
-            "chapter_num": "02",
-            "title": "论文到底在解决什么问题",
-            "lead": "追溯研究脉络，厘清既有方案的科学局限与本文的切入动因。",
-            "blocks": ch2_blocks
-        },
-        {
-            "id": "method",
-            "chapter_num": "03",
-            "title": "方法到底怎么工作",
-            "lead": "深入端到端工作机制，拆解算法流程、核心公式与理论假设。",
-            "blocks": ch3_blocks
-        },
-        {
-            "id": "experiments",
-            "chapter_num": "04",
-            "title": "关键实验逐个说明",
-            "lead": "聚焦关键图表与基准对比，客观审视实证数据对主张的支撑强度。",
-            "blocks": ch4_blocks
-        },
-        {
-            "id": "synthesis",
-            "chapter_num": "05",
-            "title": "证据最终支持了什么",
-            "lead": "把证据、解释、替代解释与边界放回论文自身的科学论证链。",
-            "blocks": ch5_blocks
-        },
-        {
-            "id": "conclusions",
-            "chapter_num": "06",
-            "title": "结论与边界",
-            "lead": "总结论文已经建立的结论、适用边界与仍未解决的问题。",
-            "blocks": ch7_blocks
-        }
-    ]
-
-    if intent == 'PAPER_TECHNICAL_EXTRACTION':
-        chapters.insert(-1, {
-            "id": "technical_extraction",
-            "chapter_num": "06",
-            "title": "论文技术细节提取",
-            "lead": "仅整理论文明确给出的算法、输入输出与实验设置；严格局限于论文自身技术范围。",
-            "blocks": ch6_blocks
-        })
-
-    # Ensure sequential two-digit chapter numbers
-    for idx, ch in enumerate(chapters, 1):
-        ch["chapter_num"] = f"{idx:02d}"
-
-    meta_authors = paper.get('authors', [])
-    if isinstance(meta_authors, str):
-        meta_authors = [meta_authors]
-        
-    manuscript = {
-        "schema_version": "1.0",
-        "paper_id": paper_id,
-        "source_sha256": source_sha,
-        "created_at": datetime.now(timezone.utc).isoformat(),
-        "document": {
-            "title": paper_title,
-            "subtitle": "Evidentia 深度科学研读与证据重构报告",
-            "paper_meta": {
-                "authors": meta_authors,
-                "venue": paper.get('venue', ''),
-                "year": paper.get('year', 2026),
-                "doi": paper.get('doi', ''),
-                "pdf_sha256": source_sha
-            },
-            "executive_summary": {
-                "lead": f"《{paper_title}》聚焦于“{q_first}”。{c_first}",
-                "takeaways": ch1_takeaways,
-                "key_question": q_first,
-                "core_finding": c_first,
-                "core_boundary": boundary_summary
-            },
-            "story_spine": story_spine,
-            "chapters": chapters,
-            "appendix_summary": {
-                "claims_count": len(claims),
-                "figures_count": len(figs),
-                "tables_count": len(tables),
-                "conflicts_count": len(conflicts),
-                "unresolved_count": len(unresolved),
-                "evidence_atlas_ref": "evidence_atlas.html"
-            }
-        }
+    # A custom paper spine may omit evidence blocks. Add a local evidence
+    # section for every promoted figure/table that is otherwise absent.
+    present_ids = {
+        str(block.get("evidence_id"))
+        for section in sections for block in _items(section.get("blocks"))
+        if block.get("type") in ("figure", "table") and block.get("evidence_id")
     }
+    promoted = [eid for eid, role in roles.items() if role in ("narrative_core", "narrative_support")]
+    missing_blocks = []
+    for eid in promoted:
+        if str(eid) in present_ids:
+            continue
+        item = next((x for x in figs + tables if str(x.get("id")) == str(eid)), None)
+        if item is None:
+            continue
+        block = (_table_block(item, claims, roles, question="论文用这一证据检验什么问题？", section_refs=[str(eid)])
+                 if item in tables else
+                 _figure_block(item, claims, roles, question="论文用这一证据检验什么问题？", section_refs=[str(eid)]))
+        missing_blocks.append(block)
+    if missing_blocks:
+        sections.append({"id": f"spine-{len(sections)+1:02d}", "title": "关键证据与局部核验", "lead": "以下证据在论文的主张结构中被提升为正文材料，并在此处逐项说明其作用与边界。", "blocks": missing_blocks})
+    present_equations = {
+        str(block.get("evidence_id"))
+        for section in sections for block in _items(section.get("blocks"))
+        if block.get("type") == "equation" and block.get("evidence_id")
+    }
+    missing_equations = [block for block in _equation_blocks(source_map)
+                         if str(block.get("evidence_id")) not in present_equations]
+    if missing_equations:
+        sections.append({"id": f"spine-{len(sections)+1:02d}", "title": "公式与推导", "lead": "公式保留原始来源状态；无法可靠重建的内容会在验收时明确标记。", "blocks": missing_equations})
 
-    errs = schema_validate(manuscript, 'narrative_manuscript')
-    if errs:
-        raise ValueError(f"narrative_manuscript schema validation failed: {errs}")
+    # Keep every extracted figure/table addressable in the rendered Reader.
+    # Evidence promotion controls narrative emphasis, but omitting an
+    # audit-only asset breaks provenance links from synthesized claims.
+    present_visual_ids = {
+        str(block.get("evidence_id"))
+        for section in sections for block in _items(section.get("blocks"))
+        if block.get("type") in ("figure", "table") and block.get("evidence_id")
+    }
+    audit_visual_blocks = []
+    for item in figs:
+        if str(item.get("id")) not in present_visual_ids:
+            audit_visual_blocks.append(_figure_block(item, claims, roles, question="论文在此处提供了什么可核查的图像证据？", section_refs=[str(item.get("id"))]))
+    for item in tables:
+        if str(item.get("id")) not in present_visual_ids:
+            audit_visual_blocks.append(_table_block(item, claims, roles, question="论文在此处提供了什么可核查的表格证据？", section_refs=[str(item.get("id"))]))
+    if audit_visual_blocks:
+        sections.append({"id": f"spine-{len(sections)+1:02d}", "title": "证据目录与审计锚点", "lead": "未进入主叙事的图表仍保留为可定位的审计证据。", "blocks": audit_visual_blocks})
 
+    council_uncertain = []
+    for item in _items(council.get("unresolved")) + _items(council.get("items")):
+        if not isinstance(item, dict):
+            continue
+        status = str(item.get("status") or item.get("epistemic_state") or "").upper()
+        if status in ("UNRESOLVED", "AMBIGUOUS", "INSUFFICIENT_EVIDENCE", "TENSION"):
+            statement = item.get("statement") or item.get("canonical_statement")
+            if statement:
+                council_uncertain.append(_clause(statement))
+    council_uncertain = list(dict.fromkeys(council_uncertain))
+    topic_blocks = []
+    for topic in _items(synthesis.get("topics")):
+        parts = [_clause(topic.get("core_conclusion_zh") or topic.get("conclusion"))]
+        for key, prefix in (("mechanism_zh", "这说明"), ("reviewer_caveat_zh", "但证据边界是"), ("alternative_explanation_zh", "另一种解释是"), ("anomaly_zh", "同时需要注意")):
+            if topic.get(key): parts.append(f"{prefix}{_clause(topic.get(key))}")
+        topic_blocks.append({"type": "paragraph", "text": "。".join(parts) + "。", "evidence_refs": [str(x) for x in topic.get("evidence_refs", []) if x] or default_refs})
+    if not topic_blocks: topic_blocks.append({"type": "paragraph", "text": f"在已报告的证据范围内，{_clause(spine.get('justified_conclusion'))}。", "evidence_refs": default_refs})
+    if council_uncertain:
+        topic_blocks.append({"type": "paragraph", "text": f"证据之间仍保留未决之处：{'；'.join(council_uncertain)}。", "evidence_refs": default_refs})
+    sections.append({"id": f"spine-{len(sections)+1:02d}", "title": _truncate(spine.get("justified_conclusion")), "lead": "把实验证据、解释和反例放在同一条论证链上，判断结论成立的范围。", "blocks": topic_blocks})
+    boundary_items = limitations + anomalies + unresolved + council_uncertain or [_clean(x) for x in _items(spine.get("scope_and_limits"))]; boundary_text = "；".join(dict.fromkeys(x for x in boundary_items if x)) or UNCERTAIN
+    sections.append({"id": f"spine-{len(sections)+1:02d}", "title": f"边界与未决问题：{_truncate(boundary_text, 56)}", "lead": "论文已经建立的结论必须和尚未检验的范围一起阅读。", "blocks": [{"type": "paragraph", "text": f"目前可以确立的是：{_clause(spine.get('justified_conclusion'))}。", "evidence_refs": default_refs}, {"type": "paragraph", "text": f"仍需保留为开放问题的是：{_clause(boundary_text)}。", "evidence_refs": default_refs}]})
+    if intent == "PAPER_TECHNICAL_EXTRACTION":
+        details = "；".join(_clean(m.get("name")) + "：" + _clean(m.get("description")) for m in methods) or UNCERTAIN
+        sections.append({"id": "technical_extraction", "title": "论文中可复核的技术细节", "lead": "仅整理源论文明确给出的实现信息。", "blocks": [{"type": "paragraph", "text": details, "evidence_refs": default_refs}]})
+    for idx, section in enumerate(sections, 1):
+        section["chapter_num"] = f"{idx:02d}"; section.setdefault("blocks", [{"type": "paragraph", "text": _clean(section.get("lead")), "evidence_refs": default_refs}]); section.setdefault("lead", _clean(section.get("title")))
+    conflicts = _items(council.get("items")) or _items(pm.get("lens_conflicts")); meta_authors = paper.get("authors", []); meta_authors = meta_authors if isinstance(meta_authors, list) else [str(meta_authors)]
+    manuscript = {"schema_version": "2.0", "paper_id": pm.get("paper_id", root.name), "source_sha256": pm.get("source_sha256", ""), "created_at": datetime.now(timezone.utc).isoformat(), "document": {"title": title, "subtitle": "中文科学精读稿", "paper_meta": {"authors": meta_authors, "venue": paper.get("venue", ""), "year": paper.get("year"), "doi": paper.get("doi", ""), "pdf_sha256": pm.get("source_sha256", "")}, "executive_summary": {"lead": f"{_clause(spine.get('central_question'))}。{_clause(spine.get('justified_conclusion'))}。", "takeaways": [_clean(spine.get("central_question")), _clean(spine.get("central_move")), _clean(spine.get("justified_conclusion")), f"边界：{boundary_text}"], "key_question": _clean(spine.get("central_question")), "core_finding": _clean(spine.get("justified_conclusion")), "core_boundary": boundary_text}, "story_spine": spine, "chapters": sections, "appendix_summary": {"claims_count": len(claims), "figures_count": len(figs), "tables_count": len(tables), "conflicts_count": len(conflicts), "unresolved_count": len(unresolved), "evidence_atlas_ref": "evidence_atlas.html"}}}
+    errs = schema_validate(manuscript, "narrative_manuscript")
+    if errs: raise ValueError(f"narrative_manuscript schema validation failed: {errs}")
     return manuscript
 
-def main():
-    ap = argparse.ArgumentParser(description="Compose semantic narrative manuscript IR.")
-    ap.add_argument('--out', required=True, help="Workspace run directory containing model/")
-    ap.add_argument('--intent', choices=INTENTS, default=None, help="Explicit paper output intent; default follows run_state or PAPER_READING")
-    args = ap.parse_args()
-    root = Path(args.out)
-    
-    manuscript = compose_narrative_manuscript(root, intent=args.intent)
-    reader_dir = root / 'reader'
-    reader_dir.mkdir(parents=True, exist_ok=True)
-    out_file = reader_dir / 'narrative_manuscript.json'
-    out_file.write_text(json.dumps(manuscript, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
-    print(f"OK: Composed narrative manuscript -> {out_file}")
-    return 0
 
-if __name__ == '__main__':
-    sys.exit(main())
+def main():
+    ap = argparse.ArgumentParser(description="Compose the paper-specific Reader narrative."); ap.add_argument("--out", required=True); ap.add_argument("--intent", choices=INTENTS, default=None); args = ap.parse_args(); root = Path(args.out)
+    output = root / "reader/narrative_manuscript.json"; output.parent.mkdir(parents=True, exist_ok=True); output.write_text(json.dumps(compose_narrative_manuscript(root, args.intent), indent=2, ensure_ascii=False) + "\n", encoding="utf-8"); print(f"OK: Composed paper-specific narrative -> {output}")
+
+
+if __name__ == "__main__":
+    main()

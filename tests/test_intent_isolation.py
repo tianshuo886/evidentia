@@ -117,20 +117,23 @@ def test_scenario_2_technical_extraction_prompt(tmp_path):
     assert rs['intent'] == 'PAPER_TECHNICAL_EXTRACTION'
 
     # Technical extraction chapter MUST exist
-    html_text = (out_dir / 'reader/paper_reader.html').read_text(encoding='utf-8')
-    assert "论文技术细节提取" in html_text
+    # Technical extraction is an explicit secondary artifact so the primary
+    # Reader remains a paper narrative rather than a schema dump.
+    tech_html = (out_dir / 'reader/technical_extraction.html').read_text(encoding='utf-8')
+    assert "论文技术细节提取" in tech_html
 
     # Standalone technical extraction artifacts MUST exist
     tech_md = out_dir / 'reader/technical_extraction.md'
-    tech_html = out_dir / 'reader/technical_extraction.html'
+    tech_html_path = out_dir / 'reader/technical_extraction.html'
     assert tech_md.exists()
-    assert tech_html.exists()
+    assert tech_html_path.exists()
     assert "论文技术细节提取" in tech_md.read_text(encoding='utf-8')
 
     # MUST remain paper-scoped: NO apply directory, NO project transfer recommendations
     assert not (out_dir / 'apply').exists()
-    assert "迁移到你的项目" not in html_text
-    assert "建议用于项目" not in html_text
+    tech_surface = tech_html_path.read_text(encoding='utf-8')
+    assert "迁移到你的项目" not in tech_surface
+    assert "建议用于项目" not in tech_surface
 
 
 def test_scenario_3_project_apply_prompt(tmp_path):

@@ -43,7 +43,7 @@ def dispatch_agent_task(task_path, adapter=None, model=None, replay_dir=None, fi
     task_id = task.get('task_id', '')
     task_type = task.get('task_type', '')
     root = tp.parent.parent
-    if tp.parent.name in ('lens', 'verification', 'apply'):
+    if tp.parent.name in ('lens', 'verification', 'apply', 'cross_examination'):
         root = tp.parent.parent.parent
     if not task_type:
         if 'target_type' in task or 'target_id' in task or 'TASK-V' in task_id or 'verif' in task_id.lower():
@@ -52,8 +52,8 @@ def dispatch_agent_task(task_path, adapter=None, model=None, replay_dir=None, fi
             task_type = 'LENS'
         elif 'OPEN' in task_id:
             task_type = 'OPEN_READING'
-        elif 'RECON' in task_id:
-            task_type = 'RECONCILIATION'
+        elif 'RECON' in task_id or 'COUNCIL' in task_id:
+            task_type = 'COUNCIL_CHAIR'
         elif 'APPLY' in task_id:
             task_type = 'APPLY_LOCAL'
 
@@ -107,12 +107,22 @@ def dispatch_agent_task(task_path, adapter=None, model=None, replay_dir=None, fi
         elif task_type == 'LENS':
             import lens_fixture
             return lens_fixture.run_synthetic_lens(tp, model=model or "fixture-lens-model")
-        elif task_type == 'RECONCILIATION':
+        elif task_type in ('RECONCILIATION', 'COUNCIL_CHAIR'):
             import reconciliation_fixture
             return reconciliation_fixture.run_synthetic_reconciliation(tp)
         elif task_type == 'VERIFICATION':
             import verifier_fixture
             return verifier_fixture.run_synthetic_verification(tp)
+        elif task_type == 'CROSS_EXAMINATION':
+            from datetime import datetime, timezone
+            from validate_common import sha256
+            now = datetime.now(timezone.utc).isoformat()
+            package = root / 'model/frozen_evidence_package.json'
+            return {
+                'task_id': task_id, 'execution_kind': 'SIMULATED_FIXTURE',
+                'executor': {'kind': 'SIMULATED_FIXTURE', 'host': 'synthetic-fixture-runner', 'model': 'synthetic-cross-examination-v1', 'started_at': now, 'completed_at': now},
+                'result': {'schema_version': '1.0', 'examination_id': task_id, 'source_sha256': task.get('source_sha256', 'UNKNOWN'), 'evidence_package_sha256': sha256(package) if package.exists() else 'UNKNOWN', 'target_item_id': task.get('target_id', ''), 'challenger_lens': task.get('challenger_lens'), 'status': 'UNRESOLVED', 'question': task.get('statement', ''), 'answer': 'UNRESOLVED: synthetic fixture does not decide scientific questions.', 'evidence': []}
+            }
         elif task_type == 'APPLY_LOCAL':
             import apply_fixture
             root = tp.parent.parent

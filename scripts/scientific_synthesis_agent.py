@@ -15,17 +15,31 @@ from datetime import datetime, timezone
 sys.path.insert(0, str(Path(__file__).parent))
 from validate_common import load_json, schema_validate, sha256
 from agent_dispatch import is_fixture_enabled, dispatch_agent_task
-from build_argument_reconstruction import build_argument_reconstruction
+from lens_council import load_council, write_council_artifact
 
 LENSES = ('author', 'reviewer', 'mechanism', 'builder', 'anomaly', 'counterfactual')
 
-def extract_lens_findings(root):
-    findings_by_lens = {}
-    for l in LENSES:
-        lp = root / 'lens' / f'{l}.json'
-        if lp.exists():
-            data = load_json(lp)
-            findings_by_lens[l] = data.get('findings', [])
+def extract_council_findings(council):
+    """Project only the Chair's council items into synthesis input.
+
+    This is intentionally not a reader for lens/*.json.  Round-1 reports are
+    private inputs to the Council; the synthesis boundary receives the Chair's
+    normalized item plus provenance and unresolved state.
+    """
+    findings_by_lens = {l: [] for l in LENSES}
+    for item in council.get('items', []):
+        finding = {
+            'id': item.get('id', 'COUNCIL-ITEM'),
+            'statement': item.get('canonical_statement', item.get('statement', '')),
+            'evidence': item.get('source', item.get('evidence', [])),
+            'epistemic': item.get('epistemic_state', 'UNRESOLVED'),
+            'council_status': item.get('status', item.get('relation', 'UNRESOLVED')),
+            'unresolved': item.get('status') == 'UNRESOLVED' or item.get('verifier_status') in ('PENDING', 'PENDING_VERIFICATION')
+        }
+        lenses = item.get('supporting_lenses') or ['author']
+        for lens in lenses:
+            if lens in findings_by_lens:
+                findings_by_lens[lens].append(dict(finding))
     return findings_by_lens
 
 def synthesize_topics_dynamically(pm, rec_data, lens_findings, arg_reconstruction):
@@ -223,7 +237,7 @@ def synthesize_topics_dynamically(pm, rec_data, lens_findings, arg_reconstructio
     # 5. 保留的跨透镜科学争议与张力 (Preserved Tensions & Contradictions)
     # Strictly preserve conflicts without majority voting
     for c in conflicts:
-        if c.get('status') in ('TENSION', 'CONTRADICTION'):
+        if c.get('status') in ('TENSION', 'CONTRADICTION', 'UNRESOLVED'):
             cid = f"SYN-{topic_counter:02d}"
             topic_counter += 1
             c_stmt = c.get('canonical_statement', c.get('statement', '科学证据定性分歧'))
@@ -241,7 +255,7 @@ def synthesize_topics_dynamically(pm, rec_data, lens_findings, arg_reconstructio
                 "anomaly_zh": None,
                 "alternative_explanation_zh": None,
                 "builder_note_zh": None,
-                "confidence": "TENSION",
+                "confidence": "UNCERTAIN" if c.get('status') == 'UNRESOLVED' else "TENSION",
                 "evidence_refs": c_ev,
                 "contributing_lenses": supp_lenses,
                 "unresolved": [c_stmt]
@@ -258,17 +272,29 @@ def run_scientific_synthesis(out_dir, fixture=None, replay_dir=None, adapter=Non
     pm = load_json(pm_path)
     src_sha = pm.get('source_sha256') or sha256(root / 'source/paper.pdf')
 
-    rec_p = root / 'model/lens_reconciliation.json'
-    rec_data = load_json(rec_p) if rec_p.exists() else {}
-
-    lens_findings = extract_lens_findings(root)
+    # Scientific Synthesis has one legal deliberation input: the Council
+    # Chair artifact.  The compatibility loader creates a council-shaped view
+    # only for pre-#14 workspaces; normal runs always have lens_council.json.
+    council_path = root / 'model/lens_council.json'
+    council = load_council(root, allow_compat=True)
+    # One-time migration for legacy fixtures/workspaces that predate #14.
+    # Subsequent consumers see a canonical Chair artifact.
+    if not council_path.exists() and (root / 'model/frozen_evidence_package.json').exists():
+        council = write_council_artifact(root, council)
+    rec_data = council
+    lens_findings = extract_council_findings(council)
 
     # Ensure argument reconstruction artifact is loaded or generated
     arg_p = root / 'model/argument_reconstruction.json'
     if arg_p.exists():
         arg_recon = load_json(arg_p)
     else:
-        arg_recon = build_argument_reconstruction(root)
+        # Do not reopen Round-1 reports at the synthesis boundary. Older
+        # workspaces can still synthesize from the paper model alone.
+        arg_recon = pm.get('argument_reconstruction', {}) or {
+            'central_question': (pm.get('questions') or [{}])[0].get('text', 'NOT_STATED'),
+            'central_thesis': (pm.get('claims') or [{}])[0].get('statement', 'NOT_STATED')
+        }
 
     topics = synthesize_topics_dynamically(pm, rec_data, lens_findings, arg_recon)
 
@@ -277,7 +303,7 @@ def run_scientific_synthesis(out_dir, fixture=None, replay_dir=None, adapter=Non
     # Grounded summary and overall assessment without generic ML boilerplate
     high_count = sum(1 for t in topics if t.get('confidence') == 'HIGH')
     partial_count = sum(1 for t in topics if t.get('confidence') in ('PARTIAL', 'LOW'))
-    tension_count = sum(1 for t in topics if t.get('confidence') in ('TENSION', 'CONTRADICTION'))
+    tension_count = sum(1 for t in topics if t.get('confidence') in ('TENSION', 'CONTRADICTION', 'UNCERTAIN'))
 
     assessed_thesis = arg_recon.get('assessed_argument', {}).get('justified_thesis') or f"在论文报告的基准设定下，核心实证链条基本闭环。"
 
@@ -293,8 +319,10 @@ def run_scientific_synthesis(out_dir, fixture=None, replay_dir=None, adapter=Non
         "schema_version": "1.0",
         "paper_id": pm.get('paper_id', root.name),
         "source_sha256": src_sha,
+        "council_id": council.get('council_id', 'UNKNOWN_COUNCIL'),
+        "evidence_package_sha256": council.get('evidence_package_sha256', ''),
         "created_at": datetime.now(timezone.utc).isoformat(),
-        "summary_zh": f"本综合报告基于六大独立科学透镜对《{paper_title}》进行动态交叉审视，涵盖论证有效性、因果解释、边界异常及工程可迁移性。",
+        "summary_zh": f"本综合报告基于 Evidence-grounded Lens Council 的 Chair 输出，对《{paper_title}》进行动态交叉审视，涵盖论证有效性、因果解释、边界异常及工程可迁移性。",
         "overall_scientific_assessment_zh": overall_assessment,
         "topics": topics
     }

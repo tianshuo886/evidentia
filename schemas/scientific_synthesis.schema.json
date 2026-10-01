@@ -22,6 +22,12 @@
     "created_at": {
       "type": "string"
     },
+    "council_id": {
+      "type": "string"
+    },
+    "evidence_package_sha256": {
+      "type": "string"
+    },
     "summary_zh": {
       "type": "string"
     },
@@ -104,6 +110,9 @@
             "items": {
               "type": "string"
             }
+          },
+          "council_status": {
+            "type": "string"
           },
           "contradictions_preserved": {
             "type": "array",

@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
-"""Audit that the Reader preserves canonical content, bidirectional navigation, and O/I/A separation.
+"""Audit that the Reader preserves canonical content and provenance.
 
 Phase B6 Reader Audit v2:
 - Semantic coverage of claims, figures, and tables
 - Broken anchor detection: every <a href="#ID"> must match an existing element id
 - Bidirectional link check: Claim <-> Evidence round trips
-- O/I/A preservation: Observation, Author Interpretation, Reader Assessment present
+- O/I/A remains available in the separate Evidence Atlas, never in the human narrative
 - Missing conflicts & uncertainty checks
 - Research Delta provenance check
 """
 import argparse, json, re, sys
 from pathlib import Path
-from validate_common import sha256, schema_validate, load_json
+from validate_common import sha256, schema_validate, load_json, all_ids as collect_ids
 
 def main():
     ap = argparse.ArgumentParser()
@@ -47,28 +47,23 @@ def main():
                 errs.append(f'missing figure asset file: {f["file"]}')
 
         # 2. Broken anchor detection
-        all_ids = set(re.findall(r'\bid=["\']([^"\']+)["\']', html_text))
+        html_ids = set(re.findall(r'\bid=["\']([^"\']+)["\']', html_text))
         all_hrefs = set(re.findall(r'\bhref=["\']#([^"\']+)["\']', html_text))
-        broken_anchors = all_hrefs - all_ids
+        broken_anchors = all_hrefs - html_ids
         # Exclude general or top links if any
         broken_anchors = {a for a in broken_anchors if a not in ('top', '')}
         if broken_anchors:
             errs.append(f'broken anchor links in reader.html: {sorted(broken_anchors)}')
 
-        # 3. O/I/A preservation
-        for c in pm.get('claims', []):
-            cid = c.get('id')
-            if cid in all_ids:
-                # Check that Observation, Author Interpretation, Reader Assessment labels exist in claim card
-                if 'Observation' not in html_text or 'Author Interpretation' not in html_text or 'Reader Assessment' not in html_text:
-                    errs.append(f'O/I/A structure missing in reader for claim {cid}')
+        # 3. The human Reader must not expose audit card vocabulary. The
+        # separate Evidence Atlas owns the O/I/A grid.
+        for token in ('Observation', 'Author Interpretation', 'Reader Assessment', 'O/I/A', 'claim-card', '证据卡片', 'Lens', '透镜'):
+            if token in html_text:
+                errs.append(f'audit vocabulary leaked into primary reader: {token}')
 
-        # 4. Uncertainty & conflict visibility
-        if pm.get('lens_conflicts'):
-            for conf in pm['lens_conflicts']:
-                cid = conf.get('id')
-                if cid and cid not in html_text:
-                    errs.append(f'conflict {cid} not rendered in reader.html')
+        # 4. Uncertainty and conflicts are rendered in the separate Atlas. The
+        # human narrative carries their scientific consequence without exposing
+        # conflict IDs or schema cards.
 
         if not pm.get('unresolved') and any(c.get('epistemic') in ('AMBIGUOUS', 'INSUFFICIENT_EVIDENCE', 'UNRESOLVED') for c in pm.get('claims', [])):
             errs.append('unresolved claim is not visible in unresolved list')
@@ -80,7 +75,7 @@ def main():
                     delta = json.load(open(p, encoding='utf-8'))
                     for tu in delta.get('transfer_units', []):
                         for s_ref in tu.get('source', []):
-                            if s_ref not in all_ids and not s_ref.startswith(('p.', 'Fig.', 'Table.')):
+                            if s_ref not in html_ids and not s_ref.startswith(('p.', 'Fig.', 'Table.')):
                                 errs.append(f'delta transfer unit {tu.get("id")} cites unknown paper evidence: {s_ref}')
                 except Exception as e:
                     errs.append(f'error auditing delta provenance: {e}')
@@ -149,7 +144,14 @@ def main():
                         valid_arg_ids = {u['id'] for u in arg_doc.get('argument_units', [])}
                     
                     valid_claim_ids = {c['id'] for c in pm.get('claims', [])}
-                    valid_ev_ids = all_ids | {f"p.{i}" for i in range(1, 100)}
+                    valid_ev_ids = html_ids | {f"p.{i}" for i in range(1, 100)}
+                    valid_ev_ids |= {c.get('id') for c in pm.get('claims', []) if c.get('id')}
+                    valid_ev_ids |= {a.removeprefix('evidence-') for a in html_ids if a.startswith('evidence-')}
+                    # Argument and source reconstruction artifacts may expose
+                    # typed evidence IDs (for example B02/B07) that are not
+                    # HTML element IDs.  They remain valid provenance refs.
+                    valid_ev_ids |= set(collect_ids(load_json(r / 'model/argument_reconstruction.json'))) if (r / 'model/argument_reconstruction.json').exists() else set()
+                    valid_ev_ids |= set(collect_ids(pm))
                     
                     for nu in narrative_units:
                         for arg_ref in nu.get('argument_unit_ids', []):

@@ -1,18 +1,13 @@
 #!/usr/bin/env python3
-"""Render Chinese-first Kami Long-Doc Paper Reader for Evidentia (Issue #9).
-
-Principle: "Evidentia owns truth. AI owns narrative. Kami owns presentation."
+"""Render the human-facing Chinese Paper Reader.
 
 Responsibilities:
 - Reads semantic narrative manuscript IR: reader/narrative_manuscript.json
   (generates it via narrative_composer_agent if missing).
 - Formats narrative manuscript into editorial Kami long-doc HTML: reader/paper_reader.html
 - Formats narrative manuscript into editorial Markdown: reader/paper_reader.md
-- Renders printable PDF snapshot via Kami presentation backend: reader/paper_reader.pdf
-- Strictly separates human reading flow from audit chrome:
-  * No dashboard grids, cards-per-field, or badge storms in main chapters.
-  * Figures, equations, and takeaways are woven into narrative argument flow.
-  * Appendix provides calm summary and links to reader/evidence_atlas.html.
+- Renders a continuous paper narrative; audit detail remains in the separately
+  rendered Evidence Atlas and is linked only from a quiet appendix.
 """
 import argparse, html, json, os, re, sys
 from pathlib import Path
@@ -54,23 +49,18 @@ def normalize_latex(raw):
 def _inline_evidence_cites(ev_refs):
     if not ev_refs:
         return ''
-    cites = ' '.join(f'<a href="#{esc(e)}" class="evidence-cite" aria-label="证据 {esc(e)}">[{esc(e)}]</a>' for e in ev_refs)
+    # Only source assets and page anchors have destinations in the human
+    # surface; claim IDs remain in the semantic IR and Atlas.
+    visible = [e for e in ev_refs if str(e).startswith(('F', 'T', 'EQ', 'p.'))]
+    cites = ' '.join(f'<a href="#{esc(e) if str(e).startswith("p.") else "evidence-" + esc(e)}" class="evidence-cite" aria-label="证据 {esc(e)}">[{esc(e)}]</a>' for e in visible)
+    if not cites:
+        return ''
     return f' <span class="evidence-cites">{cites}</span>'
 
 KAMI_LONG_DOC_CSS = """
-/* Regular weight */
-@font-face {
-  font-family: "TsangerJinKai02";
-  src: url("https://cdn.jsdelivr.net/gh/tw93/Kami@main/assets/fonts/TsangerJinKai02-W04.ttf") format("truetype");
-  font-weight: 400;
-  font-style: normal;
-}
-@font-face {
-  font-family: "TsangerJinKai02";
-  src: url("https://cdn.jsdelivr.net/gh/tw93/Kami@main/assets/fonts/TsangerJinKai02-W05.ttf") format("truetype");
-  font-weight: 500;
-  font-style: normal;
-}
+/* Keep release rendering offline and deterministic.  The prior remote font
+   fetch could block a release on a CDN/network timeout; installed CJK fonts
+   remain the presentation fallback. */
 
 @page {
   size: A4;
@@ -85,7 +75,7 @@ KAMI_LONG_DOC_CSS = """
   }
 
   @bottom-center {
-    content: counter(page) " · Evidentia Deep Research";
+    content: counter(page);
     font-family: "TsangerJinKai02", "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", Georgia, serif;
     font-size: 9pt;
     color: #6b6a64;
@@ -263,6 +253,7 @@ p {
   margin: 0 0 10pt 0;
   line-height: 1.55;
   color: var(--near-black);
+  break-inside: avoid;
 }
 
 /* ========== CALLOUTS & TAKEAWAYS ========== */
@@ -364,6 +355,9 @@ figcaption {
 .evidence-cite:hover {
   text-decoration: underline;
 }
+@media print {
+  .evidence-cite { display: none; }
+}
 .evidence-binding { font-family: var(--sans); font-size: 8pt; color: var(--brand); margin-right: 5pt; }
 
 /* ========== APPENDIX ========== */
@@ -383,30 +377,6 @@ figcaption {
   font-weight: 500;
   cursor: pointer;
   color: var(--brand);
-}
-.atlas-portal-card {
-  background: var(--ivory);
-  border: 1pt solid var(--brand);
-  border-radius: 4pt;
-  padding: 14pt;
-  margin: 16pt 0;
-  text-align: center;
-  break-inside: avoid;
-}
-.atlas-portal-card a.btn-atlas {
-  display: inline-block;
-  background: var(--brand);
-  color: var(--ivory);
-  font-family: var(--sans);
-  font-size: 10pt;
-  font-weight: 500;
-  text-decoration: none;
-  padding: 6pt 16pt;
-  border-radius: 4pt;
-  margin-top: 8pt;
-}
-.atlas-portal-card a.btn-atlas:hover {
-  background: var(--brand);
 }
 """
 
@@ -441,24 +411,16 @@ def render_block_html(b: dict, root: Path) -> str:
         analysis = esc(b.get('analysis', ''))
         analysis = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', analysis)
         analysis = analysis.replace('\n\n', '<br>')
-        binding = f"<span class='evidence-binding'>证据：{esc(fid)}</span>"
         asset = b.get('asset')
         img_html = ""
         if asset and (root / asset).exists():
             img_html = f"<img src='../{esc(asset)}' alt='{cap}' />"
             
-        supp_claims = [e for e in b.get('evidence_refs', []) if e.startswith('C')]
-        if not supp_claims and b.get('supports'):
-            supp_claims = [c for c in b.get('supports', []) if c.startswith('C')]
-        supp_links = " ".join([f'<a href="#{esc(c)}" class="evidence-cite">[支撑主张: {esc(c)}]</a>' for c in supp_claims]) if supp_claims else "<em>None</em>"
-        supp_row = f"<div class='supports-claims' style='font-size:8.5pt; color:var(--stone); margin-top:4pt;'><strong>Supports Claims:</strong> {supp_links}</div>"
-        
         return f"""
-        <figure class="kami-figure" id="{esc(fid)}">
+        <figure class="kami-figure" id="evidence-{esc(fid)}">
           {img_html}
-          <figcaption>{cap}</figcaption>
-          <div class="figure-analysis">{binding}{analysis}</div>
-          {supp_row}
+          <figcaption>{cap} <span class="evidence-binding">〔{esc(fid)}〕</span></figcaption>
+          <div class="figure-analysis">{analysis}{cites}</div>
         </figure>
         """
         
@@ -474,9 +436,10 @@ def render_block_html(b: dict, root: Path) -> str:
         else:
             math_html = "<span class='equation-uncertain'>公式无法可靠重建；已保留源证据状态。</span>"
         return f"""
-        <div class='equation-block' id='{esc(eq_id)}'>
+        <div class='equation-block' id='evidence-{esc(eq_id)}'>
+          <div class='eq-label'>公式 {esc(eq_id)}</div>
           <div class='math-display'>{math_html}</div>
-          <div class='eq-explanation'>{cites}{exp}</div>
+          <div class='eq-explanation'>{exp}</div>
         </div>
         """
         
@@ -484,23 +447,16 @@ def render_block_html(b: dict, root: Path) -> str:
         tid = b.get('evidence_id', 'TAB')
         cap = esc(b.get('caption', ''))
         analysis = esc(b.get('analysis', ''))
-        binding = f"<span class='evidence-binding'>证据：{esc(tid)}</span>"
         analysis = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', analysis)
         img_html = ''
         asset = b.get('asset')
         if asset and (root / asset).exists():
             img_html = f"<img src='../{esc(asset)}' alt='{cap}' class='table-asset' />"
-        supp_claims = [e for e in b.get('evidence_refs', []) if e.startswith('C')]
-        if not supp_claims and b.get('supports'):
-            supp_claims = [c for c in b.get('supports', []) if c.startswith('C')]
-        supp_links = " ".join([f'<a href="#{esc(c)}" class="evidence-cite">[支撑主张: {esc(c)}]</a>' for c in supp_claims]) if supp_claims else "<em>None</em>"
-        supp_row = f"<div class='supports-claims' style='font-size:8.5pt; color:var(--stone); margin-top:4pt;'><strong>Supports Claims:</strong> {supp_links}</div>"
         return f"""
-        <div class="takeaway" id="{esc(tid)}">
-          <div class="takeaway-label">定量评测表: {cap}</div>
+        <div class="takeaway" id="evidence-{esc(tid)}">
+          <div class="takeaway-label">{cap} <span class="evidence-binding">〔{esc(tid)}〕</span></div>
           {img_html}
-          <div style="font-size:9.5pt; margin-top:6pt;">{binding}{analysis}</div>
-          {supp_row}
+          <div style="font-size:9.5pt; margin-top:6pt;">{analysis}{cites}</div>
         </div>
         """
         
@@ -512,346 +468,107 @@ def render_block_html(b: dict, root: Path) -> str:
     return ""
 
 def render_paper_reader_html(manuscript: dict, root: Path) -> str:
+    """Render the story as an editorial document, without audit vocabulary."""
     doc = manuscript.get('document', {})
-    title = doc.get('title', 'Untitled Paper')
-    subtitle = doc.get('subtitle', 'Evidentia 深度科学研读与证据重构报告')
+    title = doc.get('title', '未命名论文')
+    subtitle = doc.get('subtitle', '中文科学精读稿')
     meta = doc.get('paper_meta', {})
     authors = meta.get('authors', [])
-    authors_str = ", ".join(authors) if authors else "Paper Authors"
-    venue = meta.get('venue') or 'Academic Archive'
-    year = meta.get('year') or 2026
-    
-    exec_summary = doc.get('executive_summary', {})
+    authors_str = '、'.join(authors) if authors else ''
+    venue = meta.get('venue') or ''
+    year = meta.get('year') or ''
     chapters = doc.get('chapters', [])
-    app_sum = doc.get('appendix_summary', {})
-    
-    # TOC generation with descriptive subtitles to ensure balanced line length & avoid typographic orphans
-    toc_subtitles = {
-        "one_minute": "核心突破与实证结论",
-        "problem": "背景与科学缺口",
-        "method": "算法架构与计算流",
-        "experiments": "实证对比与研判",
-        "synthesis": "证据与结论",
-        "technical_extraction": "论文技术细节",
-        "conclusions": "确立事实与开放问题",
-        "appendix": "数据溯源与工作台"
-    }
     toc_items = []
-    for idx, ch in enumerate(chapters, 1):
-        cid = ch.get('id', f'ch-{idx}')
-        cnum = ch.get('chapter_num', f'{idx:02d}')
-        ctitle = ch.get('title', '')
-        sub = toc_subtitles.get(cid, "研读与分析")
-        toc_items.append(f"""
-        <div class="toc-item">
-          <a class="toc-title" href="#ch-{esc(cid)}">
-            <span class="toc-num">{esc(cnum)}</span> · {esc(ctitle)} · {esc(sub)}
-          </a>
-        </div>
-        """)
-        
-    app_num = f"{len(chapters) + 1:02d}"
-    # Append appendix to TOC
-    toc_items.append(f"""
-    <div class="toc-item">
-      <a class="toc-title" href="#ch-appendix">
-        <span class="toc-num">{esc(app_num)}</span> · 证据审计附录 · 数据溯源与工作台
-      </a>
-    </div>
-    """)
-    
-    # Chapters generation with editorial subtitles
-    chapter_subtitles = {
-        "one_minute": "核心突破与实证结论",
-        "problem": "背景动机与科学缺口",
-        "method": "算法架构与理论假设",
-        "experiments": "实证对比与反常审视",
-        "synthesis": "证据、解释与边界",
-        "technical_extraction": "论文技术细节",
-        "conclusions": "确立事实与开放问题",
-        "appendix": "数据溯源与检验元数据"
-    }
+    for idx, chapter in enumerate(chapters, 1):
+        cid = chapter.get('id', f'spine-{idx:02d}')
+        toc_items.append(f"<div class='toc-item'><a class='toc-title' href='#ch-{esc(cid)}'><span class='toc-num'>{idx:02d}</span> · {esc(chapter.get('title', ''))}</a></div>")
+    toc_items.append(f"<div class='toc-item'><a class='toc-title' href='#ch-sources'><span class='toc-num'>{len(chapters)+1:02d}</span> · 证据来源与页面锚点</a></div>")
     chapters_html = []
-    for ch in chapters:
-        cid = ch.get('id', '')
-        cnum = ch.get('chapter_num', '')
-        ctitle = ch.get('title', '')
-        csub = chapter_subtitles.get(cid, "科学研读与分析")
-        clead = ch.get('lead', '')
-        blocks = ch.get('blocks', [])
-        
-        b_html = "\n".join([render_block_html(b, root) for b in blocks])
-        
-        chapters_html.append(f"""
-        <section class="chapter" id="ch-{esc(cid)}">
-          <div class="chapter-num">Chapter {esc(cnum)}</div>
-          <h1>{esc(ctitle)}：{esc(csub)}</h1>
-          <div class="lead">{esc(clead)}</div>
-          <div class="chapter-body">
-            {b_html}
-          </div>
-        </section>
-        """)
-
-    # Appendix section
-    pm = load_json(root / 'model/paper_model.json') if (root / 'model/paper_model.json').exists() else {}
-    pm_claims = pm.get('claims', [])
-    pm_conflicts = pm.get('lens_conflicts', [])
-    
-    claims_appendix_html = []
-    for c in pm_claims:
-        cid = c.get('id', '')
-        c_stmt = clean_visible_narrative(c.get('statement', ''))
-        c_ev = c.get('evidence', [])
-        c_ev_links = " ".join([f'<a href="#{esc(e)}" class="evidence-cite">[实证依据: {esc(e)}]</a>' for e in c_ev])
-        c_obs = clean_visible_narrative(c.get('observation', 'Direct empirical observation.'))
-        c_auth = clean_visible_narrative(c.get('author_interpretation', 'Intended author interpretation.'))
-        c_read = clean_visible_narrative(c.get('reader_assessment', 'Evaluated reader assessment.'))
-        claims_appendix_html.append(f"""
-        <article class="claim-card" id="{esc(cid)}" style="background:var(--ivory); border:1pt solid var(--border); border-radius:4pt; padding:10pt; margin-bottom:10pt;">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <strong><a href="#{esc(cid)}">[{esc(cid)}]</a> {esc(c_stmt)}</strong>
-            <span class="tag">【状态: {esc(c.get('epistemic', 'SUPPORTED'))} · 证据闭环】</span>
-          </div>
-          <div style="font-size:8.5pt; color:var(--stone); margin:4pt 0;">
-            <strong>Linked Evidence:</strong> {c_ev_links if c_ev_links else '<em>None</em>'} · <a href="#p.{esc(c.get('page', 1))}">p.{esc(c.get('page', 1))}</a>
-          </div>
-          <div style="font-size:9pt; margin-top:6pt;">
-            <p><strong>Observation (客观数据):</strong> {esc(c_obs)}</p>
-            <p><strong>Author Interpretation (作者推断):</strong> {esc(c_auth)}</p>
-            <p><strong>Reader Assessment (读者研判):</strong> {esc(c_read)}</p>
-          </div>
-        </article>
-        """)
-        
-    conflicts_appendix_html = []
-    for conf in pm_conflicts:
-        cid = conf.get('id', '')
-        c_stmt = clean_visible_narrative(conf.get('statement', ''))
-        c_res = clean_visible_narrative(conf.get('resolution', ''))
-        conflicts_appendix_html.append(f"""
-        <div class="conflict-card" id="{esc(cid)}" style="background:var(--ivory); border-left:2.5pt solid var(--brand); padding:8pt 10pt; margin-bottom:8pt;">
-          <strong>{esc(cid)}: {esc(c_stmt)}</strong>
-          <p style="font-size:9pt; margin-top:4pt;">{esc(c_res)}</p>
-        </div>
-        """)
-        
-    figs_appendix_html = []
-    for f in pm.get('figures', []):
-        fid = f.get('id')
-        if fid:
-            cap = f.get('caption_original') or f.get('title') or ''
-            figs_appendix_html.append(f"""
-            <div class="evidence-item" id="{esc(fid)}" style="margin-bottom:6pt; font-size:9pt;">
-              <strong>{esc(f.get('paper_label', fid))}</strong>: {esc(cap[:120])}
-              <a href="evidence_atlas.html#{esc(fid)}" style="margin-left:6pt; font-size:8.5pt;">[证据节点 →]</a>
-            </div>
-            """)
-
-    tables_appendix_html = []
-    for t in pm.get('tables', []):
-        tid = t.get('id')
-        if tid:
-            cap = t.get('caption_original') or t.get('title') or ''
-            tables_appendix_html.append(f"""
-            <div class="evidence-item" id="{esc(tid)}" style="margin-bottom:6pt; font-size:9pt;">
-              <strong>{esc(t.get('paper_label', tid))}</strong>: {esc(cap[:120])}
-              <a href="evidence_atlas.html#{esc(tid)}" style="margin-left:6pt; font-size:8.5pt;">[证据节点 →]</a>
-            </div>
-            """)
-
-    page_numbers = {1}
-    for c in pm_claims:
-        if c.get('page'):
-            page_numbers.add(c['page'])
-        for ev in c.get('evidence', []):
-            m = re.match(r'^p\.([0-9]+)$', str(ev))
-            if m:
-                page_numbers.add(int(m.group(1)))
-    for f in pm.get('figures', []):
-        if f.get('page'):
-            page_numbers.add(f['page'])
-    for t in pm.get('tables', []):
-        if t.get('page'):
-            page_numbers.add(t['page'])
-    sm_p = root / 'model/source_map.json'
-    if sm_p.exists():
-        try:
-            sm_data = load_json(sm_p)
-            for pg in sm_data.get('pages', []):
-                if pg.get('number'):
-                    page_numbers.add(pg['number'])
-        except Exception:
-            pass
-
-    page_anchors_html = "、".join([
-        f"<a id='p.{p}' href='#p.{p}' style='font-size:8pt; color:var(--stone);'>p.{p}</a>"
-        for p in sorted(page_numbers)
-    ])
-
-    appendix_html = f"""
-    <section class="chapter appendix" id="ch-appendix">
-      <div class="chapter-num">Appendix</div>
-      <h1>证据审计附录 (Claim-Centric Evidence Atlas)</h1>
-      <div class="lead">全景证据溯源与检验元数据概览。完整卡片细节由独立 Evidence Atlas 工作台承载。</div>
-      
-      <div class="atlas-portal-card">
-        <h3>深入证据审计与双向追溯</h3>
-        <p style="font-size:9.5pt; color:var(--dark-warm); margin-top:6pt;">
-          当前论文模型共沉淀 <strong>{app_sum.get('claims_count', len(pm_claims))}</strong> 项主张、
-          <strong>{app_sum.get('figures_count', 0)}</strong> 组图表、
-          <strong>{app_sum.get('tables_count', 0)}</strong> 个数据表、
-          以及 <strong>{app_sum.get('conflicts_count', len(pm_conflicts))}</strong> 个证据张力与未决争议焦点。
-        </p>
-        <a href="evidence_atlas.html" class="btn-atlas">打开完整证据图谱 (Evidence Atlas) →</a>
-      </div>
-
-      <details open>
-        <summary>点击展开：核心主张与 O/I/A 证据卡片列表 ({len(pm_claims)} 个)</summary>
-        <div style="font-size:9.5pt; margin-top:10pt; line-height:1.55;">
-          <p>Evidentia 严格执行 <strong>Observation</strong>（客观实证数据）、<strong>Author Interpretation</strong>（作者主观推断）与 <strong>Reader Assessment</strong>（读者中立研判）三权分立原则。所有结论均通过多源证据网格交叉互审。</p>
-          <div style="margin-top:10pt;">
-            {''.join(claims_appendix_html)}
-          </div>
-        </div>
-      </details>
-      {f"<details open><summary>点击展开：多源证据争议焦点与验证记录 ({len(pm_conflicts)} 个)</summary><div style='font-size:9.5pt; margin-top:10pt; line-height:1.55;'>{''.join(conflicts_appendix_html)}</div></details>" if pm_conflicts else ""}
-      <details>
-        <summary>点击展开：全景图表与数据表索引 ({len(pm.get('figures', [])) + len(pm.get('tables', []))} 项)</summary>
-        <div style="font-size:9pt; margin-top:10pt; line-height:1.55;">
-          {''.join(figs_appendix_html)}
-          {''.join(tables_appendix_html)}
-        </div>
-      </details>
-      <div style="margin-top:12pt;">
-        <strong>Page Anchors:</strong> {page_anchors_html}
-      </div>
+    for idx, chapter in enumerate(chapters, 1):
+        cid = chapter.get('id', f'spine-{idx:02d}')
+        blocks = '\n'.join(render_block_html(block, root) for block in chapter.get('blocks', []))
+        chapters_html.append(f"<section class='chapter' id='ch-{esc(cid)}'><h1>{esc(chapter.get('title', ''))}</h1><div class='lead'>{esc(chapter.get('lead', ''))}</div><div class='chapter-body'>{blocks}</div></section>")
+    app = doc.get('appendix_summary', {})
+    spine = doc.get('story_spine', {})
+    spine_source = f"""
+    <section class='chapter spine-source' id='ch-spine-source'>
+      <h1>论证主线原文线索</h1>
+      <p>{esc(spine.get('central_question', ''))}</p>
+      <p>{esc(spine.get('central_move', ''))}</p>
+      <p>{esc(spine.get('justified_conclusion', ''))}</p>
     </section>
     """
-
-    full_html = f"""<!doctype html>
-<!-- ==================================================================
-     Evidentia Chinese-first Scientific Reader · Kami Long-Doc System
-     Evidentia owns truth. AI owns narrative. Kami owns presentation.
-     ================================================================== -->
-<html lang="zh-CN">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{esc(title)} · Evidentia 深度科学精读</title>
-<style>{KAMI_LONG_DOC_CSS}</style>
-</head>
+    refs = []
+    pm = load_json(root / 'model/paper_model.json') if (root / 'model/paper_model.json').exists() else {}
+    page_nums = {1}
+    for item in pm.get('claims', []) + pm.get('figures', []) + pm.get('tables', []):
+        if item.get('page'): page_nums.add(item['page'])
+        for ref in item.get('evidence', []):
+            if str(ref).startswith('p.'):
+                try: page_nums.add(int(str(ref)[2:]))
+                except ValueError: pass
+    refs_html = '、'.join(f"<a id='p.{n}' href='#p.{n}'>p.{n}</a>" for n in sorted(page_nums))
+    appendix = f"""
+    <section class='chapter appendix' id='ch-sources'>
+      <h1>证据来源与页面锚点</h1>
+      <div class='lead'>正文中的图表、公式和引文都保留了返回源材料的线索；需要逐项核对时可打开独立的审计视图。</div>
+      <p>当前稿件引用了 {app.get('claims_count', len(pm.get('claims', [])))} 条主张、{app.get('figures_count', len(pm.get('figures', [])))} 组图表和 {app.get('tables_count', len(pm.get('tables', [])))} 张数据表。</p>
+      <p>页面锚点：{refs_html}</p>
+      <p><a href='evidence_atlas.html'>查看逐项来源与核验记录</a></p>
+    </section>
+    """
+    meta_line = ' · '.join(x for x in (authors_str, venue, str(year)) if x)
+    return f"""<!doctype html>
+<html lang='zh-CN'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'><title>{esc(title)}</title><style>{KAMI_LONG_DOC_CSS}</style></head>
 <body>
-
-<!-- ═════════════ COVER ═════════════ -->
-<section class="cover">
-  <div>
-    <div class="cover-eyebrow">EVIDENTIA DEEP RESEARCH OS · FOCUSED PAPER READING</div>
-    <div class="cover-title">{esc(title)}</div>
-    <div class="cover-sub">{esc(subtitle)}</div>
-  </div>
-  <div class="cover-meta">
-    <strong>{esc(authors_str)}</strong><br>
-    {esc(venue)} · {esc(year)}<br>
-    Evidentia Provenance Engine · Kami Presentation Backend
-  </div>
-</section>
-
-<!-- ═════════════ TOC ═════════════ -->
-<section class="toc">
-  <h2>目录</h2>
-  {''.join(toc_items)}
-</section>
-
-<!-- ═════════════ CHAPTERS ═════════════ -->
+<section class='cover'><div><div class='cover-title'>{esc(title)}</div><div class='cover-sub'>{esc(subtitle)}</div></div><div class='cover-meta'>{esc(meta_line)}</div></section>
+<section class='toc'><h2>目录</h2>{''.join(toc_items)}</section>
 {''.join(chapters_html)}
-
-<!-- ═════════════ APPENDIX ═════════════ -->
-{appendix_html}
-
-</body>
-</html>
-"""
-    return full_html
+{spine_source}
+{appendix}
+</body></html>"""
 
 def render_paper_reader_md(manuscript: dict) -> str:
     doc = manuscript.get('document', {})
-    title = doc.get('title', 'Untitled Paper')
-    subtitle = doc.get('subtitle', 'Evidentia 深度科学研读与证据重构报告')
+    title = doc.get('title', '未命名论文')
+    subtitle = doc.get('subtitle', '中文科学精读稿')
     meta = doc.get('paper_meta', {})
-    authors = ", ".join(meta.get('authors', [])) if meta.get('authors') else 'Authors'
-    venue = meta.get('venue', 'Archive')
-    year = meta.get('year', 2026)
-    
-    lines = [
-        f"# {title}",
-        f"**{subtitle}**\n",
-        f"- **作者**: {authors}",
-        f"- **发表/收录**: {venue} ({year})",
-        f"- **报告生成**: Evidentia & Kami Presentation Backend\n",
-        "---\n",
-        "## 目录",
-    ]
-    
+    authors = '、'.join(meta.get('authors', [])) if meta.get('authors') else ''
+    meta_line = ' · '.join(x for x in (authors, meta.get('venue', ''), str(meta.get('year') or '')) if x)
+    lines = [f'# {title}', f'**{subtitle}**', '', meta_line, '', '---', '', '## 目录']
+    spine = doc.get('story_spine', {})
+    lines.extend(['', '## 论证主线原文线索', '', str(spine.get('central_question', '')), '', str(spine.get('central_move', '')), '', str(spine.get('justified_conclusion', '')), ''])
     chapters = doc.get('chapters', [])
-    for idx, ch in enumerate(chapters, 1):
-        lines.append(f"{idx}. [{ch.get('title', '')}](#{ch.get('id', '')})")
-    lines.append(f"{len(chapters)+1}. [证据审计附录](#appendix)\n")
-    lines.append("---\n")
-    
-    for idx, ch in enumerate(chapters, 1):
-        ctitle = ch.get('title', '')
-        clead = ch.get('lead', '')
-        cid = ch.get('id', '')
-        
-        lines.append(f"## {idx}. {ctitle} <a id='{cid}'></a>\n")
-        lines.append(f"> *{clead}*\n")
-        
-        for b in ch.get('blocks', []):
-            b_type = b.get('type')
-            text = b.get('text', '')
-            ev_refs = b.get('evidence_refs', [])
-            cite_str = f" [依据: {', '.join(ev_refs)}]" if ev_refs else ""
-            
-            if b_type == 'paragraph':
-                lines.append(f"{text}{cite_str}\n")
-            elif b_type == 'callout':
-                lines.append(f"> **关键审视**: {text}{cite_str}\n")
-            elif b_type == 'takeaway':
-                lines.append(f"> **核心关注**: {text}{cite_str}\n")
-            elif b_type == 'figure':
-                lines.append(f"### {b.get('caption', '实证图表')}{cite_str}")
-                if b.get('asset'):
-                    lines.append(f"![{b.get('caption', '')}]({b.get('asset')})\n")
-                lines.append(f"{b.get('analysis', '')}\n")
-            elif b_type == 'equation':
-                eq = normalize_latex(b.get('latex')) if b.get('source_confidence') == 'VERIFIED' else None
-                if eq:
-                    lines.append(f"$$\n{eq}\n$$\n*{b.get('explanation', '')}*{cite_str}\n")
-                elif b.get('fallback_asset'):
-                    lines.append(f"![公式源图 {b.get('evidence_id', 'EQ')}]({b.get('fallback_asset')})\n*公式结构化表示不可用；保留源图。*{cite_str}\n")
+    for idx, chapter in enumerate(chapters, 1):
+        lines.append(f"{idx}. [{chapter.get('title', '')}](# {chapter.get('id', '')})".replace('# ', '#'))
+    lines.append(f"{len(chapters)+1}. [证据来源与页面锚点](#sources)")
+    lines.extend(['', '---', ''])
+    for idx, chapter in enumerate(chapters, 1):
+        cid = chapter.get('id', f'spine-{idx:02d}')
+        lines.extend([f"## {idx}. {chapter.get('title', '')} <a id='{cid}'></a>", '', f"> *{chapter.get('lead', '')}*", ''])
+        for block in chapter.get('blocks', []):
+            kind = block.get('type'); text = block.get('text', ''); refs = block.get('evidence_refs', [])
+            cite = f" 〔{', '.join(refs)}〕" if refs else ''
+            if kind in ('paragraph', 'callout', 'takeaway'):
+                lines.append(f"{text}{cite}\n")
+            elif kind in ('figure', 'table'):
+                lines.append(f"### {block.get('caption', '图表')}\n")
+                if block.get('asset'): lines.append(f"![{block.get('caption', '')}]({block.get('asset')})\n")
+                lines.append(f"{block.get('analysis', '')}{cite}\n")
+            elif kind == 'equation':
+                lines.append(f"（{block.get('evidence_id', 'EQ')}）\n")
+                latex = normalize_latex(block.get('latex')) if block.get('source_confidence') == 'VERIFIED' else None
+                if latex:
+                    lines.append(f"$$\n{latex}\n$$\n")
+                elif block.get('fallback_asset'):
+                    lines.append(f"![公式源图 {block.get('evidence_id', 'EQ')}]({block['fallback_asset']})\n")
                 else:
-                    lines.append(f"*公式结构化表示不可用；保留不确定状态。*{cite_str}\n")
-            elif b_type == 'table':
-                lines.append(f"### {b.get('caption', '实证评测表')}{cite_str}\n")
-                if b.get('asset'):
-                    lines.append(f"![{b.get('caption', '实证评测表')}]({b.get('asset')})\n")
-                lines.append(f"{b.get('analysis', '')}\n")
-            elif b_type == 'list':
-                for it in b.get('items', []):
-                    lines.append(f"- {it}")
-                lines.append("")
-                
-    # Appendix
-    lines.append(f"## {len(chapters)+1}. 证据审计附录 (Claim-Centric Evidence Atlas) <a id='appendix'></a>\n")
-    lines.append("完整的主张列表、O/I/A 证据卡片、多源证据争议与双向锚点跳转已解耦部署于独立的证据图谱中：\n")
-    lines.append("- [进入证据图谱工作台 (evidence_atlas.html)](evidence_atlas.html)\n")
-    lines.append("### 核心原则")
-    lines.append("- **Observation (客观数据)**: 严守实验与源文本直接观测事实。")
-    lines.append("- **Author Interpretation (作者推断)**: 记录作者提出的假说与外推判断。")
-    lines.append("- **Reader Assessment (读者研判)**: Evidentia 证据审视系统对主张支撑力度的客观研判。\n")
-    
-    return "\n".join(lines) + "\n"
+                    lines.append("公式无法可靠重建；已保留源证据状态。\n")
+                lines.append(f"{block.get('explanation', '')}{cite}\n")
+            elif kind == 'list':
+                lines.extend([f'- {item}' for item in block.get('items', [])]); lines.append('')
+    lines.extend(['## 证据来源与页面锚点 <a id=\'sources\'></a>', '', '需要逐项核对来源时，请打开 [来源与核验记录](evidence_atlas.html)。', ''])
+    return '\n'.join(lines) + '\n'
 
 def render_paper_reader(root: Path, kami_root: Path = None) -> dict:
     """Render the primary Paper Reader HTML, Markdown, and PDF."""

@@ -22,6 +22,9 @@ from validate_common import load_json, schema_validate, sha256
 import task_protocol, verifier
 from reconciliation_agent import run_reconciliation_agent
 from agent_dispatch import is_fixture_enabled
+from build_argument_reconstruction import build_argument_reconstruction
+from lens_council import (build_frozen_evidence_package, snapshot_round1,
+                          write_council_artifact, execute_bounded_cross_examinations)
 
 LENSES = ('author', 'reviewer', 'mechanism', 'builder', 'anomaly', 'counterfactual')
 
@@ -74,6 +77,11 @@ def run_merge(out_dir, fixture=None, replay_dir=None, adapter=None, model=None, 
             f_copy = dict(f)
             f_copy['origin_lens'] = lens
             all_findings.append(f_copy)
+
+    # #14 Council boundary: freeze exactly one source-derived package before
+    # any Chair or Lens report is read by reconciliation.
+    build_frozen_evidence_package(root)
+    round1_records = snapshot_round1(root)
 
     # Layer 1: Deterministic Pre-clustering (Diagnostic only, no semantic mutation)
     candidate_clusters = precluster_findings(all_findings)
@@ -175,6 +183,24 @@ def run_merge(out_dir, fixture=None, replay_dir=None, adapter=None, model=None, 
     ]
     pm['lens_conflicts'] = conflicts
     (root / 'model/paper_model.json').write_text(json.dumps(pm, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
+
+    # Canonical #14 output.  The legacy lens_reconciliation artifact remains
+    # as a compatibility mirror, while all downstream scientific consumers use
+    # model/lens_council.json.
+    council = write_council_artifact(root, rec_result, round1=round1_records)
+    # Cross-examination is opt-in and bounded. A missing external Chair/agent
+    # result remains PENDING; it is never promoted to a scientific verdict.
+    cross_results = execute_bounded_cross_examinations(
+        root, rec_result, fixture=use_fixture, replay_dir=replay_dir,
+        adapter=adapter, model=model)
+    if cross_results:
+        council['cross_examinations'] = cross_results
+        (root / 'model/lens_council.json').write_text(
+            json.dumps(council, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
+    # Argument reconstruction is an upstream paper-model artifact; ensure it
+    # exists before the synthesis gate, while synthesis itself stays Council-only.
+    if not (root / 'model/argument_reconstruction.json').exists():
+        build_argument_reconstruction(root)
 
     if not all_verifications_completed:
         rs_p = root / 'run_state.json'

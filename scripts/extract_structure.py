@@ -151,7 +151,11 @@ def main():
                     'raw_text': line_s,
                     'latex': None,
                     'bbox': bbox,
-                    'display_mode': True,
+                    # Keep prose-level equalities in the source map, but only
+                    # promote compact formula-like lines to displayed Reader
+                    # equations. This prevents parameter prose and citations
+                    # from becoming dozens of broken equation pages.
+                    'display_mode': bool(fallback_asset and len(line_s) < 70 and not re.search(r'\b(?:the|where|used|with|and|of|et\s+al|el\s+al|corpus|layers?|research)\b|\[[0-9]+\]|\b(?:19|20)\d{2}\b', line_s, re.I)),
                     'symbols': [],
                     'role_zh': '',
                     'source_confidence': 'UNCERTAIN',

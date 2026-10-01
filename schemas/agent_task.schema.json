@@ -24,7 +24,9 @@
         "VERIFICATION",
         "APPLY_LOCAL",
         "MEMORY_SYNTHESIS",
-        "CROSS_PAPER_RELATION"
+        "CROSS_PAPER_RELATION",
+        "COUNCIL_CHAIR",
+        "CROSS_EXAMINATION"
       ]
     },
     "lens": {
@@ -109,6 +111,9 @@
     "target_id": {
       "type": "string"
     },
+    "challenger_lens": {
+      "type": ["string", "null"]
+    },
     "statement": {
       "type": "string"
     },
@@ -140,6 +145,9 @@
       "type": "string"
     },
     "base_sha256": {
+      "type": ["string", "null"]
+    },
+    "evidence_package_sha256": {
       "type": ["string", "null"]
     },
     "contract_version": {
