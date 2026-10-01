@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evidentia.dev/schemas/frozen_evidence_package.schema.json",
+  "type": "object",
+  "required": ["schema_version", "package_id", "source_sha256", "base_model_sha256", "evidence", "frozen"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "package_id": {"type": "string", "minLength": 1},
+    "source_sha256": {"type": "string", "minLength": 1},
+    "base_model_sha256": {"type": "string", "minLength": 1},
+    "created_at": {"type": "string"},
+    "frozen": {"const": true},
+    "evidence": {"type": "array", "items": {"type": "object"}},
+    "allowed_inputs": {"type": "array", "items": {"type": "string"}},
+    "prohibited_context": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": false
+}

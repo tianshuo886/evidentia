@@ -77,6 +77,26 @@
             "major_findings": { "type": "array", "items": { "type": "string" } },
             "justified_conclusion": { "type": "string" },
             "scope_and_limits": { "type": "array", "items": { "type": "string" } }
+            ,"sections": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": { "type": "string" },
+                  "title": { "type": "string" },
+                  "heading": { "type": "string" },
+                  "lead": { "type": "string" },
+                  "summary": { "type": "string" },
+                  "proposition": { "type": "string" },
+                  "blocks": { "type": "array" },
+                  "argument_refs": { "type": "array", "items": { "type": "string" } },
+                  "evidence_refs": { "type": "array", "items": { "type": "string" } }
+                },
+                "additionalProperties": true
+              }
+            },
+            "narrative_sections": { "type": "array" },
+            "nodes": { "type": "array" }
           },
           "additionalProperties": false
         },

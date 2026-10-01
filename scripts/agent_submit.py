@@ -164,6 +164,12 @@ def submit_agent_result(run_dir, task_id, result_path, allow_legacy_raw=False):
         if paper_sha and paper_sha != task_src_sha:
             sys.exit(f"REFUSED: Paper pdf_sha256 '{paper_sha}' does not match task source_sha256 '{task_src_sha}'.")
 
+    task_package_sha = task.get('evidence_package_sha256')
+    if task_package_sha:
+        package_p = r_dir / 'model/frozen_evidence_package.json'
+        if not package_p.exists() or sha256(package_p) != task_package_sha:
+            sys.exit('REFUSED: Frozen evidence package changed or is missing during agent execution.')
+
     task_base_sha = task.get('base_sha256')
     if task_base_sha:
         res_base = payload.get('base_sha256') or payload.get('base_model_sha256')

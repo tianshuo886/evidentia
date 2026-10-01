@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evidentia.dev/schemas/cross_examination.schema.json",
+  "type": "object",
+  "required": ["schema_version", "examination_id", "source_sha256", "evidence_package_sha256", "target_item_id", "status"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "examination_id": {"type": "string", "minLength": 1},
+    "source_sha256": {"type": "string", "minLength": 1},
+    "evidence_package_sha256": {"type": "string", "minLength": 1},
+    "target_item_id": {"type": "string", "minLength": 1},
+    "challenger_lens": {"type": "string"},
+    "status": {"enum": ["PENDING", "COMPLETED", "UNRESOLVED", "NOT_REQUESTED"]},
+    "question": {"type": "string"},
+    "answer": {"type": "string"},
+    "evidence": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": false
+}

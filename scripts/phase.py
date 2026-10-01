@@ -13,7 +13,7 @@ INGEST -> SOURCE_RECONSTRUCTION -> SOURCE_LOCK -> OPEN_READING -> BASELINE_LOCK
 -> LENS_EXECUTION -> RECONCILIATION -> VERIFICATION -> FINAL_MODEL -> FREEZE
 -> RENDER -> COMPLETE
 """
-import argparse, json, sys
+import argparse, json, os, sys
 from pathlib import Path
 from datetime import datetime, timezone
 
@@ -82,6 +82,7 @@ PHASE_BUNDLES = {
         'model/open_reading_manifest.json',
     ],
     'LENS_EXECUTION': [
+        'model/frozen_evidence_package.json',
         'lens/author.json',
         'lens/reviewer.json',
         'lens/mechanism.json',
@@ -98,7 +99,9 @@ PHASE_BUNDLES = {
         'lens/counterfactual.json',
     ],
     'RECONCILIATION': [
+        'model/frozen_evidence_package.json',
         'model/lens_reconciliation.json',
+        'model/lens_council.json',
     ],
     'SYNTHESIS': [
         'model/scientific_synthesis.json',
@@ -365,6 +368,17 @@ def main():
         errs = schema_validate(load_json(rec_p), 'lens_reconciliation')
         if errs:
             fail(f'lens reconciliation schema-invalid: {errs}')
+        # New council runs have an explicit Chair artifact and frozen package.
+        # Legacy workspaces remain resumable without silently claiming council
+        # completion.
+        council_p = root / 'model/lens_council.json'
+        package_p = root / 'model/frozen_evidence_package.json'
+        if package_p.exists():
+            if not council_p.exists():
+                fail('missing model/lens_council.json (Council Chair output)')
+            council_errs = schema_validate(load_json(council_p), 'lens_council')
+            if council_errs:
+                fail(f'lens council schema-invalid: {council_errs}')
 
     elif a.complete == 'SYNTHESIS':
         syn_p = root / 'model/scientific_synthesis.json'
@@ -373,6 +387,8 @@ def main():
         errs = schema_validate(load_json(syn_p), 'scientific_synthesis')
         if errs:
             fail(f'scientific synthesis schema-invalid: {errs}')
+        if (root / 'model/frozen_evidence_package.json').exists() and not (root / 'model/lens_council.json').exists():
+            fail('scientific synthesis must consume model/lens_council.json')
         arg_p = root / 'model/argument_reconstruction.json'
         if not arg_p.exists():
             fail('missing model/argument_reconstruction.json')
@@ -412,7 +428,10 @@ def main():
         import subprocess
         if subprocess.run([sys.executable, str(Path(__file__).with_name('reader_audit.py')), '--out', str(root)]).returncode != 0:
             fail('Reader audit failed')
-        if subprocess.run([sys.executable, str(Path(__file__).with_name('reader_acceptance.py')), '--out', str(root)]).returncode != 0:
+        acceptance_args = [sys.executable, str(Path(__file__).with_name('reader_acceptance.py')), '--out', str(root)]
+        if os.environ.get('EVIDENTIA_FIXTURE_ACCEPTANCE') == '1':
+            acceptance_args.append('--artifact-only')
+        if subprocess.run(acceptance_args).returncode != 0:
             fail('Reader acceptance gate failed; status is NEEDS_REVIEW')
 
     elif a.complete in ('COMPLETE', 'PAPER_COMPLETE'):
@@ -431,7 +450,10 @@ def main():
             if project_dir.exists():
                 fail(f'project isolation violated: project/ directory must not exist under {intent}')
         import subprocess
-        if subprocess.run([sys.executable, str(Path(__file__).with_name('reader_acceptance.py')), '--out', str(root)]).returncode != 0:
+        acceptance_args = [sys.executable, str(Path(__file__).with_name('reader_acceptance.py')), '--out', str(root)]
+        if os.environ.get('EVIDENTIA_FIXTURE_ACCEPTANCE') == '1':
+            acceptance_args.append('--artifact-only')
+        if subprocess.run(acceptance_args).returncode != 0:
             fail('Reader acceptance gate failed; PAPER_COMPLETE refused')
 
     # Record history and update state

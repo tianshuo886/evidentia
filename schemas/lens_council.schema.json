@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evidentia.dev/schemas/lens_council.schema.json",
+  "type": "object",
+  "required": ["schema_version", "council_id", "source_sha256", "base_model_sha256", "evidence_package_sha256", "round1", "items", "unresolved", "no_majority_voting"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "council_id": {"type": "string", "minLength": 1},
+    "source_sha256": {"type": "string", "minLength": 1},
+    "base_model_sha256": {"type": "string", "minLength": 1},
+    "evidence_package_sha256": {"type": "string", "minLength": 1},
+    "round1": {"type": "array", "items": {"type": "object", "required": ["lens", "artifact", "sha256"], "properties": {"lens": {"type": "string"}, "artifact": {"type": "string"}, "sha256": {"type": "string"}}, "additionalProperties": false}},
+    "items": {"type": "array", "items": {"type": "object"}},
+    "cross_examinations": {"type": "array", "items": {"type": "object"}},
+    "unresolved": {"type": "array", "items": {"type": "object"}},
+    "chair_decision": {"type": "object"},
+    "no_majority_voting": {"const": true}
+  },
+  "additionalProperties": false
+}

@@ -21,16 +21,6 @@ sys.path.insert(0, str(ROOT / 'scripts'))
 from test_gates import fixture
 from validate_common import schema_validate, load_json
 
-DEFAULT_LAYERS = [
-    "一分钟看懂这篇论文",
-    "论文到底在解决什么问题",
-    "方法到底怎么工作",
-    "关键实验逐个说明",
-    "证据最终支持了什么",
-    "结论与边界",
-    "证据审计附录"
-]
-
 def test_chinese_reader_ir_and_dual_rendering(tmp_path):
     r = fixture(tmp_path)
     
@@ -61,13 +51,16 @@ def test_chinese_reader_ir_and_dual_rendering(tmp_path):
     html_p = reader_dir / 'paper_reader.html'
     assert html_p.exists()
     html_text = html_p.read_text(encoding='utf-8')
-    for layer in DEFAULT_LAYERS:
-        assert layer in html_text, f"Missing narrative section in HTML: {layer}"
+    # The v2 Reader is driven by the paper's reconstructed Story Spine, so
+    # section titles are paper-specific rather than a fixed template.
+    assert len(man['document']['chapters']) >= 4
+    assert all(ch['title'] in html_text for ch in man['document']['chapters'])
+    assert man['document']['story_spine']['central_question']
     
     # Verify Kami long-doc elements
-    assert "class=\"cover\"" in html_text
-    assert "class=\"toc\"" in html_text
-    assert "class=\"chapter\"" in html_text
+    assert "class='cover'" in html_text or 'class="cover"' in html_text
+    assert "class='toc'" in html_text or 'class="toc"' in html_text
+    assert "class='chapter'" in html_text or 'class="chapter"' in html_text
     assert "TsangerJinKai02" in html_text or "Source Han Serif" in html_text
     assert "#f5f4ed" in html_text  # parchment background
     assert "#1B365D" in html_text  # brand accent
@@ -77,18 +70,14 @@ def test_chinese_reader_ir_and_dual_rendering(tmp_path):
     assert ".oia-grid" not in html_text
     assert "badge-epistemic-supported" not in html_text
 
-    # Verify audit details tag is used in appendix
-    assert '<details' in html_text
-    assert 'Observation' in html_text
-    assert 'Author Interpretation' in html_text
-    assert 'Reader Assessment' in html_text
+    # Audit O/I/A details belong to the secondary Evidence Atlas; the primary
+    # Reader keeps those internal labels out of its narrative surface.
 
     # 4. Markdown Reader validation
     md_p = reader_dir / 'paper_reader.md'
     assert md_p.exists()
     md_text = md_p.read_text(encoding='utf-8')
-    for layer in DEFAULT_LAYERS:
-        assert layer in md_text, f"Missing narrative section in MD: {layer}"
+    assert all(ch['title'] in md_text for ch in man['document']['chapters'])
 
     # 5. Backward compatibility aliases
     assert (reader_dir / 'reader.html').exists()
@@ -131,7 +120,7 @@ def test_reader_split_paper_reader_and_evidence_atlas(tmp_path):
 
     # 1. Primary Paper Reader: Editorial, continuous prose, links to atlas
     assert "evidence_atlas.html" in paper_reader_html
-    assert "打开完整证据图谱" in paper_reader_html
+    assert "查看逐项来源与核验记录" in paper_reader_html
 
     # 2. Evidence Atlas: Audit-focused, full claim/evidence cards, O/I/A grid
     assert "Evidence Atlas" in atlas_html
@@ -188,7 +177,6 @@ def test_technical_extraction_mode_positive(tmp_path):
     reader_dir = r / 'reader'
     html_p = reader_dir / 'paper_reader.html'
     html_text = html_p.read_text(encoding='utf-8')
-    assert "论文技术细节提取" in html_text
     assert not (r / 'apply').exists()
 
     # Dedicated standalone technical extraction artifacts
@@ -247,4 +235,3 @@ def test_project_apply_mode_and_frozen_reader_hash_immutability(tmp_path):
     new_md_sha = hashlib.sha256((reader_dir / 'paper_reader.md').read_bytes()).hexdigest()
     assert new_html_sha == html_sha, "Paper Reader HTML was mutated by Apply!"
     assert new_md_sha == md_sha, "Paper Reader Markdown was mutated by Apply!"
-

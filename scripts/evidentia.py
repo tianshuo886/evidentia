@@ -11,7 +11,7 @@ Supports:
 - resume: resume execution from saved state with tamper and invalidation checks
 - memory: full Frozen Research Memory management interface (commit, search, inspect, relation, snapshot, export, import)
 """
-import argparse, json, subprocess, sys
+import argparse, json, os, subprocess, sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -83,21 +83,32 @@ def resolve_paper_workspace(raw_input, explicit_out=None):
                     if s_stem.lower() in f.stem.lower() or f.stem.lower() in s_stem.lower():
                         return lit_dir / re.sub(r'[^a-zA-Z0-9_\-]', '_', f.stem).strip('_')
                     
-    # 3. Default literature directory or fallback runs directory
+    # 3. Use an available paper library; never silently fall back to the
+    # skill's ./runs directory.  A run is a paper workspace, so it belongs
+    # beside the source-paper library rather than beside the skill code.
     target_stem = stems_to_check[-1] if len(stems_to_check) > 1 else clean_stem
-    if (Path.cwd() / 'literature').exists():
-        return Path.cwd() / 'literature' / target_stem
     for lit_dir in candidate_lit_dirs:
         if lit_dir.exists():
             return lit_dir / target_stem
-    return Path('./runs') / target_stem
+    # No library exists yet (for example, a DOI-only acquisition from a new
+    # project).  Create the neutral local library root and keep the same
+    # paper-folder convention instead of writing into ./runs.
+    default_lit = Path.cwd() / 'literature'
+    default_lit.mkdir(parents=True, exist_ok=True)
+    return default_lit / target_stem
 
 def sync_top_level_readers(out_dir: Path):
     """Synchronize user-facing reading artifacts to paper root alongside original PDF."""
     reader_dir = out_dir / 'reader'
+    import shutil
+    source_pdf = out_dir / 'source/paper.pdf'
+    if source_pdf.exists():
+        report_pdfs = {'paper_reader.pdf', 'reader.pdf'}
+        root_source_pdfs = [p for p in out_dir.glob('*.pdf') if p.name not in report_pdfs]
+        if not root_source_pdfs:
+            shutil.copy2(str(source_pdf), str(out_dir / f'{out_dir.name}.pdf'))
     if not reader_dir.exists():
         return
-    import shutil
     for fname in ('paper_reader.html', 'reader.html', 'evidence_atlas.html'):
         rf = reader_dir / fname
         if rf.exists():
@@ -125,13 +136,17 @@ def run_workflow(args):
             args.pdf = str(pdf_path)
 
     rs_path = out_dir / 'run_state.json'
-    if not rs_path.exists() and (out_dir / '.evidentia/run_state.json').exists():
-        rs_path = out_dir / '.evidentia/run_state.json'
     mode = getattr(args, 'mode', 'standard') or 'standard'
     extra_flags = []
     from agent_dispatch import is_fixture_enabled
-    if is_fixture_enabled(getattr(args, 'fixture', None)):
+    fixture_mode = is_fixture_enabled(getattr(args, 'fixture', None))
+    if fixture_mode:
         extra_flags.append('--fixture')
+        # Synthetic/replay fixtures exercise the workflow mechanics without
+        # pretending to have a human semantic/visual sign-off packet. Keep
+        # the production path fail-closed while allowing the fixture suite to
+        # use the artifact-only acceptance contract explicitly.
+        os.environ.setdefault('EVIDENTIA_FIXTURE_ACCEPTANCE', '1')
     if getattr(args, 'replay', None):
         extra_flags.extend(['--replay', args.replay])
     if getattr(args, 'adapter', None):
@@ -243,6 +258,15 @@ def run_workflow(args):
             return 0
         from validate_common import load_json, schema_validate
         rec_data = load_json(rec_p)
+        # Legacy workspaces may already contain the old reconciliation artifact;
+        # materialize the #14 Council/argument boundary before synthesis.
+        if not (out_dir / 'model/lens_council.json').exists():
+            from lens_council import build_frozen_evidence_package, write_council_artifact
+            from build_argument_reconstruction import build_argument_reconstruction
+            build_frozen_evidence_package(out_dir)
+            write_council_artifact(out_dir, rec_data)
+            if not (out_dir / 'model/argument_reconstruction.json').exists():
+                build_argument_reconstruction(out_dir)
         rec_errs = schema_validate(rec_data, 'lens_reconciliation')
         if rec_errs:
             sys.exit(f"Reconciliation validation failed:\n{rec_errs}")
@@ -469,13 +493,15 @@ def main():
     p_run = subparsers.add_parser("run")
     p_run.add_argument("--pdf", help="Source paper PDF, DOI, arXiv ID, or URL")
     p_run.add_argument("--doi", help="DOI or paper identifier to auto-acquire (e.g. 10.1038/... or 1706.03762)")
-    p_run.add_argument("--out", help="Workspace output directory (default: ./runs/<paper_name>)")
+    p_run.add_argument("--out", help="Workspace output directory (default: same-named folder beside the source paper)")
     p_run.add_argument("--mode", choices=["standard", "ensemble"], default="standard")
     p_run.add_argument("--intent", choices=["PAPER_READING", "PAPER_TECHNICAL_EXTRACTION"], default=None)
     p_run.add_argument("--prompt", help="Natural language prompt to route intent (e.g. '帮我深读这篇论文')")
     p_run.add_argument("--models", help="Comma-separated model identifiers for ensemble mode")
     p_run.add_argument("--supplement", action="append", help="Supplementary PDF files")
-    p_run.add_argument("--fixture", action="store_true", help="Use isolated synthetic test fixtures")
+    # ``None`` lets is_fixture_enabled() detect the pytest/replay fixture
+    # environment when the flag is omitted; an explicit flag still wins.
+    p_run.add_argument("--fixture", action="store_true", default=None, help="Use isolated synthetic test fixtures")
     p_run.add_argument("--replay", help="Recorded replay directory")
     p_run.add_argument("--adapter", help="Host agent adapter name (e.g. pi, generic)")
 

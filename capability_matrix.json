@@ -210,6 +210,28 @@
       "evidence": "Pre-clustering into Finding Clusters with canonical relations (AGREEMENT, TENSION, etc.) and verification triggers implemented."
     },
     {
+      "id": "lens_council",
+      "area": "Core",
+      "claim": "Evidence-grounded Lens Council with immutable shared evidence, independent six-Lens Round 1, Chair reconciliation, bounded cross-examination, no voting, and unresolved states",
+      "schema": [
+        "frozen_evidence_package",
+        "lens_council",
+        "cross_examination"
+      ],
+      "scripts": [
+        "lens_council.py",
+        "council.py",
+        "merge_lenses.py"
+      ],
+      "tests": [
+        "test_lens_council"
+      ],
+      "implementation_status": "IMPLEMENTED",
+      "validation_status": "SYNTHETIC_VALIDATED",
+      "status": "IMPLEMENTED",
+      "evidence": "One frozen evidence package is hashed into six independent Round-1 snapshots; Chair output preserves relations and unresolved items, while cross-examination is explicit and bounded to three requests in one round without majority voting."
+    },
+    {
       "id": "argument_reconstruction",
       "area": "Core",
       "claim": "First-class argument reconstruction topology separating author argument from Evidentia assessment with evidence promotion",

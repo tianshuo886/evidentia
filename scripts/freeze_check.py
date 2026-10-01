@@ -128,6 +128,23 @@ def main():
     if not covered:
      errs.append(f'conflict on {ev} not recorded in lens_conflicts (conflict erased)')
   except Exception as e:errs.append(f'unparseable model/lens_reconciliation.json: {e}')
+ # A #14 run cannot freeze without the immutable package and Chair output.
+ package_p = root / 'model/frozen_evidence_package.json'
+ council_p = root / 'model/lens_council.json'
+ if package_p.exists() or council_p.exists():
+  if not package_p.exists(): errs.append('missing model/frozen_evidence_package.json')
+  else:
+   try:
+    errs += ['frozen_evidence_package: '+e for e in schema_validate(load_json(package_p), 'frozen_evidence_package')]
+    if load_json(package_p).get('source_sha256') != actual_src: errs.append('frozen evidence package source_sha256 mismatch')
+   except Exception as e: errs.append(f'unparseable model/frozen_evidence_package.json: {e}')
+  if not council_p.exists(): errs.append('missing model/lens_council.json (Council Chair output)')
+  else:
+   try:
+    council = load_json(council_p)
+    errs += ['lens_council: '+e for e in schema_validate(council, 'lens_council')]
+    if package_p.exists() and council.get('evidence_package_sha256') != sha256(package_p): errs.append('lens_council evidence_package_sha256 mismatch')
+   except Exception as e: errs.append(f'unparseable model/lens_council.json: {e}')
  if not pm.get('unresolved') and any(c.get('epistemic') in ('AMBIGUOUS','INSUFFICIENT_EVIDENCE','UNRESOLVED') for c in pm.get('claims',[])):errs.append('unresolved claims must be explicitly listed')
  if not pm.get('coverage'):errs.append('coverage audit missing')
  supp_cov = pm.get('coverage',{}).get('supplement')
@@ -167,7 +184,7 @@ def main():
  if base_expected:man['base_model_sha256']=base_expected
  for rel in required:
   if (root/rel).exists():man['hashes'][rel]=sha256(root/rel)
- for rel in ('model/open_reading_model.json','model/open_reading_manifest.json','model/lens_reconciliation.json','model/argument_reconstruction.json','model/scientific_synthesis.json'):
+ for rel in ('model/open_reading_model.json','model/open_reading_manifest.json','model/lens_reconciliation.json','model/lens_council.json','model/frozen_evidence_package.json','model/argument_reconstruction.json','model/scientific_synthesis.json'):
   if (root/rel).exists():man['hashes'][rel]=sha256(root/rel)
  for lens in LENSES:
   p=root/'lens'/f'{lens}.json'

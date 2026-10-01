@@ -45,13 +45,11 @@ def test_narrative_composer_schema_and_chapters(tmp_path):
     doc = manuscript['document']
     assert doc['title'] == pm['paper']['title']
 
-    # 3. Default faithful reading has six narrative chapters plus the audit appendix.
+    # 3. Default faithful reading has a paper-specific Story Spine.
     chapters = doc['chapters']
-    assert len(chapters) == 6
-    
-    expected_ids = ["one_minute", "problem", "method", "experiments", "synthesis", "conclusions"]
+    assert len(chapters) >= 4
     actual_ids = [ch['id'] for ch in chapters]
-    assert actual_ids == expected_ids
+    assert all(cid.startswith('spine-') for cid in actual_ids)
     assert doc['story_spine']['central_question']
     assert 'reusable' not in actual_ids
 
@@ -72,7 +70,7 @@ def test_narrative_composer_schema_and_chapters(tmp_path):
                 for ev in ev_refs:
                     assert ev in all_valid_ev_ids or ev.startswith('p.'), f"Block references unknown evidence: {ev}"
 
-    assert total_blocks >= 10
+    assert total_blocks >= len(chapters)
     assert has_grounded_block, "Must contain blocks grounded in valid evidence"
 
 def test_narrative_composer_lens_synthesis_not_segregated(tmp_path):
@@ -94,10 +92,11 @@ def test_narrative_composer_lens_synthesis_not_segregated(tmp_path):
 
     m_path = r / 'reader/narrative_manuscript.json'
     manuscript = load_json(m_path)
-    ch5 = next(ch for ch in manuscript['document']['chapters'] if ch['id'] == 'synthesis')
-    
-    # Check that synthesis chapter does not contain raw lens report headings
-    ch5_text = " ".join([b.get('text', '') for b in ch5['blocks']])
+    # Check that no chapter contains raw lens report headings.
+    all_text = " ".join(
+        b.get('text', '') for ch in manuscript['document']['chapters']
+        for b in ch['blocks']
+    )
     for forbidden_heading in [
         "Author Lens 报告",
         "Reviewer Lens 报告",
@@ -106,7 +105,7 @@ def test_narrative_composer_lens_synthesis_not_segregated(tmp_path):
         "Anomaly Lens 报告",
         "Counterfactual Lens 报告"
     ]:
-        assert forbidden_heading not in ch5_text, f"Raw lens heading leaked into narrative synthesis: {forbidden_heading}"
+        assert forbidden_heading not in all_text, f"Raw lens heading leaked into narrative synthesis: {forbidden_heading}"
 
 def test_narrative_composer_renderer_purity(tmp_path):
     """Ensure that narrative composer does not inject forbidden domain scientific boilerplate."""

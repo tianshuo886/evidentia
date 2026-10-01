@@ -14,6 +14,7 @@ sys.path.insert(0, str(HERE))
 from validate_common import load_json, schema_validate
 from agent_dispatch import dispatch_agent_task
 from agent_submit import submit_agent_result
+from validate_common import sha256
 
 def run_lens(task_path, out_path=None, result_file=None, model=None, host=None, fixture=False, replay_dir=None, adapter=None):
     tp = Path(task_path)
@@ -22,6 +23,12 @@ def run_lens(task_path, out_path=None, result_file=None, model=None, host=None, 
 
     task = load_json(tp)
     lens = task['lens']
+    package_rel = task.get('input_artifacts', {}).get('frozen_evidence_package')
+    expected_package_sha = task.get('evidence_package_sha256')
+    if package_rel and expected_package_sha:
+        package_p = (tp.parent.parent.parent / package_rel)
+        if not package_p.exists() or sha256(package_p) != expected_package_sha:
+            sys.exit('REFUSED: frozen evidence package changed or is missing; Round-1 lens execution must restart')
     root = tp.parent.parent
     if tp.parent.name == 'lens':
         root = tp.parent.parent.parent

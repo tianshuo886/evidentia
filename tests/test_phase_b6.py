@@ -21,15 +21,17 @@ def test_reader_rendering_and_bidirectional_navigation(tmp_path):
     assert res_render.returncode == 0, res_render.stdout + res_render.stderr
     
     html_text = (r / 'reader/reader.html').read_text(encoding='utf-8')
-    assert 'Claim-Centric Evidence Atlas' in html_text
-    assert 'Observation' in html_text
-    assert 'Author Interpretation' in html_text
-    assert 'Reader Assessment' in html_text
+    atlas_text = (r / 'reader/evidence_atlas.html').read_text(encoding='utf-8')
+    assert 'evidence_atlas.html' in html_text
+    assert 'Evidence Atlas' in atlas_text
+    assert 'Observation' in atlas_text
+    assert 'Author Interpretation' in atlas_text
+    assert 'Reader Assessment' in atlas_text
 
     # Check bidirectional navigation anchors
-    assert '<a href="#F01"' in html_text
-    assert '<a href="#C01"' in html_text
-    assert 'Supports Claims:' in html_text
+    assert 'href="#evidence-F01"' in html_text
+    assert 'href="#C01"' in atlas_text
+    assert 'Supports Claims:' in atlas_text
 
     # Run reader audit v2
     res_audit = run('reader_audit.py', '--out', str(r))
@@ -43,7 +45,7 @@ def test_reader_audit_detects_broken_anchor(tmp_path):
     # Tamper with reader.html to introduce broken anchor link
     rf = r / 'reader/reader.html'
     content = rf.read_text(encoding='utf-8')
-    content = content.replace('<a href="#F01"', '<a href="#BROKEN99"')
+    content = content.replace('href="#evidence-F01"', 'href="#BROKEN99"', 1)
     rf.write_text(content, encoding='utf-8')
 
     res_audit = run('reader_audit.py', '--out', str(r))

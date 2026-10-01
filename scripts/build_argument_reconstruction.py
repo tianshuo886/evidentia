@@ -87,6 +87,7 @@ def build_argument_topology(pm, inv=None, sm=None, rec_data=None, lens_findings=
     claims = pm.get('claims', [])
     questions = pm.get('questions', [])
     methods = pm.get('methods', [])
+    natural_structure = [str(x) for x in pm.get('natural_structure', []) if str(x).strip()]
     assumptions = pm.get('assumptions', [])
     limitations = pm.get('limitations', [])
     open_questions = pm.get('open_questions', [])
@@ -101,13 +102,13 @@ def build_argument_topology(pm, inv=None, sm=None, rec_data=None, lens_findings=
         central_q = f"论文针对'{paper_title}'探讨的核心问题是什么？"
 
     if limitations:
-        motivation = f"已有研究在特定假设或工况下存在局限：{limitations[0].get('text', '论文未明确说明额外局限')}。"
+        motivation = limitations[0].get('text') or "论文未明确说明研究动机。"
     elif arg_chain:
-        motivation = f"研究出发点：{arg_chain[0]}。"
+        motivation = str(arg_chain[0]).strip()
     else:
-        motivation = "论文提出针对领域内既有方法局限性的改进关切。"
+        motivation = "论文未明确说明研究动机。"
 
-    gap = assumptions[0].get('text') if assumptions else "论文未明确说明前置理论假设与基准条件间隙。"
+    gap = assumptions[0].get('text') if assumptions else "论文未明确说明先验缺口。"
 
     # 2. Central thesis
     if claims and claims[0].get('statement'):
@@ -115,7 +116,7 @@ def build_argument_topology(pm, inv=None, sm=None, rec_data=None, lens_findings=
     elif arg_chain and len(arg_chain) > 1:
         central_thesis = arg_chain[1].strip()
     else:
-        central_thesis = f"提出针对'{paper_title}'的新型建模与分析方法，并完成实证验证。"
+        central_thesis = "论文未明确说明中心主张。"
 
     # 3. Argument units
     units = []
@@ -144,8 +145,8 @@ def build_argument_topology(pm, inv=None, sm=None, rec_data=None, lens_findings=
     # Unit 2: Hypothesis / Method Rationale
     u_hypo_id = f"ARG-{unit_idx:02d}"
     unit_idx += 1
-    method_name = methods[0].get('name', '核心方法设计') if methods else '核心方法设计'
-    method_desc = methods[0].get('description', central_thesis) if methods else central_thesis
+    method_name = methods[0].get('name', '方法') if methods else (natural_structure[0] if natural_structure else '方法')
+    method_desc = methods[0].get('description', central_thesis) if methods else (' → '.join(natural_structure) if natural_structure else central_thesis)
     units.append({
         "id": u_hypo_id,
         "semantic_role": "method_rationale",
@@ -300,15 +301,13 @@ def build_argument_topology(pm, inv=None, sm=None, rec_data=None, lens_findings=
     ]
 
     # Scope conditions
-    scope_conditions = [
-        a.get('text', '数据分布与测试环境保持一致') for a in assumptions[:3]
-    ] or ["仅在论文报告的数据集与测试基准范围内已获检验"]
+    scope_conditions = [a.get('text') for a in assumptions[:3] if a.get('text')] or ["论文报告的实验范围"]
 
     # Limitations list
-    limits_list = [l.get('text', '') for l in limitations[:3]] or ["未在开放域分布之外进行压力测试"]
+    limits_list = [l.get('text', '') for l in limitations[:3] if l.get('text')] or ["论文未明确说明额外局限"]
 
     # Unresolved questions list
-    unres_list = [u.get('issue', '') for u in unresolved[:3]] or [q.get('text', '') for q in open_questions[:3]] or ["更广泛实际环境下的长效表现仍待验证"]
+    unres_list = [u.get('issue', '') for u in unresolved[:3] if u.get('issue')] or [q.get('text', '') for q in open_questions[:3] if q.get('text')] or ["论文未明确说明未决问题"]
 
     # Author argument vs Assessed argument
     author_unit_ids = [u['id'] for u in units if u['semantic_role'] in ('problem', 'method_rationale', 'result', 'conclusion')]
@@ -335,11 +334,11 @@ def build_argument_topology(pm, inv=None, sm=None, rec_data=None, lens_findings=
                 alt_explanations.append(c.get('reader_assessment'))
 
     assessed_arg = {
-        "justified_thesis": f"在论文设定的实验边界内，实证数据支撑主要结论；但外推适用性需受边界条件约束。",
+        "justified_thesis": claims[0].get('statement', '论文未明确说明中心结论。') if claims else '论文未明确说明中心结论。',
         "supported_units": supported_unit_ids,
         "weakened_units": weakened_unit_ids,
         "alternative_explanations": alt_explanations,
-        "epistemic_assessment": "证据链在核心基准上闭环，外推至未测试场景时需重新标定前置假设。"
+        "epistemic_assessment": "外推范围取决于论文报告的实验条件与证据覆盖。"
     }
 
     # Evidence promotion
@@ -393,13 +392,11 @@ def build_argument_reconstruction(root_dir):
     rec_p = root / 'model/lens_reconciliation.json'
     rec_data = load_json(rec_p) if rec_p.exists() else {}
 
-    # Extract lens findings if present
+    # The argument artifact is upstream of the human Reader.  Once the Lens
+    # Council exists, do not reopen raw Round-1 lens files while composing or
+    # repairing a Reader.  Council items are already folded into paper_model;
+    # alternative explanations remain explicit there when available.
     lens_findings = {}
-    lens_dir = root / 'lens'
-    if lens_dir.exists():
-        for lf in lens_dir.glob('*.json'):
-            ldata = load_json(lf)
-            lens_findings[ldata.get('lens', lf.stem)] = ldata.get('findings', [])
 
     src_sha = pm.get('source_sha256') or (sha256(root / 'source/paper.pdf') if (root / 'source/paper.pdf').exists() else "SOURCE_SHA")
     paper_id = pm.get('paper_id', root.name)

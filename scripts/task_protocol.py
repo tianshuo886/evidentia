@@ -148,7 +148,12 @@ def create_open_reading_task(root):
 
 def create_lens_tasks(root):
     root = Path(root)
+    # Freeze the common evidence boundary before creating any independent
+    # Round-1 task. Import lazily to avoid task_protocol/council cycles.
+    from lens_council import build_frozen_evidence_package
+    build_frozen_evidence_package(root)
     src_sha, base_sha = get_source_and_base_shas(root)
+    package_sha = sha256(root / 'model/frozen_evidence_package.json')
     orm_p = root / 'model/open_reading_manifest.json'
 
     contract_v = "1.0"
@@ -169,7 +174,8 @@ def create_lens_tasks(root):
             "description": f"Independent {lens} lens rereading pass.",
             "input_artifacts": {
                 "source_pdf": "source/paper.pdf",
-                "base_model": "model/open_reading_model.json"
+                "base_model": "model/open_reading_model.json",
+                "frozen_evidence_package": "model/frozen_evidence_package.json"
             },
             "source_pdf": "source/paper.pdf",
             "base_model": "model/open_reading_model.json",
@@ -179,6 +185,7 @@ def create_lens_tasks(root):
             "source_sha256": src_sha,
             "base_sha256": base_sha,
             "base_model_sha256": base_sha,
+            "evidence_package_sha256": package_sha,
             "contract_version": contract_v,
             "lens_contract_version": contract_v,
             "prompt_version": prompt_v,
@@ -192,13 +199,13 @@ def create_lens_tasks(root):
             "allowed_inputs": [
                 "source/",
                 "supplement/",
-                "model/",
-                "lens/"
+                "model/frozen_evidence_package.json"
             ],
             "forbidden_inputs": [
                 "apply/",
                 "project/",
-                "memory/project/"
+                "memory/project/",
+                "lens/"
             ],
             "instructions": LENS_PROMPTS[lens],
             "executor_template": build_executor_metadata()
@@ -210,23 +217,31 @@ def create_lens_tasks(root):
 
 def create_reconciliation_task(root):
     root = Path(root)
+    from lens_council import build_frozen_evidence_package
+    build_frozen_evidence_package(root)
     src_sha, base_sha = get_source_and_base_shas(root)
+    package_sha = sha256(root / 'model/frozen_evidence_package.json')
 
+    # #14: the reconciliation task is the Council Chair task.  The legacy
+    # task id/output are retained so existing Host Agent integrations remain
+    # valid, but the shared frozen evidence package is now mandatory input.
     task = {
         "task_id": "TASK-RECONCILIATION",
-        "task_type": "RECONCILIATION",
-        "required_capability": "SEMANTIC_RECONCILIATION",
-        "scientific_contract": "Semantic reconciliation: classify candidate finding cluster relations without majority voting.",
+        "task_type": "COUNCIL_CHAIR",
+        "required_capability": "EVIDENCE_GROUNDED_COUNCIL_CHAIR",
+        "scientific_contract": "Council Chair reconciliation over one shared frozen evidence package; no majority voting; preserve unresolved states and request only bounded cross-examination.",
         "description": "Semantic reconciliation and clustering across six independent lens passes.",
         "input_artifacts": {
             "lenses": [f"lens/{l}.json" for l in LENSES],
             "candidate_clusters": "model/candidate_clusters.json",
-            "open_reading_model": "model/open_reading_model.json"
+            "open_reading_model": "model/open_reading_model.json",
+            "frozen_evidence_package": "model/frozen_evidence_package.json"
         },
         "target_output": "model/lens_reconciliation.json",
         "output_schema": "lens_reconciliation",
         "source_sha256": src_sha,
         "base_sha256": base_sha,
+        "evidence_package_sha256": package_sha,
         "contract_version": "1.0",
         "prompt_version": "1.0",
         "prohibited_context": [
@@ -246,13 +261,43 @@ def create_reconciliation_task(root):
             "memory/project/"
         ],
         "instructions": (
-            "Analyze findings from all six independent lenses and candidate clusters. "
+            "Analyze findings from all six independent Round-1 lenses against the shared frozen evidence package. "
             "Categorize relations into: AGREEMENT, COMPLEMENTARY, PARTIAL_AGREEMENT, TENSION, CONTRADICTION, ORTHOGONAL, UNRESOLVED. "
-            "Preserve all supporting_lenses for every item. Never erase scientific tension or contradiction."
+            "Preserve all supporting_lenses for every item. Never erase scientific tension or contradiction. "
+            "Do not count votes or use majority rule. Selectively request at most three bounded cross-examinations, only for a material unresolved or contradictory item."
         )
     }
     out_p = root / 'tasks/reconciliation.json'
     return validate_and_write_task(task, out_p)
+
+def create_cross_examination_task(root, target_item_id, question, challenger_lens=None):
+    """Create one bounded Chair-requested cross-examination task."""
+    root = Path(root)
+    src_sha, base_sha = get_source_and_base_shas(root)
+    package = root / 'model/frozen_evidence_package.json'
+    if not package.exists():
+        raise ValueError('frozen evidence package is required for cross-examination')
+    task = {
+        'task_id': f'TASK-CROSS-EXAM-{target_item_id}',
+        'task_type': 'CROSS_EXAMINATION',
+        'required_capability': 'BOUNDED_COUNCIL_CROSS_EXAMINATION',
+        'target_id': target_item_id,
+        'statement': question,
+        'input_artifacts': {'frozen_evidence_package': 'model/frozen_evidence_package.json', 'council': 'model/lens_council.json'},
+        'target_output': f'council/cross_examination/{target_item_id}.json',
+        'output_schema': 'cross_examination',
+        'scientific_contract': 'Answer one Chair-selected question against the frozen evidence package; do not introduce a new debate round.',
+        'source_sha256': src_sha,
+        'base_sha256': base_sha,
+        'evidence_package_sha256': sha256(package),
+        'contract_version': '1.0', 'prompt_version': '1.0',
+        'challenger_lens': challenger_lens,
+        'allowed_inputs': ['model/frozen_evidence_package.json', 'model/lens_council.json'],
+        'forbidden_inputs': ['apply/', 'project/', 'memory/project/', 'lens/'],
+        'instructions': 'Answer only the selected question, cite the frozen evidence package, and return UNRESOLVED when evidence cannot settle it.'
+    }
+    return validate_and_write_task(task, root / f'tasks/cross_examination/{target_item_id}.json')
+
 
 def create_verification_task(root, target_id, claim_or_statement, localized_evidence, trigger_reason="high_impact_finding"):
     root = Path(root)

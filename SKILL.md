@@ -2,9 +2,8 @@
 name: evidentia
 description: Evidence-grounded Paper Research OS for one paper at a time. Build a source-reconstructed Paper Model and Evidence Graph, perform six independent Lens rereads, freeze the facts, render a unified Paper/Project Reader, and produce a provenance-linked Research Delta for a project. Use when the user asks to deeply read, audit, transfer, or build research memory from a supplied paper PDF. Not for paper search, triage, or multi-paper surveys.
 license: Apache-2.0
-compatibility: ">=Python 3.9"
 metadata:
-  version: "1.1.1"
+  version: "1.1.2"
   argument-hint: "<paper.pdf> --out <directory> [--supplement ...] | apply --paper <directory> --project <document> [--focus ...] | memory ..."
 ---
 
@@ -19,7 +18,7 @@ PDF → Source Reconstruction (Page-first Visual Track) → Source Lock
     → Open Reading (AgentTask) → Baseline Lock → Six Independent Lenses (AgentTask)
     → Semantic Reconciliation → Argument-Aware Cross-Lens Scientific Synthesis
     → Evidence Verification → Frozen Paper Model + Evidence Graph
-    → Chinese-first Narrative Reader (HTML/MD/PDF) → PAPER_COMPLETE (STOP)
+    → Chinese-first Narrative Reader (HTML/MD/PDF) → release regression gate → PAPER_COMPLETE (STOP)
 
 [Explicit User Request Only]
 → Contextual Apply (/evidentia-apply) → Separate Project Reader (apply/<project>/)
@@ -34,9 +33,13 @@ PDF → Source Reconstruction (Page-first Visual Track) → Source Lock
 /evidentia-memory [commit-paper|commit-project|relation|inspect|snapshot|export|import]
 ```
 
-Supports local PDF files, DOIs (e.g. `10.1038/...`), arXiv IDs (e.g. `1706.03762`), and direct paper URLs. Automatically acquires paper metadata, overview markdown, and open-access source PDF via `pa` (Paper Acquire), CrossRef, and Unpaywall. If `--out` is omitted, output defaults to `./runs/<paper_stem>/`. All workspace artifacts are strictly contained within that single directory for clean inspection and one-command deletion.
+Supports local PDF files, DOIs (e.g. `10.1038/...`), arXiv IDs (e.g. `1706.03762`), and direct paper URLs. Automatically acquires paper metadata, overview markdown, and open-access source PDF via `pa` (Paper Acquire), CrossRef, and Unpaywall. If `--out` is omitted, a local PDF is processed in a same-named workspace beside the source paper; identifier-based acquisition uses the available paper library and the same paper-folder convention. The workspace root contains the source PDF and user-facing reader copies, while internal artifacts remain under that single directory.
 
-**Paper reading is the default contract**: Default execution terminates at `PAPER_COMPLETE` after producing the frozen paper understanding and Chinese-first Paper Reader (`reader/paper_reader.html`, `paper_reader.md`, `paper_reader.pdf`). Apply loads exactly one project document **only after explicit user intent** and writes exclusively to `apply/<project>/`.
+## Execution harness boundary
+
+The six independent Round-1 lenses are a required part of the workflow and remain separate even when one model executes all of them. Use the currently active execution harness and do not proactively switch harnesses or providers. Multi-harness routing and lens-to-model assignment are intentionally left open for a future design; do not invent them here.
+
+**Paper reading is the default contract**: Default execution can terminate at `PAPER_COMPLETE` only after the frozen paper understanding, Chinese-first Paper Reader (`reader/paper_reader.html`, `paper_reader.md`, `reader/paper_reader.pdf`), bound semantic/visual reviews, and the real-paper regression release report all pass. Apply loads exactly one project document **only after explicit user intent** and writes exclusively to `apply/<project>/`.
 
 ## Required output
 
@@ -56,13 +59,16 @@ Supports local PDF files, DOIs (e.g. `10.1038/...`), arXiv IDs (e.g. `1706.03762
 │   ├── open_reading_manifest.json   # baseline hashes + contract/prompt versions
 │   ├── argument_reconstruction.json # first-class argument topology, author vs assessed argument, evidence promotion
 │   ├── candidate_clusters.json      # Layer 1 deterministic pre-clustering
-│   ├── lens_reconciliation.json     # Layer 2 semantic reconciliation + recorded conflicts
-│   ├── scientific_synthesis.json    # dynamic topic-centered cross-lens synthesis
+│   ├── frozen_evidence_package.json # immutable shared Council evidence boundary
+│   ├── lens_reconciliation.json     # compatibility mirror of Chair item output
+│   ├── lens_council.json            # Chair reconciliation, bounded cross-exam, unresolved state
+│   ├── scientific_synthesis.json    # synthesis derived only from Council output
 │   ├── evidence_graph.json          # typed claim/evidence relations (bound to SOURCE_SHA256)
 │   ├── figure_inventory.json        # extraction record (bound to SOURCE_SHA256)
 │   ├── source_map.json
 │   └── manifest.json                # freeze hashes and audit status
 ├── lens/{author,reviewer,mechanism,builder,anomaly,counterfactual}.json
+├── council/round1/{author,reviewer,mechanism,builder,anomaly,counterfactual}.json # frozen Round 1 snapshots
 ├── reader/                          # Chinese-first Paper Reader (immutable & project-independent)
 │   ├── paper_reader_ir.json         # single synthesis-rich content IR (and render_ir.json)
 │   ├── paper_reader.html            # interactive deep-reading report (and reader.html)
@@ -86,8 +92,9 @@ Supports local PDF files, DOIs (e.g. `10.1038/...`), arXiv IDs (e.g. `1706.03762
 5. **Renderer purity: renderers must be scientifically dumb.** Production renderers format presentation, typography, and layout, but must never invent mechanisms, limitations, hyperparameters, optimizers, or domain boilerplate. When evidence is absent, state explicitly or omit.
 6. **Page-first visual reconstruction; zero whole-page fallbacks.** Render complete PDF pages first, visually localize evidence second, deterministically crop third, verify fourth. Never publish a whole-page screenshot as a Figure/Table asset. Low-confidence visual binding fails closed to `NEEDS_REVIEW`.
 7. **Claim discipline.** Keep Observation, Author Interpretation and Reader Assessment separate. Distinguish in-paper evidence from cited evidence.
-8. **Independent Lens passes.** Author, Reviewer, Mechanism, Builder, Anomaly and Counterfactual are separate rereads of the frozen base understanding. One combined summary is not a Lens pass.
-9. **Cross-lens scientific synthesis without majority voting.** Dynamically derive synthesis units from reconstructed arguments and Lens findings (`scientific_synthesis.json`), free of hardcoded domain templates. Contradictions, anomalies, caveats and counterfactuals must be preserved, never erased.
+8. **Independent Lens passes.** Author, Reviewer, Mechanism, Builder, Anomaly and Counterfactual are separate Round-1 rereads of one shared frozen evidence package. One combined summary is not a Lens pass.
+9. **Evidence-grounded Lens Council.** A Council Chair reconciles Round-1 findings, may request at most one bounded selective cross-examination round, never uses majority voting, and preserves unresolved states.
+10. **Cross-lens scientific synthesis without majority voting.** Scientific Synthesis consumes the Chair Council output, not raw Lens reports. Contradictions, anomalies, caveats and counterfactuals must be preserved, never erased.
 10. **Chinese-first human reader; source preserved underneath.** Reader outputs are Chinese-first by default for human deep reading. Technical English terms and source evidence are preserved in parentheses.
 11. **Apply is EXPLICIT-REQUEST-ONLY.** Project Apply is not the next phase of a normal read; it runs only upon explicit user request. Paper outputs (`reader/`) and project outputs (`apply/<project>/`) are physically separate. The Paper Reader is immutable.
 12. **Uncertainty is data.** NOT_STATED, AMBIGUOUS, INSUFFICIENT_EVIDENCE, MODEL_UNCERTAIN and UNRESOLVED remain visible. Fail closed on uncertain tables (`STRUCTURE_UNCERTAIN`).
@@ -125,15 +132,9 @@ python scripts/full_audit.py --out output
 - **Anomaly:** real failures, subgroup flips, negative results and downplayed findings; empty is valid.
 - **Counterfactual:** serious alternative explanations that reuse the paper's evidence.
 
-## Reader structure (six narrative chapters + audit appendix)
+## Reader structure (paper-specific Story Spine + quiet provenance appendix)
 
-1. **一分钟看懂这篇论文:** 研究问题、核心方法、核心发现、最大价值、最大风险/边界。
-2. **论文到底在解决什么问题:** 背景痛点、已有先验局限、切入点、重要度判定。
-3. **方法到底怎么工作:** 端到端流程、核心组件拆解、公式与假设；可分析的图表就地呈现。
-4. **关键实验逐个说明:** 核心图表逐一精读（实验问题、观测结果、证明范围、盲区、异常信号）。
-5. **证据最终支持了什么:** 最坚实证据链、最薄弱推理链、替代解释、反常现象与适用边界。
-6. **结论与边界:** 已建立的结论、证据边界和未决问题。
-7. **证据审计附录:** 主张与 O/I/A 证据卡片列表、争议焦点、页面锚点、验证状态（次级可折叠）。
+The Reader follows the paper's reconstructed argument. Section count, titles, and order are derived from its question, motivation, method, decisive results, assessment, and boundaries rather than a fixed chapter template. Chinese-first prose carries the explanation; figures, equations, and local source links appear where the argument needs them. A quiet appendix links to the separate Evidence Atlas for audit detail; O/I/A cards and Lens vocabulary never enter the human narrative.
 
 默认 Reader 不包含“可复用技术内容”或项目迁移章节。论文技术细节提取是单独的显式意图（`PAPER_TECHNICAL_EXTRACTION`）；项目迁移仍只通过显式 `/evidentia-apply` 请求产生，且永不改写冻结 Paper Reader。
 

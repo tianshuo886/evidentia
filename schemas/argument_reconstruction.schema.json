@@ -52,7 +52,10 @@
         "experimental_questions": { "type": "array", "items": { "type": "string" } },
         "major_findings": { "type": "array", "items": { "type": "string" } },
         "justified_conclusion": { "type": "string" },
-        "scope_and_limits": { "type": "array", "items": { "type": "string" } }
+        "scope_and_limits": { "type": "array", "items": { "type": "string" } },
+        "sections": { "type": "array" },
+        "narrative_sections": { "type": "array" },
+        "nodes": { "type": "array" }
       },
       "additionalProperties": false
     },
