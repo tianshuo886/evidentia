@@ -132,3 +132,79 @@ def test_direct_baseline_task_is_real_model_contract_not_synthetic_fixture(tmp_p
     assert "model/" in task["forbidden_inputs"]
     assert "RESEARCH_MEMORY" in task["prohibited_context"]
     assert not schema_validate(task, "agent_task")
+
+
+def _valid_manuscript(root):
+    return {
+        "schema_version": "2.0",
+        "paper_id": "PAPER-V3",
+        "source_sha256": sha256(root / "source/paper.pdf"),
+        "created_at": "2026-10-01T00:00:00Z",
+        "document": {
+            "title": "Reader v3 test paper",
+            "subtitle": "中文科学精读稿",
+            "paper_meta": {
+                "authors": ["A. Researcher"], "venue": "Test", "year": 2026,
+                "doi": "", "pdf_sha256": sha256(root / "source/paper.pdf")
+            },
+            "executive_summary": {
+                "lead": "这篇论文回答一个清晰的科学问题。",
+                "takeaways": ["方法与结论均在测试范围内得到证据支持。"],
+                "key_question": "核心问题是什么？",
+                "core_finding": "结果支持核心主张。",
+                "core_boundary": "外推仍需验证。"
+            },
+            "story_spine": {
+                "central_question": "核心问题是什么？",
+                "motivation": "现有方法存在缺口。",
+                "prior_gap": "证据不完整。",
+                "central_move": "提出新方法。",
+                "method_logic": "输入到输出",
+                "experimental_questions": ["主要实验是否支持主张？"],
+                "major_findings": ["主要实验支持主张。"],
+                "justified_conclusion": "在测试范围内成立。",
+                "scope_and_limits": ["外推仍需验证。"]
+            },
+            "chapters": [{
+                "id": "c1", "chapter_num": "01", "title": "论文解决了什么问题",
+                "lead": "先建立研究问题与证据。",
+                "blocks": [{
+                    "type": "paragraph",
+                    "text": "论文在来源页中明确提出研究问题，并给出相应实验。",
+                    "evidence_refs": ["p.1"]
+                }]
+            }],
+            "appendix_summary": {
+                "claims_count": 0, "figures_count": 0, "tables_count": 0,
+                "conflicts_count": 0, "unresolved_count": 0,
+                "evidence_atlas_ref": "evidence_atlas.html"
+            }
+        }
+    }
+
+
+def test_v3_manuscript_integrity_rejects_phantom_evidence(tmp_path):
+    from reader_v3 import _validate_v3_manuscript
+    root = _workspace(tmp_path)
+    (root / "model/source_map.json").write_text(json.dumps({
+        "pages": [{"number": 1, "equations": []}]
+    }))
+    manuscript = _valid_manuscript(root)
+    assert _validate_v3_manuscript(root, manuscript) == []
+    manuscript["document"]["chapters"][0]["blocks"][0]["evidence_refs"] = ["F99"]
+    errors = _validate_v3_manuscript(root, manuscript)
+    assert any("unknown source evidence reference" in e for e in errors)
+
+
+def test_v3_evidence_atlas_does_not_require_legacy_paper_model(tmp_path):
+    from render_evidence_atlas_v3 import build_atlas
+    root = _workspace(tmp_path)
+    (root / "model/source_map.json").write_text(json.dumps({
+        "pages": [{"number": 1, "equations": []}]
+    }))
+    manuscript = _valid_manuscript(root)
+    (root / "reader/narrative_manuscript.json").write_text(json.dumps(manuscript))
+    atlas = build_atlas(root)
+    assert atlas["paper_id"] == "PAPER-V3"
+    assert any(x["id"] == "p.1" for x in atlas["items"])
+    assert not (root / "model/paper_model.json").exists()
