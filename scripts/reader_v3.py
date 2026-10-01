@@ -8,6 +8,7 @@ legacy narrative composer.
 from __future__ import annotations
 import argparse, json, shutil, sys
 from pathlib import Path
+from typing import Optional
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
@@ -38,7 +39,7 @@ def _status(root: Path) -> dict:
     return out
 
 
-def prepare_next(root: Path) -> Path | None:
+def prepare_next(root: Path) -> Optional[Path]:
     st = _status(root)
     if not st["source_ready"]:
         raise FileNotFoundError("Reader v3 requires an initialized workspace with source/paper.pdf")
