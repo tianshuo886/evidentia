@@ -20,6 +20,76 @@ from reader_v3_protocol import (
 )
 
 
+INTERNAL_MARKERS = (
+    "Author Lens", "Reviewer Lens", "Mechanism Lens", "Builder Lens",
+    "Anomaly Lens", "Counterfactual Lens", "Lens Council", "Council Chair",
+    "Revision Memo", "TASK-V3", "lens_v3", "schema_version", "source_sha256", "O/I/A"
+)
+
+
+def _allowed_evidence_ids(root: Path):
+    allowed = set()
+    inv_p = root / "model/figure_inventory.json"
+    if inv_p.exists():
+        for item in load_json(inv_p).get("items", []):
+            if item.get("id"):
+                allowed.add(str(item["id"]))
+    sm_p = root / "model/source_map.json"
+    if sm_p.exists():
+        for page in load_json(sm_p).get("pages", []):
+            n = page.get("number")
+            if n is not None:
+                allowed.add(f"p.{n}")
+            for eq in page.get("equations", []) if isinstance(page.get("equations", []), list) else []:
+                if isinstance(eq, dict) and eq.get("equation_id"):
+                    allowed.add(str(eq["equation_id"]))
+    return allowed
+
+
+def _walk_strings(obj):
+    if isinstance(obj, str):
+        yield obj
+    elif isinstance(obj, list):
+        for item in obj:
+            yield from _walk_strings(item)
+    elif isinstance(obj, dict):
+        for value in obj.values():
+            yield from _walk_strings(value)
+
+
+def _validate_v3_manuscript(root: Path, data: dict):
+    errors = list(schema_validate(data, "narrative_manuscript"))
+    visible_text = "\n".join(_walk_strings(data.get("document", {})))
+    for marker in INTERNAL_MARKERS:
+        if marker in visible_text:
+            errors.append(f"internal Reader-v3 vocabulary leaked into primary narrative: {marker}")
+
+    allowed = _allowed_evidence_ids(root)
+    for chapter in data.get("document", {}).get("chapters", []):
+        chapter_refs = set()
+        for block in chapter.get("blocks", []):
+            refs = [str(x) for x in (block.get("evidence_refs") or []) if x]
+            if block.get("evidence_id"):
+                refs.append(str(block["evidence_id"]))
+            chapter_refs.update(refs)
+            for ref in refs:
+                if ref not in allowed:
+                    errors.append(f"unknown source evidence reference {ref!r} in chapter {chapter.get('id')}")
+            if block.get("presentation_role") == "audit_only":
+                errors.append(f"audit_only evidence leaked into primary Reader: {block.get('evidence_id')}")
+            if block.get("type") in ("figure", "table"):
+                asset = block.get("asset")
+                if block.get("presentation_role") != "uncertain":
+                    if not asset:
+                        errors.append(f"{block.get('type')} {block.get('evidence_id')} has no bound asset")
+                    elif not (root / asset).exists():
+                        errors.append(f"{block.get('type')} {block.get('evidence_id')} asset does not exist: {asset}")
+        if not chapter_refs:
+            errors.append(f"chapter {chapter.get('id')} contains no source evidence references")
+    return errors
+
+
+
 def _status(root: Path) -> dict:
     out = {
         "source_ready": (root / "source/paper.pdf").exists(),
@@ -61,15 +131,16 @@ def render(root: Path):
     manuscript = root / "reader/narrative_manuscript.json"
     if not manuscript.exists():
         raise FileNotFoundError("Lead Writer manuscript is required before rendering")
-    errs = schema_validate(load_json(manuscript), "narrative_manuscript")
+    manuscript_data = load_json(manuscript)
+    errs = _validate_v3_manuscript(root, manuscript_data)
     if errs:
-        raise ValueError("Lead Writer manuscript failed schema validation:\n" + "\n".join(errs))
+        raise ValueError("Lead Writer manuscript failed Reader v3 integrity checks:\n" + "\n".join(errs))
     # Render directly from the Lead Writer manuscript. Do NOT call render_reader,
     # because the legacy orchestrator would overwrite it with deterministic composition.
     from render_paper_reader import render_paper_reader
-    from render_evidence_atlas import render_evidence_atlas
+    from render_evidence_atlas_v3 import render as render_evidence_atlas_v3
     render_paper_reader(root)
-    render_evidence_atlas(root)
+    render_evidence_atlas_v3(root)
     rdir = root / "reader"
     for src, dst in (("paper_reader.html", "reader.html"), ("paper_reader.md", "reader.md"), ("paper_reader.pdf", "reader.pdf")):
         s = rdir / src
