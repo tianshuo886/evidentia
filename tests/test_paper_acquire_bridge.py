@@ -14,6 +14,7 @@ def test_identifier_syntax_detection():
     assert paper_acquire_bridge.is_arxiv("1706.03762")
     assert paper_acquire_bridge.is_arxiv("https://arxiv.org/abs/1706.03762")
     assert paper_acquire_bridge.is_arxiv("arxiv:2312.12345v1")
+    assert paper_acquire_bridge.is_arxiv("10.48550/arXiv.1706.03762")
 
     assert paper_acquire_bridge.extract_doi("https://doi.org/10.1038/s41586-021-03819-2") == "10.1038/s41586-021-03819-2"
     assert paper_acquire_bridge.extract_arxiv_id("https://arxiv.org/abs/1706.03762") == "1706.03762"

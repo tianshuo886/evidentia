@@ -551,10 +551,14 @@ def inspect_memory(item_id, custom_root=None):
 def enforce_open_reading_firewall(task_packet):
     """Verify that Open Reading task packet strictly forbids and excludes research memory."""
     task_type = task_packet.get('task_type')
-    if task_type in ('OPEN_READING', 'LENS'):
+    if task_type in (
+        'OPEN_READING', 'LENS',
+        'LEAD_READING', 'LENS_V3', 'REVISION_MEMO', 'LEAD_WRITING',
+        'VISUAL_LOCALIZATION', 'DIRECT_READING_BASELINE', 'READER_EVALUATION'
+    ):
         prohibited = task_packet.get('prohibited_context', [])
         if 'RESEARCH_MEMORY' not in prohibited and 'cross-paper memory' not in prohibited:
-            return False, "Open Reading/Lens task packet must explicitly list RESEARCH_MEMORY in prohibited_context."
+            return False, f"{task_type} task packet must explicitly list RESEARCH_MEMORY or cross-paper memory in prohibited_context."
         # Verify no memory artifacts are in input_artifacts
         for k, v in task_packet.get('input_artifacts', {}).items():
             if 'memory' in str(k).lower() or 'memory' in str(v).lower():
