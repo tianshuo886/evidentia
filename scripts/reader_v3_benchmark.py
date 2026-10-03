@@ -41,9 +41,11 @@ def create_direct_task(root: Path) -> Path:
       "constraints":["REAL_MODEL_BASELINE","NO_EVIDENTIA_CONTEXT"],
       "instructions":(
         "Read this paper directly and produce the best deep-reading report you can for a researcher. "
-        "Explain the problem/gap, method/study design, decisive evidence and experiments, major findings, "
-        "what the evidence does and does not establish, limitations and unresolved questions. "
-        "Use coherent Chinese-first narrative. Do not assume or reference any Evidentia output."
+        "First determine how this particular paper constructs its case and characterize its native structure. "
+        "Explain the paper-specific claims, propositions, observations, design choices, proof or measurement steps, "
+        "decisive evidence, what that evidence does and does not establish, and unresolved issues. Do not force a "
+        "problem/gap/method/results/limitations sequence when the source does not use it. Use coherent Chinese-first "
+        "narrative. Do not assume or reference any Evidentia output."
       ),
       "executor_template":build_executor_metadata()
     }

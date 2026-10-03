@@ -25,7 +25,8 @@ def build_atlas(root: Path) -> dict:
     sm=load_json(root/"model/source_map.json") if (root/"model/source_map.json").exists() else {"pages":[]}
 
     usage={}
-    for ch in manuscript.get("document",{}).get("chapters",[]):
+    document = manuscript.get("document", {})
+    for ch in (document.get("sections") or document.get("chapters", [])):
         for block in ch.get("blocks",[]):
             refs=list(block.get("evidence_refs",[]) or [])
             if block.get("evidence_id"):

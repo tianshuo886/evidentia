@@ -35,7 +35,7 @@ def create_lead_reader_task(root: Path) -> Path:
         "required_capability": "DEEP_SCIENTIFIC_READING",
         "scientific_contract": (
             "Read the complete paper as a strong scientific reader before specialist critique. "
-            "Produce a coherent Paper Understanding Draft, not a schema-shaped summary."
+            "Produce a coherent open-form Paper Understanding Draft, not a schema-shaped summary."
         ),
         "description": "Reader v3 Lead Reader full-paper understanding pass.",
         "input_artifacts": {
@@ -61,14 +61,16 @@ def create_lead_reader_task(root: Path) -> Path:
             "EXPLICIT_UNCERTAINTY"
         ],
         "instructions": (
-            "Read the paper as a whole. Your primary job is comprehension, not auditing. "
-            "Explain in natural scientific prose: why the paper exists; the prior limitation/gap; "
-            "the central design move; how the method/study actually works; which experiments are decisive; "
-            "what the results directly establish; what remains uncertain; and the scope of the conclusion. "
-            "Use figures/tables/equations when they are necessary to understand the argument. "
-            "Do not expose internal Evidentia terminology. Do not discuss the user's project. "
-            "Classify paper_type using a concise scientific category such as method, experimental, theory, "
-            "clinical, observational, review, measurement, machine_learning, or remote_sensing."
+            "Read the paper as a whole. Your primary job is complete natural scientific understanding, not auditing. "
+            "Begin by asking: How does this particular paper actually construct its case? Reconstruct its own "
+            "paper/structure characterization and an open, ordered argument topology with source/evidence-grounded "
+            "nodes and relations. Choose node roles and relations that fit this paper; observation, hypothesis, "
+            "theorem, assumption, experiment, design choice, mechanism, contradiction, measurement, taxonomy branch, "
+            "boundary, result and unresolved issue are examples, never a required checklist. Preserve structurally "
+            "unusual forms such as proofs, taxonomies, reviews, measurement protocols, or multi-part empirical cases. "
+            "Then explain the paper in natural prose, identify decisive/source-critical evidence, and record uncertainty "
+            "and open issues. Do not force a problem→gap→method→experiment→result→limitation story. Do not expose "
+            "internal Evidentia terminology or discuss the user's project. Classify paper_type using a concise category."
         ),
         "executor_template": build_executor_metadata()
     }
@@ -147,6 +149,45 @@ def create_lens_tasks(root: Path) -> list[Path]:
     return out
 
 
+def create_narrative_plan_task(root: Path) -> Path:
+    root = Path(root)
+    draft_p = root / "model/paper_understanding_draft.json"
+    memo_p = root / "model/revision_memo.json"
+    for p in (draft_p, memo_p):
+        if not p.exists():
+            raise FileNotFoundError(f"Missing prerequisite: {p}")
+    draft = load_json(draft_p)
+    source_sha = _source_sha(root)
+    task = {
+        "task_id": "TASK-V3-NARRATIVE-PLAN",
+        "task_type": "NARRATIVE_PLAN",
+        "required_capability": "SCIENTIFIC_NARRATIVE_PLANNING",
+        "scientific_contract": "Design an open paper-specific narrative plan before final composition; fixed universal chapter slots are forbidden.",
+        "description": "Paper-specific dynamic narrative plan for the Lead Writer.",
+        "input_artifacts": {"source_pdf": "source/paper.pdf", "lead_reader_draft": "model/paper_understanding_draft.json", "revision_memo": "model/revision_memo.json"},
+        "target_output": "model/narrative_plan.json",
+        "output_schema": "narrative_plan",
+        "source_sha256": source_sha,
+        "base_sha256": sha256(draft_p),
+        "contract_version": "3.0",
+        "prompt_version": "3.1",
+        "allowed_inputs": ["source/", "source_pages/", "assets/", "model/paper_understanding_draft.json", "model/revision_memo.json"],
+        "forbidden_inputs": ["apply/", "project/", "memory/project/", "reader/paper_reader_ir.json", "reader/render_ir.json"],
+        "prohibited_context": ["PROJECT_APPLY", "RESEARCH_MEMORY", "legacy Reader IR"],
+        "constraints": ["PAPER_SPECIFIC_STRUCTURE", "OPEN_ORDER", "SOURCE_GROUNDED", "NO_FIXED_STORY_SLOTS", "PRESERVE_UNCERTAINTY"],
+        "instructions": (
+            "Determine the paper's own narrative architecture from the Lead Reader comprehension and Revision Memo. "
+            "Return ordered dynamic sections. Each section needs a title, purpose, proposition or question when one "
+            "exists, evidence refs, source anchors, and local figure/table/equation bindings when relevant. The count, "
+            "identity and order must be chosen by the paper, not by a universal template. A section may be a proof "
+            "step, taxonomy branch, measurement protocol, design trade-off, contradiction, result cluster, or another "
+            "form. Do not read or emit any legacy Reader IR."
+        ),
+        "executor_template": build_executor_metadata()
+    }
+    return validate_and_write_task(task, root / "tasks/v3/narrative_plan.json")
+
+
 def create_revision_memo_task(root: Path) -> Path:
     root = Path(root)
     manifest_p = root / "model/lens_v3_manifest.json"
@@ -199,7 +240,8 @@ def create_lead_writer_task(root: Path) -> Path:
     draft_p = root / "model/paper_understanding_draft.json"
     memo_p = root / "model/revision_memo.json"
     manifest_p = root / "model/lens_v3_manifest.json"
-    for p in (draft_p, memo_p, manifest_p):
+    plan_p = root / "model/narrative_plan.json"
+    for p in (draft_p, memo_p, manifest_p, plan_p):
         if not p.exists():
             raise FileNotFoundError(f"Missing prerequisite: {p}")
     manifest = load_json(manifest_p)
@@ -210,7 +252,7 @@ def create_lead_writer_task(root: Path) -> Path:
         "task_type": "LEAD_WRITING",
         "required_capability": "SCIENTIFIC_NARRATIVE_WRITING",
         "scientific_contract": (
-            "Write the final Chinese-first Paper Reader as a coherent scientific explanation. "
+            "Write the final Chinese-first Paper Reader as a coherent open-form scientific explanation. "
             "The Reader must be authored by the strong model, not assembled from fixed prose templates."
         ),
         "description": "Reader v3 Lead Writer final narrative pass.",
@@ -220,6 +262,7 @@ def create_lead_writer_task(root: Path) -> Path:
             "figure_inventory": "model/figure_inventory.json",
             "lead_reader_draft": "model/paper_understanding_draft.json",
             "revision_memo": "model/revision_memo.json",
+            "narrative_plan": "model/narrative_plan.json",
             "lens_outputs": lens_files
         },
         "target_output": "reader/narrative_manuscript.json",
@@ -227,24 +270,25 @@ def create_lead_writer_task(root: Path) -> Path:
         "source_sha256": source_sha,
         "base_sha256": sha256(draft_p),
         "contract_version": "3.0",
-        "prompt_version": "3.0",
+        "prompt_version": "3.1",
         "allowed_inputs": [
             "source/", "source_pages/", "assets/",
             "model/source_map.json", "model/figure_inventory.json",
             "model/paper_understanding_draft.json", "model/revision_memo.json",
-            "model/lens_v3_manifest.json", "lens_v3/"
+            "model/narrative_plan.json", "model/lens_v3_manifest.json", "lens_v3/"
         ],
         "forbidden_inputs": ["apply/", "project/", "memory/project/"],
         "prohibited_context": ["PROJECT_APPLY", "RESEARCH_MEMORY"],
         "constraints": [
-            "CHINESE_FIRST", "PAPER_SPECIFIC_STRUCTURE", "CONTINUOUS_NARRATIVE",
+            "CHINESE_FIRST", "PAPER_SPECIFIC_STRUCTURE", "OPEN_ORDER", "CONTINUOUS_NARRATIVE",
             "INLINE_EVIDENCE", "NO_INTERNAL_PIPELINE_VOCABULARY", "NO_PROJECT_TRANSFER"
         ],
         "instructions": (
-            "Return a narrative_manuscript v2 object. Re-read source evidence whenever the draft or Revision Memo requires it. "
-            "Write for a researcher who has not read the paper: explain why the paper exists, what it does, how it works, "
-            "which experiments/results are decisive, what those results establish, and what remains uncertain. "
-            "Use a paper-specific section structure rather than fixed slots. Place verified figures/tables/equations locally "
+            "Return a narrative_manuscript v3 object. Re-read source evidence whenever the draft, plan or Revision Memo requires it. "
+            "Write for a researcher who has not read the paper: first explain how this particular paper constructs its case, "
+            "then follow the supplied paper-specific plan without turning it into pipeline jargon. Use the plan's dynamic "
+            "section structure rather than fixed slots; do not add universal problem, gap, method, experiment, result or "
+            "limitation sections merely because they are conventional. Place verified figures/tables/equations locally "
             "where they advance the scientific argument; each visual block must explain what question it addresses, what it shows, "
             "what it supports, and what it does not prove. The primary prose must never mention Lens names, Council, O/I/A, schemas, "
             "hashes, task IDs, pipeline phases or audit machinery. Do not create project-transfer or reusable-component advice. "

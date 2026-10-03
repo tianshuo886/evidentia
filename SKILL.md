@@ -2,6 +2,7 @@
 name: evidentia
 description: Evidence-grounded Paper Research OS for one paper at a time. Build a source-reconstructed Paper Model and Evidence Graph, perform six independent Lens rereads, freeze the facts, render a unified Paper/Project Reader, and produce a provenance-linked Research Delta for a project. Use when the user asks to deeply read, audit, transfer, or build research memory from a supplied paper PDF. Not for paper search, triage, or multi-paper surveys.
 license: Apache-2.0
+compatibility: Python 3.9+, PyMuPDF, JSON Schema, and the existing Evidentia source-reconstruction dependencies.
 metadata:
   version: "1.1.2"
   argument-hint: "<paper.pdf> --out <directory> [--supplement ...] | apply --paper <directory> --project <document> [--focus ...] | memory ..."
@@ -132,9 +133,9 @@ python scripts/full_audit.py --out output
 - **Anomaly:** real failures, subgroup flips, negative results and downplayed findings; empty is valid.
 - **Counterfactual:** serious alternative explanations that reuse the paper's evidence.
 
-## Reader structure (paper-specific Story Spine + quiet provenance appendix)
+## Reader structure (open paper-specific narrative + quiet provenance appendix)
 
-The Reader follows the paper's reconstructed argument. Section count, titles, and order are derived from its question, motivation, method, decisive results, assessment, and boundaries rather than a fixed chapter template. Chinese-first prose carries the explanation; figures, equations, and local source links appear where the argument needs them. A quiet appendix links to the separate Evidence Atlas for audit detail; O/I/A cards and Lens vocabulary never enter the human narrative.
+The Reader follows the paper's reconstructed argument topology. Section count, titles, identity, and order are selected for that paper by the Dynamic Narrative Plan; no universal problem/gap/method/results/limits sequence is required. Chinese-first prose carries the explanation; figures, equations, and local source links appear where that paper's argument needs them. A quiet appendix links to the separate Evidence Atlas for audit detail; O/I/A cards and Lens vocabulary never enter the human narrative.
 
 默认 Reader 不包含“可复用技术内容”或项目迁移章节。论文技术细节提取是单独的显式意图（`PAPER_TECHNICAL_EXTRACTION`）；项目迁移仍只通过显式 `/evidentia-apply` 请求产生，且永不改写冻结 Paper Reader。
 

@@ -11,7 +11,14 @@ For each benchmark paper:
    same active harness / comparable strong-model capability used by Reader v3;
 2. complete Reader v3;
 3. run `reader_v3_benchmark.py evaluate`;
-4. inspect the pair evaluation and the actual rendered HTML manually.
+4. inspect the pair evaluation and the actual rendered HTML manually;
+5. after at least three completed real-paper Readers spanning different structures, run:
+   `python scripts/reader_structure_diversity.py --run <method-run> --run <empirical-run> --run <theory-or-review-run>`.
+
+The structural-diversity gate reports section architectures and asks whether the
+Reader feels shaped by the paper or by Evidentia. It is intentionally separate
+from the full Issue #19 benchmark and fails closed when fewer than three real
+Reader outputs are available.
 
 Required development corpus: 5–10 real papers across multiple paper types plus
 at least one post-freeze unseen paper.
