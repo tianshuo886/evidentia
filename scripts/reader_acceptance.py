@@ -2,7 +2,7 @@
 """Release gate for the human-facing Paper Reader (Issues #10–#13).
 
 This gate is intentionally deterministic and fail-closed. It checks:
-- Semantic story spine and paper-specific narrative sections
+- Open paper-specific narrative sections and source/evidence bindings
 - Lens invisibility across the entire document
 - Local evidence bindings, image decodability, and per-equation SVG rendering
 - Input firewall, intent isolation, and absence of unsolicited transfer prose
@@ -129,32 +129,22 @@ def _evaluate_artifact(root: Path, *, artifact_only=False):
     if errors:
         return _report(errors)
     doc = manuscript.get("document", {})
-    chapters = doc.get("chapters", [])
-    spine = doc.get("story_spine") or {}
+    chapters = doc.get("sections") or doc.get("chapters", [])
+    spine = doc.get("story_spine") or {}  # optional compatibility metadata only
 
-    # 1. Semantic story spine check
+    # 1. Open narrative check. Rigor is attached to sections and evidence
+    # bindings, never to a universal scientific story spine.
     errors.gate = "narrative_complete"
-    required_spine_text = ("central_question", "motivation", "central_move", "method_logic", "justified_conclusion")
-    for field in required_spine_text:
-        val = str(spine.get(field, "")).strip()
-        if not val or val == "NOT_STATED":
-            errors.append(f"story spine missing {field}")
-        elif len(val) < 4:
-            errors.append(f"story spine {field} is too short or a trivial placeholder: {val!r}")
-
-    required_spine_lists = ("experimental_questions", "major_findings", "scope_and_limits")
-    for field in required_spine_lists:
-        val = spine.get(field)
-        if not isinstance(val, list) or not val:
-            errors.append(f"story spine missing non-empty list for {field}")
-        elif all(str(x).strip() in ("", "NOT_STATED") or len(str(x).strip()) < 3 for x in val):
-            errors.append(f"story spine {field} contains only empty/trivial items")
-
+    if not isinstance(chapters, list) or not chapters:
+        errors.append("paper-specific Reader has no ordered sections")
     chapter_ids = [c.get("id") for c in chapters]
-    if len(chapters) < 4:
-        errors.append("paper story is too short to explain problem, method, evidence and boundaries")
     if len(set(chapter_ids)) != len(chapter_ids):
-        errors.append("paper story contains duplicate section ids")
+        errors.append("paper-specific Reader contains duplicate section ids")
+    for chapter in chapters:
+        if not str(chapter.get("title", "")).strip():
+            errors.append(f"section {chapter.get('id')} has no title")
+        if not isinstance(chapter.get("blocks"), list) or not chapter.get("blocks"):
+            errors.append(f"section {chapter.get('id')} has no typed presentation blocks")
     if all(cid in {"one_minute", "problem", "method", "experiments", "synthesis", "conclusions"} for cid in chapter_ids):
         errors.append("paper story still uses fixed template chapter ids")
 
@@ -176,8 +166,8 @@ def _evaluate_artifact(root: Path, *, artifact_only=False):
             errors.append(message)
     errors.gate = "narrative_complete"
     paragraphs = [b.get("text", "") for ch in chapters for b in ch.get("blocks", []) if b.get("type") == "paragraph"]
-    if len(paragraphs) < 4 or len(set(paragraphs)) < 4:
-        errors.append("narrative is empty, repetitive, or isolated fragments instead of explanatory paragraphs")
+    if not paragraphs or not any(str(p).strip() for p in paragraphs):
+        errors.append("narrative is empty or contains no explanatory paragraph")
 
     # 2. Lens and Atlas opacity check
     # Main reader must have 0 occurrences of Lens terms or Atlas substitute links
@@ -251,12 +241,13 @@ def _evaluate_artifact(root: Path, *, artifact_only=False):
             for view_name, view in views.items():
                 if _plain_text(title) not in view:
                     errors.append(f"chapter missing from {view_name} view: {title}")
-    for field in ("central_question", "central_move", "justified_conclusion"):
-        probe = _probe(spine.get(field))
+    orientation = doc.get("orientation") or doc.get("executive_summary") or {}
+    for field in ("lead",):
+        probe = _probe(orientation.get(field))
         if probe:
             for view_name, view in views.items():
                 if probe not in view:
-                    errors.append(f"story spine {field} missing from {view_name} view")
+                    errors.append(f"Reader orientation missing from {view_name} view")
 
     # 6. Local inline evidence bindings and image decodability
     errors.gate = "inline_evidence_complete"

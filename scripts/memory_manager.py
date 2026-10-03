@@ -553,7 +553,7 @@ def enforce_open_reading_firewall(task_packet):
     task_type = task_packet.get('task_type')
     if task_type in (
         'OPEN_READING', 'LENS',
-        'LEAD_READING', 'LENS_V3', 'REVISION_MEMO', 'LEAD_WRITING',
+        'LEAD_READING', 'LENS_V3', 'REVISION_MEMO', 'NARRATIVE_PLAN', 'LEAD_WRITING',
         'VISUAL_LOCALIZATION', 'DIRECT_READING_BASELINE', 'READER_EVALUATION'
     ):
         prohibited = task_packet.get('prohibited_context', [])

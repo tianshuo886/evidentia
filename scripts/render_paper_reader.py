@@ -472,12 +472,15 @@ def render_paper_reader_html(manuscript: dict, root: Path) -> str:
     doc = manuscript.get('document', {})
     title = doc.get('title', '未命名论文')
     subtitle = doc.get('subtitle', '中文科学精读稿')
+    orientation = doc.get('orientation') or doc.get('executive_summary') or {}
     meta = doc.get('paper_meta', {})
     authors = meta.get('authors', [])
     authors_str = '、'.join(authors) if authors else ''
     venue = meta.get('venue') or ''
     year = meta.get('year') or ''
-    chapters = doc.get('chapters', [])
+    # Dynamic sections are the canonical presentation sequence. `chapters` is
+    # accepted only as a compatibility alias for older manuscripts.
+    chapters = doc.get('sections') or doc.get('chapters', [])
     toc_items = []
     for idx, chapter in enumerate(chapters, 1):
         cid = chapter.get('id', f'spine-{idx:02d}')
@@ -489,15 +492,6 @@ def render_paper_reader_html(manuscript: dict, root: Path) -> str:
         blocks = '\n'.join(render_block_html(block, root) for block in chapter.get('blocks', []))
         chapters_html.append(f"<section class='chapter' id='ch-{esc(cid)}'><h1>{esc(chapter.get('title', ''))}</h1><div class='lead'>{esc(chapter.get('lead', ''))}</div><div class='chapter-body'>{blocks}</div></section>")
     app = doc.get('appendix_summary', {})
-    spine = doc.get('story_spine', {})
-    spine_source = f"""
-    <section class='chapter spine-source' id='ch-spine-source'>
-      <h1>论证主线原文线索</h1>
-      <p>{esc(spine.get('central_question', ''))}</p>
-      <p>{esc(spine.get('central_move', ''))}</p>
-      <p>{esc(spine.get('justified_conclusion', ''))}</p>
-    </section>
-    """
     refs = []
     pm = load_json(root / 'model/paper_model.json') if (root / 'model/paper_model.json').exists() else {}
     page_nums = {1}
@@ -521,10 +515,9 @@ def render_paper_reader_html(manuscript: dict, root: Path) -> str:
     return f"""<!doctype html>
 <html lang='zh-CN'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'><title>{esc(title)}</title><style>{KAMI_LONG_DOC_CSS}</style></head>
 <body>
-<section class='cover'><div><div class='cover-title'>{esc(title)}</div><div class='cover-sub'>{esc(subtitle)}</div></div><div class='cover-meta'>{esc(meta_line)}</div></section>
+<section class='cover'><div><div class='cover-title'>{esc(title)}</div><div class='cover-sub'>{esc(subtitle)}</div></div><div class='cover-meta'>{esc(meta_line)}</div>{('<div class="cover-orientation">' + esc(orientation.get('lead')) + '</div>') if orientation.get('lead') else ''}</section>
 <section class='toc'><h2>目录</h2>{''.join(toc_items)}</section>
 {''.join(chapters_html)}
-{spine_source}
 {appendix}
 </body></html>"""
 
@@ -532,13 +525,15 @@ def render_paper_reader_md(manuscript: dict) -> str:
     doc = manuscript.get('document', {})
     title = doc.get('title', '未命名论文')
     subtitle = doc.get('subtitle', '中文科学精读稿')
+    orientation = doc.get('orientation') or doc.get('executive_summary') or {}
     meta = doc.get('paper_meta', {})
     authors = '、'.join(meta.get('authors', [])) if meta.get('authors') else ''
     meta_line = ' · '.join(x for x in (authors, meta.get('venue', ''), str(meta.get('year') or '')) if x)
-    lines = [f'# {title}', f'**{subtitle}**', '', meta_line, '', '---', '', '## 目录']
-    spine = doc.get('story_spine', {})
-    lines.extend(['', '## 论证主线原文线索', '', str(spine.get('central_question', '')), '', str(spine.get('central_move', '')), '', str(spine.get('justified_conclusion', '')), ''])
-    chapters = doc.get('chapters', [])
+    lines = [f'# {title}', f'**{subtitle}**', '', meta_line, '']
+    if orientation.get('lead'):
+        lines.extend([f'> {orientation.get("lead")}', ''])
+    lines.extend(['---', '', '## 目录'])
+    chapters = doc.get('sections') or doc.get('chapters', [])
     for idx, chapter in enumerate(chapters, 1):
         lines.append(f"{idx}. [{chapter.get('title', '')}](# {chapter.get('id', '')})".replace('# ', '#'))
     lines.append(f"{len(chapters)+1}. [证据来源与页面锚点](#sources)")

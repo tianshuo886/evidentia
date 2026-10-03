@@ -24,7 +24,7 @@ def is_doi(s):
 
 def is_arxiv(s):
     s = s.strip()
-    return bool(re.match(r'^(https?://arxiv\.org/(abs|pdf)/)?([0-9]{4}\.[0-9]{4,5}(v[0-9]+)?)$', s, re.I)) or bool(re.match(r'^arxiv:[0-9]{4}\.[0-9]{4,5}', s, re.I))
+    return bool(re.match(r'^(https?://arxiv\.org/(abs|pdf)/)?([0-9]{4}\.[0-9]{4,5}(v[0-9]+)?)$', s, re.I)) or bool(re.match(r'^arxiv:[0-9]{4}\.[0-9]{4,5}', s, re.I)) or bool(re.match(r'^10\.48550/arxiv\.[0-9]{4}\.[0-9]{4,5}(v[0-9]+)?$', s, re.I))
 
 def is_url(s):
     return s.strip().startswith('http://') or s.strip().startswith('https://')

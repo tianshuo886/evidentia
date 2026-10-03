@@ -15,11 +15,11 @@ CORE_LENSES = [
         "title": "Argument & Narrative",
         "capability": "SCIENTIFIC_ARGUMENT_RECONSTRUCTION",
         "questions": [
-            "What scientific problem is the paper trying to solve and why does it matter?",
-            "What limitation or gap in prior work motivates the paper?",
-            "What is the central design move or proposition?",
-            "How does the argument progress from problem to method to evidence to conclusion?",
-            "What role does each decisive experiment play in that argument?"
+            "How does this particular paper construct its case, in its own terms?",
+            "What are the paper's material claims, propositions, observations or organizing moves?",
+            "What ordered topology connects those nodes, and which relations are author-stated versus assessed?",
+            "Which important thread would be lost if this paper were forced into a conventional scientific-story outline?",
+            "What source evidence makes each material transition credible?"
         ],
         "forbidden": ["project transfer", "implementation advice unrelated to faithful reading"]
     },
@@ -29,10 +29,10 @@ CORE_LENSES = [
         "title": "Method & Study Design",
         "capability": "SCIENTIFIC_METHOD_READING",
         "questions": [
-            "What did the authors actually do, in operational order?",
-            "Why does each method/study component exist?",
-            "What assumptions, controls, variables, training choices, measurements or proof steps matter?",
-            "Which design choices are necessary to interpret the results correctly?"
+            "What did the authors actually do, prove, measure, compare, classify or construct, in the order needed to understand this paper?",
+            "Why does each reported component or transition exist?",
+            "What assumptions, controls, variables, measurements, proof steps or selection rules matter?",
+            "Which design choices are necessary to interpret the paper's native argument correctly?"
         ],
         "forbidden": ["project transfer"]
     },
@@ -42,9 +42,9 @@ CORE_LENSES = [
         "title": "Evidence & Results",
         "capability": "SCIENTIFIC_EVIDENCE_READING",
         "questions": [
-            "What does each decisive figure/table/experiment directly show?",
-            "Which claim does each result support?",
-            "What is the magnitude/direction of the result where the source states it?",
+            "Which figures, tables, equations, observations, proof steps or source passages are decisive for this paper?",
+            "What does each directly show, and which node or relation does it support or contradict?",
+            "What is the magnitude, direction or formal consequence where the source states it?",
             "What does the evidence not establish?",
             "Are there anomalous or off-trend observations that matter?"
         ],
@@ -56,10 +56,10 @@ CORE_LENSES = [
         "title": "Validity & Boundary",
         "capability": "SCIENTIFIC_VALIDITY_REVIEW",
         "questions": [
-            "Are controls, baselines, comparisons and evaluation protocols adequate?",
-            "Are there confounds, leakage, causal overclaims or unsupported generalizations?",
-            "What alternative explanation could fit the same evidence?",
-            "Under what tested conditions does the conclusion hold, and what remains untested?"
+            "Are the paper's controls, comparisons, sampling, proof dependencies or evaluation protocols adequate for its own claims?",
+            "Are there confounds, leakage, unsupported generalizations or inferential jumps?",
+            "What alternative explanation or interpretation could fit the same evidence?",
+            "Which boundaries, assumptions and unresolved issues remain material?"
         ],
         "forbidden": ["project transfer"]
     }

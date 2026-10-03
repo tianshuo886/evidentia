@@ -179,7 +179,7 @@ export KAMI_ROOT=~/.agents/skills/kami   # or /path/to/Kami
 python scripts/kami_adapter.py --out paper-output --kami-root "$KAMI_ROOT"
 ```
 
-The adapter refuses to run without `KAMI_ROOT` and fails if `reader/reader.pdf` is missing, so the PDF snapshot (hence WeasyPrint) is required at this stage. A Reader without `kami_audit.json` status OK is draft-only, not shippable. `reader_acceptance.py` additionally requires the semantic story spine, Lens/Atlas invisibility in the main body, local figure/table bindings, formula safety, intent isolation, and HTML/Markdown/PDF parity. After the machine checks pass, still open the page images and confirm figure clarity, caption binding, page breaks, math, and the Paper/Project visual distinction by eye.
+The adapter refuses to run without `KAMI_ROOT` and fails if `reader/reader.pdf` is missing, so the PDF snapshot (hence WeasyPrint) is required at this stage. A Reader without `kami_audit.json` status OK is draft-only, not shippable. `reader_acceptance.py` additionally requires an open paper-specific ordered narrative with local source/evidence bindings, Lens/Atlas invisibility in the main body, formula safety, intent isolation, and HTML/Markdown/PDF parity. After the machine checks pass, still open the page images and confirm figure clarity, caption binding, page breaks, math, and the Paper/Project visual distinction by eye.
 
 ### 5. Apply the frozen paper to a project
 
