@@ -71,6 +71,30 @@ def test_source_page_rasterization_and_clean_crops(tmp_path):
     assert table_item['id'] == 'T01'
     assert table_item['headers'] is not None or table_item['structure_status'] == 'STRUCTURE_UNCERTAIN'
 
+def test_appendix_figure_and_table_labels_are_inventory_items(tmp_path):
+    pdf_path = tmp_path / 'appendix_paper.pdf'
+    inv_path = tmp_path / 'model/figure_inventory.json'
+    assets_dir = tmp_path / 'assets/figures'
+
+    import fitz
+    doc = fitz.open()
+    page = doc.new_page(width=595, height=842)
+    page.draw_rect(fitz.Rect(60, 100, 500, 300), color=(0.1, 0.5, 0.8), fill=(0.9, 0.95, 1.0))
+    page.insert_text((60, 320), 'Figure A.1: Appendix diagnostic plot.', fontsize=10)
+    page.insert_text((60, 400), 'Table A.1: Appendix results.', fontsize=10)
+    page.insert_text((60, 430), 'Method     Score', fontsize=9)
+    page.insert_text((60, 450), 'Ours       1.0', fontsize=9)
+    doc.save(str(pdf_path))
+
+    res = subprocess.run([
+        PY, str(ROOT / 'scripts/extract_figs.py'),
+        '--pdf', str(pdf_path), '--out', str(assets_dir), '--inventory', str(inv_path)
+    ], capture_output=True, text=True)
+    assert res.returncode == 0, res.stdout + res.stderr
+    inv = json.loads(inv_path.read_text(encoding='utf-8'))
+    assert {item['id'] for item in inv['items']} == {'FA1', 'TA1'}
+
+
 def test_uncertain_visual_fails_closed_without_whole_page_asset(tmp_path):
     pdf_path = tmp_path / 'elusive_paper.pdf'
     inv_path = tmp_path / 'model/figure_inventory.json'

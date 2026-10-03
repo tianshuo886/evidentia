@@ -16,9 +16,16 @@ import argparse, json, os, re, sys
 from pathlib import Path
 
 CAP_RE = re.compile(
-    r'^\s*((?:Fig(?:ure)?\.?|Table|Supplementary\s+(?:Fig(?:ure)?\.?|Table))\s*[S]?\d+[A-Za-z]?)\s*[:.]?\s*(.*)$',
+    r'^\s*((?:Fig(?:ure)?\.?|Table|Supplementary\s+(?:Fig(?:ure)?\.?|Table))\s*(?:[A-Z]\.)?[S]?\d+[A-Za-z]?)\s*[:.|]?\s*(.*)$',
     re.I
 )
+
+
+def _evidence_id(kind, label):
+    """Build stable IDs while preserving appendix/supplement prefixes."""
+    number = re.search(r'(?:[A-Z]\.)?[S]?\d+[A-Za-z]?', label, re.I)
+    token = re.sub(r'[^A-Za-z0-9]', '', number.group(0)) if number else '0'
+    return ('T' if kind == 'table' else 'F') + token.upper().zfill(2)
 
 def compute_binding_score(caption_bbox, candidate_bbox, kind, page_rect=None):
     """Compute binding score based on spatial adjacency, vertical distance, and horizontal alignment."""
@@ -196,10 +203,7 @@ def main():
                     continue
                 label = m.group(1).strip()
                 kind = 'table' if label.lower().startswith('table') else 'figure'
-                num_m = re.search(r'[S]?\d+[A-Za-z]?', label, re.I)
-                num = num_m.group(0) if num_m else '0'
-                num_int = int(re.sub(r'[^0-9]', '', num) or 0)
-                ident = ('T' if kind == 'table' else 'F') + f'{num_int:02d}'
+                ident = _evidence_id(kind, label)
                 if ident in seen:
                     ident += f'-p{pno+1}'
                 seen.add(ident)
