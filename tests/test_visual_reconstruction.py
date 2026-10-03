@@ -94,6 +94,20 @@ def test_appendix_figure_and_table_labels_are_inventory_items(tmp_path):
     inv = json.loads(inv_path.read_text(encoding='utf-8'))
     assert {item['id'] for item in inv['items']} == {'FA1', 'TA1'}
 
+    # In-text mentions are not caption inventory items when they lack an
+    # explicit caption separator.
+    page2 = fitz.open(pdf_path)
+    page2[0].insert_text((60, 500), 'Figure A.9 is discussed below, but is not drawn here.', fontsize=9)
+    page2.save(str(pdf_path.with_name('appendix_paper_with_reference.pdf')))
+    inv2_path = tmp_path / 'model/figure_inventory_2.json'
+    res2 = subprocess.run([
+        PY, str(ROOT / 'scripts/extract_figs.py'),
+        '--pdf', str(pdf_path.with_name('appendix_paper_with_reference.pdf')),
+        '--out', str(assets_dir), '--inventory', str(inv2_path)
+    ], capture_output=True, text=True)
+    assert res2.returncode == 0, res2.stdout + res2.stderr
+    assert {item['id'] for item in json.loads(inv2_path.read_text())['items']} == {'FA1', 'TA1'}
+
 
 def test_uncertain_visual_fails_closed_without_whole_page_asset(tmp_path):
     pdf_path = tmp_path / 'elusive_paper.pdf'

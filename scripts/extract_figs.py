@@ -16,7 +16,7 @@ import argparse, json, os, re, sys
 from pathlib import Path
 
 CAP_RE = re.compile(
-    r'^\s*((?:Fig(?:ure)?\.?|Table|Supplementary\s+(?:Fig(?:ure)?\.?|Table))\s*(?:[A-Z]\.)?[S]?\d+[A-Za-z]?)\s*[:.|]?\s*(.*)$',
+    r'^\s*((?:Fig(?:ure)?\.?|Table|Supplementary\s+(?:Fig(?:ure)?\.?|Table))\s*(?:[A-Z]\.)?[S]?\d+[A-Za-z]?)\s*(?::|\|)\s*(.*)$',
     re.I
 )
 
