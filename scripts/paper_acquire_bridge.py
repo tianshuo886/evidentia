@@ -60,19 +60,23 @@ def validate_full_pdf(path, *, min_pages=2, min_text_chars=1000):
     request strict validation.
     """
     path = Path(path)
-    if path.stat().st_size < 20_000:
-        raise ValueError(f"PDF is implausibly small ({path.stat().st_size} bytes): {path}")
     try:
+        if not path.read_bytes()[:1024].lstrip().startswith(b'%PDF-'):
+            raise ValueError("Source is not a PDF (HTML/metadata substitution refused)")
         import fitz
         doc = fitz.open(path)
+        if not doc.is_pdf or doc.needs_pass:
+            raise ValueError("Source must be an unencrypted PDF")
+        first_text = "\n".join(doc[i].get_text() for i in range(min(2, doc.page_count))).lower()
+        if "acquired via evidentia paper acquire bridge" in first_text:
+            raise ValueError("Evidentia-synthesized PDF is not an acceptable benchmark source")
+        if path.stat().st_size < 20_000:
+            raise ValueError(f"PDF is implausibly small ({path.stat().st_size} bytes): {path}")
         if doc.page_count < min_pages:
             raise ValueError(f"PDF has only {doc.page_count} page(s); full paper required")
         text_chars = sum(len(page.get_text().strip()) for page in doc)
         if text_chars < min_text_chars:
             raise ValueError(f"PDF contains only {text_chars} extracted text characters; full paper required")
-        first_text = "\n".join(doc[i].get_text() for i in range(min(2, doc.page_count))).lower()
-        if "acquired via evidentia paper acquire bridge" in first_text:
-            raise ValueError("Evidentia-synthesized PDF is not an acceptable benchmark source")
     except ImportError as exc:
         raise RuntimeError("PyMuPDF is required for strict PDF validation") from exc
     except ValueError:
@@ -182,7 +186,6 @@ def acquire_paper(input_str, out_dir=None, target_pdf_path=None, require_full_pd
         acquired_meta["arxiv_id"] = arxiv_id
         acquired_meta["source_type"] = "ARXIV"
         pdf_url = f"https://arxiv.org/pdf/{arxiv_id}.pdf"
-        acquired_meta["source_url"] = pdf_url
 
         # Try `pa` CLI
         pa_data = try_pa_acquire(arxiv_id)
@@ -191,6 +194,7 @@ def acquire_paper(input_str, out_dir=None, target_pdf_path=None, require_full_pd
             if pa_data.get('pdf_url'):
                 pdf_url = pa_data['pdf_url']
 
+        acquired_meta["source_url"] = pdf_url
         print(f"[PAPER_ACQUIRE] Downloading ArXiv PDF from {pdf_url}...")
         download_file(pdf_url, resolved_pdf)
         if require_full_pdf:
