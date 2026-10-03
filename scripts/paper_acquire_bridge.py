@@ -24,7 +24,13 @@ def is_doi(s):
 
 def is_arxiv(s):
     s = s.strip()
-    return bool(re.match(r'^(https?://arxiv\.org/(abs|pdf)/)?([0-9]{4}\.[0-9]{4,5}(v[0-9]+)?)$', s, re.I)) or bool(re.match(r'^arxiv:[0-9]{4}\.[0-9]{4,5}', s, re.I))
+    # arXiv's DOI form (10.48550/arXiv.<id>) must resolve through the
+    # canonical arXiv PDF endpoint, not Crossref/Unpaywall metadata fallback.
+    return (
+        bool(re.match(r'^(https?://arxiv\.org/(abs|pdf)/)?([0-9]{4}\.[0-9]{4,5}(v[0-9]+)?)$', s, re.I))
+        or bool(re.match(r'^arxiv:[0-9]{4}\.[0-9]{4,5}', s, re.I))
+        or bool(re.match(r'^(?:https?://(dx\.)?doi\.org/)?10\.48550/arxiv\.[0-9]{4}\.[0-9]{4,5}(v[0-9]+)?$', s, re.I))
+    )
 
 def is_url(s):
     return s.strip().startswith('http://') or s.strip().startswith('https://')
@@ -44,6 +50,36 @@ def download_file(url, target_path):
     with urllib.request.urlopen(req, timeout=30) as resp, open(target_path, 'wb') as f:
         shutil.copyfileobj(resp, f)
     return target_path
+
+
+def validate_full_pdf(path, *, min_pages=2, min_text_chars=1000):
+    """Fail closed unless *path* is a plausible real full-paper PDF.
+
+    This deliberately rejects metadata/abstract-only and Evidentia-synthesized
+    PDFs while leaving the historical permissive API unchanged unless callers
+    request strict validation.
+    """
+    path = Path(path)
+    if path.stat().st_size < 20_000:
+        raise ValueError(f"PDF is implausibly small ({path.stat().st_size} bytes): {path}")
+    try:
+        import fitz
+        doc = fitz.open(path)
+        if doc.page_count < min_pages:
+            raise ValueError(f"PDF has only {doc.page_count} page(s); full paper required")
+        text_chars = sum(len(page.get_text().strip()) for page in doc)
+        if text_chars < min_text_chars:
+            raise ValueError(f"PDF contains only {text_chars} extracted text characters; full paper required")
+        first_text = "\n".join(doc[i].get_text() for i in range(min(2, doc.page_count))).lower()
+        if "acquired via evidentia paper acquire bridge" in first_text:
+            raise ValueError("Evidentia-synthesized PDF is not an acceptable benchmark source")
+    except ImportError as exc:
+        raise RuntimeError("PyMuPDF is required for strict PDF validation") from exc
+    except ValueError:
+        raise
+    except Exception as exc:
+        raise ValueError(f"Unreadable PDF: {path}: {exc}") from exc
+    return path
 
 def query_crossref(doi):
     clean_doi = extract_doi(doi)
@@ -120,13 +156,19 @@ def synthesize_pdf_from_text(title, abstract, sections, out_pdf_path):
     doc.save(str(out_pdf_path))
     return out_pdf_path
 
-def acquire_paper(input_str, out_dir=None, target_pdf_path=None):
-    """Acquire paper by local path, DOI, arXiv ID, or URL."""
+def acquire_paper(input_str, out_dir=None, target_pdf_path=None, require_full_pdf=False):
+    """Acquire paper by local path, DOI, arXiv ID, or URL.
+
+    ``require_full_pdf`` is used by empirical benchmark preparation and refuses
+    the legacy metadata/abstract synthesis fallback.
+    """
     s = str(input_str).strip()
 
     # 1. Local PDF check
     p = Path(s)
     if p.exists() and p.suffix.lower() == '.pdf':
+        if require_full_pdf:
+            validate_full_pdf(p)
         return p, {"source_type": "LOCAL_PDF", "path": str(p.resolve())}
 
     print(f"[PAPER_ACQUIRE] Resolving paper identifier: {s}...")
@@ -140,6 +182,7 @@ def acquire_paper(input_str, out_dir=None, target_pdf_path=None):
         acquired_meta["arxiv_id"] = arxiv_id
         acquired_meta["source_type"] = "ARXIV"
         pdf_url = f"https://arxiv.org/pdf/{arxiv_id}.pdf"
+        acquired_meta["source_url"] = pdf_url
 
         # Try `pa` CLI
         pa_data = try_pa_acquire(arxiv_id)
@@ -150,6 +193,8 @@ def acquire_paper(input_str, out_dir=None, target_pdf_path=None):
 
         print(f"[PAPER_ACQUIRE] Downloading ArXiv PDF from {pdf_url}...")
         download_file(pdf_url, resolved_pdf)
+        if require_full_pdf:
+            validate_full_pdf(resolved_pdf)
         return resolved_pdf, acquired_meta
 
     # 3. DOI
@@ -179,15 +224,22 @@ def acquire_paper(input_str, out_dir=None, target_pdf_path=None):
 
         if pdf_url:
             print(f"[PAPER_ACQUIRE] Downloading Open Access PDF from {pdf_url}...")
+            acquired_meta["source_url"] = pdf_url
             try:
                 download_file(pdf_url, resolved_pdf)
+                if require_full_pdf:
+                    validate_full_pdf(resolved_pdf)
                 return resolved_pdf, acquired_meta
             except Exception as e:
+                if require_full_pdf:
+                    raise ValueError(f"Downloaded source is not a valid full PDF: {e}") from e
                 print(f"[PAPER_ACQUIRE] Direct PDF download failed: {e}. Falling back to structured synthesis.")
 
         # 3d. Paywalled fallback: synthesize structured PDF from acquired metadata & abstract
         title = acquired_meta.get('title', f"Paper {doi}")
         abstract = acquired_meta.get('abstract', '')
+        if require_full_pdf:
+            raise ValueError(f"No publicly accessible full PDF resolved for DOI {doi}; synthetic substitution is forbidden")
         print(f"[PAPER_ACQUIRE] Note: Direct publisher PDF requires institutional subscription. Synthesizing structured source PDF from verified metadata & abstract...")
         synthesize_pdf_from_text(title, abstract, [f"DOI: {doi}", f"Venue: {acquired_meta.get('venue', '')}", f"Authors: {', '.join(acquired_meta.get('authors', []))}"], resolved_pdf)
         return resolved_pdf, acquired_meta
@@ -196,7 +248,9 @@ def acquire_paper(input_str, out_dir=None, target_pdf_path=None):
     if is_url(s) and (s.lower().endswith('.pdf') or 'pdf' in s.lower()):
         print(f"[PAPER_ACQUIRE] Downloading direct PDF URL from {s}...")
         download_file(s, resolved_pdf)
-        return resolved_pdf, {"source_type": "DIRECT_URL", "url": s}
+        if require_full_pdf:
+            validate_full_pdf(resolved_pdf)
+        return resolved_pdf, {"source_type": "DIRECT_URL", "url": s, "source_url": s}
 
     raise ValueError(f"Could not resolve paper input '{s}'. Please provide a valid PDF file path, DOI, arXiv ID, or URL.")
 
