@@ -37,17 +37,17 @@
     },
     "BENCH-03-REMOTE-SENSING-FOREST": {
       "major_claims": [
-        {"id": "C01", "statement": "Probabilistic fusion of sparse LiDAR GEDI profiles and dense Sentinel-2 imagery enables 10m canopy height estimation.", "grounding_evidence": ["Figure 3", "Table 3"]}
+        {"id": "C01", "statement": "A probabilistic deep-learning model fusing sparse GEDI LiDAR supervision with dense Sentinel-2 imagery produces a global 10m canopy-top-height map for 2020 with predictive uncertainty.", "grounding_evidence": ["Figure 1", "Figure 2", "Extended Data Table 1"]}
       ],
       "known_limitations": [
-        {"id": "L01", "text": "Cloud cover and topographic slope distort LiDAR wave returns."},
-        {"id": "L02", "text": "Optical texture saturation in dense multi-layered tropical canopies."}
+        {"id": "L01", "text": "Optical imagery cannot fully resolve structurally ambiguous vegetation; uncertainty is high in GEDI-uncovered, cloud- or snow-affected regions."},
+        {"id": "L02", "text": "Low vegetation is sometimes overestimated and uncertainty calibration varies by biome and standard-deviation range."}
       ],
       "mechanisms": [
-        {"id": "M01", "name": "Probabilistic Deep Residual Inversion", "evidence": ["Figure 2"]}
+        {"id": "M01", "name": "Probabilistic deep ensemble with sparse GEDI supervision", "evidence": ["Figure 1", "Methods, pp. 1785–1786"]}
       ],
       "portable_components": [
-        {"id": "PC01", "name": "Canopy Inversion Convolutional Backbone", "io": "Multispectral 10m bands -> Mean height and uncertainty"}
+        {"id": "PC01", "name": "Sentinel-2 canopy-height CNN", "io": "12 Sentinel-2 bands + encoded coordinates -> canopy-height mean and predictive variance"}
       ]
     },
     "BENCH-04-ALPHAFOLD2-STRUCTURE": {

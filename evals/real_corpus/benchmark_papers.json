@@ -29,14 +29,14 @@
     {
       "id": "BENCH-03-REMOTE-SENSING-FOREST",
       "category": "Remote sensing & environmental monitoring",
-      "title": "High-Resolution Canopy Height Modeling from GEDI and Sentinel-2",
-      "authors": ["N. Lang", "K. Schindler", "J. Wegner"],
-      "year": 2022,
-      "venue": "Remote Sensing of Environment",
-      "open_access_doi": "10.1016/j.rse.2022.113070",
+      "title": "A high-resolution canopy height model of the Earth",
+      "authors": ["Nico Lang", "Walter Jetz", "Konrad Schindler", "Jan Dirk Wegner"],
+      "year": 2023,
+      "venue": "Nature Ecology & Evolution",
+      "open_access_doi": "10.1038/s41559-023-02206-6",
       "license": "CC-BY-4.0",
-      "key_claims": ["C01: Probabilistic fusion of spaceborne LiDAR and optical imagery enables global 10m canopy height maps"],
-      "key_evidence": ["Figure 3", "Figure 7", "Table 3"]
+      "key_claims": ["C01: A probabilistic deep-learning model fusing sparse GEDI spaceborne LiDAR with dense Sentinel-2 imagery produces a global 10 m canopy-top-height map for 2020 with uncertainty estimates"],
+      "key_evidence": ["Figure 1", "Figure 2", "Figure 3", "Extended Data Table 1"]
     },
     {
       "id": "BENCH-04-ALPHAFOLD2-STRUCTURE",

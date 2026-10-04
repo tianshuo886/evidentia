@@ -1,0 +1,11 @@
+{
+  "status": "QUARANTINED",
+  "benchmark_id": "BENCH-03-REMOTE-SENSING-FOREST",
+  "incorrect_identifier": "10.1016/j.rse.2022.113070",
+  "reason": "The DOI resolves to a different Remote Sensing of Environment paper about gapless all-weather land-surface temperature, not the intended canopy-height publication.",
+  "disposition": "No source PDF or derived artifacts from the incorrect identity are accepted in the active BENCH-03 workspace.",
+  "replacement_identifier": "10.1038/s41559-023-02206-6",
+  "replacement_title": "A high-resolution canopy height model of the Earth",
+  "replacement_venue": "Nature Ecology & Evolution",
+  "replacement_year": 2023
+}

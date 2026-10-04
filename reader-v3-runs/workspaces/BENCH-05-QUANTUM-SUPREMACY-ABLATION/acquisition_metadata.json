@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "identifier": "10.1038/s41586-019-1666-5",
+  "doi": "10.1038/s41586-019-1666-5",
+  "source_type": "PUBLISHER_FULL_PDF",
+  "source_url": "https://www.nature.com/articles/s41586-019-1666-5.pdf",
+  "landing_page_url": "https://www.nature.com/articles/s41586-019-1666-5",
+  "acquisition_method": "DOI -> Crossref/Unpaywall identity resolution -> Nature publisher PDF",
+  "acquired_at": "2026-10-03T17:35:51Z",
+  "identity_verification": {
+    "title": "Quantum supremacy using a programmable superconducting processor",
+    "authors": [
+      "Frank Arute",
+      "Kunal Arya",
+      "Ryan Babbush",
+      "et al."
+    ],
+    "venue": "Nature",
+    "year": 2019,
+    "doi_in_pdf": "10.1038/s41586-019-1666-5",
+    "pdf_first_page_text": "Quantum supremacy using a programmable superconducting processor",
+    "verification_method": "registry metadata, publisher PDF metadata, DOI on first page, and first-page bibliographic text"
+  },
+  "source_file": "source/paper.pdf",
+  "source_sha256": "6f3030abb7d9d4f0624a5cbe5ca2ff673df63afc85c97fadd0bf7db780c8dbaf",
+  "full_paper_validation": {
+    "format": "PDF",
+    "page_count": 7,
+    "text_chars": 42341,
+    "encrypted": false,
+    "synthetic_substitution": false
+  }
+}

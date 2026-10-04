@@ -1,0 +1,49 @@
+{
+  "task_id": "TASK-V3-DIRECT-BENCH-05-QUANTUM-SUPREMACY-ABLATION",
+  "task_type": "DIRECT_READING_BASELINE",
+  "required_capability": "DEEP_SCIENTIFIC_READING",
+  "scientific_contract": "Read the real paper directly with no Evidentia intermediate artifacts. Produce the strongest fair deep-reading baseline.",
+  "description": "Real direct strong-model paper-reading baseline.",
+  "input_artifacts": {
+    "source_pdf": "source/paper.pdf"
+  },
+  "target_output": "evals/reader_v3/BENCH-05-QUANTUM-SUPREMACY-ABLATION/direct_ai.json",
+  "output_schema": "direct_reading_baseline",
+  "source_sha256": "6f3030abb7d9d4f0624a5cbe5ca2ff673df63afc85c97fadd0bf7db780c8dbaf",
+  "base_sha256": null,
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "allowed_inputs": [
+    "source/paper.pdf"
+  ],
+  "forbidden_inputs": [
+    "model/",
+    "lens/",
+    "lens_v3/",
+    "reader/",
+    "apply/",
+    "project/",
+    "memory/"
+  ],
+  "prohibited_context": [
+    "Evidentia intermediate artifacts",
+    "PROJECT_APPLY",
+    "RESEARCH_MEMORY"
+  ],
+  "constraints": [
+    "REAL_MODEL_BASELINE",
+    "NO_EVIDENTIA_CONTEXT"
+  ],
+  "instructions": "Read this paper directly and produce the best deep-reading report you can for a researcher. Explain the problem/gap, method/study design, decisive evidence and experiments, major findings, what the evidence does and does not establish, limitations and unresolved questions. Use coherent Chinese-first narrative. Do not assume or reference any Evidentia output.",
+  "executor_template": {
+    "host": "generic-host",
+    "host_version": "UNKNOWN",
+    "provider": "openai-codex",
+    "model": "gpt-6.1-sol",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "standard",
+    "tool_profile": "paper-only",
+    "started_at": "2026-10-04T01:45:24.176423+00:00",
+    "completed_at": "2026-10-04T01:45:24.176423+00:00"
+  }
+}
