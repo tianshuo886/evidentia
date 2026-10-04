@@ -19,10 +19,10 @@ from pathlib import Path
 from render_paper_reader import normalize_latex
 from validate_common import load_json, schema_validate, sha256
 from reader_review import semantic_review_errors, visual_review_errors, bindings, implementation_hash
-from reader_integrity import parity_errors, firewall_errors, ReaderHTML
+from reader_integrity import parity_errors, firewall_errors, lens_execution_provenance_errors, ReaderHTML
 
 GATES = ("narrative_complete", "lens_invisible", "inline_evidence_complete", "equations_valid",
-         "intent_isolated", "unsupported_prose_free", "html_md_pdf_parity", "visual_review")
+         "intent_isolated", "execution_provenance", "unsupported_prose_free", "html_md_pdf_parity", "visual_review")
 
 
 class GateErrors(list):
@@ -207,6 +207,8 @@ def _evaluate_artifact(root: Path, *, artifact_only=False):
         intent = "PAPER_READING"
         state = {}
     errors.extend(firewall_errors(root, intent, state))
+    errors.gate = "execution_provenance"
+    errors.extend(lens_execution_provenance_errors(root))
 
     if intent in ("PAPER_READING", "PAPER_TECHNICAL_EXTRACTION"):
         apply_p = root / "apply"

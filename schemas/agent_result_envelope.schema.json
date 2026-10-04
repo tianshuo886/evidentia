@@ -72,7 +72,60 @@
       "type": "string"
     },
     "input_hashes": {
-      "type": "object"
+      "type": "object",
+      "additionalProperties": {"type": "string"}
+    },
+    "execution_binding": {
+      "type": "object",
+      "required": ["execution_id", "nonce", "dispatch_sha256", "task_sha256", "code_sha"],
+      "properties": {
+        "execution_id": {"type": "string"},
+        "nonce": {"type": "string"},
+        "dispatch_sha256": {"type": "string"},
+        "task_sha256": {"type": "string"},
+        "code_sha": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "execution_manifest": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "boundary",
+        "snapshot_root",
+        "task_id",
+        "lens_id",
+        "source_sha256",
+        "contract_version",
+        "prompt_version",
+        "material_inputs",
+        "forbidden_paths_checked",
+        "forbidden_paths_present",
+        "sibling_lens_outputs_present",
+        "manifest_sha256"
+      ],
+      "properties": {
+        "schema_version": {"type": "string"},
+        "boundary": {"type": "string"},
+        "snapshot_root": {"type": "string"},
+        "task_id": {"type": "string"},
+        "lens_id": {"type": "string"},
+        "source_sha256": {"type": "string"},
+        "base_sha256": {"type": ["string", "null"]},
+        "contract_version": {"type": "string"},
+        "prompt_version": {"type": "string"},
+        "task_sha256": {"type": ["string", "null"]},
+        "task_prompt_sha256": {"type": "string"},
+        "code_sha": {"type": "string"},
+        "material_inputs": {"type": "object", "additionalProperties": {"type": "string"}},
+        "forbidden_paths_checked": {"type": "array", "items": {"type": "string"}},
+        "forbidden_paths_present": {"type": "array", "items": {"type": "string"}},
+        "sibling_lens_outputs_present": {"type": "boolean"},
+        "executor": {"type": "object"},
+        "output_sha256": {"type": ["string", "null"]},
+        "manifest_sha256": {"type": "string"}
+      },
+      "additionalProperties": false
     },
     "contract_version": {
       "type": "string"

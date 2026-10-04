@@ -68,6 +68,41 @@ def compute_binding_score(caption_bbox, candidate_bbox, kind, page_rect=None):
     v_score = max(0.0, 1.0 - max(0, v_dist) / 450.0)
     return round(0.5 * h_score + 0.5 * v_score, 2)
 
+def _table_text_bbox(page, caption_bbox, page_rect):
+    """Infer a table region from dense multi-column text near either caption side."""
+    words = page.get_text('words')
+    candidates = []
+    for direction in ("before", "after"):
+        selected = []
+        for word in words:
+            if direction == "before":
+                distance = caption_bbox[1] - word[3]
+            else:
+                distance = word[1] - caption_bbox[3]
+            if 0 <= distance < 320 and abs(word[0] - caption_bbox[0]) < 260:
+                selected.append(word)
+        if not selected:
+            continue
+        lines = {}
+        for word in selected:
+            y = round(((word[1] + word[3]) / 2.0) / 4.0) * 4.0
+            lines.setdefault(y, []).append(word)
+        ordered = [sorted(v, key=lambda x: x[0]) for _, v in sorted(lines.items())]
+        multi_column_lines = sum(
+            1 for row in ordered
+            if sum(1 for left, right in zip(row, row[1:]) if right[0] - left[2] > 22) >= 1
+        )
+        if len(ordered) < 2 or multi_column_lines < 2:
+            continue
+        x0 = max(0.0, min(w[0] for w in selected) - 5)
+        y0 = max(0.0, min(w[1] for w in selected) - 5)
+        x1 = min(page_rect.width, max(w[2] for w in selected) + 5)
+        y1 = min(page_rect.height, max(w[3] for w in selected) + 5)
+        score = multi_column_lines * 4 + min(len(ordered), 20) - (min(abs(caption_bbox[1] - y1), abs(y0 - caption_bbox[3])) / 200)
+        candidates.append((score, [x0, y0, x1, y1]))
+    return max(candidates, key=lambda item: item[0])[1] if candidates else None
+
+
 def extract_table_cells(page, table_bbox, caption_bbox):
     """Deterministically extract structured table cells or return uncertain."""
     if not table_bbox:
@@ -177,19 +212,41 @@ def main():
                 if r_area < 0.82 * page_area:
                     candidate_rects.append((list(r), xref))
 
-        # Also collect vector drawings bounding clusters (for vector figures)
+        # Also collect vector drawings, merging nearby components so a
+        # multi-part vector figure cannot collapse to one tiny subcomponent.
         drawings = page.get_drawings()
         if drawings:
-            # Cluster drawings by bounding box
-            cluster_boxes = []
+            boxes = []
             for d in drawings:
                 dr = d.get('rect')
-                if dr:
-                    dr_area = max(0, dr[2] - dr[0]) * max(0, dr[3] - dr[1])
-                    if 1500 < dr_area < 0.80 * page_area:
-                        cluster_boxes.append(list(dr))
-            for cb in cluster_boxes[:8]:
-                candidate_rects.append((cb, None))
+                if not dr:
+                    continue
+                dr_area = max(0, dr[2] - dr[0]) * max(0, dr[3] - dr[1])
+                if 20 < dr_area < 0.80 * page_area:
+                    boxes.append(list(dr))
+            changed = True
+            while changed:
+                changed = False
+                merged = []
+                while boxes:
+                    current = boxes.pop(0)
+                    keep = []
+                    for other in boxes:
+                        gap_x = max(0, max(current[0], other[0]) - min(current[2], other[2]))
+                        gap_y = max(0, max(current[1], other[1]) - min(current[3], other[3]))
+                        overlaps_or_near = gap_x <= 24 and gap_y <= 24
+                        if overlaps_or_near:
+                            current = [min(current[0], other[0]), min(current[1], other[1]), max(current[2], other[2]), max(current[3], other[3])]
+                            changed = True
+                        else:
+                            keep.append(other)
+                    boxes = keep
+                    merged.append(current)
+                boxes = merged
+            for cb in boxes[:16]:
+                cb_area = max(0, cb[2] - cb[0]) * max(0, cb[3] - cb[1])
+                if 1500 < cb_area < 0.80 * page_area:
+                    candidate_rects.append((cb, None))
 
         # 2. Collect text blocks to detect captions and table lines
         blocks = page.get_text('blocks')
@@ -211,10 +268,14 @@ def main():
                 cap = (label + ' ' + m.group(2)).strip()
                 subfigs = sorted(set(re.findall(r'\(([a-z])\)', cap, re.I)))
 
-                # Find best matching candidate visual region using geometry
-                best_cand = None
-                best_score = 0.0
-                for cand_bbox, xref in candidate_rects:
+                # Tables are text/rule regions in many PDFs, not image/drawing
+                # regions. Prefer a nearby dense multi-column text inference;
+                # this prevents a chart below the caption from being reused as
+                # the table asset.
+                table_text_bbox = _table_text_bbox(page, bbox, page_rect) if kind == 'table' else None
+                best_cand = (table_text_bbox, None) if table_text_bbox else None
+                best_score = 0.92 if table_text_bbox else 0.0
+                for cand_bbox, xref in ([] if table_text_bbox else candidate_rects):
                     score = compute_binding_score(bbox, cand_bbox, kind, page_rect=page_rect)
                     if score > best_score:
                         best_score = score

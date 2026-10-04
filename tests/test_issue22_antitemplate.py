@@ -5,7 +5,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
-from render_paper_reader import render_paper_reader_html, render_paper_reader_md
+from render_paper_reader import render_paper_reader_html, render_paper_reader_md, rebind_visual_assets
 from validate_common import schema_validate
 
 
@@ -93,6 +93,18 @@ def test_structural_diversity_gate_accepts_materially_different_architectures(tm
     report = evaluate(roots)
     assert report["status"] == "PASS", report
     assert report["materially_different_architectures"] is True
+
+
+def test_visual_binding_resolves_by_evidence_identity_not_stale_writer_path(tmp_path):
+    root = tmp_path / "workspace"
+    (root / "model").mkdir(parents=True)
+    (root / "assets/figures").mkdir(parents=True)
+    (root / "assets/figures/v3_F02.png").write_bytes(b"png")
+    (root / "model/figure_inventory.json").write_text(json.dumps({"items": [{"id": "F02", "file": "assets/figures/v3_F02.png"}]}))
+    manuscript = {"document": {"sections": [{"id": "s1", "blocks": [{"type": "figure", "evidence_id": "F02", "asset": "assets/figures/old_F02.png"}]}]}}
+    changes = rebind_visual_assets(manuscript, root)
+    assert changes == [{"evidence_id": "F02", "old_asset": "assets/figures/old_F02.png", "new_asset": "assets/figures/v3_F02.png"}]
+    assert manuscript["document"]["sections"][0]["blocks"][0]["asset"] == "assets/figures/v3_F02.png"
 
 
 def test_legacy_reader_ir_is_explicitly_downstream_projection():
