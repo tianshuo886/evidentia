@@ -1,0 +1,71 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-10-04T01:50:00Z",
+  "purpose": "Issue #19 development-corpus readiness after BENCH-03 identity correction",
+  "registry": "evals/real_corpus/benchmark_papers.json",
+  "excluded_ids": ["BENCH-01-VASWANI-ATTENTION"],
+  "unseen_paper_selected": false,
+  "condition_b_runs_started": false,
+  "rows": [
+    {
+      "benchmark_id": "BENCH-02-LORA-ADAPTATION",
+      "real_pdf_acquired": true,
+      "source_sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+      "source_sha_verified": true,
+      "source_reconstruction_complete": true,
+      "source_pages_complete": true,
+      "figure_table_equation_inventory_complete": true,
+      "visual_tasks_prepared": true,
+      "direct_ai_baseline_complete": true,
+      "direct_ai_schema_valid": true,
+      "agent_result_envelope_valid": true,
+      "provenance_complete": true,
+      "blocker_notes": "None; visual preparation records two deterministic candidates requiring later semantic review."
+    },
+    {
+      "benchmark_id": "BENCH-03-REMOTE-SENSING-FOREST",
+      "real_pdf_acquired": true,
+      "source_sha256": "b4d103e6ab0664d96c31a00a0ee4d99e9fbc54a9f1a8eeea500716843d4eabce",
+      "source_sha_verified": true,
+      "source_reconstruction_complete": true,
+      "source_pages_complete": true,
+      "figure_table_equation_inventory_complete": true,
+      "visual_tasks_prepared": true,
+      "direct_ai_baseline_complete": true,
+      "direct_ai_schema_valid": true,
+      "agent_result_envelope_valid": true,
+      "provenance_complete": true,
+      "blocker_notes": "Corrected DOI and publisher PDF verified. Inventory covers Figures 1–4, Extended Data Figures 1–8, Extended Data Tables 1–2, and 79 source equations; eight duplicated continuation-caption localizations remain explicitly NEEDS_REVIEW."
+    },
+    {
+      "benchmark_id": "BENCH-04-ALPHAFOLD2-STRUCTURE",
+      "real_pdf_acquired": true,
+      "source_sha256": "6eae057a9faf4f671c3101e0745ed704460c6d3dec77243dfd3a9f2d2ab68970",
+      "source_sha_verified": true,
+      "source_reconstruction_complete": true,
+      "source_pages_complete": true,
+      "figure_table_equation_inventory_complete": true,
+      "visual_tasks_prepared": true,
+      "direct_ai_baseline_complete": true,
+      "direct_ai_schema_valid": true,
+      "agent_result_envelope_valid": true,
+      "provenance_complete": true,
+      "blocker_notes": "None."
+    },
+    {
+      "benchmark_id": "BENCH-05-QUANTUM-SUPREMACY-ABLATION",
+      "real_pdf_acquired": true,
+      "source_sha256": "6f3030abb7d9d4f0624a5cbe5ca2ff673df63afc85c97fadd0bf7db780c8dbaf",
+      "source_sha_verified": true,
+      "source_reconstruction_complete": true,
+      "source_pages_complete": true,
+      "figure_table_equation_inventory_complete": true,
+      "visual_tasks_prepared": true,
+      "direct_ai_baseline_complete": true,
+      "direct_ai_schema_valid": true,
+      "agent_result_envelope_valid": true,
+      "provenance_complete": true,
+      "blocker_notes": "None."
+    }
+  ]
+}

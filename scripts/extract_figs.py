@@ -16,7 +16,7 @@ import argparse, json, os, re, sys
 from pathlib import Path
 
 CAP_RE = re.compile(
-    r'^\s*((?:Fig(?:ure)?\.?|Table|Supplementary\s+(?:Fig(?:ure)?\.?|Table))\s*(?:[A-Z]\.)?[S]?\d+[A-Za-z]?)\s*(?::|\|)\s*(.*)$',
+    r'^\s*((?:(?:Extended\s+Data\s+)?(?:Fig(?:ure)?\.?|Table)|Supplementary\s+(?:Fig(?:ure)?\.?|Table))\s*(?:[A-Z]\.)?[S]?\d+[A-Za-z]?)\s*(?::|\|)\s*(.*)$',
     re.I
 )
 
@@ -202,7 +202,7 @@ def main():
                 if not m:
                     continue
                 label = m.group(1).strip()
-                kind = 'table' if label.lower().startswith('table') else 'figure'
+                kind = 'table' if re.search(r'(?:^|\s)table\s', label, re.I) else 'figure'
                 ident = _evidence_id(kind, label)
                 if ident in seen:
                     ident += f'-p{pno+1}'

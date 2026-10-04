@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "identifier": "10.48550/arXiv.2106.09685",
+  "doi": "10.48550/arXiv.2106.09685",
+  "source_type": "ARXIV_FULL_PDF",
+  "source_url": "https://arxiv.org/pdf/2106.09685.pdf",
+  "landing_page_url": "https://arxiv.org/abs/2106.09685",
+  "acquisition_method": "DOI -> arXiv canonical PDF",
+  "acquired_at": "2026-10-03T17:35:51Z",
+  "identity_verification": {
+    "title": "LoRA: Low-Rank Adaptation of Large Language Models",
+    "authors": [
+      "Edward J. Hu",
+      "Yelong Shen",
+      "Phillip Wallis",
+      "Zeyuan Allen-Zhu",
+      "Yuanzhi Li",
+      "Shean Wang",
+      "Lu Wang",
+      "Weizhu Chen"
+    ],
+    "venue": "ICLR",
+    "year": 2021,
+    "doi_in_pdf": "10.48550/arXiv.2106.09685",
+    "pdf_first_page_text": "LORA: LOW-RANK ADAPTATION OF LARGE LANGUAGE MODELS",
+    "verification_method": "registry metadata, arXiv landing page, and first-page bibliographic text"
+  },
+  "source_file": "source/paper.pdf",
+  "source_sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+  "full_paper_validation": {
+    "format": "PDF",
+    "page_count": 26,
+    "text_chars": 82694,
+    "encrypted": false,
+    "synthetic_substitution": false
+  }
+}

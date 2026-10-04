@@ -1,0 +1,69 @@
+{
+  "task_id": "TASK-V3-VISUAL-P002",
+  "task_type": "VISUAL_LOCALIZATION",
+  "required_capability": "VISUAL_EVIDENCE_LOCALIZATION",
+  "scientific_contract": "Inspect the full rendered PDF page and semantically bind each requested Figure/Table to its complete visual region.",
+  "description": "Reader v3 semantic visual localization for source page 2.",
+  "input_artifacts": {
+    "source_page": "source_pages/page-002.png",
+    "source_pdf": "source/paper.pdf",
+    "page": 2,
+    "candidates": [
+      {
+        "evidence_id": "F01",
+        "kind": "figure",
+        "paper_label": "Fig. 1",
+        "caption_original": "Fig. 1 AlphaFold produces highly accurate structures. a, The performance",
+        "candidate_bbox_pdf": [
+          165.47694396972656,
+          205.66607666015625,
+          224.3899383544922,
+          359.1380615234375
+        ],
+        "candidate_asset": "assets/figures/crop_F01_p2_165x427.png",
+        "candidate_method": "MULTIMODAL_PAGE_LOCALIZATION",
+        "candidate_confidence": 0.68
+      }
+    ]
+  },
+  "target_output": "visual/page-002.json",
+  "output_schema": "visual_page_verification",
+  "source_sha256": "6eae057a9faf4f671c3101e0745ed704460c6d3dec77243dfd3a9f2d2ab68970",
+  "base_sha256": null,
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "allowed_inputs": [
+    "source/paper.pdf",
+    "source_pages/page-002.png",
+    "model/figure_inventory.json"
+  ],
+  "forbidden_inputs": [
+    "apply/",
+    "project/",
+    "memory/project/",
+    "lens/",
+    "lens_v3/"
+  ],
+  "prohibited_context": [
+    "PROJECT_APPLY",
+    "RESEARCH_MEMORY"
+  ],
+  "constraints": [
+    "FULL_PAGE_SEMANTIC_LOCALIZATION",
+    "NO_WHOLE_PAGE_FALLBACK",
+    "CAPTION_SEMANTIC_MATCH",
+    "MULTI_PANEL_AWARE"
+  ],
+  "instructions": "Inspect the complete page image, not only PDF object geometry. For every candidate evidence_id, identify the complete visual region corresponding to its caption. Return bbox_norm=[x0,y0,x1,y1] in normalized page coordinates 0..1. A multi-panel figure should use one bbox covering the complete figure and panel_bboxes_norm for meaningful panels when identifiable. Mark VERIFIED only when the crop is complete and the caption semantically matches. Reject caption-only, body-text-heavy, partial panel, unrelated image, and whole-page regions. If uncertain, return NEEDS_REVIEW rather than guessing.",
+  "executor_template": {
+    "host": "generic-host",
+    "host_version": "UNKNOWN",
+    "provider": "openai-codex",
+    "model": "gpt-6.1-sol",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "standard",
+    "tool_profile": "paper-only",
+    "started_at": "2026-10-04T01:45:24.057595+00:00",
+    "completed_at": "2026-10-04T01:45:24.057595+00:00"
+  }
+}
