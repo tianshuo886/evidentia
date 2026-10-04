@@ -16,6 +16,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'scripts'))
 from executor_meta import build_executor_metadata
+from lens_execution_manifest import issue_dispatch_record
 
 class PiHostBridge:
     def __init__(self, default_model=None, available_models=None):
@@ -43,6 +44,7 @@ class PiHostBridge:
         task = json.loads(tp.read_text(encoding='utf-8'))
         task_id = task.get('task_id', 'TASK-UNKNOWN')
         target_model = model or self.route_model(task.get('task_type'), task.get('lens'))
+        core_dispatch = issue_dispatch_record(tp) if task.get('isolation_proof_required') else None
 
         dispatch_packet = {
             "task_id": task_id,
@@ -54,6 +56,7 @@ class PiHostBridge:
                 provider="anthropic",
                 model=target_model
             ),
+            "core_dispatch": core_dispatch,
             "payload": task
         }
 

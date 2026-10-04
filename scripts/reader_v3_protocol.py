@@ -125,6 +125,7 @@ def create_lens_tasks(root: Path) -> list[Path]:
             "forbidden_inputs": ["lens/", "lens_v3/", "apply/", "project/", "memory/project/"],
             "prohibited_context": ["other Lens outputs", "PROJECT_APPLY", "RESEARCH_MEMORY"],
             "constraints": ["CONTEXT_ISOLATED", "NO_MAJORITY_VOTING", "NO_PROJECT_TRANSFER"],
+            "isolation_proof_required": True,
             "instructions": (
                 f"Role: {lens['title']}.\n"
                 "Answer only this role's scientific questions. Cite source evidence IDs/pages for every material finding.\n"

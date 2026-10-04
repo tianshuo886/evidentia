@@ -380,6 +380,43 @@ figcaption {
 }
 """
 
+def _inventory_asset_map(root: Path) -> dict[str, str]:
+    inventory = root / "model" / "figure_inventory.json"
+    if not inventory.exists():
+        return {}
+    data = load_json(inventory)
+    return {
+        str(item.get("id")): str(item.get("file") or item.get("asset"))
+        for item in data.get("items", [])
+        if item.get("id") and (item.get("file") or item.get("asset"))
+    }
+
+
+def resolve_visual_asset(block: dict, root: Path):
+    """Resolve by canonical evidence identity, never by a stale writer path."""
+    eid = block.get("evidence_id")
+    inventory_asset = _inventory_asset_map(root).get(str(eid)) if eid else None
+    if inventory_asset and (root / inventory_asset).exists():
+        return inventory_asset
+    return block.get("asset")
+
+
+def rebind_visual_assets(manuscript: dict, root: Path) -> list[dict[str, str]]:
+    """Repair stale evidence→asset paths through the generic inventory binding."""
+    changes = []
+    document = manuscript.get("document", {})
+    chapters = document.get("sections") or document.get("chapters", [])
+    for chapter in chapters:
+        for block in chapter.get("blocks", []):
+            if block.get("type") not in ("figure", "table") or not block.get("evidence_id"):
+                continue
+            resolved = resolve_visual_asset(block, root)
+            if resolved and block.get("asset") != resolved:
+                changes.append({"evidence_id": str(block["evidence_id"]), "old_asset": block.get("asset"), "new_asset": resolved})
+                block["asset"] = resolved
+    return changes
+
+
 def render_block_html(b: dict, root: Path) -> str:
     b_type = b.get('type')
     ev_refs = b.get('evidence_refs', [])
@@ -411,7 +448,7 @@ def render_block_html(b: dict, root: Path) -> str:
         analysis = esc(b.get('analysis', ''))
         analysis = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', analysis)
         analysis = analysis.replace('\n\n', '<br>')
-        asset = b.get('asset')
+        asset = resolve_visual_asset(b, root)
         img_html = ""
         if asset and (root / asset).exists():
             img_html = f"<img src='../{esc(asset)}' alt='{cap}' />"
@@ -449,7 +486,7 @@ def render_block_html(b: dict, root: Path) -> str:
         analysis = esc(b.get('analysis', ''))
         analysis = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', analysis)
         img_html = ''
-        asset = b.get('asset')
+        asset = resolve_visual_asset(b, root)
         if asset and (root / asset).exists():
             img_html = f"<img src='../{esc(asset)}' alt='{cap}' class='table-asset' />"
         return f"""
@@ -521,7 +558,7 @@ def render_paper_reader_html(manuscript: dict, root: Path) -> str:
 {appendix}
 </body></html>"""
 
-def render_paper_reader_md(manuscript: dict) -> str:
+def render_paper_reader_md(manuscript: dict, root=None) -> str:
     doc = manuscript.get('document', {})
     title = doc.get('title', '未命名论文')
     subtitle = doc.get('subtitle', '中文科学精读稿')
@@ -548,7 +585,8 @@ def render_paper_reader_md(manuscript: dict) -> str:
                 lines.append(f"{text}{cite}\n")
             elif kind in ('figure', 'table'):
                 lines.append(f"### {block.get('caption', '图表')}\n")
-                if block.get('asset'): lines.append(f"![{block.get('caption', '')}]({block.get('asset')})\n")
+                asset = resolve_visual_asset(block, root) if root else block.get('asset')
+                if asset: lines.append(f"![{block.get('caption', '')}]({asset})\n")
                 lines.append(f"{block.get('analysis', '')}{cite}\n")
             elif kind == 'equation':
                 lines.append(f"（{block.get('evidence_id', 'EQ')}）\n")
@@ -575,13 +613,23 @@ def render_paper_reader(root: Path, kami_root: Path = None) -> dict:
         manuscript = load_json(manuscript_p)
     else:
         manuscript = compose_narrative_manuscript(root)
-        manuscript_p.write_text(json.dumps(manuscript, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
-        
+    binding_changes = rebind_visual_assets(manuscript, root)
+    manuscript_p.write_text(json.dumps(manuscript, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
+    if binding_changes:
+        (reader_dir / 'visual_binding_repair.json').write_text(
+            json.dumps({
+                'schema_version': '1.0',
+                'method': 'EVIDENCE_ID_TO_INVENTORY_ASSET',
+                'changes': binding_changes,
+                'inventory_sha256': sha256(root / 'model/figure_inventory.json'),
+            }, indent=2, ensure_ascii=False) + '\n', encoding='utf-8'
+        )
+
     html_content = kami_adapter.render_math_html(render_paper_reader_html(manuscript, root), kami_root=kami_root)
     html_file = reader_dir / 'paper_reader.html'
     html_file.write_text(html_content, encoding='utf-8')
     
-    md_content = render_paper_reader_md(manuscript)
+    md_content = render_paper_reader_md(manuscript, root)
     md_file = reader_dir / 'paper_reader.md'
     md_file.write_text(md_content, encoding='utf-8')
     

@@ -109,6 +109,33 @@ def test_appendix_figure_and_table_labels_are_inventory_items(tmp_path):
     assert {item['id'] for item in json.loads(inv2_path.read_text())['items']} == {'FA1', 'TA1'}
 
 
+def test_table_and_chart_nearby_do_not_share_visual_asset(tmp_path):
+    import fitz
+    pdf_path = tmp_path / 'collision_paper.pdf'
+    inv_path = tmp_path / 'model/figure_inventory.json'
+    assets_dir = tmp_path / 'assets/figures'
+    doc = fitz.open()
+    page = doc.new_page(width=595, height=842)
+    page.insert_text((60, 90), 'Method      Accuracy      Latency', fontsize=9)
+    page.insert_text((60, 112), 'Baseline    0.70         20ms', fontsize=9)
+    page.insert_text((60, 134), 'Ours        0.82         14ms', fontsize=9)
+    page.insert_text((60, 165), 'Table 4: Performance of methods.', fontsize=10)
+    page.draw_rect(fitz.Rect(80, 300, 500, 500), color=(0.1, 0.5, 0.8), fill=(0.9, 0.95, 1.0))
+    page.insert_text((80, 520), 'Figure 2: Validation accuracy chart.', fontsize=10)
+    doc.save(str(pdf_path))
+    res = subprocess.run([
+        PY, str(ROOT / 'scripts/extract_figs.py'), '--pdf', str(pdf_path),
+        '--out', str(assets_dir), '--inventory', str(inv_path)
+    ], capture_output=True, text=True)
+    assert res.returncode == 0, res.stdout + res.stderr
+    items = json.loads(inv_path.read_text(encoding='utf-8'))['items']
+    table = next(x for x in items if x['id'] == 'T04')
+    figure = next(x for x in items if x['id'] == 'F02')
+    assert table['file'] and figure['file']
+    assert table['file'] != figure['file']
+    assert table['figure_bbox'][3] < figure['figure_bbox'][1]
+
+
 def test_uncertain_visual_fails_closed_without_whole_page_asset(tmp_path):
     pdf_path = tmp_path / 'elusive_paper.pdf'
     inv_path = tmp_path / 'model/figure_inventory.json'

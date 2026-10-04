@@ -95,6 +95,9 @@
     "executor_template": {
       "type": "object"
     },
+    "isolation_proof_required": {
+      "type": "boolean"
+    },
     "source_pdf": {
       "type": "string"
     },

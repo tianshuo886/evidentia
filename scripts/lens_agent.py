@@ -15,6 +15,7 @@ from validate_common import load_json, schema_validate
 from agent_dispatch import dispatch_agent_task
 from agent_submit import submit_agent_result
 from validate_common import sha256
+from lens_execution_manifest import validate_execution_manifest, result_payload_sha256
 
 def run_lens(task_path, out_path=None, result_file=None, model=None, host=None, fixture=False, replay_dir=None, adapter=None):
     tp = Path(task_path)
@@ -48,6 +49,19 @@ def run_lens(task_path, out_path=None, result_file=None, model=None, host=None, 
             sys.exit(f"Host Agent result failed agent_result_envelope schema validation:\n{errs}")
 
         payload = envelope['result']
+        if task.get('isolation_proof_required'):
+            manifest = envelope.get('execution_manifest')
+            if not isinstance(manifest, dict):
+                sys.exit('Host Agent result requires execution_manifest for Reader-v3 Lens isolation.')
+            try:
+                validate_execution_manifest(
+                    root,
+                    task,
+                    manifest,
+                    result_sha256=result_payload_sha256(payload),
+                )
+            except ValueError as exc:
+                sys.exit(f'Host Agent execution boundary rejected: {exc}')
         lens_errs = schema_validate(payload, 'lens')
         if lens_errs:
             sys.exit(f"Host Agent result failed lens schema validation:\n{lens_errs}")
