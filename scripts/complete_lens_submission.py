@@ -56,6 +56,7 @@ def main():
         model=os.environ.get("PI_MODEL", "UNKNOWN"),
         tool_profile="paper-only-isolated-snapshot",
     )
+    executor["kind"] = "HOST_AGENT"
     manifest = build_execution_manifest(
         run_root,
         task,
