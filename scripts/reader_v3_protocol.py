@@ -109,7 +109,9 @@ def create_lens_tasks(root: Path) -> list[Path]:
                 "source_pdf": "source/paper.pdf",
                 "source_map": "model/source_map.json",
                 "figure_inventory": "model/figure_inventory.json",
-                "lead_reader_draft": "model/paper_understanding_draft.json"
+                "lead_reader_draft": "model/paper_understanding_draft.json",
+                "source_pages": "source_pages/",
+                "assets": "assets/"
             },
             "target_output": f"lens_v3/{lid}.json",
             "output_schema": "lens_v3",
