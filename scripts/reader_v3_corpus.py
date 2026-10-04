@@ -21,24 +21,18 @@ from reader_v3_benchmark import create_direct_task
 from validate_common import load_json, sha256
 from visual_localization_protocol import create_visual_tasks
 
-ACTIVE_DEVELOPMENT_PAPER = "BENCH-01-VASWANI-ATTENTION"
-# The registry DOI for BENCH-03 resolves to an unrelated Remote Sensing of
-# Environment article. This explicit, documented identifier correction keeps
-# the registry entry authoritative without silently swapping the paper.
-IDENTIFIER_OVERRIDES = {
-    "BENCH-03-REMOTE-SENSING-FOREST": {
-        "identifier": "10.48550/arXiv.2204.08322",
-        "reason": "registry DOI 10.1016/j.rse.2022.113070 resolves to an unrelated land-surface-temperature paper; arXiv preprint title/authors match the registered canopy-height work"
-    }
-}
-
-
 def _run(*args):
     subprocess.run([sys.executable, *map(str, args)], check=True)
 
 
 def _write_benchmark_manifest(workspace: Path, paper: dict, source_pdf: Path, acquisition: dict) -> dict:
     """Persist the registry identity and immutable source/contract boundary."""
+    expected_identifier = paper.get("open_access_doi")
+    acquired_identifier = acquisition.get("identifier") or acquisition.get("doi")
+    if not acquired_identifier or acquired_identifier.lower() != str(expected_identifier).lower():
+        raise ValueError(f"Registry/acquisition identifier mismatch: {expected_identifier} != {acquired_identifier}; owner approval required, no automatic substitution")
+    if not acquisition.get("source_url"):
+        raise ValueError("Missing acquisition source URL; provenance must be established before preparation")
     source_sha = sha256(source_pdf)
     sha_path = workspace / "source/source_sha256.txt"
     if sha_path.exists() and sha_path.read_text(encoding="utf-8").strip() != source_sha:
@@ -80,7 +74,7 @@ def _write_benchmark_manifest(workspace: Path, paper: dict, source_pdf: Path, ac
     return manifest
 
 
-def prepare_one(paper: dict, work_root: Path) -> dict:
+def prepare_one(paper: dict, work_root: Path, source_only=False) -> dict:
     pid = paper["id"]
     workspace = work_root / pid
     source_dir = workspace / "source"
@@ -91,8 +85,7 @@ def prepare_one(paper: dict, work_root: Path) -> dict:
     assets_dir.mkdir(parents=True, exist_ok=True)
 
     source_pdf = source_dir / "paper.pdf"
-    correction = IDENTIFIER_OVERRIDES.get(pid)
-    identifier = correction["identifier"] if correction else paper.get("open_access_doi")
+    identifier = paper.get("open_access_doi")
     if source_pdf.exists():
         validate_full_pdf(source_pdf)
         meta = load_json(workspace / "acquisition_metadata.json") if (workspace / "acquisition_metadata.json").exists() else {
@@ -105,9 +98,6 @@ def prepare_one(paper: dict, work_root: Path) -> dict:
         acquired, meta = acquire_paper(
             identifier, out_dir=workspace, target_pdf_path=source_pdf, require_full_pdf=True
         )
-        if correction:
-            meta["registry_identifier"] = paper.get("open_access_doi")
-            meta["identifier_discrepancy"] = correction["reason"]
         if Path(acquired) != source_pdf and Path(acquired).exists():
             source_pdf.write_bytes(Path(acquired).read_bytes())
         validate_full_pdf(source_pdf)
@@ -115,6 +105,10 @@ def prepare_one(paper: dict, work_root: Path) -> dict:
     manifest = _write_benchmark_manifest(workspace, paper, source_pdf, meta)
     source_map = model_dir / "source_map.json"
     inventory = model_dir / "figure_inventory.json"
+    if source_map.exists() and load_json(source_map).get("pdf_sha256") != manifest["source_sha256"]:
+        raise ValueError("Stale source map SHA; refusing to reuse artifacts from another PDF")
+    if inventory.exists() and load_json(inventory).get("source_sha256") != manifest["source_sha256"]:
+        raise ValueError("Stale figure inventory SHA; refusing to reuse artifacts from another PDF")
     if not source_map.exists():
         _run(HERE / "extract_structure.py", "--pdf", source_pdf, "--out", source_map)
     if not inventory.exists():
@@ -139,7 +133,7 @@ def prepare_one(paper: dict, work_root: Path) -> dict:
     )
 
     visual_tasks = create_visual_tasks(workspace)
-    lead_task = create_lead_reader_task(workspace)
+    lead_task = None if source_only else create_lead_reader_task(workspace)
     direct_task = create_direct_task(workspace)
 
     return {
@@ -152,7 +146,7 @@ def prepare_one(paper: dict, work_root: Path) -> dict:
         "source_pages": len(list((workspace / "source_pages").glob("page-*.png"))),
         "visual_tasks": len(visual_tasks),
         "equations": len(equation_inventory["equations"]),
-        "lead_reader_task": str(lead_task.relative_to(workspace)),
+        "lead_reader_task": str(lead_task.relative_to(workspace)) if lead_task else None,
         "direct_task": str(direct_task.relative_to(workspace)),
     }
 
@@ -170,23 +164,21 @@ def main():
         help="Workspace root",
     )
     ap.add_argument("--id", action="append", dest="ids", help="Prepare only selected benchmark ID(s)")
+    ap.add_argument("--exclude-id", action="append", default=[], help="Exclude active benchmark ID(s)")
+    ap.add_argument("--source-only", action="store_true", help="Prepare source and Direct-AI tasks only; no Lead Reader tasks")
     args = ap.parse_args()
 
     corpus = json.loads(Path(args.corpus).read_text(encoding="utf-8"))
     selected = set(args.ids or [])
-    if selected:
-        papers = [p for p in corpus.get("papers", []) if p.get("id") in selected]
-    else:
-        # Never accidentally prepare the already-active smoke paper through the
-        # four-paper development-corpus command.
-        papers = [p for p in corpus.get("papers", []) if p.get("id") != ACTIVE_DEVELOPMENT_PAPER]
+    excluded = set(args.exclude_id)
+    papers = [p for p in corpus.get("papers", []) if (not selected or p.get("id") in selected) and p.get("id") not in excluded]
     work_root = Path(args.work_root)
     work_root.mkdir(parents=True, exist_ok=True)
 
     results = []
     for paper in papers:
         try:
-            results.append(prepare_one(paper, work_root))
+            results.append(prepare_one(paper, work_root, source_only=args.source_only))
         except Exception as exc:
             results.append({
                 "id": paper.get("id"),
