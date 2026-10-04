@@ -1,0 +1,69 @@
+{
+  "task_id": "TASK-V3-VISUAL-P005",
+  "task_type": "VISUAL_LOCALIZATION",
+  "required_capability": "VISUAL_EVIDENCE_LOCALIZATION",
+  "scientific_contract": "Inspect the full rendered PDF page and semantically bind each requested Figure/Table to its complete visual region.",
+  "description": "Reader v3 semantic visual localization for source page 5.",
+  "input_artifacts": {
+    "source_page": "source_pages/page-005.png",
+    "source_pdf": "source/paper.pdf",
+    "page": 5,
+    "candidates": [
+      {
+        "evidence_id": "F04",
+        "kind": "figure",
+        "paper_label": "Fig. 4",
+        "caption_original": "Fig. 4 Interpreting the neural network. a, Ablation results on two target sets:",
+        "candidate_bbox_pdf": [
+          331.1109924316406,
+          269.7135314941406,
+          555.0479736328125,
+          360.4215393066406
+        ],
+        "candidate_asset": "assets/figures/crop_F04_p5_623x253.png",
+        "candidate_method": "MULTIMODAL_PAGE_LOCALIZATION",
+        "candidate_confidence": 0.97
+      }
+    ]
+  },
+  "target_output": "visual/page-005.json",
+  "output_schema": "visual_page_verification",
+  "source_sha256": "6eae057a9faf4f671c3101e0745ed704460c6d3dec77243dfd3a9f2d2ab68970",
+  "base_sha256": null,
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "allowed_inputs": [
+    "source/paper.pdf",
+    "source_pages/page-005.png",
+    "model/figure_inventory.json"
+  ],
+  "forbidden_inputs": [
+    "apply/",
+    "project/",
+    "memory/project/",
+    "lens/",
+    "lens_v3/"
+  ],
+  "prohibited_context": [
+    "PROJECT_APPLY",
+    "RESEARCH_MEMORY"
+  ],
+  "constraints": [
+    "FULL_PAGE_SEMANTIC_LOCALIZATION",
+    "NO_WHOLE_PAGE_FALLBACK",
+    "CAPTION_SEMANTIC_MATCH",
+    "MULTI_PANEL_AWARE"
+  ],
+  "instructions": "Inspect the complete page image, not only PDF object geometry. For every candidate evidence_id, identify the complete visual region corresponding to its caption. Return bbox_norm=[x0,y0,x1,y1] in normalized page coordinates 0..1. A multi-panel figure should use one bbox covering the complete figure and panel_bboxes_norm for meaningful panels when identifiable. Mark VERIFIED only when the crop is complete and the caption semantically matches. Reject caption-only, body-text-heavy, partial panel, unrelated image, and whole-page regions. If uncertain, return NEEDS_REVIEW rather than guessing.",
+  "executor_template": {
+    "host": "generic-host",
+    "host_version": "UNKNOWN",
+    "provider": "openai-codex",
+    "model": "gpt-6.1-sol",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "standard",
+    "tool_profile": "paper-only",
+    "started_at": "2026-10-04T01:45:24.062604+00:00",
+    "completed_at": "2026-10-04T01:45:24.062604+00:00"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "task_id": "TASK-V3-DIRECT-BENCH-04-ALPHAFOLD2-STRUCTURE",
+  "execution_kind": "HOST_AGENT",
+  "executor": {
+    "kind": "HOST_AGENT",
+    "host": "pi",
+    "host_version": "UNKNOWN",
+    "provider": "openai-codex",
+    "model": "gpt-6-sol",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "high",
+    "tool_profile": "paper-only",
+    "started_at": "2026-10-03T17:45:59.893131+00:00",
+    "completed_at": "2026-10-03T17:45:59.893131+00:00"
+  },
+  "started_at": "2026-10-03T17:45:59.893131+00:00",
+  "completed_at": "2026-10-03T17:45:59.893131+00:00",
+  "input_hashes": {
+    "source/paper.pdf": "6eae057a9faf4f671c3101e0745ed704460c6d3dec77243dfd3a9f2d2ab68970"
+  },
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "result": {
+    "schema_version": "1.0",
+    "paper_id": "BENCH-04-ALPHAFOLD2-STRUCTURE",
+    "source_sha256": "6eae057a9faf4f671c3101e0745ed704460c6d3dec77243dfd3a9f2d2ab68970",
+    "narrative_markdown": "# Highly accurate protein structure prediction with AlphaFold — 直接精读\n\n## 问题与总体结论\n蛋白质序列到三维结构的实验解析需要数月至数年，而已解析的约 100,000 个独特蛋白相对已知序列仍很少。既有物理模拟和进化方法在没有近同源结构时通常离原子精度很远。本文报告完全重设计的 AlphaFold2，并在盲测 CASP14 上评估。它把多序列比对（MSA）、模板、几何与物理知识融入神经网络，在多数 CASP14 目标上达到接近实验结构的精度；这支持“在相当范围内实现高精度预测”的主张，但不是所有蛋白、复合体条件或结构状态都已解决。\n\n## 架构与计算机制\n输入是目标氨基酸序列、同源序列构成的 MSA，以及可用结构模板。Evoformer trunk 重复 48 个 block，同时更新 Nseq×Nres 的 MSA 表征和 Nres×Nres 的 pair 表征。pair 表征可解释为残基图的有向边；triangle multiplicative update 和 triangle self-attention 围绕三角关系传播几何一致性，MSA 的 outer-product mean 把进化信息写入 pair 表征，pair bias 又反馈到 MSA attention。随后 structure module 为每个残基维护旋转和平移 frame，通过 invariant point attention（IPA）进行对全局旋转/平移不变的几何注意力，并迭代更新结构。网络把最终结构反馈给相同模块进行三次 recycling；FAPE loss 在局部 frame 中比较原子位置，另有中间损失、masked-MSA 目标和 self-distillation。\n\n## 主要准确度证据\nCASP14 的 87 个 protein domains 中，AlphaFold 的 median backbone Cα rmsd95 为 0.96 Å（95% CI 0.85—1.16 Å），下一名为 2.8 Å（2.7—4.0 Å）；全原子 rmsd95 为 1.5 Å，而最佳替代方法为 3.5 Å。图 1 展示了 zinc-binding site 的准确侧链、T1056 的局部结构和没有同源结构的 2,180-residue T1044 的正确 domain packing。对训练截止日期之后、无高同源模板的 3,144 条 PDB chains，整体 median backbone rmsd95 为 1.46 Å。pLDDT 与真实 lDDT-Cα 近似线性（lDDT-Cα=0.997×pLDDT−1.17，r=0.76），pTM 与全链 TM-score 也相关（TM-score=0.98×pTM+0.07，r=0.85）。这些是分层测试集和统计估计，不是对所有天然结构的无条件保证。\n\n## 消融、解释与限制\n图 4 的消融显示 self-distillation、raw MSA、distogram head、IPA、recycling、triangle 更新/门控以及端到端结构梯度共同贡献性能；去掉 IPA 或 recycling 会明显损失。48 个 Evoformer block 的中间轨迹显示不同目标所需深度不同，困难的 SARS-CoV-2 ORF8 会持续重排。MSA 深度低于约 30 条时准确度明显下降，超过约 100 条收益变小；异源链接触占主导的 bridging domains 仍明显较弱。作者还承认 peptide-bond geometry 在 structure module 中并未硬约束，Amber relaxation 主要消除立体化学违规而不提升 GDT/lDDT。模型输出的是在 PDB 条件下最可能的结构，不能自动表达配体、离子、构象状态或完整复合体的所有条件；因此高 pLDDT 是局部可信度信号，不等价于功能机制证明。",
+    "notes": "Real Host Agent Direct-AI reading of the original source PDF only; no Evidentia artifacts, project context, or Research Memory were supplied."
+  }
+}

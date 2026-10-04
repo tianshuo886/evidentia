@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "identifier": "10.1038/s41559-023-02206-6",
+  "doi": "10.1038/s41559-023-02206-6",
+  "source_type": "PUBLISHER_FULL_PDF",
+  "source_url": "https://www.nature.com/articles/s41559-023-02206-6.pdf",
+  "landing_page_url": "https://www.nature.com/articles/s41559-023-02206-6",
+  "acquisition_method": "DOI -> Crossref identity resolution -> Nature publisher PDF",
+  "acquired_at": "2026-10-04T01:38:00Z",
+  "identity_verification": {
+    "title": "A high-resolution canopy height model of the Earth",
+    "authors": [
+      "Nico Lang",
+      "Walter Jetz",
+      "Konrad Schindler",
+      "Jan Dirk Wegner"
+    ],
+    "venue": "Nature Ecology & Evolution",
+    "year": 2023,
+    "doi_in_pdf": "10.1038/s41559-023-02206-6",
+    "publisher_pdf_metadata_title": "A high-resolution canopy height model of the Earth",
+    "publisher_pdf_metadata_subject": "Nature Ecology & Evolution, doi:10.1038/s41559-023-02206-6",
+    "verification_method": "Crossref metadata, publisher PDF metadata, and first-page bibliographic text"
+  },
+  "source_file": "source/paper.pdf",
+  "source_sha256": "b4d103e6ab0664d96c31a00a0ee4d99e9fbc54a9f1a8eeea500716843d4eabce",
+  "full_paper_validation": {
+    "format": "PDF",
+    "page_count": 28,
+    "text_chars": 96851,
+    "encrypted": false,
+    "synthetic_substitution": false
+  },
+  "supersedes_invalid_registry_identity": {
+    "doi": "10.1016/j.rse.2022.113070",
+    "status": "QUARANTINED_NOT_USED",
+    "reason": "DOI resolves to an unrelated gapless all-weather land-surface-temperature paper"
+  }
+}

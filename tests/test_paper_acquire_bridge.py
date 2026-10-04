@@ -27,6 +27,28 @@ def test_acquire_local_pdf(tmp_path):
     assert resolved_path == fake_pdf
     assert meta['source_type'] == 'LOCAL_PDF'
 
+
+def test_arxiv_doi_is_strictly_recognized():
+    assert paper_acquire_bridge.is_arxiv('10.48550/arXiv.2106.09685')
+    assert paper_acquire_bridge.is_arxiv('https://doi.org/10.48550/arXiv.2106.09685')
+
+
+def test_strict_validation_rejects_html_and_synthetic_pdf(tmp_path):
+    html = tmp_path / 'paper.pdf'
+    html.write_bytes(b'<html><body>abstract only</body></html>')
+    with pytest.raises(ValueError, match='not a PDF'):
+        paper_acquire_bridge.validate_full_pdf(html)
+
+    import fitz
+    synthetic = tmp_path / 'synthetic.pdf'
+    doc = fitz.open()
+    for _ in range(20):
+        page = doc.new_page()
+        page.insert_text((50, 50), 'Acquired via Evidentia Paper Acquire Bridge ' + ('full paper text ' * 500))
+    doc.save(synthetic)
+    with pytest.raises(ValueError, match='synthesized'):
+        paper_acquire_bridge.validate_full_pdf(synthetic)
+
 def test_query_crossref_metadata():
     # Test real CrossRef API resolution on AlphaFold 2 DOI
     meta = paper_acquire_bridge.query_crossref("10.1038/s41586-021-03819-2")

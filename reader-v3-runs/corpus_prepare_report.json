@@ -1,0 +1,21 @@
+{
+  "schema_version": "3.0",
+  "purpose": "Reader v3 real-paper development corpus",
+  "truth_level": "REAL_PAPERS_TASKS_PREPARED",
+  "unseen_paper_required": true,
+  "papers": [
+    {
+      "id": "BENCH-03-REMOTE-SENSING-FOREST",
+      "title": "A high-resolution canopy height model of the Earth",
+      "category": "Remote sensing & environmental monitoring",
+      "workspace": "reader-v3-runs/workspaces/BENCH-03-REMOTE-SENSING-FOREST",
+      "status": "TASKS_READY",
+      "source_sha256": "b4d103e6ab0664d96c31a00a0ee4d99e9fbc54a9f1a8eeea500716843d4eabce",
+      "source_pages": 28,
+      "visual_tasks": 18,
+      "equations": 79,
+      "lead_reader_task": null,
+      "direct_task": "tasks/v3/benchmark/BENCH-03-REMOTE-SENSING-FOREST/direct_ai.json"
+    }
+  ]
+}

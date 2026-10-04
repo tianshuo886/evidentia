@@ -1,0 +1,84 @@
+{
+  "task_id": "TASK-V3-VISUAL-P017",
+  "task_type": "VISUAL_LOCALIZATION",
+  "required_capability": "VISUAL_EVIDENCE_LOCALIZATION",
+  "scientific_contract": "Inspect the full rendered PDF page and semantically bind each requested Figure/Table to its complete visual region.",
+  "description": "Reader v3 semantic visual localization for source page 17.",
+  "input_artifacts": {
+    "source_page": "source_pages/page-017.png",
+    "source_pdf": "source/paper.pdf",
+    "page": 17,
+    "candidates": [
+      {
+        "evidence_id": "T08",
+        "kind": "table",
+        "paper_label": "Table 8",
+        "caption_original": "Table 8 Fine-tuning signiﬁcantly outperforms few-shot learning on GPT-3 (Brown et al., 2020).",
+        "candidate_bbox_pdf": [
+          127.8010025024414,
+          367.3565673828125,
+          484.19354248046875,
+          563.5269775390625
+        ],
+        "candidate_asset": "assets/figures/crop_T08_p17_990x546.png",
+        "candidate_method": "MULTIMODAL_PAGE_LOCALIZATION",
+        "candidate_confidence": 0.75
+      },
+      {
+        "evidence_id": "F05",
+        "kind": "figure",
+        "paper_label": "Figure 5",
+        "caption_original": "Figure 5 Percentage slow-down of inference latency compared to the no-adapter (r = 0) baseline.",
+        "candidate_bbox_pdf": [
+          127.8010025024414,
+          367.3565673828125,
+          484.19354248046875,
+          563.5269775390625
+        ],
+        "candidate_asset": "assets/figures/crop_F05_p17_990x546.png",
+        "candidate_method": "MULTIMODAL_PAGE_LOCALIZATION",
+        "candidate_confidence": 0.99
+      }
+    ]
+  },
+  "target_output": "visual/page-017.json",
+  "output_schema": "visual_page_verification",
+  "source_sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+  "base_sha256": null,
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "allowed_inputs": [
+    "source/paper.pdf",
+    "source_pages/page-017.png",
+    "model/figure_inventory.json"
+  ],
+  "forbidden_inputs": [
+    "apply/",
+    "project/",
+    "memory/project/",
+    "lens/",
+    "lens_v3/"
+  ],
+  "prohibited_context": [
+    "PROJECT_APPLY",
+    "RESEARCH_MEMORY"
+  ],
+  "constraints": [
+    "FULL_PAGE_SEMANTIC_LOCALIZATION",
+    "NO_WHOLE_PAGE_FALLBACK",
+    "CAPTION_SEMANTIC_MATCH",
+    "MULTI_PANEL_AWARE"
+  ],
+  "instructions": "Inspect the complete page image, not only PDF object geometry. For every candidate evidence_id, identify the complete visual region corresponding to its caption. Return bbox_norm=[x0,y0,x1,y1] in normalized page coordinates 0..1. A multi-panel figure should use one bbox covering the complete figure and panel_bboxes_norm for meaningful panels when identifiable. Mark VERIFIED only when the crop is complete and the caption semantically matches. Reject caption-only, body-text-heavy, partial panel, unrelated image, and whole-page regions. If uncertain, return NEEDS_REVIEW rather than guessing.",
+  "executor_template": {
+    "host": "generic-host",
+    "host_version": "UNKNOWN",
+    "provider": "openai-codex",
+    "model": "gpt-6.1-sol",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "standard",
+    "tool_profile": "paper-only",
+    "started_at": "2026-10-04T01:45:23.611973+00:00",
+    "completed_at": "2026-10-04T01:45:23.611973+00:00"
+  }
+}

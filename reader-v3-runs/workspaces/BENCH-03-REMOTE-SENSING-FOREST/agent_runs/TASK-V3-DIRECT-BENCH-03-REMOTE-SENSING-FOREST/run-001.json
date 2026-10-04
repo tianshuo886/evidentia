@@ -1,0 +1,30 @@
+{
+  "task_id": "TASK-V3-DIRECT-BENCH-03-REMOTE-SENSING-FOREST",
+  "execution_kind": "HOST_AGENT",
+  "executor": {
+    "kind": "HOST_AGENT",
+    "host": "pi",
+    "host_version": "UNKNOWN",
+    "provider": "openai-codex",
+    "model": "gpt-6.1-sol",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "high",
+    "tool_profile": "paper-only",
+    "started_at": "2026-10-04T01:40:00Z",
+    "completed_at": "2026-10-04T01:47:00Z"
+  },
+  "started_at": "2026-10-04T01:40:00Z",
+  "completed_at": "2026-10-04T01:47:00Z",
+  "input_hashes": {
+    "source/paper.pdf": "b4d103e6ab0664d96c31a00a0ee4d99e9fbc54a9f1a8eeea500716843d4eabce"
+  },
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "result": {
+    "schema_version": "1.0",
+    "paper_id": "BENCH-03-REMOTE-SENSING-FOREST",
+    "source_sha256": "b4d103e6ab0664d96c31a00a0ee4d99e9fbc54a9f1a8eeea500716843d4eabce",
+    "narrative_markdown": "# A high-resolution canopy height model of the Earth — 直接精读\n\n## 研究问题与核心主张\n论文针对全球森林/植被高度数据在空间分辨率、覆盖范围和不确定性表达之间的矛盾，提出一个全球 2020 年 10 m ground-sampling-distance canopy-top-height model。GEDI 全波形 LiDAR 提供垂直结构但覆盖稀疏（约 51.6°N–S、约 25 m footprint），Sentinel-2 光学影像覆盖密集却不能直接观测高度；作者以稀疏 GEDI RH98 监督训练深度模型，再将其部署到全球 Sentinel-2 档案。论文的正式主张是：这种融合可在全球生成 10 m 冠层高度和逐像元预测不确定性，并改善高大冠层的偏差，同时支持全球生态与保护分析，而不是证明光学影像单独能够无条件恢复真实三维结构。\n\n## 方法与研究设计\n输入是 Sentinel-2 L2A 的 12 个光谱波段（20/60 m 波段上采样到 10 m）及循环编码的经纬度，共 15 个通道；网络是无下采样的全卷积残差 CNN，缩减后为 8 个残差块、每块 256 个 filters，以便全球推理。输出同时包括高度均值和方差（图 1a）。训练在 GEDI 有效 footprint 像素进行稀疏监督，采用 Gaussian negative log likelihood，使预测均值和 aleatoric variance 一起学习；每个网络 5,000,000 iterations、batch 64、Adam，学习率在 2,000,000 与 3,500,000 iterations 后下降。为估计 epistemic uncertainty，作者从不同随机初始化训练 5 个 CNN；每个位置从一年内最多 10 个获取日期中推理，再按预测方差倒数加权合并。最终产品的 uncertainty 同时包含数据噪声和模型不确定性。对高度分布不平衡，作者只对最终均值回归层进行 cost-sensitive fine-tuning，避免破坏 uncertainty calibration。\n\n## 决定性证据与结果\n1. 留出 GEDI 验证（图 1b–d）显示 final ensemble 的 balanced RMSE 为 7.3 m、balanced MAE 为 5.5 m、balanced mean error 为 −1.8 m；confusion plot 显示总体预测与 GEDI 参考高度一致，但低矮植被和高冠层仍有残差结构。与已有 UMD 全球图相比，按高度区间平均的偏差从 −7.1 m 降至 −1.7 m；这个比较支持高冠层偏差改善，但不是完全无偏的证明。\n2. 独立 airborne LiDAR 验证覆盖 24 个 Sentinel-2 tiles（12 LVIS、12 ALS，Extended Data Table 1；跨北美、中美、欧洲和 Gabon）。在 GEDI 覆盖内的平均比较中，作者报告 UMD RMSE 9.1 m、bias −4.5 m，而本方法 RMSE 7.9 m、bias 1.7 m；GEDI 覆盖外的平均 RMSE 为 5.3 m、bias 0.5 m。作者同时指出并非每一个区域和指标都胜出，且本方法在某些矮植被区域过估计。\n3. 预测不确定性分析显示其与经验误差相关；剔除相对标准差最高的 20% 验证点后，整体 RMSE 从 6.0 m 降至 5.2 m（降低 13%），bias 从 1.3 m 降至 1.0 m（降低 23%）。但低标准差（<4 m）处 calibration 变差，且 calibration 随 biome 变化，说明 uncertainty 是可用的筛选信号而非自动保证的置信区间。\n4. 全球部署处理约 1.3×10^12 个 10 m land pixels，使用约 160 TB Sentinel-2 数据和约 27,000 GPU-hours，在约 10 天内生成全球图（图 2）。图 2 同时展示 canopy-top height 与 predictive standard deviation；图 3 给出全球/保护区/biome 分布：约 41% 全球陆地有 >5 m 植被、30% >10 m、5% >30 m，>30 m 冠层约 34% 位于保护区。\n\n## 论文真正建立了什么\n证据支持一个可公开部署的全球 10 m canopy-height 产品：稀疏 GEDI 监督、Sentinel-2 密集覆盖和 probabilistic deep ensemble 的组合在留出 GEDI 以及独立 LVIS/ALS 样本上具有有用的误差水平，并能输出空间化 uncertainty。图 1 支持模型机制和主要验证，图 2 支持产品的空间/不确定性表达，图 3 支持分布与保护区统计，Extended Data Table 1 支持逐 tile 外部验证。\n\n## 证据不建立的内容、局限与未决问题\n- 10 m 是产品 GSD，不等于每个 10 m 像素都包含独立、10 m 精度的真实冠层高度观测；GEDI supervision 本身稀疏，训练分布和空间外推决定了误差。\n- 模型使用光学影像和地理坐标，无法从单次观测中保证物理可辨识性；光谱/纹理相似但结构不同的植被会产生混淆。Alaska、Yukon、Tibet 和 Papua New Guinea 等地的 uncertainty 较高，云雪和 GEDI 未覆盖区域尤其需要谨慎。\n- UMD 是有偏比较基线且其训练/区域拟合策略不同；跨数据源和区域的比较不能单独证明模型在所有生态类型上 state of the art。独立 airborne LiDAR 样本虽然重要，但只有 24 tiles，不是全面的全球验证。\n- 高度 <5 m 存在过估计；不确定性 calibration 依 biome 和阈值变化，应用者可能需要后处理重校准。高冠层改善的误差仍可能来自训练标签、云筛选、地理共变量或 ensemble 设计。\n- 全球图的 160 TB 数据和 27,000 GPU-hours 是重部署成本；产品可用于碳、生物多样性和保护分析，但这些下游量的因果解释还需要独立的 biomass、扰动和生态调查数据。\n\n总体判断：这是以多源遥感融合和不确定性量化为核心的全球产品论文。它较有力地证明了“在给定 Sentinel-2、GEDI、训练分布和外部验证条件下，可以生产有用的全球 10 m 冠层高度估计及其质量信号”；它没有证明逐像素真值、对所有生态区的均匀精度，或仅凭高度图即可直接推出全球碳储量和保护成效。",
+    "notes": "Real Direct-AI reading of the original publisher PDF only. No Evidentia intermediate artifacts, project context, or Research Memory were supplied."
+  }
+}
