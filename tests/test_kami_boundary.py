@@ -210,3 +210,18 @@ def test_kami_audit_warning_classification(tmp_path):
     # Broken PDF or font errors are correctly detected as BLOCKING defects
     assert report["blocking_defects_count"] > 0
     assert report["status"] == "FAIL"
+
+def test_kami_audit_when_kami_unavailable_does_not_crash(tmp_path):
+    fake_pdf = tmp_path / "test.pdf"
+    fake_html = tmp_path / "test.html"
+    fake_pdf.write_bytes(b"%PDF-1.4 test")
+    fake_html.write_text("<html><body>Test</body></html>", encoding="utf-8")
+
+    # Explicitly test unavailable Kami backend (clean Linux runner without Kami installed)
+    report = collect_kami_report(fake_pdf, html_path=fake_html, kami_root=Path("/non_existent_kami_root"), out_dir=tmp_path)
+    assert report["presentation_contract"]["presentation_only"] is True
+    assert report["blocking_defects_count"] == 0
+    assert report["status"] == "OK"
+    checks_list = report.get("checks", report.get("results", []))
+    assert any(x.get("check") == "KAMI_AVAILABILITY" for x in checks_list)
+

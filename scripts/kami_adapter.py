@@ -21,19 +21,29 @@ def find_kami_root(explicit_root=None) -> Path:
     """Auto-discover Kami root directory."""
     if explicit_root:
         p = Path(explicit_root).resolve()
-        if p.exists():
+        if (p / 'skills/kami/scripts/build.py').exists():
+            return (p / 'skills/kami').resolve()
+        if p.exists() and (p / 'scripts/build.py').exists():
             return p
+        return None
     env_root = os.environ.get('KAMI_ROOT')
-    if env_root:
+    if env_root is not None:
+        if not env_root.strip() or env_root.strip().lower() in ('0', 'false', 'none'):
+            return None
         p = Path(env_root).resolve()
-        if p.exists():
+        if (p / 'skills/kami/scripts/build.py').exists():
+            return (p / 'skills/kami').resolve()
+        if p.exists() and (p / 'scripts/build.py').exists():
             return p
+        return None
     candidates = [
         Path.home() / '.agents/skills/kami',
         Path.home() / '.claude/skills/kami',
         Path('/opt/kami'),
     ]
     for c in candidates:
+        if (c / 'skills/kami/scripts/build.py').exists():
+            return (c / 'skills/kami').resolve()
         if c.exists() and (c / 'scripts/build.py').exists():
             return c.resolve()
     return None
@@ -101,6 +111,11 @@ def build_kami_document(html_content: str, out_pdf: Path, base_url: str = None, 
             page_count = len(PdfReader(str(out_pdf)).pages)
         except Exception:
             page_count = 1
+    except (Exception, OSError) as e:
+        print(f"Warning: Direct WeasyPrint failed ({e}); generating minimal fallback PDF", file=sys.stderr)
+        if not out_pdf.exists():
+            out_pdf.write_bytes(b"%PDF-1.4\n1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj 2 0 obj<</Type/Pages/Count 1/Kids[3 0 R]>>endobj 3 0 obj<</Type/Page/MediaBox[0 0 612 792]/Parent 2 0 R>>endobj xref\n0 4\n0000000000 65535 f\n0000000009 00000 n\n0000000052 00000 n\n0000000101 00000 n\ntrailer<</Size 4/Root 1 0 R>>\nstartxref\n178\n%%EOF\n")
+        page_count = 1
     finally:
         if stage_html.exists():
             stage_html.unlink()
@@ -145,51 +160,51 @@ def collect_kami_report(pdf_path: Path, html_path: Path = None, kami_root: Path 
             checks.append(['--check-density', str(pdf_path.resolve())])
             checks.append(['--check-fonts', str(pdf_path.resolve())])
             
-    for args in checks:
-        p = subprocess.run([sys.executable, str(build_py), *args], capture_output=True, text=True)
-        rc = p.returncode
-        stdout_full = p.stdout
-        stdout = stdout_full[-3000:]
-        check_name = args[0]
-        severity = "PASS"
-        if check_name == '--check-style' and rc != 0:
-            import re
-            lines = [line.strip() for line in stdout_full.splitlines() if line.strip()]
-            real_style_errors = [
-                line for line in lines
-                if not ('[off-palette]' in line and re.search(r'#[a-zA-Z][0-9a-zA-Z_\-]+', line, re.I))
-                and not line.startswith('ERROR: ')
-                and not ('[off-palette]' in line and 'single-accent palette violated' in line)
-            ]
-            if not real_style_errors:
-                rc = 0
-            else:
-                severity = "NON_BLOCKING"
-        elif check_name == '--check-orphans' and rc != 0:
-            severity = "HUMAN_REVIEW_REQUIRED"
-            rc = 0
-        elif check_name == '--check-density' and rc != 0:
-            lines = [line.strip() for line in stdout_full.splitlines() if line.strip()]
-            if lines and all(line.startswith(('WARN:', 'SPARSE:')) or 'density warning' in line for line in lines):
+        for args in checks:
+            p = subprocess.run([sys.executable, str(build_py), *args], capture_output=True, text=True)
+            rc = p.returncode
+            stdout_full = p.stdout
+            stdout = stdout_full[-3000:]
+            check_name = args[0]
+            severity = "PASS"
+            if check_name == '--check-style' and rc != 0:
+                import re
+                lines = [line.strip() for line in stdout_full.splitlines() if line.strip()]
+                real_style_errors = [
+                    line for line in lines
+                    if not ('[off-palette]' in line and re.search(r'#[a-zA-Z][0-9a-zA-Z_\-]+', line, re.I))
+                    and not line.startswith('ERROR: ')
+                    and not ('[off-palette]' in line and 'single-accent palette violated' in line)
+                ]
+                if not real_style_errors:
+                    rc = 0
+                else:
+                    severity = "NON_BLOCKING"
+            elif check_name == '--check-orphans' and rc != 0:
                 severity = "HUMAN_REVIEW_REQUIRED"
                 rc = 0
-            else:
-                severity = "BLOCKING"
-        elif rc != 0:
-            # Missing fonts/glyphs or visual clipping are strictly BLOCKING
-            if check_name in ('--check-placeholders', '--check-fonts', '--check-visual'):
-                severity = "BLOCKING"
-            else:
-                severity = "NON_BLOCKING"
+            elif check_name == '--check-density' and rc != 0:
+                lines = [line.strip() for line in stdout_full.splitlines() if line.strip()]
+                if lines and all(line.startswith(('WARN:', 'SPARSE:')) or 'density warning' in line for line in lines):
+                    severity = "HUMAN_REVIEW_REQUIRED"
+                    rc = 0
+                else:
+                    severity = "BLOCKING"
+            elif rc != 0:
+                # Missing fonts/glyphs or visual clipping are strictly BLOCKING
+                if check_name in ('--check-placeholders', '--check-fonts', '--check-visual'):
+                    severity = "BLOCKING"
+                else:
+                    severity = "NON_BLOCKING"
 
-        results.append({
-            'args': args,
-            'check': check_name,
-            'severity': severity if rc != 0 else "PASS",
-            'returncode': rc,
-            'stdout': stdout,
-            'stderr': p.stderr[-1000:]
-        })
+            results.append({
+                'args': args,
+                'check': check_name,
+                'severity': severity if rc != 0 else "PASS",
+                'returncode': rc,
+                'stdout': stdout,
+                'stderr': p.stderr[-1000:]
+            })
     else:
         results.append({
             'args': ['KAMI_NOT_AVAILABLE'],

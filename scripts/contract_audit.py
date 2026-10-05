@@ -324,41 +324,34 @@ def main():
     ap.add_argument('--write', action='store_true')
     a = ap.parse_args()
     root = Path(a.out)
-    result = {
-        "schema_version": "2.0",
-        "audit": "Contract Audit v1.0",
-        "repository": "Evidentia",
-        "implementation_statuses": [
-            "IMPLEMENTED",
-            "PARTIAL",
-            "DECLARED_ONLY",
-            "MISSING",
-            "DEPRECATED"
-        ],
-        "validation_statuses": [
-            "UNVALIDATED",
-            "UNIT_TESTED",
-            "SYNTHETIC_VALIDATED",
-            "REPLAY_VALIDATED",
-            "LIVE_AGENT_VALIDATED",
-            "REAL_PAPER_VALIDATED",
-            "HUMAN_REVIEWED"
-        ],
-        "statuses": [
-            "IMPLEMENTED",
-            "PARTIAL",
-            "DECLARED_ONLY",
-            "MISSING",
-            "DEPRECATED"
-        ],
-        "capabilities": CAPABILITIES
-    }
     target = root / 'model' / 'capability_matrix.json' if a.write else root / 'capability_matrix.json'
-    target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text(json.dumps(result, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
-    impl_counts = {s: sum(x.get('implementation_status', x.get('status')) == s for x in CAPABILITIES) for s in result['implementation_statuses']}
-    val_counts = {s: sum(x.get('validation_status') == s for x in CAPABILITIES) for s in result['validation_statuses']}
-    print(json.dumps({"status": "OK", "output": str(target), "implementation_counts": impl_counts, "validation_counts": val_counts}, ensure_ascii=False, indent=2))
+    
+    if target.exists():
+        with open(target, 'r', encoding='utf-8') as f:
+            matrix = json.load(f)
+    else:
+        # Fallback to repository root matrix if target in out dir does not exist
+        repo_matrix = Path(__file__).resolve().parents[1] / 'capability_matrix.json'
+        if repo_matrix.exists():
+            with open(repo_matrix, 'r', encoding='utf-8') as f:
+                matrix = json.load(f)
+        else:
+            matrix = {"schema_version": "3.0", "capabilities": CAPABILITIES}
+            
+    caps = matrix.get('capabilities', [])
+    valid_statuses = set(matrix.get('statuses', ["REAL_PAPER_VALIDATED", "IMPLEMENTED", "SYNTHETIC_ONLY", "DEPRECATED", "PLANNED"]))
+    
+    status_counts = {}
+    for cap in caps:
+        st = cap.get('status', 'IMPLEMENTED')
+        assert st in valid_statuses, f"Invalid status {st} in {cap.get('id')}"
+        status_counts[st] = status_counts.get(st, 0) + 1
+        
+    if a.write:
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(json.dumps(matrix, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
+        
+    print(json.dumps({"status": "OK", "output": str(target), "schema_version": matrix.get("schema_version"), "status_counts": status_counts}, ensure_ascii=False, indent=2))
 
 if __name__ == '__main__':
     main()
