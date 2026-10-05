@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
-"""Evidence-grounded Lens Council boundary.
+"""DEPRECATED: Legacy v1/v2 evidence-grounded Lens Council boundary.
 
-The council is deliberately a boundary, not a voting helper.  It freezes one
-shared evidence package, snapshots six independent Round-1 reports, gives a
-Chair an agent task, and records only bounded, explicitly requested
-cross-examination.  Scientific Synthesis consumes the resulting council
-artifact; it never needs to read the raw Round-1 reports.
+Retained for historical replays only. Superseded by Reader v3 Revision Memo.
+Prohibited in canonical Reader v3 scientific execution.
 """
 import argparse, json, sys
 from datetime import datetime, timezone

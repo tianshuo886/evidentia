@@ -52,6 +52,16 @@ def dispatch_agent_task(task_path, adapter=None, model=None, replay_dir=None, fi
             task_type = 'LENS'
         elif 'OPEN' in task_id:
             task_type = 'OPEN_READING'
+        elif 'LEAD-READING' in task_id:
+            task_type = 'LEAD_READING'
+        elif 'LENS-' in task_id:
+            task_type = 'LENS_V3'
+        elif 'REVISION-MEMO' in task_id:
+            task_type = 'REVISION_MEMO'
+        elif 'NARRATIVE-PLAN' in task_id:
+            task_type = 'NARRATIVE_PLAN'
+        elif 'LEAD-WRITING' in task_id:
+            task_type = 'LEAD_WRITING'
         elif 'RECON' in task_id or 'COUNCIL' in task_id:
             task_type = 'COUNCIL_CHAIR'
         elif 'APPLY' in task_id:
@@ -101,7 +111,10 @@ def dispatch_agent_task(task_path, adapter=None, model=None, replay_dir=None, fi
     # 2. Tier 1 Synthetic Fixtures: Only when explicitly requested
     allow_fixture = is_fixture_enabled(fixture)
     if allow_fixture:
-        if task_type == 'OPEN_READING':
+        if task_type in ('LEAD_READING', 'LENS_V3', 'REVISION_MEMO', 'NARRATIVE_PLAN', 'LEAD_WRITING'):
+            import reader_v3_fixture
+            return reader_v3_fixture.run_synthetic_v3_task(tp)
+        elif task_type == 'OPEN_READING':
             import open_reading_fixture
             return open_reading_fixture.run_synthetic_open_reading(tp)
         elif task_type == 'LENS':

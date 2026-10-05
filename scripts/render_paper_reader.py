@@ -15,7 +15,8 @@ from datetime import datetime, timezone
 
 sys.path.insert(0, str(Path(__file__).parent))
 from validate_common import load_json, sha256
-from narrative_composer_agent import compose_narrative_manuscript, clean_visible_narrative
+# In Reader v3, narrative_manuscript.json is strictly authored by the Lead Writer.
+# Deterministic composition is quarantined for legacy compatibility only.
 import kami_adapter
 
 def esc(x):
@@ -636,8 +637,15 @@ def render_paper_reader(root: Path, kami_root: Path = None) -> dict:
     manuscript_p = reader_dir / 'narrative_manuscript.json'
     if manuscript_p.exists():
         manuscript = load_json(manuscript_p)
-    else:
+    elif os.environ.get("EVIDENTIA_ALLOW_LEGACY_COMPOSER") == "1":
+        from narrative_composer_agent import compose_narrative_manuscript
         manuscript = compose_narrative_manuscript(root)
+    else:
+        raise FileNotFoundError(
+            f"Missing canonical Lead Writer manuscript at {manuscript_p}. "
+            "In Reader v3, the narrative manuscript must be produced by the strong-model Lead Writer. "
+            "Deterministic composition is deprecated and prohibited in production."
+        )
     binding_changes = rebind_visual_assets(manuscript, root)
     manuscript_p.write_text(json.dumps(manuscript, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
     if binding_changes:

@@ -1,28 +1,32 @@
-# Complete Paper Research OS workflow
+# Canonical Evidentia Reader v3 Workflow
 
-The skill is a state machine, not a single summarization prompt:
+The skill is an evidence-grounded research operating system that turns a supplied paper PDF into a durable, deeply reasoned, auditable research object:
 
 ```text
 source-only INGEST
-  → SOURCE_RECONSTRUCTION (page-first: source_pages/ + source_map + figure_inventory, bound to SOURCE_SHA256)
+  → SOURCE_RECONSTRUCTION (page-first: source_pages/ + source_map + figure_inventory + equation_inventory, bound to source_sha256)
   → SOURCE LOCK (freeze_check SHA chain: actual source/paper.pdf == all references)
-  → OPEN_READING draft (model/paper_model.json, project invisible)
-  → BASELINE LOCK (snapshot_baseline.py → model/open_reading_model.json + open_reading_manifest.json)
-  → six independent LENS task packets (lens_runner.py binds source_sha256/base_sha256/contract+prompt versions)
-  → merge with provenance (merge_lenses.py → model/lens_reconciliation.json; supporting_lenses preserved, conflicts recorded)
-  → CROSS-LENS SCIENTIFIC SYNTHESIS (scientific_synthesis_agent.py → model/scientific_synthesis.json)
-  → EVIDENCE VERIFICATION (verifier.py on tension/contradictions without majority voting)
-  → FINAL MODEL + evidence_graph (build_graph.py binds source_sha256)
-  → FREEZE + hash verification (freeze_check.py fail-closed; verify_frozen.py)
-  → CHINESE-FIRST PAPER READER render (paper_reader.html + paper_reader.md + paper_reader.pdf)
-  → PAPER_COMPLETE (Stop here)
+  → MULTIMODAL VISUAL LOCALIZATION (semantic full-page inspection, collision-free crops)
+  → LEAD READER PASS (model/paper_understanding_draft.json, open argument topology, specialist lens selection)
+  → 4 UNIVERSAL CORE + 2 ADAPTIVE SPECIALIST LENSES (isolated execution snapshots under provenance/lens/<task_id>, zero crosstalk)
+  → EDITORIAL REVISION MEMO (model/revision_memo.json; structured Keep/Expand/Correct/Qualify/Verify directives without majority voting)
+  → DYNAMIC NARRATIVE PLAN (model/narrative_plan.json; paper-specific anti-template section architecture)
+  → STRONG-MODEL LEAD WRITER (reader/narrative_manuscript.json; publication-grade Chinese academic manuscript)
+  → INTEGRITY & ANTI-TEMPLATE VALIDATION (fail-closed check on evidence refs, assets, and structural diversity)
+  → KAMI PRESENTATION TRANSFORMATION (render_paper_reader.py; typography, layout, responsive HTML, and vector PDF export)
+  → SECONDARY EVIDENCE ATLAS (render_evidence_atlas_v3.py; claim-to-evidence inspection graph)
+  → PAPER_COMPLETE (Canonical reading stops here)
 
 Explicit user request only:
-  → PROJECT APPLY contextual reread (/evidentia-apply)
+  → CONTEXTUAL PROJECT APPLY (/evidentia-apply)
   → separate apply/<project>/project_reader.html + research_delta.json
   → optional cross-paper memory index (/evidentia-memory)
 ```
 
-`pipeline.py`, `init_run.py`, `phase.py`, and `init_apply.py` make the boundary explicit. The scripts never invent paper facts or pretend to have run an LLM pass: each generated artifact is a required, schema-validated input. This preserves the distinction between an execution contract and the model that performs the reading.
+## Primary Axiom
 
-Open Reading can see only `working/paper.pdf`, supplied supplements, source reconstruction and skill resources. Apply begins only after `verify_frozen.py` succeeds and copies one project document into a separate apply directory. Frozen Paper Model files are read-only during apply.
+> **Paper decides the story. Evidentia enforces rigor. Kami presents the story.**
+
+The scripts never invent paper facts or pretend to have run an LLM pass: each generated artifact is a required, schema-validated input with cryptographic execution receipts. This preserves the distinction between an execution contract and the model that performs the reading.
+
+Paper reading is strictly project-independent. Project Apply begins only upon explicit user request and operates on the frozen Paper Object without mutating original understanding.

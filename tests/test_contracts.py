@@ -48,8 +48,8 @@ def test_capability_matrix_audit_clean():
     matrix_file = ROOT / 'capability_matrix.json'
     assert matrix_file.exists()
     matrix = json.loads(matrix_file.read_text(encoding='utf-8'))
-    assert matrix.get('schema_version') in ('1.0', '2.0')
-    valid_statuses = {"IMPLEMENTED", "PARTIAL", "DECLARED_ONLY", "MISSING", "DEPRECATED"}
+    assert matrix.get('schema_version') in ('1.0', '2.0', '3.0')
+    valid_statuses = {"IMPLEMENTED", "PARTIAL", "DECLARED_ONLY", "MISSING", "DEPRECATED", "REAL_PAPER_VALIDATED", "SYNTHETIC_ONLY", "PLANNED"}
     ids = set()
     for cap in matrix.get('capabilities', []):
         assert cap['id'] not in ids

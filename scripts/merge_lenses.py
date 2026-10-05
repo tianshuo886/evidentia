@@ -1,17 +1,10 @@
 #!/usr/bin/env python3
-"""Cross-Lens Reconciliation for Evidentia v1.1.1.
+"""DEPRECATED: Legacy v1/v2 cross-lens reconciliation.
 
-Implements Section 14 Two-Layer Separation & P0-1 Hardening:
-- Layer 1 (Deterministic): Pre-clusters findings by evidence overlap, normalized strings,
-  and exact matching -> model/candidate_clusters.json.
-  Deterministic code NEVER modifies relation, status, or canonical_statement.
-- Layer 2 (Semantic Reasoning): Dispatches to Semantic Reconciliation Agent
-  (scripts/reconciliation_agent.py) to assign canonical statements and relations.
-- Localized Evidence Verification:
-  Only triggered when semantic agent assigns TENSION, CONTRADICTION, or requires_verification=True.
-  Verifies actual candidate statements (not generated meta-descriptions).
-  If verifier is absent or returns None: verifier_status becomes PENDING_VERIFICATION and workflow
-  pauses at WAITING_FOR_VERIFIERS. Zero fail-open to SUPPORTED.
+Retained for downstream compatibility and historical replays only.
+In canonical Reader v3, specialist lenses are reconciled by the Editorial
+Revision Memo without deterministic merging or majority voting.
+Prohibited in canonical Reader v3 scientific execution.
 """
 import argparse, json, re, sys
 from pathlib import Path
