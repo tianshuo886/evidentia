@@ -44,8 +44,8 @@ def build_legacy_reader_ir(r, manuscript=None):
     """
     manuscript = manuscript or load_json(r / 'reader/narrative_manuscript.json')
     doc = manuscript.get('document', {})
-    spine = doc.get('story_spine', {})
-    chapters = doc.get('chapters', [])
+    spine = doc.get('story_spine', {})  # compatibility metadata only
+    chapters = doc.get('sections') or doc.get('chapters', [])
     pm = load_json(r / 'model/paper_model.json') if (r / 'model/paper_model.json').exists() else {}
     claims = pm.get('claims', [])
     inv = load_json(r / 'model/figure_inventory.json') if (r / 'model/figure_inventory.json').exists() else {}
@@ -71,11 +71,12 @@ def build_legacy_reader_ir(r, manuscript=None):
             elif block.get('type') == 'table':
                 tables.append({'id': block.get('evidence_id'), 'caption_original': block.get('caption'), 'file': block.get('asset'), 'page': block.get('page', 1)})
         evidence_ids.extend(chapter_evidence)
-        units.append({'section_id': chapter.get('id'), 'heading_zh': chapter.get('title', ''), 'narrative_text_zh': ' '.join(text_parts), 'argument_unit_ids': [], 'claim_ids': [], 'evidence_ids': list(dict.fromkeys(chapter_evidence))})
+        units.append({'section_id': chapter.get('id'), 'purpose': chapter.get('purpose', ''), 'heading_zh': chapter.get('title', ''), 'narrative_text_zh': ' '.join(text_parts), 'argument_unit_ids': list(chapter.get('argument_refs') or []), 'claim_ids': [], 'evidence_ids': list(dict.fromkeys(chapter_evidence)), 'source_anchors': list(chapter.get('source_anchors') or []), 'bindings': list(chapter.get('bindings') or [])})
     summary = doc.get('executive_summary', {})
     final_text = ' '.join(b.get('text', '') for c in chapters[-2:] for b in c.get('blocks', []) if b.get('text'))
     ir = {
         'schema_version': '2.0',
+        'compatibility_projection': True,
         'paper_id': manuscript.get('paper_id', r.name),
         'title': doc.get('title', ''),
         'source_sha256': manuscript.get('source_sha256', ''),
@@ -171,7 +172,8 @@ def render_reader(workspace_root: Path, kami_root: Path = None, intent=None) -> 
     # Dedicated standalone technical extraction artifacts (Issue #12)
     tech_md_p = reader_dir / 'technical_extraction.md'
     tech_html_p = reader_dir / 'technical_extraction.html'
-    tech_ch = next((ch for ch in manuscript.get('document', {}).get('chapters', []) if ch.get('id') in ('technical_extraction', 'technical-extraction')), None)
+    document = manuscript.get('document', {})
+    tech_ch = next((ch for ch in (document.get('sections') or document.get('chapters', [])) if ch.get('id') in ('technical_extraction', 'technical-extraction')), None)
     if tech_ch:
         p_title = manuscript.get('document', {}).get('title', '论文')
         lines = [

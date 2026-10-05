@@ -30,6 +30,7 @@
         "LEAD_READING",
         "LENS_V3",
         "REVISION_MEMO",
+        "NARRATIVE_PLAN",
         "LEAD_WRITING",
         "VISUAL_LOCALIZATION",
         "DIRECT_READING_BASELINE",
@@ -93,6 +94,9 @@
     },
     "executor_template": {
       "type": "object"
+    },
+    "isolation_proof_required": {
+      "type": "boolean"
     },
     "source_pdf": {
       "type": "string"

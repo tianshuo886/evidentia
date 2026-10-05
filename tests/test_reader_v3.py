@@ -10,6 +10,7 @@ from reader_v3_protocol import (
     create_lead_reader_task,
     create_lens_tasks,
     create_revision_memo_task,
+    create_narrative_plan_task,
     create_lead_writer_task,
 )
 from reader_v3_benchmark import create_direct_task
@@ -33,6 +34,8 @@ def _draft(root, paper_type="remote_sensing"):
         "paper_id": "PAPER-V3",
         "source_sha256": sha256(root / "source/paper.pdf"),
         "paper_type": paper_type,
+        "structure_characterization": "A method paper organized around an architecture and empirical consequences.",
+        "argument_topology": {"nodes": [{"id": "N01", "role": "design_choice", "proposition": "The architecture links input to prediction.", "evidence_refs": [], "source_anchors": ["p.1"], "epistemic_status": "SUPPORTED"}], "relations": [], "ordering": ["N01"]},
         "story_spine": {
             "central_question": "What problem is being solved?",
             "motivation": "Existing methods leave an unresolved scientific gap.",
@@ -114,6 +117,17 @@ def test_reader_v3_task_chain_is_host_neutral_and_context_isolated(tmp_path):
         "unresolved": []
     }))
 
+    plan_task = create_narrative_plan_task(root)
+    plan = load_json(plan_task)
+    assert plan["task_type"] == "NARRATIVE_PLAN"
+    assert "NO_FIXED_STORY_SLOTS" in plan["constraints"]
+    assert not schema_validate(plan, "agent_task")
+    (root / "model/narrative_plan.json").write_text(json.dumps({
+        "schema_version": "1.0", "paper_id": "PAPER-V3",
+        "source_sha256": sha256(root / "source/paper.pdf"),
+        "sections": [{"id": "section-observation", "title": "A paper-specific section", "purpose": "Describe the native move", "evidence_refs": ["p.1"], "source_anchors": ["p.1"]}]
+    }))
+
     writer_task = create_lead_writer_task(root)
     writer = load_json(writer_task)
     assert writer["task_type"] == "LEAD_WRITING"
@@ -154,17 +168,9 @@ def _valid_manuscript(root):
                 "core_finding": "结果支持核心主张。",
                 "core_boundary": "外推仍需验证。"
             },
-            "story_spine": {
-                "central_question": "核心问题是什么？",
-                "motivation": "现有方法存在缺口。",
-                "prior_gap": "证据不完整。",
-                "central_move": "提出新方法。",
-                "method_logic": "输入到输出",
-                "experimental_questions": ["主要实验是否支持主张？"],
-                "major_findings": ["主要实验支持主张。"],
-                "justified_conclusion": "在测试范围内成立。",
-                "scope_and_limits": ["外推仍需验证。"]
-            },
+            "orientation": {"lead": "论文的结构由其自身证据组织。", "takeaways": ["结论仅在证据范围内成立。"]},
+            "narrative_plan": {"sections": [{"id": "c1", "title": "论文特有的论证段落", "purpose": "推进本论文自己的论证", "evidence_refs": ["p.1"], "source_anchors": ["p.1"]}]},
+            "sections": [{"id": "c1", "chapter_num": "01", "title": "论文特有的论证段落", "lead": "先建立证据。", "purpose": "推进本论文自己的论证", "evidence_refs": ["p.1"], "source_anchors": ["p.1"], "blocks": [{"type": "paragraph", "text": "论文在来源页中明确提出论证并给出相应证据。", "evidence_refs": ["p.1"]}]}],
             "chapters": [{
                 "id": "c1", "chapter_num": "01", "title": "论文解决了什么问题",
                 "lead": "先建立研究问题与证据。",
@@ -191,9 +197,21 @@ def test_v3_manuscript_integrity_rejects_phantom_evidence(tmp_path):
     }))
     manuscript = _valid_manuscript(root)
     assert _validate_v3_manuscript(root, manuscript) == []
-    manuscript["document"]["chapters"][0]["blocks"][0]["evidence_refs"] = ["F99"]
+    manuscript["document"]["sections"][0]["blocks"][0]["evidence_refs"] = ["F99"]
     errors = _validate_v3_manuscript(root, manuscript)
     assert any("unknown source evidence reference" in e for e in errors)
+
+
+def test_v3_dynamic_plan_order_is_checked(tmp_path):
+    from reader_v3 import _validate_v3_manuscript
+    root = _workspace(tmp_path)
+    (root / "model/source_map.json").write_text(json.dumps({"pages": [{"number": 1, "equations": []}]}))
+    plan = {"schema_version": "1.0", "paper_id": "PAPER-V3", "source_sha256": sha256(root / "source/paper.pdf"), "sections": [{"id": "first", "title": "First", "purpose": "p", "evidence_refs": ["p.1"], "source_anchors": ["p.1"]}, {"id": "second", "title": "Second", "purpose": "p", "evidence_refs": ["p.1"], "source_anchors": ["p.1"]}]}
+    (root / "model/narrative_plan.json").write_text(json.dumps(plan))
+    manuscript = _valid_manuscript(root)
+    manuscript["narrative_plan_ref"] = "model/narrative_plan.json"
+    manuscript["document"]["sections"] = [{"id": "second", "title": "Second", "blocks": [{"type": "paragraph", "text": "e", "evidence_refs": ["p.1"]}]}, {"id": "first", "title": "First", "blocks": [{"type": "paragraph", "text": "e", "evidence_refs": ["p.1"]}]}]
+    assert any("section order" in error for error in _validate_v3_manuscript(root, manuscript))
 
 
 def test_v3_evidence_atlas_does_not_require_legacy_paper_model(tmp_path):

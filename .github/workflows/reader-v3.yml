@@ -4,7 +4,7 @@ on:
   push:
     branches: [ reader-reset-v3 ]
   pull_request:
-    branches: [ master, main ]
+    branches: [ reader-reset-v3, master, main ]
     paths:
       - "scripts/reader_v3*.py"
       - "scripts/lens_registry.py"
@@ -16,12 +16,17 @@ on:
       - "scripts/intent_router.py"
       - "schemas/*v3*.json"
       - "schemas/paper_understanding_draft.schema.json"
+      - "schemas/paper_argument_topology.schema.json"
+      - "schemas/narrative_plan.schema.json"
+      - "schemas/narrative_manuscript.schema.json"
+      - "schemas/paper_reader_ir.schema.json"
       - "schemas/revision_memo.schema.json"
       - "schemas/visual_page_verification.schema.json"
       - "schemas/direct_reading_baseline.schema.json"
       - "schemas/reader_pair_evaluation.schema.json"
       - "schemas/agent_task.schema.json"
       - "tests/test_reader_v3.py"
+      - "tests/test_issue22_antitemplate.py"
       - "tests/test_visual_v3.py"
       - ".github/workflows/reader-v3.yml"
 
@@ -54,6 +59,10 @@ jobs:
           names = [
               "agent_task.schema.json",
               "paper_understanding_draft.schema.json",
+              "paper_argument_topology.schema.json",
+              "narrative_plan.schema.json",
+              "narrative_manuscript.schema.json",
+              "paper_reader_ir.schema.json",
               "lens_v3.schema.json",
               "revision_memo.schema.json",
               "visual_page_verification.schema.json",
@@ -69,7 +78,7 @@ jobs:
 
       - name: Run Reader v3 unit tests
         run: |
-          python -m pytest -q tests/test_reader_v3.py tests/test_visual_v3.py
+          python -m pytest -q tests/test_reader_v3.py tests/test_issue22_antitemplate.py tests/test_visual_v3.py
 
       - name: Reader v3 CLI smoke
         run: |
@@ -77,6 +86,7 @@ jobs:
           python scripts/reader_v3_agent.py --help
           python scripts/reader_v3_benchmark.py --help
           python scripts/reader_v3_corpus.py --help
+          python scripts/reader_structure_diversity.py --help
           python scripts/visual_localization_protocol.py --help
           python scripts/apply_visual_verification.py --help
           python scripts/render_evidence_atlas_v3.py --help

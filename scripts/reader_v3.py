@@ -16,7 +16,7 @@ sys.path.insert(0, str(HERE))
 from validate_common import load_json, schema_validate
 from reader_v3_protocol import (
     create_lead_reader_task, create_lens_tasks,
-    create_revision_memo_task, create_lead_writer_task,
+    create_revision_memo_task, create_narrative_plan_task, create_lead_writer_task,
 )
 
 
@@ -59,13 +59,31 @@ def _walk_strings(obj):
 
 def _validate_v3_manuscript(root: Path, data: dict):
     errors = list(schema_validate(data, "narrative_manuscript"))
+    plan_ref = data.get("narrative_plan_ref")
+    if plan_ref:
+        plan_path = root / plan_ref
+        if not plan_path.exists():
+            errors.append(f"narrative plan is missing: {plan_ref}")
+        else:
+            plan = load_json(plan_path)
+            errors.extend(schema_validate(plan, "narrative_plan"))
+            if plan.get("source_sha256") != data.get("source_sha256"):
+                errors.append("narrative plan source_sha256 does not match manuscript")
+            planned_ids = [str(x.get("id")) for x in plan.get("sections", [])]
+            document = data.get("document", {})
+            output_sections = document.get("sections") or document.get("chapters", [])
+            output_ids = [str(x.get("id")) for x in output_sections]
+            if planned_ids and output_ids[:len(planned_ids)] != planned_ids:
+                errors.append("Lead Writer section order does not preserve the Dynamic Narrative Plan")
     visible_text = "\n".join(_walk_strings(data.get("document", {})))
     for marker in INTERNAL_MARKERS:
         if marker in visible_text:
             errors.append(f"internal Reader-v3 vocabulary leaked into primary narrative: {marker}")
 
     allowed = _allowed_evidence_ids(root)
-    for chapter in data.get("document", {}).get("chapters", []):
+    document = data.get("document", {})
+    chapters = document.get("sections") or document.get("chapters", [])
+    for chapter in chapters:
         chapter_refs = set()
         for block in chapter.get("blocks", []):
             refs = [str(x) for x in (block.get("evidence_refs") or []) if x]
@@ -85,7 +103,7 @@ def _validate_v3_manuscript(root: Path, data: dict):
                     elif not (root / asset).exists():
                         errors.append(f"{block.get('type')} {block.get('evidence_id')} asset does not exist: {asset}")
         if not chapter_refs:
-            errors.append(f"chapter {chapter.get('id')} contains no source evidence references")
+            errors.append(f"section {chapter.get('id')} contains no source evidence references")
     return errors
 
 
@@ -96,6 +114,7 @@ def _status(root: Path) -> dict:
         "lead_reader": (root / "model/paper_understanding_draft.json").exists(),
         "lens_manifest": (root / "model/lens_v3_manifest.json").exists(),
         "revision_memo": (root / "model/revision_memo.json").exists(),
+        "narrative_plan": (root / "model/narrative_plan.json").exists(),
         "lead_writer": (root / "reader/narrative_manuscript.json").exists(),
         "rendered": (root / "reader/paper_reader.html").exists(),
     }
@@ -122,6 +141,8 @@ def prepare_next(root: Path) -> Optional[Path]:
         return None
     if not st["revision_memo"]:
         return create_revision_memo_task(root)
+    if not st["narrative_plan"]:
+        return create_narrative_plan_task(root)
     if not st["lead_writer"]:
         return create_lead_writer_task(root)
     return None
