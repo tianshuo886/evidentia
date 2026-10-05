@@ -1,15 +1,8 @@
 #!/usr/bin/env python3
-"""Adaptive Model Escalation policy engine for Evidentia Ensemble Mode.
+"""DEPRECATED: Legacy v1/v2 adaptive model escalation policy engine.
 
-Evaluates first-pass findings against trigger rules:
-- high_impact
-- critical_uncertainty
-- causal_ambiguity
-- unexpected_anomaly
-- weak_evidence
-- transfer_critical
-
-Returns escalation recommendations: second independent model run or localized verifier.
+Retained for historical replays only. Superseded by Reader v3 adaptive lens selection.
+Prohibited in canonical Reader v3 scientific execution.
 """
 import argparse, json, sys
 from pathlib import Path

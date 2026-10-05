@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "source_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+  "page": 10,
+  "bindings": [
+    {
+      "evidence_id": "T04",
+      "kind": "table",
+      "bbox_norm": [0.17, 0.08, 0.835, 0.315],
+      "panel_bboxes_norm": [],
+      "status": "VERIFIED",
+      "complete": true,
+      "caption_match": true,
+      "confidence": 0.99,
+      "notes": "Full-page inspection confirms the complete Table 4 caption and all parser/training/WSJ 23 F1 rows, including the Transformer rows."
+    }
+  ]
+}

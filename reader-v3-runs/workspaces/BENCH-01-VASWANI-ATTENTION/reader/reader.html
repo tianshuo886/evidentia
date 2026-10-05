@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang='zh-CN'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'><title>Attention Is All You Need</title><style>
+/* Keep release rendering offline and deterministic.  The prior remote font
+   fetch could block a release on a CDN/network timeout; installed CJK fonts
+   remain the presentation fallback. */
+
+@page {
+  size: A4;
+  margin: 20mm 22mm 22mm 22mm;
+  background: #f5f4ed;
+
+  @top-right {
+    content: string(section-title);
+    font-family: "TsangerJinKai02", "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", Georgia, serif;
+    font-size: 8pt;
+    color: #6b6a64;
+  }
+
+  @bottom-center {
+    content: counter(page);
+    font-family: "TsangerJinKai02", "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", Georgia, serif;
+    font-size: 9pt;
+    color: #6b6a64;
+  }
+}
+
+@page:first {
+  @top-right { content: ""; }
+  @bottom-center { content: ""; }
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --parchment: #f5f4ed;
+  --ivory:     #faf9f5;
+  --near-black:#141413;
+  --dark-warm: #3d3d3a;
+  --olive:     #504e49;
+  --stone:     #6b6a64;
+  --brand:     #1B365D;
+  --border:    #e8e6dc;
+  --border-soft:#e5e3d8;
+  --tag-bg:    #E4ECF5;
+  --serif: "TsangerJinKai02", "Source Han Serif SC", "Source Han Serif CN", "Noto Serif CJK SC", "Noto Serif SC", "Songti SC", "STSong", "SimSun", Georgia, serif;
+  --sans: var(--serif);
+  --rhythm-module: 14pt;
+  --rhythm-section: 18pt;
+}
+
+html, body {
+  background: var(--parchment);
+  color: var(--near-black);
+  font-family: var(--serif);
+  font-size: 10.5pt;
+  line-height: 1.55;
+  letter-spacing: 0.2pt;
+  widows: 3;
+  orphans: 3;
+}
+
+@media screen {
+  body {
+    max-width: 210mm;
+    margin: 0 auto;
+    padding: 20mm 22mm;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+}
+
+/* ========== COVER ========== */
+.cover {
+  min-height: 240mm;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 36mm 0 0 0;
+  break-after: page;
+}
+.cover-eyebrow {
+  font-family: var(--sans);
+  font-size: 9.5pt;
+  color: var(--brand);
+  letter-spacing: 1.5pt;
+  text-transform: uppercase;
+  font-weight: 500;
+  margin-bottom: 18pt;
+}
+.cover-title {
+  font-size: 30pt;
+  font-weight: 500;
+  color: var(--near-black);
+  line-height: 1.25;
+  letter-spacing: 0.3pt;
+  margin-bottom: 16pt;
+}
+.cover-sub {
+  font-size: 13pt;
+  color: var(--olive);
+  line-height: 1.5;
+  max-width: 90%;
+  margin-bottom: 24pt;
+}
+.cover-meta {
+  font-size: 9.5pt;
+  color: var(--stone);
+  line-height: 1.55;
+  border-top: 0.5pt solid var(--border);
+  padding-top: 14pt;
+}
+.cover-meta strong {
+  color: var(--dark-warm);
+  font-weight: 500;
+}
+
+/* ========== TOC ========== */
+.toc {
+  break-after: page;
+  padding-top: 16pt;
+}
+.toc h2 {
+  font-size: 20pt;
+  font-weight: 500;
+  margin-bottom: var(--rhythm-module);
+  color: var(--near-black);
+}
+.toc-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 7pt 0;
+  border-bottom: 0.3pt dotted var(--border);
+  font-size: 10.5pt;
+}
+.toc-num {
+  color: var(--brand);
+  font-weight: 500;
+  min-width: 28pt;
+}
+.toc-title {
+  flex: 1;
+  color: var(--near-black);
+  text-decoration: none;
+  display: block;
+}
+.toc-title[href]::after {
+  content: target-counter(attr(href), page);
+  color: var(--stone);
+  font-variant-numeric: tabular-nums;
+  float: right;
+}
+
+/* ========== CHAPTERS ========== */
+.chapter {
+  break-before: page;
+  padding-top: 10pt;
+}
+.chapter-num {
+  font-family: var(--sans);
+  font-size: 9.5pt;
+  color: var(--brand);
+  letter-spacing: 1pt;
+  text-transform: uppercase;
+  margin-bottom: 6pt;
+  font-weight: 500;
+}
+h1 {
+  font-size: 20pt;
+  font-weight: 500;
+  line-height: 1.25;
+  margin: 0 0 10pt 0;
+  color: var(--near-black);
+  break-after: avoid;
+  string-set: section-title content();
+}
+h2 {
+  font-size: 14pt;
+  font-weight: 500;
+  line-height: 1.3;
+  margin: 20pt 0 8pt 0;
+  color: var(--near-black);
+  break-after: avoid;
+}
+.lead {
+  font-size: 11.5pt;
+  line-height: 1.55;
+  color: var(--dark-warm);
+  margin-bottom: var(--rhythm-module);
+  font-style: normal;
+  border-left: 2pt solid var(--brand);
+  padding-left: 10pt;
+}
+
+p {
+  margin: 0 0 10pt 0;
+  line-height: 1.55;
+  color: var(--near-black);
+  break-inside: avoid;
+}
+
+/* ========== CALLOUTS & TAKEAWAYS ========== */
+.callout {
+  background: var(--ivory);
+  border-left: 2.5pt solid var(--brand);
+  padding: 10pt 14pt;
+  border-radius: 0 3pt 3pt 0;
+  margin: 12pt 0;
+  line-height: 1.55;
+  break-inside: avoid;
+}
+.takeaway {
+  background: var(--ivory);
+  border: 1pt solid var(--border);
+  border-radius: 4pt;
+  padding: 10pt 14pt;
+  margin: 14pt 0;
+  break-inside: avoid;
+}
+.takeaway-label {
+  font-family: var(--sans);
+  font-size: 8.5pt;
+  color: var(--brand);
+  letter-spacing: 0.8pt;
+  text-transform: uppercase;
+  font-weight: 500;
+  margin-bottom: 4pt;
+}
+
+/* ========== FIGURES & TABLES ========== */
+figure.kami-figure {
+  margin: 16pt 0;
+  break-inside: avoid;
+  background: var(--ivory);
+  border: 1pt solid var(--border);
+  border-radius: 4pt;
+  padding: 12pt;
+}
+figure.kami-figure img {
+  max-width: 100%;
+  max-height: 380px;
+  display: block;
+  margin: 0 auto 8pt auto;
+  border-radius: 2pt;
+}
+figcaption {
+  font-family: var(--sans);
+  font-size: 9pt;
+  color: var(--stone);
+  text-align: center;
+  margin-bottom: 8pt;
+  font-weight: 500;
+}
+.figure-analysis {
+  font-size: 9.5pt;
+  color: var(--dark-warm);
+  line-height: 1.55;
+  border-top: 0.3pt solid var(--border);
+  padding-top: 8pt;
+}
+
+.equation-block {
+  background: var(--ivory);
+  border-radius: 4pt;
+  padding: 10pt 14pt;
+  margin: 12pt 0;
+  break-inside: avoid;
+  text-align: center;
+}
+.math-display {
+  font-size: 11pt;
+  margin: 6pt 0;
+}
+.math-source { display: inline-block; max-width: 100%; overflow-wrap: anywhere; }
+.equation-fallback, .table-asset { max-width: 100%; height: auto; display: block; margin: 6pt auto; }
+.equation-uncertain { color: var(--stone); font-style: italic; }
+.eq-explanation {
+  font-size: 9pt;
+  color: var(--stone);
+  margin-top: 4pt;
+  text-align: left;
+}
+
+/* Quiet evidence anchors */
+.evidence-cite {
+  display: inline-block;
+  white-space: nowrap;
+  font-family: var(--sans);
+  font-size: 8pt;
+  color: var(--brand);
+  background: var(--tag-bg);
+  padding: 1pt 5pt;
+  border-radius: 2pt;
+  margin-left: 4pt;
+  vertical-align: 1pt;
+  text-decoration: none;
+}
+.evidence-cite:hover {
+  text-decoration: underline;
+}
+@media print {
+  .evidence-cite { display: none; }
+}
+.evidence-binding { font-family: var(--sans); font-size: 8pt; color: var(--brand); margin-right: 5pt; }
+
+/* ========== APPENDIX ========== */
+.appendix {
+  border-top: 0.5pt solid var(--border);
+  padding-top: 14pt;
+  margin-top: 20pt;
+}
+.appendix details {
+  background: var(--ivory);
+  border: 1pt solid var(--border);
+  border-radius: 4pt;
+  padding: 10pt 14pt;
+  margin: 12pt 0;
+}
+.appendix summary {
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--brand);
+}
+</style></head>
+<body>
+<section class='cover'><div><div class='cover-title'>Attention Is All You Need</div><div class='cover-sub'>从循环序列模型到纯注意力的 Transformer</div></div><div class='cover-meta'>Ashish Vaswani、Noam Shazeer、Llion Jones、Aidan N. Gomez、Niki Parmar、Jakob Uszkoreit、Łukasz Kaiser、Illia Polosukhin · NeurIPS 2017 · 2017</div></section>
+<section class='toc'><h2>目录</h2><div class='toc-item'><a class='toc-title' href='#ch-problem'><span class='toc-num'>01</span> · 问题：序列建模为何难以并行</a></div><div class='toc-item'><a class='toc-title' href='#ch-architecture'><span class='toc-num'>02</span> · 设计：把编码器—解码器改造成注意力网络</a></div><div class='toc-item'><a class='toc-title' href='#ch-translation'><span class='toc-num'>03</span> · 主要证据：机器翻译质量与训练代价</a></div><div class='toc-item'><a class='toc-title' href='#ch-ablations'><span class='toc-num'>04</span> · 消融：性能来自怎样的配置组合</a></div><div class='toc-item'><a class='toc-title' href='#ch-transfer'><span class='toc-num'>05</span> · 跨任务检验：成分句法解析</a></div><div class='toc-item'><a class='toc-title' href='#ch-interpretation'><span class='toc-num'>06</span> · 可视化与边界：学到了什么，尚未证明什么</a></div><div class='toc-item'><a class='toc-title' href='#ch-sources'><span class='toc-num'>07</span> · 证据来源与页面锚点</a></div></section>
+<section class='chapter' id='ch-problem'><h1>问题：序列建模为何难以并行</h1><div class='lead'>论文从循环模型的顺序瓶颈出发。</div><div class='chapter-body'><p>循环编码器-解码器按符号位置推进隐藏状态，因此训练样本内部的计算难以并行；长距离依赖还要经过更长的路径。卷积模型改善并行性，却仍需要随距离增长的路径。Transformer 的问题不是简单地增加一个注意力模块，而是询问：注意力能否承担整个转导过程。 <span class="evidence-cites"><a href="#p.2" class="evidence-cite" aria-label="证据 p.2">[p.2]</a></span></p>
+
+        <div class="takeaway" id="evidence-T01">
+          <div class="takeaway-label">Table 1：不同层类型的复杂度、顺序操作与最大路径长度。 <span class="evidence-binding">〔T01〕</span></div>
+          <img src='../assets/figures/v3_T01_p6_1217x413.png' alt='Table 1：不同层类型的复杂度、顺序操作与最大路径长度。' class='table-asset' />
+          <div style="font-size:9.5pt; margin-top:6pt;">表格把核心权衡写清楚：无限制自注意力具有 O(1) 顺序操作和 O(1) 路径长度，但每层计算为 O(n²·d)；循环层为 O(n·d²) 且需要 O(n) 顺序操作。 <span class="evidence-cites"><a href="#evidence-T01" class="evidence-cite" aria-label="证据 T01">[T01]</a> <a href="#p.6" class="evidence-cite" aria-label="证据 p.6">[p.6]</a></span></div>
+        </div>
+        </div></section><section class='chapter' id='ch-architecture'><h1>设计：把编码器—解码器改造成注意力网络</h1><div class='lead'>Transformer 的关键不是单个公式，而是各个子层如何组合。</div><div class='chapter-body'>
+        <figure class="kami-figure" id="evidence-F01">
+          <img src='../assets/figures/v3_F01_p3_580x1139.png' alt='Figure 1：Transformer 模型架构。' />
+          <figcaption>Figure 1：Transformer 模型架构。 <span class="evidence-binding">〔F01〕</span></figcaption>
+          <div class="figure-analysis">左侧编码器堆叠多头自注意力与逐位置前馈层；右侧解码器增加对编码器输出的注意力，并以掩码阻止当前位置读取未来目标词。输入/输出嵌入与位置编码相加，残差连接和 LayerNorm 包围子层。 <span class="evidence-cites"><a href="#evidence-F01" class="evidence-cite" aria-label="证据 F01">[F01]</a> <a href="#p.3" class="evidence-cite" aria-label="证据 p.3">[p.3]</a></span></div>
+        </figure>
+        
+
+        <figure class="kami-figure" id="evidence-F02">
+          <img src='../assets/figures/v3_F02_p4_1245x727.png' alt='Figure 2：缩放点积注意力与多头注意力。' />
+          <figcaption>Figure 2：缩放点积注意力与多头注意力。 <span class="evidence-binding">〔F02〕</span></figcaption>
+          <div class="figure-analysis">缩放点积注意力计算 softmax(QKᵀ/√d_k)V；多头注意力先把 Q、K、V 投影到多个低维子空间，再并行计算并拼接。缩放用于抑制大点积把 softmax 推入小梯度区域。 <span class="evidence-cites"><a href="#evidence-F02" class="evidence-cite" aria-label="证据 F02">[F02]</a> <a href="#evidence-EQ-05" class="evidence-cite" aria-label="证据 EQ-05">[EQ-05]</a> <a href="#p.4" class="evidence-cite" aria-label="证据 p.4">[p.4]</a></span></div>
+        </figure>
+        
+<p>基础模型使用 d_model=512、6 层、8 个头，每个头 d_k=d_v=64；前馈层内维度为 2048。解码器的未来位置掩码和移位输出保持自回归条件，而位置编码补回没有循环结构后丢失的顺序信息。 <span class="evidence-cites"><a href="#p.3" class="evidence-cite" aria-label="证据 p.3">[p.3]</a> <a href="#p.5" class="evidence-cite" aria-label="证据 p.5">[p.5]</a> <a href="#p.6" class="evidence-cite" aria-label="证据 p.6">[p.6]</a></span></p></div></section><section class='chapter' id='ch-translation'><h1>主要证据：机器翻译质量与训练代价</h1><div class='lead'>翻译实验是论文最重要的实证检验。</div><div class='chapter-body'><p>在 WMT 2014 English-to-German 上，Transformer big 达到 28.4 BLEU，base 达到 27.3；在 English-to-French 上，big 达到 41.8 BLEU。论文还报告 big 模型在 8 张 P100 GPU 上训练 3.5 天，并用估算 FLOP 与此前系统比较。 <span class="evidence-cites"><a href="#evidence-T02" class="evidence-cite" aria-label="证据 T02">[T02]</a> <a href="#p.8" class="evidence-cite" aria-label="证据 p.8">[p.8]</a></span></p>
+
+        <div class="takeaway" id="evidence-T02">
+          <div class="takeaway-label">Table 2：WMT 2014 翻译 BLEU 与训练 FLOP 比较。 <span class="evidence-binding">〔T02〕</span></div>
+          <img src='../assets/figures/v3_T02_p8_1245x594.png' alt='Table 2：WMT 2014 翻译 BLEU 与训练 FLOP 比较。' class='table-asset' />
+          <div style="font-size:9.5pt; margin-top:6pt;">Transformer big 的 En-De 28.4 和 En-Fr 41.8 是表中关键结果；base 也以较低估算代价取得较强 En-De 结果。 <span class="evidence-cites"><a href="#evidence-T02" class="evidence-cite" aria-label="证据 T02">[T02]</a> <a href="#p.8" class="evidence-cite" aria-label="证据 p.8">[p.8]</a></span></div>
+        </div>
+        
+<div class='callout'><p>不能。Table 1 的 O(1) 是顺序操作和路径长度的渐近性质，注意力仍有随 n² 增长的层计算和内存压力。论文证明的是其报告设置下的质量与并行化组合，而不是硬件无关的速度定理。 <span class="evidence-cites"><a href="#evidence-T01" class="evidence-cite" aria-label="证据 T01">[T01]</a> <a href="#evidence-T02" class="evidence-cite" aria-label="证据 T02">[T02]</a> <a href="#p.6" class="evidence-cite" aria-label="证据 p.6">[p.6]</a> <a href="#p.8" class="evidence-cite" aria-label="证据 p.8">[p.8]</a></span></p></div></div></section><section class='chapter' id='ch-ablations'><h1>消融：性能来自怎样的配置组合</h1><div class='lead'>Table 3 让‘注意力取代循环’这一口号变得更具体。</div><div class='chapter-body'>
+        <div class="takeaway" id="evidence-T03">
+          <div class="takeaway-label">Table 3：Transformer 架构变化。 <span class="evidence-binding">〔T03〕</span></div>
+          <img src='../assets/figures/v3_T03_p9_1245x1054.png' alt='Table 3：Transformer 架构变化。' class='table-asset' />
+          <div style="font-size:9.5pt; margin-top:6pt;">头数过少或过多、键维度变小、模型规模、dropout 和位置表示都会改变开发集结果；big 模型和大前馈层通常更强。正弦与学习位置嵌入在报告行中几乎相同，选择正弦编码带有外推假设。 <span class="evidence-cites"><a href="#evidence-T03" class="evidence-cite" aria-label="证据 T03">[T03]</a> <a href="#p.9" class="evidence-cite" aria-label="证据 p.9">[p.9]</a></span></div>
+        </div>
+        
+<p>因此，结果不应被解释为‘只要使用注意力就会提升性能’。头数、表示维度、规模、正则化和训练程序共同构成有效配置。 <span class="evidence-cites"><a href="#evidence-T03" class="evidence-cite" aria-label="证据 T03">[T03]</a> <a href="#p.9" class="evidence-cite" aria-label="证据 p.9">[p.9]</a></span></p></div></section><section class='chapter' id='ch-transfer'><h1>跨任务检验：成分句法解析</h1><div class='lead'>论文进一步问 Transformer 是否只适合机器翻译。</div><div class='chapter-body'>
+        <div class="takeaway" id="evidence-T04">
+          <div class="takeaway-label">Table 4：英语成分句法解析的 WSJ 23 F1。 <span class="evidence-binding">〔T04〕</span></div>
+          <img src='../assets/figures/v3_T04_p10_1245x570.png' alt='Table 4：英语成分句法解析的 WSJ 23 F1。' class='table-asset' />
+          <div style="font-size:9.5pt; margin-top:6pt;">4 层 Transformer 在 WSJ-only discriminative 设置达到 91.3 F1，在 semi-supervised 设置达到 92.7 F1，超过表中多项此前系统；但表中 generative 的 93.3 仍更高，因此结论是强迁移表现而非全面胜出。 <span class="evidence-cites"><a href="#evidence-T04" class="evidence-cite" aria-label="证据 T04">[T04]</a> <a href="#p.10" class="evidence-cite" aria-label="证据 p.10">[p.10]</a></span></div>
+        </div>
+        
+<p>这个结果扩大了论文的范围，但不能替代更广泛的跨领域验证。它显示注意力架构能够处理结构约束很强、输出通常比输入更长的解析任务，同时也保留了比较表中未胜出的结果。 <span class="evidence-cites"><a href="#evidence-T04" class="evidence-cite" aria-label="证据 T04">[T04]</a> <a href="#p.10" class="evidence-cite" aria-label="证据 p.10">[p.10]</a></span></p></div></section><section class='chapter' id='ch-interpretation'><h1>可视化与边界：学到了什么，尚未证明什么</h1><div class='lead'>附录图把注意力头的行为展示出来，但其证据等级不同于翻译表格。</div><div class='chapter-body'>
+        <figure class="kami-figure" id="evidence-F03">
+          <img src='../assets/figures/v3_F03_p13_1245x957.png' alt='Figure 3：长距离依赖示例。' />
+          <figcaption>Figure 3：长距离依赖示例。 <span class="evidence-binding">〔F03〕</span></figcaption>
+          <div class="figure-analysis">不同颜色的线连接词语位置，展示若干头对长距离依赖的关注。 <span class="evidence-cites"><a href="#evidence-F03" class="evidence-cite" aria-label="证据 F03">[F03]</a> <a href="#p.13" class="evidence-cite" aria-label="证据 p.13">[p.13]</a></span></div>
+        </figure>
+        
+
+        <figure class="kami-figure" id="evidence-F04">
+          <img src='../assets/figures/v3_F04_p14_1254x1525.png' alt='Figure 4：与指代消解相关的注意力头示例。' />
+          <figcaption>Figure 4：与指代消解相关的注意力头示例。 <span class="evidence-binding">〔F04〕</span></figcaption>
+          <div class="figure-analysis">图中展示 layer 5 的两个头在特定词语上的全注意力与孤立注意力。原文使用 apparently，说明这是解释性假设而非确定性证明。 <span class="evidence-cites"><a href="#evidence-F04" class="evidence-cite" aria-label="证据 F04">[F04]</a> <a href="#p.14" class="evidence-cite" aria-label="证据 p.14">[p.14]</a></span></div>
+        </figure>
+        
+
+        <figure class="kami-figure" id="evidence-F05">
+          <img src='../assets/figures/v3_F05_p15_1254x1477.png' alt='Figure 5：与句子结构相关的头示例。' />
+          <figcaption>Figure 5：与句子结构相关的头示例。 <span class="evidence-binding">〔F05〕</span></figcaption>
+          <div class="figure-analysis">绿色与红色头显示不同连线模式，原文说行为 seems related to structure。 <span class="evidence-cites"><a href="#evidence-F05" class="evidence-cite" aria-label="证据 F05">[F05]</a> <a href="#p.15" class="evidence-cite" aria-label="证据 p.15">[p.15]</a></span></div>
+        </figure>
+        
+<div class='takeaway'><div class='takeaway-label'>核心关注</div><p>结论边界：论文在所测翻译和解析设置中证明了一个强而可并行的注意力架构。它没有消除长序列的二次成本，没有用重复种子给出不确定性区间，也没有用定性图证明普遍可解释性。 <span class="evidence-cites"><a href="#evidence-T01" class="evidence-cite" aria-label="证据 T01">[T01]</a> <a href="#evidence-T02" class="evidence-cite" aria-label="证据 T02">[T02]</a> <a href="#evidence-T03" class="evidence-cite" aria-label="证据 T03">[T03]</a> <a href="#evidence-T04" class="evidence-cite" aria-label="证据 T04">[T04]</a> <a href="#evidence-F03" class="evidence-cite" aria-label="证据 F03">[F03]</a> <a href="#evidence-F04" class="evidence-cite" aria-label="证据 F04">[F04]</a> <a href="#evidence-F05" class="evidence-cite" aria-label="证据 F05">[F05]</a></span></p></div></div></section>
+
+    <section class='chapter spine-source' id='ch-spine-source'>
+      <h1>论证主线原文线索</h1>
+      <p>能否以纯注意力替代循环/卷积序列转导？</p>
+      <p>Transformer 采用注意力、前馈层、残差归一化和位置编码组成编码器-解码器。</p>
+      <p>纯注意力架构在所测试任务上实现了强质量与并行性的组合，但收益不是脱离规模、数据、解码和训练协议的单一机制效果。</p>
+    </section>
+    
+
+    <section class='chapter appendix' id='ch-sources'>
+      <h1>证据来源与页面锚点</h1>
+      <div class='lead'>正文中的图表、公式和引文都保留了返回源材料的线索；需要逐项核对时可打开独立的审计视图。</div>
+      <p>当前稿件引用了 0 条主张、0 组图表和 0 张数据表。</p>
+      <p>页面锚点：<a id='p.1' href='#p.1'>p.1</a></p>
+      <p><a href='evidence_atlas.html'>查看逐项来源与核验记录</a></p>
+    </section>
+    
+</body></html>

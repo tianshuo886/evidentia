@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "source_sha256": "6eae057a9faf4f671c3101e0745ed704460c6d3dec77243dfd3a9f2d2ab68970",
+  "page": 5,
+  "bindings": [{
+    "evidence_id": "F04", "kind": "figure", "bbox_norm": [0.500, 0.045, 0.950, 0.480],
+    "panel_bboxes_norm": [[0.510,0.050,0.950,0.300],[0.540,0.320,0.940,0.475]],
+    "status": "VERIFIED", "complete": true, "caption_match": true, "confidence": 0.99,
+    "notes": "Full two-panel Fig. 4 ablation and Evoformer-block trajectory, separated from surrounding prose."
+  }]
+}

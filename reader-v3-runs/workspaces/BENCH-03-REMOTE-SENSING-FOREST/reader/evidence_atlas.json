@@ -1,0 +1,1501 @@
+{
+  "schema_version": "3.0",
+  "paper_id": "BENCH-03-REMOTE-SENSING-FOREST",
+  "source_sha256": "b4d103e6ab0664d96c31a00a0ee4d99e9fbc54a9f1a8eeea500716843d4eabce",
+  "items": [
+    {
+      "id": "F01",
+      "kind": "figure",
+      "page": 3,
+      "label": "Fig. 1",
+      "caption": "Fig. 1 Model overview and global model evaluation on held-out GEDI",
+      "asset": "assets/figures/crop_F01_p3_349x342.png",
+      "verification_status": "inspected",
+      "confidence": 0.81,
+      "used_in": [
+        {
+          "chapter_id": "SEC-02",
+          "chapter_title": "无下采样残差架构与高斯异方差似然机制",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "SEC-02",
+          "chapter_title": "无下采样残差架构与高斯异方差似然机制",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "SEC-02",
+          "chapter_title": "无下采样残差架构与高斯异方差似然机制",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "SEC-04",
+          "chapter_title": "留出GEDI与跨洲机载LiDAR双重验证",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "F02",
+      "kind": "figure",
+      "page": 5,
+      "label": "Fig. 2",
+      "caption": "Fig. 2 Global canopy height map for the year 2020. The underlying data",
+      "asset": "assets/figures/fig02_p5_1731x845.png",
+      "verification_status": "inspected",
+      "confidence": 0.88,
+      "used_in": []
+    },
+    {
+      "id": "F03",
+      "kind": "figure",
+      "page": 6,
+      "label": "Fig. 3",
+      "caption": "Fig. 3 Global canopy height distributions of the entire landmass, protected",
+      "asset": "assets/figures/crop_F03_p6_397x390.png",
+      "verification_status": "inspected",
+      "confidence": 0.86,
+      "used_in": []
+    },
+    {
+      "id": "F04",
+      "kind": "figure",
+      "page": 7,
+      "label": "Fig. 4",
+      "caption": "Fig. 4 Examples for potential applications. a, Biomass and carbon stock",
+      "asset": "assets/figures/fig04_p7_715x715.png",
+      "verification_status": "inspected",
+      "confidence": 0.93,
+      "used_in": []
+    },
+    {
+      "id": "F01-p13",
+      "kind": "figure",
+      "page": 13,
+      "label": "Extended Data Fig. 1",
+      "caption": "Extended Data Fig. 1 Geographical error analysis on held-out GEDI validation data at 1 degree resolution ( ≈ 111 km on the equator). a) Root mean square",
+      "asset": "assets/figures/fig05_p13_2168x2597.png",
+      "verification_status": "inspected",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "F02-p14",
+      "kind": "figure",
+      "page": 14,
+      "label": "Extended Data Fig. 2",
+      "caption": "Extended Data Fig. 2 Biome-level evaluation with GEDI reference data. Biome-level confusion plots showing the relationship between GEDI reference data and the",
+      "asset": "assets/figures/fig06_p14_2168x1770.png",
+      "verification_status": "inspected",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "F03-p15",
+      "kind": "figure",
+      "page": 15,
+      "label": "Extended Data Fig. 3",
+      "caption": "Extended Data Fig. 3 See next page for caption.",
+      "asset": "assets/figures/crop_F03-p15_p15_1416x1775.png",
+      "verification_status": "inspected",
+      "confidence": 0.73,
+      "used_in": []
+    },
+    {
+      "id": "F03-p16",
+      "kind": "figure",
+      "page": 16,
+      "label": "Extended Data Fig. 3",
+      "caption": "Extended Data Fig. 3 Comparison of canopy top height estimates from ETH",
+      "asset": null,
+      "verification_status": "NEEDS_REVIEW",
+      "confidence": 0.4,
+      "used_in": []
+    },
+    {
+      "id": "F04-p17",
+      "kind": "figure",
+      "page": 17,
+      "label": "Extended Data Fig. 4",
+      "caption": "Extended Data Fig. 4 Locations of independent airborne LIDAR campaigns. Independent airborne LIDAR data from 24 regions including 12 regions with LVIS",
+      "asset": "assets/figures/fig08_p17_2168x1205.png",
+      "verification_status": "inspected",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "F05",
+      "kind": "figure",
+      "page": 18,
+      "label": "Extended Data Fig. 5",
+      "caption": "Extended Data Fig. 5 See next page for caption.",
+      "asset": "assets/figures/crop_F05_p18_269x239.png",
+      "verification_status": "inspected",
+      "confidence": 0.89,
+      "used_in": []
+    },
+    {
+      "id": "F05-p19",
+      "kind": "figure",
+      "page": 19,
+      "label": "Extended Data Fig. 5",
+      "caption": "Extended Data Fig. 5 Evaluation of the estimated uncertainty. a) Calibration",
+      "asset": null,
+      "verification_status": "NEEDS_REVIEW",
+      "confidence": 0.4,
+      "used_in": []
+    },
+    {
+      "id": "F06",
+      "kind": "figure",
+      "page": 20,
+      "label": "Extended Data Fig. 6",
+      "caption": "Extended Data Fig. 6 Protected area analysis according to the World",
+      "asset": "assets/figures/fig10_p20_2168x1434.png",
+      "verification_status": "inspected",
+      "confidence": 0.88,
+      "used_in": []
+    },
+    {
+      "id": "F07",
+      "kind": "figure",
+      "page": 21,
+      "label": "Extended Data Fig. 7",
+      "caption": "Extended Data Fig. 7 See next page for caption.",
+      "asset": "assets/figures/fig11_p21_2092x2717.png",
+      "verification_status": "inspected",
+      "confidence": 0.88,
+      "used_in": []
+    },
+    {
+      "id": "F07-p22",
+      "kind": "figure",
+      "page": 22,
+      "label": "Extended Data Fig. 7",
+      "caption": "Extended Data Fig. 7 Qualitative examples comparing UMD and ETH (ours)",
+      "asset": null,
+      "verification_status": "NEEDS_REVIEW",
+      "confidence": 0.4,
+      "used_in": []
+    },
+    {
+      "id": "F08",
+      "kind": "figure",
+      "page": 23,
+      "label": "Extended Data Fig. 8",
+      "caption": "Extended Data Fig. 8 See next page for caption.",
+      "asset": "assets/figures/fig12_p23_1857x2717.png",
+      "verification_status": "inspected",
+      "confidence": 0.88,
+      "used_in": []
+    },
+    {
+      "id": "F08-p24",
+      "kind": "figure",
+      "page": 24,
+      "label": "Extended Data Fig. 8",
+      "caption": "Extended Data Fig. 8 Qualitative examples beyond GEDI coverage (that is",
+      "asset": null,
+      "verification_status": "NEEDS_REVIEW",
+      "confidence": 0.4,
+      "used_in": []
+    },
+    {
+      "id": "T01",
+      "kind": "table",
+      "page": 25,
+      "label": "Extended Data Table 1",
+      "caption": "Extended Data Table 1 Tile-level evaluation with independent airborne LIDAR data",
+      "asset": null,
+      "verification_status": "NEEDS_REVIEW",
+      "confidence": 0.4,
+      "used_in": []
+    },
+    {
+      "id": "T02",
+      "kind": "table",
+      "page": 26,
+      "label": "Extended Data Table 2",
+      "caption": "Extended Data Table 2 Averaged evaluation with independent airborne LIDAR data",
+      "asset": null,
+      "verification_status": "NEEDS_REVIEW",
+      "confidence": 0.4,
+      "used_in": []
+    },
+    {
+      "id": "p.1",
+      "kind": "page",
+      "page": 1,
+      "label": "p.1",
+      "caption": null,
+      "asset": "source_pages/page-001.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "SEC-01",
+          "chapter_title": "全球森林高度的观测困境与融合契机",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "p.2",
+      "kind": "page",
+      "page": 2,
+      "label": "p.2",
+      "caption": null,
+      "asset": "source_pages/page-002.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "SEC-01",
+          "chapter_title": "全球森林高度的观测困境与融合契机",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "SEC-02",
+          "chapter_title": "无下采样残差架构与高斯异方差似然机制",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "SEC-06",
+          "chapter_title": "物理不可辨识性与全球部署边界",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "p.3",
+      "kind": "page",
+      "page": 3,
+      "label": "p.3",
+      "caption": null,
+      "asset": "source_pages/page-003.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "SEC-02",
+          "chapter_title": "无下采样残差架构与高斯异方差似然机制",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "SEC-02",
+          "chapter_title": "无下采样残差架构与高斯异方差似然机制",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "SEC-03",
+          "chapter_title": "深度集成策略与多时相方差倒数加权融合",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "SEC-04",
+          "chapter_title": "留出GEDI与跨洲机载LiDAR双重验证",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "EQ-01",
+      "kind": "equation",
+      "page": 3,
+      "label": "EQ-01",
+      "caption": "the 10th and 90th percentiles (n = 88, 332, 537). RMSE, root mean square error;",
+      "asset": "assets/equations/EQ-01.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-02",
+      "kind": "equation",
+      "page": 3,
+      "label": "EQ-02",
+      "caption": "(n = 88, 332, 537).",
+      "asset": "assets/equations/EQ-02.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.4",
+      "kind": "page",
+      "page": 4,
+      "label": "p.4",
+      "caption": null,
+      "asset": "source_pages/page-004.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "SEC-04",
+          "chapter_title": "留出GEDI与跨洲机载LiDAR双重验证",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "SEC-04",
+          "chapter_title": "留出GEDI与跨洲机载LiDAR双重验证",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "SEC-05",
+          "chapter_title": "不确定性空间校准与全球生态宏观统计",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "EQ-03",
+      "kind": "equation",
+      "page": 4,
+      "label": "EQ-03",
+      "caption": "data from two airborne LiDAR sources: (1) NASA’s Land, Vegetation,",
+      "asset": "assets/equations/EQ-03.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-04",
+      "kind": "equation",
+      "page": 4,
+      "label": "EQ-04",
+      "caption": "to deliver canopy-top heights comparable to GEDI12 and (2) GEDI-like",
+      "asset": "assets/equations/EQ-04.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.5",
+      "kind": "page",
+      "page": 5,
+      "label": "p.5",
+      "caption": null,
+      "asset": "source_pages/page-005.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "SEC-03",
+          "chapter_title": "深度集成策略与多时相方差倒数加权融合",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "SEC-05",
+          "chapter_title": "不确定性空间校准与全球生态宏观统计",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "SEC-06",
+          "chapter_title": "物理不可辨识性与全球部署边界",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "p.6",
+      "kind": "page",
+      "page": 6,
+      "label": "p.6",
+      "caption": null,
+      "asset": "source_pages/page-006.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "SEC-05",
+          "chapter_title": "不确定性空间校准与全球生态宏观统计",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "SEC-06",
+          "chapter_title": "物理不可辨识性与全球部署边界",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "p.7",
+      "kind": "page",
+      "page": 7,
+      "label": "p.7",
+      "caption": null,
+      "asset": "source_pages/page-007.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "SEC-06",
+          "chapter_title": "物理不可辨识性与全球部署边界",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "EQ-05",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-05",
+      "caption": "the median, the quartiles and the 10th and 90th percentiles (n = 339, 835, 325).",
+      "asset": "assets/equations/EQ-05.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.8",
+      "kind": "page",
+      "page": 8,
+      "label": "p.8",
+      "caption": null,
+      "asset": "source_pages/page-008.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "p.9",
+      "kind": "page",
+      "page": 9,
+      "label": "p.9",
+      "caption": null,
+      "asset": "source_pages/page-009.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "EQ-06",
+      "kind": "equation",
+      "page": 9,
+      "label": "EQ-06",
+      "caption": "minimizing the loss (equation (1)) only at pixel locations for which there",
+      "asset": "assets/equations/EQ-06.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-07",
+      "kind": "equation",
+      "page": 9,
+      "label": "EQ-07",
+      "caption": "(equation (1)) as a loss function35. This corresponds to independently",
+      "asset": "assets/equations/EQ-07.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-08",
+      "kind": "equation",
+      "page": 9,
+      "label": "EQ-08",
+      "caption": "ℒNLL = 1",
+      "asset": "assets/equations/EQ-08.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-09",
+      "kind": "equation",
+      "page": 9,
+      "label": "EQ-09",
+      "caption": "from T different acquisition dates (here T = 10) for every location to",
+      "asset": "assets/equations/EQ-09.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-10",
+      "kind": "equation",
+      "page": 9,
+      "label": "EQ-10",
+      "caption": "final map by averaging with inverse-variance weighting (equation (3)).",
+      "asset": "assets/equations/EQ-10.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-11",
+      "kind": "equation",
+      "page": 9,
+      "label": "EQ-11",
+      "caption": "total variance (equation (4))35. For readability we omit the pixel index i.",
+      "asset": "assets/equations/EQ-11.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-12",
+      "kind": "equation",
+      "page": 9,
+      "label": "EQ-12",
+      "caption": "Var( ̂y) =",
+      "asset": "assets/equations/EQ-12.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-13",
+      "kind": "equation",
+      "page": 9,
+      "label": "EQ-13",
+      "caption": "the loss (equation (5)). To establish the frequency distribution of the",
+      "asset": "assets/equations/EQ-13.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-14",
+      "kind": "equation",
+      "page": 9,
+      "label": "EQ-14",
+      "caption": "j=1 √1/Nj",
+      "asset": "assets/equations/EQ-14.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-15",
+      "kind": "equation",
+      "page": 9,
+      "label": "EQ-15",
+      "caption": "the RMSE (equation (6)) of the predicted heights, their MAE (equa-",
+      "asset": null,
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-16",
+      "kind": "equation",
+      "page": 9,
+      "label": "EQ-16",
+      "caption": "tion (7)) and their mean error (ME, equation (8)). The latter quantifies",
+      "asset": "assets/equations/EQ-16.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-17",
+      "kind": "equation",
+      "page": 9,
+      "label": "EQ-17",
+      "caption": "RMSE =",
+      "asset": "assets/equations/EQ-17.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-18",
+      "kind": "equation",
+      "page": 9,
+      "label": "EQ-18",
+      "caption": "MAE = 1",
+      "asset": "assets/equations/EQ-18.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-19",
+      "kind": "equation",
+      "page": 9,
+      "label": "EQ-19",
+      "caption": "ME = 1",
+      "asset": "assets/equations/EQ-19.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-20",
+      "kind": "equation",
+      "page": 9,
+      "label": "EQ-20",
+      "caption": "the normalized mean error (NME, equation (7)) in percentage, where the",
+      "asset": "assets/equations/EQ-20.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-21",
+      "kind": "equation",
+      "page": 9,
+      "label": "EQ-21",
+      "caption": "NME = 100",
+      "asset": "assets/equations/EQ-21.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-22",
+      "kind": "equation",
+      "page": 9,
+      "label": "EQ-22",
+      "caption": "tion, the uncertainty calibration error (UCE) (equation (10))57. Again,",
+      "asset": "assets/equations/EQ-22.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.10",
+      "kind": "page",
+      "page": 10,
+      "label": "p.10",
+      "caption": null,
+      "asset": "source_pages/page-010.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "EQ-23",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-23",
+      "caption": "calibration error (AUCE) (equation (11)), where each bin has the same",
+      "asset": "assets/equations/EQ-23.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-24",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-24",
+      "caption": "AUCE = 1",
+      "asset": "assets/equations/EQ-24.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-25",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-25",
+      "caption": "̂ui = ̂σi",
+      "asset": "assets/equations/EQ-25.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-26",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-26",
+      "caption": "̂ui = Var( ̂yi) when evaluating the calibration of the ensemble. We refer",
+      "asset": "assets/equations/EQ-26.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-27",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-27",
+      "caption": "consumption of 250 W × 27,000 h = 6,750 kWh for the global map. The",
+      "asset": "assets/equations/EQ-27.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-28",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-28",
+      "caption": "Ecol. Evol. 2, 427–436 (2018).",
+      "asset": "assets/equations/EQ-28.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-29",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-29",
+      "caption": "un-strategic-plan-for-forests-2030/index.html (2017).",
+      "asset": "assets/equations/EQ-29.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-30",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-30",
+      "caption": "Evol. 5, 845–853 (2021).",
+      "asset": "assets/equations/EQ-30.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-31",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-31",
+      "caption": "forest cover change. Science 342, 850–853 (2013).",
+      "asset": "assets/equations/EQ-31.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-32",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-32",
+      "caption": "from space. Nat. Ecol. Evol. 5, 896–906 (2021).",
+      "asset": "assets/equations/EQ-32.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-33",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-33",
+      "caption": "Change Biol. 23, 177–190 (2017).",
+      "asset": "assets/equations/EQ-33.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-34",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-34",
+      "caption": "ecosystem function. Nature 598, 468–472 (2021).",
+      "asset": "assets/equations/EQ-34.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-35",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-35",
+      "caption": "mission. Remote Sens. Environ. 270, 112845 (2022).",
+      "asset": "assets/equations/EQ-35.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-36",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-36",
+      "caption": "1329–1339 (2015).",
+      "asset": "assets/equations/EQ-36.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.11",
+      "kind": "page",
+      "page": 11,
+      "label": "p.11",
+      "caption": null,
+      "asset": "source_pages/page-011.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "EQ-37",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-37",
+      "caption": "canopies. Nat. Ecol. Evol. 3, 744–749 (2019).",
+      "asset": "assets/equations/EQ-37.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-38",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-38",
+      "caption": "Change Biol. 24, 5243–5258 (2018).",
+      "asset": "assets/equations/EQ-38.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-39",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-39",
+      "caption": "topography. Sci. Remote Sens. 1, 100002 (2020).",
+      "asset": "assets/equations/EQ-39.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-40",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-40",
+      "caption": "(2020).",
+      "asset": "assets/equations/EQ-40.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-41",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-41",
+      "caption": "Environ. Res. Lett. 2, 045023 (2007).",
+      "asset": "assets/equations/EQ-41.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-42",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-42",
+      "caption": "Rep. 3, 1–18 (2017).",
+      "asset": "assets/equations/EQ-42.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-43",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-43",
+      "caption": "Remote Sens. Environ. 233, 111347 (2019).",
+      "asset": "assets/equations/EQ-43.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-44",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-44",
+      "caption": "at https://doi.org/10.48550/arXiv.2111.13154 (2021).",
+      "asset": "assets/equations/EQ-44.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-45",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-45",
+      "caption": "(2021).",
+      "asset": "assets/equations/EQ-45.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-46",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-46",
+      "caption": "approach. Remote Sens. Environ. 261, 112479 (2021).",
+      "asset": "assets/equations/EQ-46.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-47",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-47",
+      "caption": "alphafold. Nature 596, 583–589 (2021).",
+      "asset": "assets/equations/EQ-47.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-48",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-48",
+      "caption": "generative models of radar. Nature 597, 672–677 (2021).",
+      "asset": "assets/equations/EQ-48.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-49",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-49",
+      "caption": "data-driven earth system science. Nature 566, 195–204 (2019).",
+      "asset": "assets/equations/EQ-49.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-50",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-50",
+      "caption": "conservation. Nat. Commun. 13, 792 (2022).",
+      "asset": "assets/equations/EQ-50.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-51",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-51",
+      "caption": "sensing. ISPRS J. Photogramm. Remote Sens. 173, 24–49 (2021).",
+      "asset": "assets/equations/EQ-51.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-52",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-52",
+      "caption": "analysis for everyone. Remote Sens. Environ. 202, 18–27 (2017).",
+      "asset": "assets/equations/EQ-52.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-53",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-53",
+      "caption": "Environ. 185, 221–232 (2016).",
+      "asset": "assets/equations/EQ-53.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-54",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-54",
+      "caption": "112165 (2021).",
+      "asset": "assets/equations/EQ-54.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-55",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-55",
+      "caption": "Sens. 12, 2840 (2020).",
+      "asset": "assets/equations/EQ-55.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-56",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-56",
+      "caption": "Remote Sens. Environ. 268, 112760 (2022).",
+      "asset": "assets/equations/EQ-56.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-57",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-57",
+      "caption": "gov (2018).",
+      "asset": "assets/equations/EQ-57.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-58",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-58",
+      "caption": "(2023).",
+      "asset": "assets/equations/EQ-58.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-59",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-59",
+      "caption": "https://openreview.net/forum?id=BJxI5gHKDr, https://dblp.org/",
+      "asset": "assets/equations/EQ-59.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-60",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-60",
+      "caption": "(2021).",
+      "asset": "assets/equations/EQ-60.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-61",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-61",
+      "caption": "of gedi. Remote Sens. Environ. 291, 113571 (2023).",
+      "asset": "assets/equations/EQ-61.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-62",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-62",
+      "caption": "from space. Environ. Res. Lett. 17, 095001 (2022).",
+      "asset": "assets/equations/EQ-62.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-63",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-63",
+      "caption": "Zenodo https://doi.org/10.5281/zenodo.4549461 (2021).",
+      "asset": "assets/equations/EQ-63.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-64",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-64",
+      "caption": "Conserv. 217, 289–310 (2018).",
+      "asset": "assets/equations/EQ-64.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-65",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-65",
+      "caption": "Data Discuss. 14, 1917–2005 (2022).",
+      "asset": "assets/equations/EQ-65.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-66",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-66",
+      "caption": "4839 (2018).",
+      "asset": "assets/equations/EQ-66.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-67",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-67",
+      "caption": "Ecology 42, 594–598 (1961).",
+      "asset": "assets/equations/EQ-67.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-68",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-68",
+      "caption": "J. Biogeogr. 31, 79–92 (2004).",
+      "asset": "assets/equations/EQ-68.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.12",
+      "kind": "page",
+      "page": 12,
+      "label": "p.12",
+      "caption": null,
+      "asset": "source_pages/page-012.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "EQ-69",
+      "kind": "equation",
+      "page": 12,
+      "label": "EQ-69",
+      "caption": "10.5281/zenodo.7737946 (2023).",
+      "asset": "assets/equations/EQ-69.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-70",
+      "kind": "equation",
+      "page": 12,
+      "label": "EQ-70",
+      "caption": "https://doi.org/10.5281/zenodo.5571936 (2021).",
+      "asset": "assets/equations/EQ-70.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-71",
+      "kind": "equation",
+      "page": 12,
+      "label": "EQ-71",
+      "caption": "https://doi.org/10.48550/arXiv.1910.09700 (2019).",
+      "asset": "assets/equations/EQ-71.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-72",
+      "kind": "equation",
+      "page": 12,
+      "label": "EQ-72",
+      "caption": "Energy Policy 162, 112794 (2022).",
+      "asset": "assets/equations/EQ-72.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-73",
+      "kind": "equation",
+      "page": 12,
+      "label": "EQ-73",
+      "caption": "zenodo.5704852 (2021).",
+      "asset": "assets/equations/EQ-73.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-74",
+      "kind": "equation",
+      "page": 12,
+      "label": "EQ-74",
+      "caption": "zenodo.7737869 (2023).",
+      "asset": "assets/equations/EQ-74.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-75",
+      "kind": "equation",
+      "page": 12,
+      "label": "EQ-75",
+      "caption": "https://doi.org/10.5281/zenodo.7888150 (2023).",
+      "asset": "assets/equations/EQ-75.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.13",
+      "kind": "page",
+      "page": 13,
+      "label": "p.13",
+      "caption": null,
+      "asset": "source_pages/page-013.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "p.14",
+      "kind": "page",
+      "page": 14,
+      "label": "p.14",
+      "caption": null,
+      "asset": "source_pages/page-014.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "p.15",
+      "kind": "page",
+      "page": 15,
+      "label": "p.15",
+      "caption": null,
+      "asset": "source_pages/page-015.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "p.16",
+      "kind": "page",
+      "page": 16,
+      "label": "p.16",
+      "caption": null,
+      "asset": "source_pages/page-016.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "EQ-76",
+      "kind": "equation",
+      "page": 16,
+      "label": "EQ-76",
+      "caption": "and the 10th and 90th percentiles (n=87,406,779 “UMD\" and “ETH (ours)\";",
+      "asset": "assets/equations/EQ-76.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-77",
+      "kind": "equation",
+      "page": 16,
+      "label": "EQ-77",
+      "caption": "n=69,925,423 “ETH (ours) 80%\"). b) Residual analysis w.r.t. biomes defined by The",
+      "asset": "assets/equations/EQ-77.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-78",
+      "kind": "equation",
+      "page": 16,
+      "label": "EQ-78",
+      "caption": "the quartiles, and the 10th and 90th percentiles (n=87,406,779 “UMD\" and",
+      "asset": "assets/equations/EQ-78.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-79",
+      "kind": "equation",
+      "page": 16,
+      "label": "EQ-79",
+      "caption": "“ETH (ours)\"; n=69,925,423 “ETH (ours) 80%\").",
+      "asset": "assets/equations/EQ-79.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.17",
+      "kind": "page",
+      "page": 17,
+      "label": "p.17",
+      "caption": null,
+      "asset": "source_pages/page-017.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "p.18",
+      "kind": "page",
+      "page": 18,
+      "label": "p.18",
+      "caption": null,
+      "asset": "source_pages/page-018.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "p.19",
+      "kind": "page",
+      "page": 19,
+      "label": "p.19",
+      "caption": null,
+      "asset": "source_pages/page-019.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "p.20",
+      "kind": "page",
+      "page": 20,
+      "label": "p.20",
+      "caption": null,
+      "asset": "source_pages/page-020.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "p.21",
+      "kind": "page",
+      "page": 21,
+      "label": "p.21",
+      "caption": null,
+      "asset": "source_pages/page-021.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "p.22",
+      "kind": "page",
+      "page": 22,
+      "label": "p.22",
+      "caption": null,
+      "asset": "source_pages/page-022.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "SEC-04",
+          "chapter_title": "留出GEDI与跨洲机载LiDAR双重验证",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "p.23",
+      "kind": "page",
+      "page": 23,
+      "label": "p.23",
+      "caption": null,
+      "asset": "source_pages/page-023.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "p.24",
+      "kind": "page",
+      "page": 24,
+      "label": "p.24",
+      "caption": null,
+      "asset": "source_pages/page-024.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "p.25",
+      "kind": "page",
+      "page": 25,
+      "label": "p.25",
+      "caption": null,
+      "asset": "source_pages/page-025.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "p.26",
+      "kind": "page",
+      "page": 26,
+      "label": "p.26",
+      "caption": null,
+      "asset": "source_pages/page-026.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "p.27",
+      "kind": "page",
+      "page": 27,
+      "label": "p.27",
+      "caption": null,
+      "asset": "source_pages/page-027.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "p.28",
+      "kind": "page",
+      "page": 28,
+      "label": "p.28",
+      "caption": null,
+      "asset": "source_pages/page-028.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    }
+  ]
+}

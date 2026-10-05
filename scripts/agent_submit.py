@@ -17,6 +17,12 @@ from datetime import datetime, timezone
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 from validate_common import load_json, schema_validate, sha256, all_ids
+from lens_execution_manifest import (
+    validate_execution_manifest,
+    validate_dispatch_binding,
+    write_core_receipt,
+    result_payload_sha256,
+)
 
 def resolve_task(run_dir, task_id):
     """Find the exact canonical AgentTask packet matching task_id in workspace."""
@@ -65,6 +71,9 @@ def build_allowed_source_ids(run_dir):
         sm = load_json(sm_p)
         for pg in sm.get('pages', []):
             allowed.add(f"p.{pg.get('number', 1)}")
+            for eq in pg.get('equations', []) if isinstance(pg.get('equations', []), list) else []:
+                if isinstance(eq, dict) and eq.get('equation_id'):
+                    allowed.add(str(eq['equation_id']))
 
     # 2. Figure and Table inventory
     inv_p = r_dir / 'model/figure_inventory.json'
@@ -90,10 +99,12 @@ def validate_evidence_ids(payload, allowed_ids):
         found = []
         if isinstance(obj, dict):
             for k, v in obj.items():
-                if k in ('evidence', 'source', 'grounding_evidence', 'evidence_ids') and isinstance(v, list):
+                if k in ('evidence', 'source', 'grounding_evidence', 'evidence_ids', 'evidence_refs') and isinstance(v, list):
                     for item in v:
                         if isinstance(item, str):
                             found.append(item)
+                elif k == 'evidence_id' and isinstance(v, str):
+                    found.append(v)
                 else:
                     found.extend(extract_evidence_ids(v))
         elif isinstance(obj, list):
@@ -155,7 +166,28 @@ def submit_agent_result(run_dir, task_id, result_path, allow_legacy_raw=False):
     if env_tid != can_tid:
         sys.exit(f"REFUSED: Envelope task_id '{envelope.get('task_id')}' does not match canonical AgentTask ID '{task.get('task_id')}'.")
 
-    # 5. Provenance hash and version binding validation
+    dispatch_path = None
+    dispatch = None
+
+    # 5. Context-isolation boundary proof for Reader-v3 Lens tasks.
+    # Task declarations alone are not execution evidence; a host must submit
+    # a self-hashed filesystem snapshot from an isolated input root.
+    if task.get('isolation_proof_required'):
+        manifest = envelope.get('execution_manifest')
+        if not isinstance(manifest, dict):
+            sys.exit('REFUSED: Reader-v3 Lens result requires an execution_manifest proving the isolated input boundary.')
+        try:
+            dispatch_path, dispatch = validate_dispatch_binding(r_dir, task, envelope, payload)
+            validate_execution_manifest(
+                r_dir,
+                task,
+                manifest,
+                result_sha256=result_payload_sha256(payload),
+            )
+        except ValueError as exc:
+            sys.exit(f'REFUSED: {exc}')
+
+    # 6. Provenance hash and version binding validation
     task_src_sha = task.get('source_sha256')
     if task_src_sha:
         if payload.get('source_sha256') and payload['source_sha256'] != task_src_sha:
@@ -199,10 +231,11 @@ def submit_agent_result(run_dir, task_id, result_path, allow_legacy_raw=False):
     if isinstance(input_hashes, dict):
         for rel_path, expected_hash in input_hashes.items():
             f_path = r_dir / rel_path
-            if f_path.exists():
-                actual_hash = sha256(f_path)
-                if actual_hash != expected_hash:
-                    sys.exit(f"REFUSED: Input artifact '{rel_path}' changed during execution (SHA mismatch: {actual_hash} != {expected_hash}).")
+            if not f_path.is_file():
+                sys.exit(f"REFUSED: Input artifact '{rel_path}' is missing during execution.")
+            actual_hash = sha256(f_path)
+            if actual_hash != expected_hash:
+                sys.exit(f"REFUSED: Input artifact '{rel_path}' changed during execution (SHA mismatch: {actual_hash} != {expected_hash}).")
 
     # 7. Evidence ID grounding validation
     allowed_ids = build_allowed_source_ids(r_dir)
@@ -236,7 +269,21 @@ def submit_agent_result(run_dir, task_id, result_path, allow_legacy_raw=False):
     runs_dir = r_dir / 'agent_runs' / task.get('task_id', task_id)
     runs_dir.mkdir(parents=True, exist_ok=True)
     run_idx = len(list(runs_dir.glob('run-*.json'))) + 1
-    (runs_dir / f"run-{run_idx:03d}.json").write_text(json.dumps(envelope, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
+    run_path = runs_dir / f"run-{run_idx:03d}.json"
+    run_path.write_text(json.dumps(envelope, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
+    if dispatch_path is not None and dispatch is not None:
+        try:
+            receipt_path = write_core_receipt(
+                r_dir,
+                task,
+                envelope,
+                dispatch_path,
+                dispatch,
+                result_payload_sha256(payload),
+            )
+            print(f"OK: Core execution receipt -> {receipt_path}")
+        except ValueError as exc:
+            sys.exit(f"REFUSED: {exc}")
 
     return 0
 

@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "source_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+  "page": 8,
+  "bindings": [
+    {
+      "evidence_id": "T02",
+      "kind": "table",
+      "bbox_norm": [0.17, 0.08, 0.835, 0.325],
+      "panel_bboxes_norm": [],
+      "status": "VERIFIED",
+      "complete": true,
+      "caption_match": true,
+      "confidence": 0.99,
+      "notes": "Full-page inspection confirms the complete Table 2 caption, header, comparison rows, Transformer base/big rows, BLEU columns, and training-cost columns."
+    },
+    {
+      "evidence_id": "T02-p8",
+      "kind": "table",
+      "bbox_norm": [0.17, 0.08, 0.835, 0.325],
+      "panel_bboxes_norm": [],
+      "status": "REJECTED",
+      "complete": false,
+      "caption_match": false,
+      "confidence": 0.99,
+      "notes": "Candidate is a duplicate lower-page crop mislabeled as Table 2; full-page inspection shows the associated text is narrative prose, not a second table."
+    }
+  ]
+}

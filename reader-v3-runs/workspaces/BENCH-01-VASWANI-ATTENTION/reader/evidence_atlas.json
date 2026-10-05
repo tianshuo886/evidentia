@@ -1,0 +1,977 @@
+{
+  "schema_version": "3.0",
+  "paper_id": "BENCH-01-VASWANI-ATTENTION",
+  "source_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+  "items": [
+    {
+      "id": "F01",
+      "kind": "figure",
+      "page": 3,
+      "label": "Figure 1",
+      "caption": "Figure 1 The Transformer - model architecture.",
+      "asset": "assets/figures/v3_F01_p3_580x1139.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.98,
+      "used_in": [
+        {
+          "chapter_id": "architecture",
+          "chapter_title": "设计：把编码器—解码器改造成注意力网络",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "architecture",
+          "chapter_title": "设计：把编码器—解码器改造成注意力网络",
+          "block_type": "figure"
+        }
+      ]
+    },
+    {
+      "id": "F02",
+      "kind": "figure",
+      "page": 4,
+      "label": "Figure 2",
+      "caption": "Figure 2 (left) Scaled Dot-Product Attention. (right) Multi-Head Attention consists of several",
+      "asset": "assets/figures/v3_F02_p4_1245x727.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.99,
+      "used_in": [
+        {
+          "chapter_id": "architecture",
+          "chapter_title": "设计：把编码器—解码器改造成注意力网络",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "architecture",
+          "chapter_title": "设计：把编码器—解码器改造成注意力网络",
+          "block_type": "figure"
+        }
+      ]
+    },
+    {
+      "id": "T01",
+      "kind": "table",
+      "page": 6,
+      "label": "Table 1",
+      "caption": "Table 1 Maximum path lengths, per-layer complexity and minimum number of sequential operations",
+      "asset": "assets/figures/v3_T01_p6_1217x413.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.99,
+      "used_in": [
+        {
+          "chapter_id": "problem",
+          "chapter_title": "问题：序列建模为何难以并行",
+          "block_type": "table"
+        },
+        {
+          "chapter_id": "problem",
+          "chapter_title": "问题：序列建模为何难以并行",
+          "block_type": "table"
+        },
+        {
+          "chapter_id": "translation",
+          "chapter_title": "主要证据：机器翻译质量与训练代价",
+          "block_type": "callout"
+        },
+        {
+          "chapter_id": "interpretation",
+          "chapter_title": "可视化与边界：学到了什么，尚未证明什么",
+          "block_type": "takeaway"
+        }
+      ]
+    },
+    {
+      "id": "T02",
+      "kind": "table",
+      "page": 8,
+      "label": "Table 2",
+      "caption": "Table 2 The Transformer achieves better BLEU scores than previous state-of-the-art models on the",
+      "asset": "assets/figures/v3_T02_p8_1245x594.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.99,
+      "used_in": [
+        {
+          "chapter_id": "translation",
+          "chapter_title": "主要证据：机器翻译质量与训练代价",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "translation",
+          "chapter_title": "主要证据：机器翻译质量与训练代价",
+          "block_type": "table"
+        },
+        {
+          "chapter_id": "translation",
+          "chapter_title": "主要证据：机器翻译质量与训练代价",
+          "block_type": "table"
+        },
+        {
+          "chapter_id": "translation",
+          "chapter_title": "主要证据：机器翻译质量与训练代价",
+          "block_type": "callout"
+        },
+        {
+          "chapter_id": "interpretation",
+          "chapter_title": "可视化与边界：学到了什么，尚未证明什么",
+          "block_type": "takeaway"
+        }
+      ]
+    },
+    {
+      "id": "T02-p8",
+      "kind": "table",
+      "page": 8,
+      "label": "Table 2",
+      "caption": "Table 2 summarizes our results and compares our translation quality and training costs to other model",
+      "asset": "assets/figures/crop_T02-p8_p8_925x292.png",
+      "verification_status": "REJECTED",
+      "confidence": 0.99,
+      "used_in": []
+    },
+    {
+      "id": "T03",
+      "kind": "table",
+      "page": 9,
+      "label": "Table 3",
+      "caption": "Table 3 Variations on the Transformer architecture. Unlisted values are identical to those of the base",
+      "asset": "assets/figures/v3_T03_p9_1245x1054.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.99,
+      "used_in": [
+        {
+          "chapter_id": "ablations",
+          "chapter_title": "消融：性能来自怎样的配置组合",
+          "block_type": "table"
+        },
+        {
+          "chapter_id": "ablations",
+          "chapter_title": "消融：性能来自怎样的配置组合",
+          "block_type": "table"
+        },
+        {
+          "chapter_id": "ablations",
+          "chapter_title": "消融：性能来自怎样的配置组合",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "interpretation",
+          "chapter_title": "可视化与边界：学到了什么，尚未证明什么",
+          "block_type": "takeaway"
+        }
+      ]
+    },
+    {
+      "id": "T04",
+      "kind": "table",
+      "page": 10,
+      "label": "Table 4",
+      "caption": "Table 4 The Transformer generalizes well to English constituency parsing (Results are on Section 23",
+      "asset": "assets/figures/v3_T04_p10_1245x570.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.99,
+      "used_in": [
+        {
+          "chapter_id": "transfer",
+          "chapter_title": "跨任务检验：成分句法解析",
+          "block_type": "table"
+        },
+        {
+          "chapter_id": "transfer",
+          "chapter_title": "跨任务检验：成分句法解析",
+          "block_type": "table"
+        },
+        {
+          "chapter_id": "transfer",
+          "chapter_title": "跨任务检验：成分句法解析",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "interpretation",
+          "chapter_title": "可视化与边界：学到了什么，尚未证明什么",
+          "block_type": "takeaway"
+        }
+      ]
+    },
+    {
+      "id": "F03",
+      "kind": "figure",
+      "page": 13,
+      "label": "Figure 3",
+      "caption": "Figure 3 An example of the attention mechanism following long-distance dependencies in the",
+      "asset": "assets/figures/v3_F03_p13_1245x957.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.99,
+      "used_in": [
+        {
+          "chapter_id": "interpretation",
+          "chapter_title": "可视化与边界：学到了什么，尚未证明什么",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "interpretation",
+          "chapter_title": "可视化与边界：学到了什么，尚未证明什么",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "interpretation",
+          "chapter_title": "可视化与边界：学到了什么，尚未证明什么",
+          "block_type": "takeaway"
+        }
+      ]
+    },
+    {
+      "id": "F04",
+      "kind": "figure",
+      "page": 14,
+      "label": "Figure 4",
+      "caption": "Figure 4 Two attention heads, also in layer 5 of 6, apparently involved in anaphora resolution. Top:",
+      "asset": "assets/figures/v3_F04_p14_1254x1525.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.99,
+      "used_in": [
+        {
+          "chapter_id": "interpretation",
+          "chapter_title": "可视化与边界：学到了什么，尚未证明什么",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "interpretation",
+          "chapter_title": "可视化与边界：学到了什么，尚未证明什么",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "interpretation",
+          "chapter_title": "可视化与边界：学到了什么，尚未证明什么",
+          "block_type": "takeaway"
+        }
+      ]
+    },
+    {
+      "id": "F05",
+      "kind": "figure",
+      "page": 15,
+      "label": "Figure 5",
+      "caption": "Figure 5 Many of the attention heads exhibit behaviour that seems related to the structure of the",
+      "asset": "assets/figures/v3_F05_p15_1254x1477.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.99,
+      "used_in": [
+        {
+          "chapter_id": "interpretation",
+          "chapter_title": "可视化与边界：学到了什么，尚未证明什么",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "interpretation",
+          "chapter_title": "可视化与边界：学到了什么，尚未证明什么",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "interpretation",
+          "chapter_title": "可视化与边界：学到了什么，尚未证明什么",
+          "block_type": "takeaway"
+        }
+      ]
+    },
+    {
+      "id": "p.1",
+      "kind": "page",
+      "page": 1,
+      "label": "p.1",
+      "caption": null,
+      "asset": "source_pages/page-001.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "p.2",
+      "kind": "page",
+      "page": 2,
+      "label": "p.2",
+      "caption": null,
+      "asset": "source_pages/page-002.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "problem",
+          "chapter_title": "问题：序列建模为何难以并行",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "EQ-01",
+      "kind": "equation",
+      "page": 2,
+      "label": "EQ-01",
+      "caption": "of continuous representations z = (z1, ..., zn). Given z, the decoder then generates an output",
+      "asset": "assets/equations/EQ-01.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.3",
+      "kind": "page",
+      "page": 3,
+      "label": "p.3",
+      "caption": null,
+      "asset": "source_pages/page-003.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "architecture",
+          "chapter_title": "设计：把编码器—解码器改造成注意力网络",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "architecture",
+          "chapter_title": "设计：把编码器—解码器改造成注意力网络",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "EQ-02",
+      "kind": "equation",
+      "page": 3,
+      "label": "EQ-02",
+      "caption": "The encoder is composed of a stack of N = 6 identical layers. Each layer has two",
+      "asset": "assets/equations/EQ-02.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-03",
+      "kind": "equation",
+      "page": 3,
+      "label": "EQ-03",
+      "caption": "layers, produce outputs of dimension dmodel = 512.",
+      "asset": "assets/equations/EQ-03.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-04",
+      "kind": "equation",
+      "page": 3,
+      "label": "EQ-04",
+      "caption": "The decoder is also composed of a stack of N = 6 identical layers. In addition to the two",
+      "asset": "assets/equations/EQ-04.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.4",
+      "kind": "page",
+      "page": 4,
+      "label": "p.4",
+      "caption": null,
+      "asset": "source_pages/page-004.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "architecture",
+          "chapter_title": "设计：把编码器—解码器改造成注意力网络",
+          "block_type": "figure"
+        }
+      ]
+    },
+    {
+      "id": "EQ-05",
+      "kind": "equation",
+      "page": 4,
+      "label": "EQ-05",
+      "caption": "Attention(Q, K, V ) = softmax(QKT",
+      "asset": "assets/equations/EQ-05.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": [
+        {
+          "chapter_id": "architecture",
+          "chapter_title": "设计：把编码器—解码器改造成注意力网络",
+          "block_type": "figure"
+        }
+      ]
+    },
+    {
+      "id": "EQ-06",
+      "kind": "equation",
+      "page": 4,
+      "label": "EQ-06",
+      "caption": "variables with mean 0 and variance 1. Then their dot product, q · k = Pdk",
+      "asset": null,
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-07",
+      "kind": "equation",
+      "page": 4,
+      "label": "EQ-07",
+      "caption": "i=1 qiki, has mean 0 and variance dk.",
+      "asset": "assets/equations/EQ-07.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.5",
+      "kind": "page",
+      "page": 5,
+      "label": "p.5",
+      "caption": null,
+      "asset": "source_pages/page-005.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "architecture",
+          "chapter_title": "设计：把编码器—解码器改造成注意力网络",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "EQ-08",
+      "kind": "equation",
+      "page": 5,
+      "label": "EQ-08",
+      "caption": "MultiHead(Q, K, V ) = Concat(head1, ..., headh)W O",
+      "asset": "assets/equations/EQ-08.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-09",
+      "kind": "equation",
+      "page": 5,
+      "label": "EQ-09",
+      "caption": "where headi = Attention(QW Q",
+      "asset": "assets/equations/EQ-09.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-10",
+      "kind": "equation",
+      "page": 5,
+      "label": "EQ-10",
+      "caption": "In this work we employ h = 8 parallel attention layers, or heads. For each of these we use",
+      "asset": "assets/equations/EQ-10.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-11",
+      "kind": "equation",
+      "page": 5,
+      "label": "EQ-11",
+      "caption": "dk = dv = dmodel/h = 64. Due to the reduced dimension of each head, the total computational cost",
+      "asset": "assets/equations/EQ-11.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-12",
+      "kind": "equation",
+      "page": 5,
+      "label": "EQ-12",
+      "caption": "FFN(x) = max(0, xW1 + b1)W2 + b2",
+      "asset": "assets/equations/EQ-12.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-13",
+      "kind": "equation",
+      "page": 5,
+      "label": "EQ-13",
+      "caption": "The dimensionality of input and output is dmodel = 512, and the inner-layer has dimensionality",
+      "asset": "assets/equations/EQ-13.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-14",
+      "kind": "equation",
+      "page": 5,
+      "label": "EQ-14",
+      "caption": "dff = 2048.",
+      "asset": "assets/equations/EQ-14.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.6",
+      "kind": "page",
+      "page": 6,
+      "label": "p.6",
+      "caption": null,
+      "asset": "source_pages/page-006.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "problem",
+          "chapter_title": "问题：序列建模为何难以并行",
+          "block_type": "table"
+        },
+        {
+          "chapter_id": "architecture",
+          "chapter_title": "设计：把编码器—解码器改造成注意力网络",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "translation",
+          "chapter_title": "主要证据：机器翻译质量与训练代价",
+          "block_type": "callout"
+        }
+      ]
+    },
+    {
+      "id": "EQ-15",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-15",
+      "caption": "PE(pos,2i) = sin(pos/100002i/dmodel)",
+      "asset": "assets/equations/EQ-15.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-16",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-16",
+      "caption": "PE(pos,2i+1) = cos(pos/100002i/dmodel)",
+      "asset": "assets/equations/EQ-16.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.7",
+      "kind": "page",
+      "page": 7,
+      "label": "p.7",
+      "caption": null,
+      "asset": "source_pages/page-007.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "EQ-17",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-17",
+      "caption": "We used the Adam optimizer [20] with β1 = 0.9, β2 = 0.98 and ϵ = 10−9. We varied the learning",
+      "asset": "assets/equations/EQ-17.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-18",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-18",
+      "caption": "considerably, to O(k · n · d + n · d2). Even with k = n, however, the complexity of a separable",
+      "asset": "assets/equations/EQ-18.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-19",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-19",
+      "caption": "lrate = d−0.5",
+      "asset": "assets/equations/EQ-19.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-20",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-20",
+      "caption": "warmup_steps = 4000.",
+      "asset": "assets/equations/EQ-20.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.8",
+      "kind": "page",
+      "page": 8,
+      "label": "p.8",
+      "caption": null,
+      "asset": "source_pages/page-008.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "translation",
+          "chapter_title": "主要证据：机器翻译质量与训练代价",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "translation",
+          "chapter_title": "主要证据：机器翻译质量与训练代价",
+          "block_type": "table"
+        },
+        {
+          "chapter_id": "translation",
+          "chapter_title": "主要证据：机器翻译质量与训练代价",
+          "block_type": "callout"
+        }
+      ]
+    },
+    {
+      "id": "EQ-21",
+      "kind": "equation",
+      "page": 8,
+      "label": "EQ-21",
+      "caption": "During training, we employed label smoothing of value ϵls = 0.1 [36]. This",
+      "asset": "assets/equations/EQ-21.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-22",
+      "kind": "equation",
+      "page": 8,
+      "label": "EQ-22",
+      "caption": "used beam search with a beam size of 4 and length penalty α = 0.6 [38]. These hyperparameters",
+      "asset": "assets/equations/EQ-22.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-23",
+      "kind": "equation",
+      "page": 8,
+      "label": "EQ-23",
+      "caption": "Pdrop = 0.1.",
+      "asset": "assets/equations/EQ-23.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-24",
+      "kind": "equation",
+      "page": 8,
+      "label": "EQ-24",
+      "caption": "dropout rate Pdrop = 0.1, instead of 0.3.",
+      "asset": "assets/equations/EQ-24.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.9",
+      "kind": "page",
+      "page": 9,
+      "label": "p.9",
+      "caption": null,
+      "asset": "source_pages/page-009.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "ablations",
+          "chapter_title": "消融：性能来自怎样的配置组合",
+          "block_type": "table"
+        },
+        {
+          "chapter_id": "ablations",
+          "chapter_title": "消融：性能来自怎样的配置组合",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "EQ-25",
+      "kind": "equation",
+      "page": 9,
+      "label": "EQ-25",
+      "caption": "We trained a 4-layer transformer with dmodel = 1024 on the Wall Street Journal (WSJ) portion of the",
+      "asset": "assets/equations/EQ-25.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.10",
+      "kind": "page",
+      "page": 10,
+      "label": "p.10",
+      "caption": null,
+      "asset": "source_pages/page-010.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "transfer",
+          "chapter_title": "跨任务检验：成分句法解析",
+          "block_type": "table"
+        },
+        {
+          "chapter_id": "transfer",
+          "chapter_title": "跨任务检验：成分句法解析",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "EQ-26",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-26",
+      "caption": "Vinyals & Kaiser el al. (2014) [37]",
+      "asset": "assets/equations/EQ-26.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-27",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-27",
+      "caption": "Petrov et al. (2006) [29]",
+      "asset": "assets/equations/EQ-27.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-28",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-28",
+      "caption": "Zhu et al. (2013) [40]",
+      "asset": "assets/equations/EQ-28.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-29",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-29",
+      "caption": "Dyer et al. (2016) [8]",
+      "asset": "assets/equations/EQ-29.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-30",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-30",
+      "caption": "Zhu et al. (2013) [40]",
+      "asset": "assets/equations/EQ-30.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-31",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-31",
+      "caption": "Huang & Harper (2009) [14]",
+      "asset": "assets/equations/EQ-31.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-32",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-32",
+      "caption": "McClosky et al. (2006) [26]",
+      "asset": "assets/equations/EQ-32.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-33",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-33",
+      "caption": "Vinyals & Kaiser el al. (2014) [37]",
+      "asset": "assets/equations/EQ-33.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-34",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-34",
+      "caption": "Luong et al. (2015) [23]",
+      "asset": "assets/equations/EQ-34.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-35",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-35",
+      "caption": "Dyer et al. (2016) [8]",
+      "asset": "assets/equations/EQ-35.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-36",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-36",
+      "caption": "increased the maximum output length to input length + 300. We used a beam size of 21 and α = 0.3",
+      "asset": "assets/equations/EQ-36.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.11",
+      "kind": "page",
+      "page": 11,
+      "label": "p.11",
+      "caption": null,
+      "asset": "source_pages/page-011.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "EQ-37",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-37",
+      "caption": "9(8):1735–1780, 1997.",
+      "asset": "assets/equations/EQ-37.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.12",
+      "kind": "page",
+      "page": 12,
+      "label": "p.12",
+      "caption": null,
+      "asset": "source_pages/page-012.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "EQ-38",
+      "kind": "equation",
+      "page": 12,
+      "label": "EQ-38",
+      "caption": "corpus of english: The penn treebank. Computational linguistics, 19(2):313–330, 1993.",
+      "asset": "assets/equations/EQ-38.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-39",
+      "kind": "equation",
+      "page": 12,
+      "label": "EQ-39",
+      "caption": "Learning Research, 15(1):1929–1958, 2014.",
+      "asset": "assets/equations/EQ-39.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.13",
+      "kind": "page",
+      "page": 13,
+      "label": "p.13",
+      "caption": null,
+      "asset": "source_pages/page-013.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "interpretation",
+          "chapter_title": "可视化与边界：学到了什么，尚未证明什么",
+          "block_type": "figure"
+        }
+      ]
+    },
+    {
+      "id": "p.14",
+      "kind": "page",
+      "page": 14,
+      "label": "p.14",
+      "caption": null,
+      "asset": "source_pages/page-014.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "interpretation",
+          "chapter_title": "可视化与边界：学到了什么，尚未证明什么",
+          "block_type": "figure"
+        }
+      ]
+    },
+    {
+      "id": "p.15",
+      "kind": "page",
+      "page": 15,
+      "label": "p.15",
+      "caption": null,
+      "asset": "source_pages/page-015.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "interpretation",
+          "chapter_title": "可视化与边界：学到了什么，尚未证明什么",
+          "block_type": "figure"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "lens": "reproducibility_implementation",
+  "lens_kind": "specialist",
+  "source_sha256": "b4d103e6ab0664d96c31a00a0ee4d99e9fbc54a9f1a8eeea500716843d4eabce",
+  "base_sha256": "a9940ed7b26fa355fcd47a2bdde791798ac177b95ab9b521b68abb7345b1c46d",
+  "summary": "工程可复现性：详细给出了27,000 GPU-hours与160 TB数据量的大规模工业级处理管线，开源了模型权重与预处理协议，具备完全的工程可复现性。",
+  "findings": [
+    {
+      "id": "RI1",
+      "statement": "详细披露了分布式推理的内存优化、分块加权与瓦片重叠混合策略，为全球级PB遥感影像深度学习推断树立了工程基准。",
+      "evidence": [
+        "p.5",
+        "p.8",
+        "p.9"
+      ],
+      "epistemic": "SUPPORTED",
+      "action": "KEEP",
+      "importance": "MINOR",
+      "reason": "全球生产级工程复现性。",
+      "cross_cutting_checks": {
+        "anomaly": null,
+        "counterfactual": null
+      }
+    }
+  ]
+}

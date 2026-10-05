@@ -1,0 +1,67 @@
+{
+  "task_id": "TASK-V3-LENS-ASSUMPTION_SENSITIVITY",
+  "execution_kind": "HOST_AGENT",
+  "executor": {
+    "kind": "HOST_AGENT",
+    "host": "pi-parent-direct",
+    "host_version": "UNKNOWN",
+    "provider": "openai-codex",
+    "model": "gpt-6.1-sol",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "high",
+    "tool_profile": "paper-only"
+  },
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "input_hashes": {
+    "source/paper.pdf": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+    "base_model": "1a76e5ae80d0141406b073ef77877f092e742b764bbe44f9e86f041878ab3fd7",
+    "task": "ec6bfaba0b91b33764f5fbd27c574718e8b41707c4dc4042232ac97bcc96f313"
+  },
+  "result": {
+    "schema_version": "1.0",
+    "lens": "assumption_sensitivity",
+    "lens_kind": "specialist",
+    "source_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+    "base_sha256": "1a76e5ae80d0141406b073ef77877f092e742b764bbe44f9e86f041878ab3fd7",
+    "summary": "The result depends on assumptions about sequence length, model width, training budget, data scale, decoding and regularization. Ablations show that configuration choices materially affect outcomes, while the paper leaves restricted attention and longer contexts open.",
+    "findings": [
+      {
+        "id": "AS-1",
+        "statement": "The asymptotic self-attention advantage is most favorable when n is below or near d; at much longer n, the quadratic term becomes a central cost.",
+        "evidence": [
+          "T01",
+          "p.6"
+        ],
+        "epistemic": "VERIFIED",
+        "action": "QUALIFY",
+        "importance": "CRITICAL",
+        "reason": "Role-specific review finding grounded in source evidence."
+      },
+      {
+        "id": "AS-2",
+        "statement": "The big model’s gain is entangled with increased width/depth and training schedule, so it is not solely attributable to replacing recurrence.",
+        "evidence": [
+          "T03",
+          "T02"
+        ],
+        "epistemic": "SUPPORTED",
+        "action": "QUALIFY",
+        "importance": "MAJOR",
+        "reason": "Role-specific review finding grounded in source evidence."
+      },
+      {
+        "id": "AS-3",
+        "statement": "Sinusoidal encoding is selected partly for hypothesized extrapolation, but the paper does not directly validate long-beyond-training extrapolation in a dedicated experiment.",
+        "evidence": [
+          "T03",
+          "p.6"
+        ],
+        "epistemic": "SUPPORTED",
+        "action": "VERIFY",
+        "importance": "MAJOR",
+        "reason": "Role-specific review finding grounded in source evidence."
+      }
+    ]
+  }
+}

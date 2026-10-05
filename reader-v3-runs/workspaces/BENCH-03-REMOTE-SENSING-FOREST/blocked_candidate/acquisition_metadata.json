@@ -1,0 +1,54 @@
+{
+  "identifier": "10.48550/arXiv.2204.08322",
+  "arxiv_id": "2204.08322",
+  "source_type": "ARXIV",
+  "source_url": "https://arxiv.org/pdf/2204.08322.pdf",
+  "paper_id": "2204.08322",
+  "title": "A high-resolution canopy height model of the Earth",
+  "source": "alphaxiv",
+  "sources": [
+    "alphaxiv"
+  ],
+  "source_input": "2204.08322",
+  "canonical_url": "https://arxiv.org/abs/2204.08322",
+  "overview_path": null,
+  "abs_path": "abs/2204.08322.abs.md",
+  "authors": [],
+  "published": "Wed Apr 13 2022 10:34:32 GMT+0000 (Coordinated Universal Time)",
+  "acquired_at": "2026-10-03T17:35:51+00:00",
+  "updated_at": "2026-10-03T17:37:00+00:00",
+  "status": {
+    "overview": "missing",
+    "abs": "present"
+  },
+  "identifiers": {
+    "arxiv_id": "2204.08322"
+  },
+  "venue": "",
+  "year": null,
+  "citation_count": null,
+  "pdf_url": "https://arxiv.org/pdf/2204.08322.pdf",
+  "landing_page_url": "https://huggingface.co/papers/2204.08322",
+  "graph_status": {
+    "references_fetched": "missing",
+    "citations_fetched": "missing"
+  },
+  "source_topics": [
+    "Computer Science",
+    "cs.CV",
+    "cs.LG",
+    "eess.IV",
+    "Electrical Engineering and Systems Science"
+  ],
+  "ai_summary": "",
+  "ai_keywords": [],
+  "github_repo": "",
+  "github_stars": null,
+  "organization": "",
+  "upvotes": null,
+  "comments": null,
+  "tags": [],
+  "collection": "",
+  "registry_identifier": "10.1016/j.rse.2022.113070",
+  "identifier_discrepancy": "registry DOI 10.1016/j.rse.2022.113070 resolves to an unrelated land-surface-temperature paper; arXiv preprint title/authors match the registered canopy-height work"
+}

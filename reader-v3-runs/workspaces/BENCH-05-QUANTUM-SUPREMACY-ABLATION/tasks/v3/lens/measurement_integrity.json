@@ -1,0 +1,60 @@
+{
+  "task_id": "TASK-V3-LENS-MEASUREMENT_INTEGRITY",
+  "task_type": "LENS_V3",
+  "lens": "measurement_integrity",
+  "lens_kind": "specialist",
+  "paper_type": "experimental",
+  "selection_reason": "selected for paper_type=experimental",
+  "required_capability": "SCIENTIFIC_MEASUREMENT_REVIEW",
+  "scientific_contract": "Independent Measurement Integrity reread. Inspect the shared paper and Lead Reader draft, but do not read other Lens outputs. Return corrections/additions, not a competing full summary.",
+  "description": "Reader v3 independent specialist pass: Measurement Integrity.",
+  "input_artifacts": {
+    "source_pdf": "source/paper.pdf",
+    "source_map": "model/source_map.json",
+    "figure_inventory": "model/figure_inventory.json",
+    "lead_reader_draft": "model/paper_understanding_draft.json"
+  },
+  "target_output": "lens_v3/measurement_integrity.json",
+  "output_schema": "lens_v3",
+  "source_sha256": "6f3030abb7d9d4f0624a5cbe5ca2ff673df63afc85c97fadd0bf7db780c8dbaf",
+  "base_sha256": "0330cd973b54a50e9fadfb5f71bcee4864182624ddc6444663496531f1dca124",
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "allowed_inputs": [
+    "source/",
+    "source_pages/",
+    "assets/",
+    "model/source_map.json",
+    "model/figure_inventory.json",
+    "model/paper_understanding_draft.json"
+  ],
+  "forbidden_inputs": [
+    "lens/",
+    "lens_v3/",
+    "apply/",
+    "project/",
+    "memory/project/"
+  ],
+  "prohibited_context": [
+    "other Lens outputs",
+    "PROJECT_APPLY",
+    "RESEARCH_MEMORY"
+  ],
+  "constraints": [
+    "CONTEXT_ISOLATED",
+    "NO_MAJORITY_VOTING",
+    "NO_PROJECT_TRANSFER"
+  ],
+  "instructions": "Role: Measurement Integrity.\nAnswer only this role's scientific questions. Cite source evidence IDs/pages for every material finding.\n- How are the key variables measured or operationalized?\n- What calibration, instrument, sampling or preprocessing choices affect validity?\n- Could measurement artifacts explain part of the result?\nCross-cutting checks: record a real anomaly when relevant; test a serious counterfactual/alternative explanation when relevant. Do not force either when the evidence does not support one. Use action KEEP/EXPAND/CORRECT/QUALIFY/VERIFY/NONE to tell the later editor how the Lead Reader draft should change.",
+  "executor_template": {
+    "host": "generic-host",
+    "host_version": "UNKNOWN",
+    "provider": "stepfun",
+    "model": "step-5-preview",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "standard",
+    "tool_profile": "paper-only",
+    "started_at": "2026-10-04T01:57:05.960528+00:00",
+    "completed_at": "2026-10-04T01:57:05.960528+00:00"
+  }
+}

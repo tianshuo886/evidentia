@@ -1,0 +1,62 @@
+{
+  "task_id": "TASK-V3-VISUAL-P021",
+  "execution_kind": "HOST_AGENT",
+  "executor": {
+    "kind": "HOST_AGENT",
+    "host": "pi",
+    "host_version": "UNKNOWN",
+    "provider": "openai-codex",
+    "model": "gpt-6-sol",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "high",
+    "tool_profile": "paper-only",
+    "started_at": "2026-10-04T03:00:00+00:00",
+    "completed_at": "2026-10-04T03:00:00+00:00"
+  },
+  "started_at": "2026-10-04T03:00:00+00:00",
+  "completed_at": "2026-10-04T03:00:00+00:00",
+  "input_hashes": {
+    "source/paper.pdf": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+    "source_pages/page-021.png": "8289ccbc283b2222c370dbc164702e1357e4162eae3b72162359fa33d82af96b",
+    "model/figure_inventory.json": "75a2c38fb10537e2939e3f85c339309fedd862dc7781f797bffbbdaf49d69afa"
+  },
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "result": {
+    "schema_version": "1.0",
+    "source_sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+    "page": 21,
+    "bindings": [
+      {
+        "evidence_id": "T12",
+        "kind": "table",
+        "bbox_norm": [
+          0.1683006037294475,
+          0.2922581566704644,
+          0.6554872600081699,
+          0.6675846600773359
+        ],
+        "status": "VERIFIED",
+        "complete": true,
+        "caption_match": true,
+        "confidence": 0.9,
+        "notes": "Full-page visual inspection confirmed complete semantic region and caption match; overlapping geometry candidate corrected where needed."
+      },
+      {
+        "evidence_id": "T13",
+        "kind": "table",
+        "bbox_norm": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "status": "NEEDS_REVIEW",
+        "complete": false,
+        "caption_match": false,
+        "confidence": 0.4,
+        "notes": "No complete crop candidate; retained NEEDS_REVIEW (fail-closed)."
+      }
+    ]
+  }
+}

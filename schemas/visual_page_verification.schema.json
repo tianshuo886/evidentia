@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evidentia.dev/schemas/visual_page_verification.schema.json",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "source_sha256",
+    "page",
+    "bindings"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "source_sha256": {
+      "type": "string",
+      "minLength": 1
+    },
+    "page": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "bindings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "evidence_id",
+          "kind",
+          "bbox_norm",
+          "status",
+          "complete",
+          "caption_match",
+          "confidence"
+        ],
+        "properties": {
+          "evidence_id": {
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "figure",
+              "table"
+            ]
+          },
+          "bbox_norm": {
+            "type": "array",
+            "minItems": 4,
+            "maxItems": 4,
+            "items": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "panel_bboxes_norm": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "minItems": 4,
+              "maxItems": 4,
+              "items": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            }
+          },
+          "status": {
+            "enum": [
+              "VERIFIED",
+              "NEEDS_REVIEW",
+              "REJECTED"
+            ]
+          },
+          "complete": {
+            "type": "boolean"
+          },
+          "caption_match": {
+            "type": "boolean"
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "notes": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

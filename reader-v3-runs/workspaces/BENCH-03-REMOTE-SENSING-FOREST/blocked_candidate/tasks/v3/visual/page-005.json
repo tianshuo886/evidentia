@@ -1,0 +1,69 @@
+{
+  "task_id": "TASK-V3-VISUAL-P005",
+  "task_type": "VISUAL_LOCALIZATION",
+  "required_capability": "VISUAL_EVIDENCE_LOCALIZATION",
+  "scientific_contract": "Inspect the full rendered PDF page and semantically bind each requested Figure/Table to its complete visual region.",
+  "description": "Reader v3 semantic visual localization for source page 5.",
+  "input_artifacts": {
+    "source_page": "source_pages/page-005.png",
+    "source_pdf": "source/paper.pdf",
+    "page": 5,
+    "candidates": [
+      {
+        "evidence_id": "F02",
+        "kind": "figure",
+        "paper_label": "Figure 2",
+        "caption_original": "Figure 2 Global canopy height map for the year 2020, visualized in Equal-Earth projection. The underlying data product, estimated from",
+        "candidate_bbox_pdf": [
+          37.612998962402344,
+          81.21990966796875,
+          557.6737670898438,
+          526.52197265625
+        ],
+        "candidate_asset": "assets/figures/crop_F02_p5_1446x1238.png",
+        "candidate_method": "MULTIMODAL_PAGE_LOCALIZATION",
+        "candidate_confidence": 0.99
+      }
+    ]
+  },
+  "target_output": "visual/page-005.json",
+  "output_schema": "visual_page_verification",
+  "source_sha256": "0e94f20b028c82a3d74df6d966a0b93ee4f1d063c71e8c63c359aefb560d5a82",
+  "base_sha256": null,
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "allowed_inputs": [
+    "source/paper.pdf",
+    "source_pages/page-005.png",
+    "model/figure_inventory.json"
+  ],
+  "forbidden_inputs": [
+    "apply/",
+    "project/",
+    "memory/project/",
+    "lens/",
+    "lens_v3/"
+  ],
+  "prohibited_context": [
+    "PROJECT_APPLY",
+    "RESEARCH_MEMORY"
+  ],
+  "constraints": [
+    "FULL_PAGE_SEMANTIC_LOCALIZATION",
+    "NO_WHOLE_PAGE_FALLBACK",
+    "CAPTION_SEMANTIC_MATCH",
+    "MULTI_PANEL_AWARE"
+  ],
+  "instructions": "Inspect the complete page image, not only PDF object geometry. For every candidate evidence_id, identify the complete visual region corresponding to its caption. Return bbox_norm=[x0,y0,x1,y1] in normalized page coordinates 0..1. A multi-panel figure should use one bbox covering the complete figure and panel_bboxes_norm for meaningful panels when identifiable. Mark VERIFIED only when the crop is complete and the caption semantically matches. Reject caption-only, body-text-heavy, partial panel, unrelated image, and whole-page regions. If uncertain, return NEEDS_REVIEW rather than guessing.",
+  "executor_template": {
+    "host": "generic-host",
+    "host_version": "UNKNOWN",
+    "provider": "openai-codex",
+    "model": "gpt-6.1-sol",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "standard",
+    "tool_profile": "paper-only",
+    "started_at": "2026-10-03T20:06:53.052267+00:00",
+    "completed_at": "2026-10-03T20:06:53.052267+00:00"
+  }
+}

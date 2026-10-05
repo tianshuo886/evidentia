@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evidentia.dev/schemas/direct_reading_baseline.schema.json",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "paper_id",
+    "source_sha256",
+    "narrative_markdown"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "paper_id": {
+      "type": "string"
+    },
+    "source_sha256": {
+      "type": "string"
+    },
+    "narrative_markdown": {
+      "type": "string",
+      "minLength": 500
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

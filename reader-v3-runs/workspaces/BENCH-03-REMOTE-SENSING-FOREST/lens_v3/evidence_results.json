@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "lens": "evidence_results",
+  "lens_kind": "core",
+  "source_sha256": "b4d103e6ab0664d96c31a00a0ee4d99e9fbc54a9f1a8eeea500716843d4eabce",
+  "base_sha256": "a9940ed7b26fa355fcd47a2bdde791798ac177b95ab9b521b68abb7345b1c46d",
+  "summary": "实证表现强劲：GEDI balanced RMSE为7.3m，高冠层偏差由-7.1m压缩至-1.7m；24个跨洲机载LiDAR验证展示了出色的跨区域泛化力；不确定性过滤显著降低测试误差。",
+  "findings": [
+    {
+      "id": "ER1",
+      "statement": "留出 GEDI 与独立机载 LVIS/ALS 验证一致表明模型显著缓解了传统卫星冠层制图对高大树木严重低估的长期系统缺陷。",
+      "evidence": [
+        "F01",
+        "p.3",
+        "p.4",
+        "p.22"
+      ],
+      "epistemic": "SUPPORTED",
+      "action": "KEEP",
+      "importance": "CRITICAL",
+      "reason": "关键实证增益。",
+      "cross_cutting_checks": {
+        "anomaly": null,
+        "counterfactual": null
+      }
+    }
+  ]
+}

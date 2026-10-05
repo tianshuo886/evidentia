@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "source_sha256": "6f3030abb7d9d4f0624a5cbe5ca2ff673df63afc85c97fadd0bf7db780c8dbaf",
+  "page": 4,
+  "bindings": [
+    {
+      "evidence_id": "F03",
+      "kind": "figure",
+      "bbox_norm": [
+        0.038,
+        0.044,
+        0.942,
+        0.245
+      ],
+      "panel_bboxes_norm": [
+        [
+          0.04,
+          0.047,
+          0.715,
+          0.243
+        ],
+        [
+          0.72,
+          0.06,
+          0.94,
+          0.222
+        ]
+      ],
+      "status": "VERIFIED",
+      "complete": true,
+      "caption_match": true,
+      "confidence": 0.97,
+      "notes": "Fig.3 occupies the top band of page 4 (candidate geometry captured only a narrow left slice; the full semantic region is verified here). Panel a is the full-width supremacy circuit instance (single-qubit gates from sqrt X/Y/W, coupler subsets A/B/C/D, cycles 1..m); panel b is the single-/two-qubit control waveform; caption 'Control operations for the quantum supremacy circuits' matches."
+    }
+  ]
+}

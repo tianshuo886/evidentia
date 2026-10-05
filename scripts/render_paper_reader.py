@@ -15,7 +15,8 @@ from datetime import datetime, timezone
 
 sys.path.insert(0, str(Path(__file__).parent))
 from validate_common import load_json, sha256
-from narrative_composer_agent import compose_narrative_manuscript, clean_visible_narrative
+# In Reader v3, narrative_manuscript.json is strictly authored by the Lead Writer.
+# Deterministic composition is quarantined for legacy compatibility only.
 import kami_adapter
 
 def esc(x):
@@ -380,6 +381,68 @@ figcaption {
 }
 """
 
+def _inventory_asset_map(root: Path, kind: str = None) -> dict[str, str]:
+    inventory = root / "model" / "figure_inventory.json"
+    if not inventory.exists():
+        return {}
+    data = load_json(inventory)
+    asset_map = {}
+    for item in data.get("items", []):
+        iid = item.get("id")
+        if not iid:
+            continue
+        if kind and item.get("kind") and item.get("kind") != kind:
+            continue
+        if item.get("needs_visual_review") or item.get("inspection_status") == "NEEDS_REVIEW" or item.get("binding_method") == "VISUAL_BINDING_UNCERTAIN":
+            continue
+        asset = item.get("file") or item.get("asset")
+        if asset:
+            asset_map[str(iid)] = str(asset)
+    return asset_map
+
+
+def resolve_visual_asset(block: dict, root: Path):
+    """Resolve by canonical evidence identity, never by a stale writer path."""
+    eid = block.get("evidence_id")
+    block_type = block.get("type")
+    inventory_asset = _inventory_asset_map(root, kind=block_type).get(str(eid)) if eid else None
+    if inventory_asset and (root / inventory_asset).exists():
+        return inventory_asset
+    return block.get("asset")
+
+
+def rebind_visual_assets(manuscript: dict, root: Path) -> list[dict[str, str]]:
+    """Repair stale evidence→asset paths through the generic inventory binding."""
+    changes = []
+    document = manuscript.get("document", {})
+    chapters = document.get("sections") or document.get("chapters", [])
+
+    # Pass 1: Collect candidate asset claims across all figure and table blocks.
+    candidate_claims: dict[str, set[str]] = {}
+    claimants: list[tuple[dict, str, str]] = []
+    for chapter in chapters:
+        for block in chapter.get("blocks", []):
+            if block.get("type") not in ("figure", "table") or not block.get("evidence_id"):
+                continue
+            eid = str(block["evidence_id"])
+            resolved = resolve_visual_asset(block, root)
+            if resolved:
+                candidate_claims.setdefault(resolved, set()).add(eid)
+                claimants.append((block, eid, resolved))
+
+    # Pass 2: Mark any asset claimed by more than one distinct evidence ID as ambiguous.
+    ambiguous_assets = {asset for asset, eids in candidate_claims.items() if len(eids) > 1}
+
+    # Pass 3: Leave every claimant of an ambiguous asset unchanged; rebind unambiguous assets.
+    for block, eid, resolved in claimants:
+        if resolved in ambiguous_assets:
+            continue
+        if block.get("asset") != resolved:
+            changes.append({"evidence_id": eid, "old_asset": block.get("asset"), "new_asset": resolved})
+            block["asset"] = resolved
+    return changes
+
+
 def render_block_html(b: dict, root: Path) -> str:
     b_type = b.get('type')
     ev_refs = b.get('evidence_refs', [])
@@ -411,7 +474,7 @@ def render_block_html(b: dict, root: Path) -> str:
         analysis = esc(b.get('analysis', ''))
         analysis = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', analysis)
         analysis = analysis.replace('\n\n', '<br>')
-        asset = b.get('asset')
+        asset = resolve_visual_asset(b, root)
         img_html = ""
         if asset and (root / asset).exists():
             img_html = f"<img src='../{esc(asset)}' alt='{cap}' />"
@@ -449,7 +512,7 @@ def render_block_html(b: dict, root: Path) -> str:
         analysis = esc(b.get('analysis', ''))
         analysis = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', analysis)
         img_html = ''
-        asset = b.get('asset')
+        asset = resolve_visual_asset(b, root)
         if asset and (root / asset).exists():
             img_html = f"<img src='../{esc(asset)}' alt='{cap}' class='table-asset' />"
         return f"""
@@ -472,12 +535,15 @@ def render_paper_reader_html(manuscript: dict, root: Path) -> str:
     doc = manuscript.get('document', {})
     title = doc.get('title', '未命名论文')
     subtitle = doc.get('subtitle', '中文科学精读稿')
+    orientation = doc.get('orientation') or doc.get('executive_summary') or {}
     meta = doc.get('paper_meta', {})
     authors = meta.get('authors', [])
     authors_str = '、'.join(authors) if authors else ''
     venue = meta.get('venue') or ''
     year = meta.get('year') or ''
-    chapters = doc.get('chapters', [])
+    # Dynamic sections are the canonical presentation sequence. `chapters` is
+    # accepted only as a compatibility alias for older manuscripts.
+    chapters = doc.get('sections') or doc.get('chapters', [])
     toc_items = []
     for idx, chapter in enumerate(chapters, 1):
         cid = chapter.get('id', f'spine-{idx:02d}')
@@ -487,17 +553,9 @@ def render_paper_reader_html(manuscript: dict, root: Path) -> str:
     for idx, chapter in enumerate(chapters, 1):
         cid = chapter.get('id', f'spine-{idx:02d}')
         blocks = '\n'.join(render_block_html(block, root) for block in chapter.get('blocks', []))
-        chapters_html.append(f"<section class='chapter' id='ch-{esc(cid)}'><h1>{esc(chapter.get('title', ''))}</h1><div class='lead'>{esc(chapter.get('lead', ''))}</div><div class='chapter-body'>{blocks}</div></section>")
+        lead_text = chapter.get('lead_paragraph') or chapter.get('lead', '')
+        chapters_html.append(f"<section class='chapter' id='ch-{esc(cid)}'><h1>{esc(chapter.get('title', ''))}</h1><div class='lead'>{esc(lead_text)}</div><div class='chapter-body'>{blocks}</div></section>")
     app = doc.get('appendix_summary', {})
-    spine = doc.get('story_spine', {})
-    spine_source = f"""
-    <section class='chapter spine-source' id='ch-spine-source'>
-      <h1>论证主线原文线索</h1>
-      <p>{esc(spine.get('central_question', ''))}</p>
-      <p>{esc(spine.get('central_move', ''))}</p>
-      <p>{esc(spine.get('justified_conclusion', ''))}</p>
-    </section>
-    """
     refs = []
     pm = load_json(root / 'model/paper_model.json') if (root / 'model/paper_model.json').exists() else {}
     page_nums = {1}
@@ -521,31 +579,33 @@ def render_paper_reader_html(manuscript: dict, root: Path) -> str:
     return f"""<!doctype html>
 <html lang='zh-CN'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'><title>{esc(title)}</title><style>{KAMI_LONG_DOC_CSS}</style></head>
 <body>
-<section class='cover'><div><div class='cover-title'>{esc(title)}</div><div class='cover-sub'>{esc(subtitle)}</div></div><div class='cover-meta'>{esc(meta_line)}</div></section>
+<section class='cover'><div><div class='cover-title'>{esc(title)}</div><div class='cover-sub'>{esc(subtitle)}</div></div><div class='cover-meta'>{esc(meta_line)}</div>{('<div class="cover-orientation">' + esc(orientation.get('lead')) + '</div>') if orientation.get('lead') else ''}</section>
 <section class='toc'><h2>目录</h2>{''.join(toc_items)}</section>
 {''.join(chapters_html)}
-{spine_source}
 {appendix}
 </body></html>"""
 
-def render_paper_reader_md(manuscript: dict) -> str:
+def render_paper_reader_md(manuscript: dict, root=None) -> str:
     doc = manuscript.get('document', {})
     title = doc.get('title', '未命名论文')
     subtitle = doc.get('subtitle', '中文科学精读稿')
+    orientation = doc.get('orientation') or doc.get('executive_summary') or {}
     meta = doc.get('paper_meta', {})
     authors = '、'.join(meta.get('authors', [])) if meta.get('authors') else ''
     meta_line = ' · '.join(x for x in (authors, meta.get('venue', ''), str(meta.get('year') or '')) if x)
-    lines = [f'# {title}', f'**{subtitle}**', '', meta_line, '', '---', '', '## 目录']
-    spine = doc.get('story_spine', {})
-    lines.extend(['', '## 论证主线原文线索', '', str(spine.get('central_question', '')), '', str(spine.get('central_move', '')), '', str(spine.get('justified_conclusion', '')), ''])
-    chapters = doc.get('chapters', [])
+    lines = [f'# {title}', f'**{subtitle}**', '', meta_line, '']
+    if orientation.get('lead'):
+        lines.extend([f'> {orientation.get("lead")}', ''])
+    lines.extend(['---', '', '## 目录'])
+    chapters = doc.get('sections') or doc.get('chapters', [])
     for idx, chapter in enumerate(chapters, 1):
         lines.append(f"{idx}. [{chapter.get('title', '')}](# {chapter.get('id', '')})".replace('# ', '#'))
     lines.append(f"{len(chapters)+1}. [证据来源与页面锚点](#sources)")
     lines.extend(['', '---', ''])
     for idx, chapter in enumerate(chapters, 1):
         cid = chapter.get('id', f'spine-{idx:02d}')
-        lines.extend([f"## {idx}. {chapter.get('title', '')} <a id='{cid}'></a>", '', f"> *{chapter.get('lead', '')}*", ''])
+        lead_text = chapter.get('lead_paragraph') or chapter.get('lead', '')
+        lines.extend([f"## {idx}. {chapter.get('title', '')} <a id='{cid}'></a>", '', f"> *{lead_text}*", ''])
         for block in chapter.get('blocks', []):
             kind = block.get('type'); text = block.get('text', ''); refs = block.get('evidence_refs', [])
             cite = f" 〔{', '.join(refs)}〕" if refs else ''
@@ -553,7 +613,8 @@ def render_paper_reader_md(manuscript: dict) -> str:
                 lines.append(f"{text}{cite}\n")
             elif kind in ('figure', 'table'):
                 lines.append(f"### {block.get('caption', '图表')}\n")
-                if block.get('asset'): lines.append(f"![{block.get('caption', '')}]({block.get('asset')})\n")
+                asset = resolve_visual_asset(block, root) if root else block.get('asset')
+                if asset: lines.append(f"![{block.get('caption', '')}]({asset})\n")
                 lines.append(f"{block.get('analysis', '')}{cite}\n")
             elif kind == 'equation':
                 lines.append(f"（{block.get('evidence_id', 'EQ')}）\n")
@@ -578,15 +639,32 @@ def render_paper_reader(root: Path, kami_root: Path = None) -> dict:
     manuscript_p = reader_dir / 'narrative_manuscript.json'
     if manuscript_p.exists():
         manuscript = load_json(manuscript_p)
-    else:
+    elif os.environ.get("EVIDENTIA_ALLOW_LEGACY_COMPOSER") == "1":
+        from narrative_composer_agent import compose_narrative_manuscript
         manuscript = compose_narrative_manuscript(root)
-        manuscript_p.write_text(json.dumps(manuscript, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
-        
+    else:
+        raise FileNotFoundError(
+            f"Missing canonical Lead Writer manuscript at {manuscript_p}. "
+            "In Reader v3, the narrative manuscript must be produced by the strong-model Lead Writer. "
+            "Deterministic composition is deprecated and prohibited in production."
+        )
+    binding_changes = rebind_visual_assets(manuscript, root)
+    manuscript_p.write_text(json.dumps(manuscript, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
+    if binding_changes:
+        (reader_dir / 'visual_binding_repair.json').write_text(
+            json.dumps({
+                'schema_version': '1.0',
+                'method': 'EVIDENCE_ID_TO_INVENTORY_ASSET',
+                'changes': binding_changes,
+                'inventory_sha256': sha256(root / 'model/figure_inventory.json'),
+            }, indent=2, ensure_ascii=False) + '\n', encoding='utf-8'
+        )
+
     html_content = kami_adapter.render_math_html(render_paper_reader_html(manuscript, root), kami_root=kami_root)
     html_file = reader_dir / 'paper_reader.html'
     html_file.write_text(html_content, encoding='utf-8')
     
-    md_content = render_paper_reader_md(manuscript)
+    md_content = render_paper_reader_md(manuscript, root)
     md_file = reader_dir / 'paper_reader.md'
     md_file.write_text(md_content, encoding='utf-8')
     

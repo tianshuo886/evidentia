@@ -1,0 +1,75 @@
+{
+  "identifier": "10.48550/arXiv.1706.03762",
+  "doi": "10.48550/arXiv.1706.03762",
+  "source_type": "DOI",
+  "paper_id": "1706.03762",
+  "title": "Attention Is All You Need",
+  "source": "alphaxiv",
+  "sources": [
+    "alphaxiv",
+    "huggingface"
+  ],
+  "source_input": "10.48550/arXiv.1706.03762",
+  "canonical_url": "https://arxiv.org/abs/1706.03762",
+  "overview_path": "overview/1706.03762.overview.md",
+  "abs_path": "abs/1706.03762.abs.md",
+  "authors": [
+    "Ashish Vaswani",
+    "Noam Shazeer",
+    "Niki Parmar",
+    "Jakob Uszkoreit",
+    "Llion Jones",
+    "Aidan N. Gomez",
+    "Lukasz Kaiser",
+    "Illia Polosukhin"
+  ],
+  "published": "Wed Aug 02 2023 07:41:18 GMT+0000 (Coordinated Universal Time)",
+  "acquired_at": "2026-09-28T06:24:17+00:00",
+  "updated_at": "2026-10-03T17:23:03+00:00",
+  "status": {
+    "overview": "present",
+    "abs": "present"
+  },
+  "identifiers": {
+    "arxiv_id": "1706.03762",
+    "doi": "10.48550/arXiv.1706.03762"
+  },
+  "venue": "",
+  "year": null,
+  "citation_count": null,
+  "pdf_url": "https://arxiv.org/pdf/1706.03762.pdf",
+  "landing_page_url": "https://huggingface.co/papers/1706.03762",
+  "graph_status": {
+    "references_fetched": "missing",
+    "citations_fetched": "missing"
+  },
+  "source_topics": [
+    "attention-mechanisms",
+    "Computer Science",
+    "cs.CL",
+    "cs.LG",
+    "efficient-transformers",
+    "machine-translation",
+    "sequence-modeling",
+    "transformers"
+  ],
+  "ai_summary": "The dominant sequence transduction models are based on complex recurrent or\nconvolutional neural networks in an encoder-decoder configuration. The best\nperforming models also connect the encoder and decoder through an attention\nmechanism. We propose a new simple network architecture, the Transformer, based\nsolely on attention mechanisms, dispensing with recurrence and convolutions\nentirely. Experiments on two machine translation tasks show these models to be\nsuperior in quality while being more parallelizable and requiring significantly\nless time to train. Our model achieves 28.4 BLEU on the WMT 2014\nEnglish-to-German translation task, improving over the existing best results,\nincluding ensembles by over 2 BLEU. On the WMT 2014 English-to-French\ntranslation task, our model establishes a new single-model state-of-the-art\nBLEU score of 41.8 after training for 3.5 days on eight GPUs, a small fraction\nof the training costs of the best models from the literature. We show that the\nTransformer generalizes well to other tasks by applying it successfully to\nEnglish constituency parsing both with large and limited training data.",
+  "ai_keywords": [
+    "recurrent neural networks",
+    "convolutional neural networks",
+    "encoder-decoder configuration",
+    "attention mechanism",
+    "Transformer",
+    "BLEU score",
+    "WMT 2014 English-to-German translation",
+    "WMT 2014 English-to-French translation",
+    "English constituency parsing"
+  ],
+  "github_repo": "",
+  "github_stars": null,
+  "organization": "",
+  "upvotes": 144,
+  "comments": null,
+  "tags": [],
+  "collection": ""
+}

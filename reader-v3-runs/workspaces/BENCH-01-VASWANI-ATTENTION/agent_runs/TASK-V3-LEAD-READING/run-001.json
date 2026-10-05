@@ -1,0 +1,124 @@
+{
+  "task_id": "TASK-V3-LEAD-READING",
+  "execution_kind": "HOST_AGENT",
+  "executor": {
+    "kind": "HOST_AGENT",
+    "host": "pi-parent-direct",
+    "host_version": "UNKNOWN",
+    "provider": "openai-codex",
+    "model": "gpt-6.1-sol",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "high",
+    "tool_profile": "paper-only"
+  },
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "input_hashes": {
+    "source/paper.pdf": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+    "task": "b408d2b6fc10c3678266455c8ee25693b6118258368b9114202fcc1606a887f4"
+  },
+  "result": {
+    "schema_version": "1.0",
+    "paper_id": "BENCH-01-VASWANI-ATTENTION",
+    "source_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+    "paper_type": "machine_learning_method",
+    "story_spine": {
+      "central_question": "Can sequence transduction be performed with an encoder-decoder architecture based entirely on attention, eliminating recurrent and convolutional layers without sacrificing translation quality?",
+      "motivation": "Recurrent sequence models impose sequential computation across positions, limiting parallelism and making long-range dependencies traverse long paths. Convolutional alternatives parallelize positions but retain non-constant dependency paths and can be expensive.",
+      "prior_gap": "Attention had usually been combined with recurrence; the paper argues that a complete transduction model using only attention had not yet been demonstrated, and that such a model could reduce sequential operations while retaining global interaction.",
+      "central_move": "The Transformer replaces recurrence and convolution with stacked self-attention, multi-head attention, position-wise feed-forward layers, residual connections, layer normalization, and sinusoidal positional encodings in an encoder-decoder architecture.",
+      "method_logic": "Queries, keys, and values are projected and combined by scaled dot-product attention. Multi-head attention performs several lower-dimensional attention operations in parallel and concatenates their outputs. The encoder uses self-attention and feed-forward sublayers; the decoder adds encoder-decoder attention and masks future positions. Positional encodings restore order information, while residual paths and normalization support optimization.",
+      "major_findings": [
+        "The Transformer achieves 28.4 BLEU on WMT 2014 English-German with the big model and 41.8 BLEU on WMT 2014 English-French, exceeding the compared prior systems in the paper's evaluation.",
+        "The base model reaches 27.3 BLEU on English-German while requiring an estimated 3.3×10^18 training FLOPs, and the reported training schedules are substantially more parallelizable than recurrent alternatives.",
+        "Ablations show quality depends on attention-head/key-value dimension choices, model capacity, dropout, and regularization; learned and sinusoidal positional representations give nearly identical development results in the reported comparison.",
+        "The model also performs strongly on English constituency parsing in both supervised and semi-supervised settings, although it does not surpass every reported recurrent baseline in every comparison."
+      ],
+      "justified_conclusion": "Within the reported translation and parsing experiments, an attention-only encoder-decoder can replace recurrent and convolutional sequence-transduction components while improving the quality/parallelization tradeoff. The evidence supports the architecture and its engineering advantages on these tasks, not a universal claim that recurrence is unnecessary for every sequence problem.",
+      "scope_and_limits": [
+        "The primary evidence is on WMT 2014 translation and WSJ constituency parsing, with comparisons inherited from the paper's selected prior systems and protocols.",
+        "The complexity table compares asymptotic layer properties but does not by itself establish end-to-end wall-clock superiority for every sequence length or hardware setting.",
+        "The attention visualizations are qualitative examples and suggest learned syntactic/semantic behavior; they do not prove that all heads implement human-interpretable functions.",
+        "The paper reports limited task-specific tuning for parsing and explicitly leaves restricted attention for very long sequences as future work.",
+        "The source reconstruction is from arXiv v7; historical BENCH-01 cloud-run byte identity and prior model-run provenance are unavailable in this continuation."
+      ]
+    },
+    "narrative": "The paper addresses a practical and conceptual bottleneck in sequence transduction: recurrent encoder-decoder models must process positions sequentially, which limits training parallelism and creates long paths between distant tokens. Convolutional models improve parallelism but still require depth-dependent paths for long-range interaction. The Transformer makes a deliberately strong architectural substitution: it removes recurrence and convolution entirely and uses attention as the only mechanism for relating positions. The resulting encoder-decoder is shown in Figure 1 (F01).\n\nThe encoder is a stack of six identical layers, each combining multi-head self-attention with a position-wise feed-forward network. The decoder has the same two components plus encoder-decoder attention; its self-attention is masked so position i cannot use future target tokens. Residual connections and layer normalization surround each sublayer. Because attention alone has no built-in order, sinusoidal positional encodings are added to token embeddings. The core attention computation is scaled dot-product attention, Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V, illustrated in Figure 2 (F02). Multi-head attention projects Q, K, and V into multiple lower-dimensional subspaces, runs attention in parallel, and concatenates the results.\n\nThe paper's design argument is supported first by an asymptotic comparison (Table 1, T01): unrestricted self-attention connects positions with O(1) sequential operations and O(1) maximum path length, at the cost of O(n^2 d) per-layer computation; recurrent layers use O(n d^2) computation and O(n) sequential operations/path length. This advantage applies most directly when sequence length n is not larger than representation dimension d, and restricted attention is identified as a possible long-sequence compromise. The empirical test is machine translation. On WMT 2014 English-German, the Transformer big model reports 28.4 BLEU and the base model 27.3; on English-French, the big model reports 41.8 BLEU. Table 2 (T02) also reports estimated training FLOPs and shows the paper's selected Transformer configurations against prior single models and ensembles. These results establish strong performance and a favorable reported training-cost/parallelization tradeoff under the stated protocol, not a hardware-independent theorem about runtime.\n\nThe ablations in Table 3 (T03) make the result less reducible to the slogan attention-only. Head count and key/value dimensions matter; too few or too many heads degrade BLEU, smaller key size hurts, larger models help, and dropout affects the development result. The learned positional-embedding alternative is nearly tied with sinusoidal encoding in the reported row, while sinusoidal encoding is chosen partly for possible extrapolation beyond training lengths. The parsing experiment in Table 4 (T04) tests generalization beyond translation: the Transformer reaches 91.3 F1 in the WSJ-only discriminative setting and 92.7 in the semi-supervised setting, beating many listed systems but not the strongest recurrent grammar baseline in the table.\n\nThe appendix attention visualizations provide qualitative evidence that some heads attend to long-distance dependencies and patterns associated with anaphora or sentence structure (F03, F04, F05). They are useful for showing that learned attention is not uniformly diffuse, but they are examples rather than a systematic interpretability evaluation. Overall, the paper demonstrates a compact and highly influential alternative to recurrent sequence modeling on its tested tasks. Its boundaries are the selected datasets, model variants, training estimates, qualitative attention evidence, and the unresolved behavior on very long sequences and other modalities.",
+    "decisive_evidence": [
+      {
+        "evidence": [
+          "F01",
+          "p.3"
+        ],
+        "claim": "The architecture actually replaces recurrent/convolutional stacks with attention, feed-forward blocks, residual paths, normalization, and positional encoding.",
+        "why_it_matters": "It binds the central design claim to the complete encoder-decoder computation graph rather than to the abstract name Transformer.",
+        "does_not_establish": "The diagram does not establish learned performance or runtime by itself."
+      },
+      {
+        "evidence": [
+          "F02",
+          "EQ-05",
+          "p.4",
+          "p.5"
+        ],
+        "claim": "Scaled dot-product and multi-head attention are the mechanism used to obtain global interaction and multiple representation subspaces.",
+        "why_it_matters": "These equations and panels explain how the replacement operates mathematically and why scaling and multiple heads are included.",
+        "does_not_establish": "The equations do not prove that attention heads learn interpretable functions."
+      },
+      {
+        "evidence": [
+          "T01",
+          "p.6"
+        ],
+        "claim": "Self-attention has constant sequential operations and path length in the unrestricted comparison, with a quadratic-in-sequence-length per-layer cost.",
+        "why_it_matters": "This is the paper's explicit computational rationale for replacing recurrence.",
+        "does_not_establish": "Asymptotic comparison alone does not determine end-to-end wall-clock cost or memory behavior for all n and hardware."
+      },
+      {
+        "evidence": [
+          "T02",
+          "p.8"
+        ],
+        "claim": "The reported Transformer configurations achieve 27.3/28.4 BLEU on English-German and 38.1/41.8 on English-French for base/big models, with reported training-cost estimates.",
+        "why_it_matters": "This is the decisive translation result and its quality/cost comparison.",
+        "does_not_establish": "It does not isolate every architectural component or remove dependence on data, decoding, tuning, and comparison selection."
+      },
+      {
+        "evidence": [
+          "T03",
+          "T04",
+          "p.9",
+          "p.10"
+        ],
+        "claim": "Ablations expose component sensitivity and the parsing experiment tests transfer beyond translation.",
+        "why_it_matters": "These tables constrain the interpretation that any attention-only configuration would work equally well and provide a second task family.",
+        "does_not_establish": "They do not constitute a broad cross-domain generalization study."
+      },
+      {
+        "evidence": [
+          "F03",
+          "F04",
+          "F05",
+          "p.13",
+          "p.14",
+          "p.15"
+        ],
+        "claim": "Selected attention heads show long-distance or structure-related patterns in qualitative visualizations.",
+        "why_it_matters": "The examples illustrate a possible interpretability benefit and connect the architecture to learned dependency patterns.",
+        "does_not_establish": "A few visual examples cannot establish systematic interpretability or causal linguistic roles for heads."
+      }
+    ],
+    "uncertainties": [
+      "The paper's estimated FLOPs and training-time comparisons depend on hardware assumptions and implementation details.",
+      "The selected prior systems, datasets, and tuning protocols limit how broadly the state-of-the-art claim should be generalized.",
+      "The qualitative attention figures suggest but do not prove semantic or syntactic specialization.",
+      "The exact historical cloud execution metadata and prior BENCH-01 generated artifacts are unavailable; this payload is a continuation rerun on the locally reconstructed source."
+    ],
+    "open_questions": [
+      "How does unrestricted attention scale when sequence length greatly exceeds representation dimension or memory capacity?",
+      "Which architectural components are necessary for the reported gains under matched training budgets and modern baselines?",
+      "How stable and causally meaningful are the apparent attention-head roles across data, seeds, and tasks?"
+    ],
+    "notes": "Generated as a continuation Lead Reader rerun under reader-reset-v3 @ 22dcbcb by the active openai-codex/gpt-6.1-sol parent execution. It is not a recovery of the unavailable historical cloud output."
+  }
+}

@@ -1,0 +1,122 @@
+{
+  "status": "PASS",
+  "errors": [],
+  "records": [
+    {
+      "root": "/Users/shentianshuo/orca/workspaces/evidentia/issue22-reval-bench02/reader-v3-runs/revalidation/workspaces/BENCH-02-LORA-ADAPTATION",
+      "paper_id": "BENCH-02-LORA-ADAPTATION",
+      "section_ids": [
+        "SEC-01",
+        "SEC-02",
+        "SEC-03",
+        "SEC-04",
+        "SEC-05",
+        "SEC-06"
+      ],
+      "section_titles": [
+        "The Deployment Dilemma: Parameter Bloat, Serving Latency, and the Limitations of Existing PEFT Paradigms",
+        "Low-Rank Reparameterization and Weight Folding: Mathematical Formulation, Initialization, and Serving Duality",
+        "Empirical Superiority Across Scales: From NLU Encoders to GPT-3 175B",
+        "Mechanistic Foundations: Parameter Allocation, Ultra-Low Rank Saturation, and Subspace Invariance",
+        "Directional Dynamics: Amplifying Dormant Task Features Over Pre-Trained Dominance",
+        "Epistemic Boundaries: Architectural Constraints, Implicit Regularization, and Multi-Tenant Serving Limits"
+      ],
+      "signature": [
+        "the deployment dilemma parameter bloat serving latency and the limitations of ex",
+        "low rank reparameterization and weight folding mathematical formulation initiali",
+        "empirical superiority across scales from nlu encoders to gpt 3 175b",
+        "mechanistic foundations parameter allocation ultra low rank saturation and subsp",
+        "directional dynamics amplifying dormant task features over pre trained dominance",
+        "epistemic boundaries architectural constraints implicit regularization and multi"
+      ],
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "root": "/Users/shentianshuo/orca/workspaces/evidentia/issue22-reval-bench04/reader-v3-runs/revalidation/workspaces/BENCH-04-ALPHAFOLD2-STRUCTURE",
+      "paper_id": "BENCH-04-ALPHAFOLD2-STRUCTURE",
+      "section_ids": [
+        "section-01-benchmark-accuracy",
+        "section-02-confidence-calibration",
+        "section-03-coupled-representations-evoformer",
+        "section-04-geometry-structure-module",
+        "section-05-training-distillation-trajectories",
+        "section-06-ablation-hierarchy",
+        "section-07-evolutionary-and-contact-boundaries",
+        "section-08-biophysical-scope-and-frontiers"
+      ],
+      "section_titles": [
+        "盲测精度与跨结构验证：AlphaFold2证明了什么",
+        "置信度校准与局部-全局可靠性评估",
+        "从MSA到残基对：Evoformer中的空间图推理与三角不等式约束",
+        "端到端三维几何生成：无约束残基气体、IPA与FAPE损失",
+        "训练机制、自蒸馏与深度计算信念搜索轨迹",
+        "消融惩罚等级：解构网络精度的核心因果驱动力",
+        "适用性边界：进化深度阈值与多聚体接触断层",
+        "生物物理范畴、算力约束与未竟探索"
+      ],
+      "signature": [
+        "盲测精度与跨结构验证 alphafold2证明了什么",
+        "置信度校准与局部 全局可靠性评估",
+        "从msa到残基对 evoformer中的空间图推理与三角不等式约束",
+        "端到端三维几何生成 无约束残基气体 ipa与fape损失",
+        "训练机制 自蒸馏与深度计算信念搜索轨迹",
+        "消融惩罚等级 解构网络精度的核心因果驱动力",
+        "适用性边界 进化深度阈值与多聚体接触断层",
+        "生物物理范畴 算力约束与未竟探索"
+      ],
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "root": "/Users/shentianshuo/orca/workspaces/evidentia/issue22-reval-bench05/reader-v3-runs/revalidation/workspaces/BENCH-05-QUANTUM-SUPREMACY-ABLATION",
+      "paper_id": "BENCH-05-QUANTUM-SUPREMACY-ABLATION",
+      "section_ids": [
+        "SEC-01",
+        "SEC-02",
+        "SEC-03",
+        "SEC-04",
+        "SEC-05",
+        "SEC-06",
+        "SEC-07",
+        "SEC-08",
+        "SEC-09",
+        "SEC-10",
+        "SEC-11",
+        "SEC-12"
+      ],
+      "section_titles": [
+        "Framing the Physical Milestone: The Dual Foundations of Quantum Computational Advantage",
+        "Task Selection: Pseudo-Random Quantum Circuit Sampling (RCS) as an Adversarial Complexity Probe",
+        "The Diagnostic Observable: Operationalizing Linear Cross-Entropy Fidelity (F_XEB) and Statistical Resolution",
+        "Hardware Substrate and Native Unitary Calibration: The 53-Qubit Sycamore Architecture",
+        "Component Error Characterization: Isolated Versus Simultaneous Benchmarking and Crosstalk Suppression",
+        "The Predictive Multiplicative Error Model and its Physical Error-Suppression Mechanisms",
+        "Topological Circuit Ablation and Algorithmic Tiling Design: Patch, Elided, and Verification Circuits",
+        "Empirical Method Validation: Fig. 4a as the Decisive Negative Control Refuting Proxy Artifacts",
+        "The Supremacy Regime Measurement: Elided Proxy Estimation and Statistical Significance",
+        "Classical Simulation Baselines, Extrapolated Runtime Disparity, and Latency Decomposition",
+        "Physical Validation of the Digital Localized Pauli Error Model and Surface-Code Implications",
+        "Relational Scope Boundaries, Complexity Assumptions, and the Moving Computational Frontier"
+      ],
+      "signature": [
+        "framing the physical milestone the dual foundations of quantum computational adv",
+        "task selection pseudo random quantum circuit sampling rcs as an adversarial comp",
+        "the diagnostic observable operationalizing linear cross entropy fidelity f_xeb a",
+        "hardware substrate and native unitary calibration the 53 qubit sycamore architec",
+        "component error characterization isolated versus simultaneous benchmarking and c",
+        "the predictive multiplicative error model and its physical error suppression mec",
+        "topological circuit ablation and algorithmic tiling design patch elided and veri",
+        "empirical method validation fig 4a as the decisive negative control refuting pro",
+        "the supremacy regime measurement elided proxy estimation and statistical signifi",
+        "classical simulation baselines extrapolated runtime disparity and latency decomp",
+        "physical validation of the digital localized pauli error model and surface code ",
+        "relational scope boundaries complexity assumptions and the moving computational "
+      ],
+      "status": "PASS",
+      "errors": []
+    }
+  ],
+  "interpretation": "Does this Reader feel shaped by the paper, or shaped by Evidentia?",
+  "materially_different_architectures": true
+}

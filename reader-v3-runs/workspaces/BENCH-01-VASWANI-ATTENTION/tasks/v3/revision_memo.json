@@ -1,0 +1,60 @@
+{
+  "task_id": "TASK-V3-REVISION-MEMO",
+  "task_type": "REVISION_MEMO",
+  "required_capability": "SCIENTIFIC_EDITORIAL_RECONCILIATION",
+  "scientific_contract": "Act as a scientific editor. Reconcile independent specialist rereads into a Revision Memo only. Do not write the final Reader and do not decide disagreements by voting.",
+  "description": "Reader v3 Council/Editor revision memo.",
+  "input_artifacts": {
+    "source_pdf": "source/paper.pdf",
+    "lead_reader_draft": "model/paper_understanding_draft.json",
+    "lens_manifest": "model/lens_v3_manifest.json",
+    "lens_outputs": [
+      "lens_v3/argument_narrative.json",
+      "lens_v3/method_study_design.json",
+      "lens_v3/evidence_results.json",
+      "lens_v3/validity_boundary.json",
+      "lens_v3/proof_integrity.json",
+      "lens_v3/assumption_sensitivity.json"
+    ]
+  },
+  "target_output": "model/revision_memo.json",
+  "output_schema": "revision_memo",
+  "source_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+  "base_sha256": "1a76e5ae80d0141406b073ef77877f092e742b764bbe44f9e86f041878ab3fd7",
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "allowed_inputs": [
+    "source/",
+    "source_pages/",
+    "assets/",
+    "model/paper_understanding_draft.json",
+    "model/lens_v3_manifest.json",
+    "lens_v3/"
+  ],
+  "forbidden_inputs": [
+    "apply/",
+    "project/",
+    "memory/project/"
+  ],
+  "prohibited_context": [
+    "PROJECT_APPLY",
+    "RESEARCH_MEMORY"
+  ],
+  "constraints": [
+    "REVISION_MEMO_ONLY",
+    "NO_MAJORITY_VOTING",
+    "PRESERVE_UNRESOLVED"
+  ],
+  "instructions": "Read the Lead Reader draft and all six independent Lens reports. Produce a concise editorial Revision Memo. Each revision must say exactly what the Lead Writer should add, rewrite, correct, qualify, remove or verify; why; which evidence supports the change; and which Lens(es) raised it. Merge duplicates, preserve real conflicts, and leave genuinely unresolved points unresolved. Do not produce a new paper summary.",
+  "executor_template": {
+    "host": "generic-host",
+    "host_version": "UNKNOWN",
+    "provider": "openai-codex",
+    "model": "gpt-6.1-sol",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "standard",
+    "tool_profile": "paper-only",
+    "started_at": "2026-10-03T20:11:42.397285+00:00",
+    "completed_at": "2026-10-03T20:11:42.397285+00:00"
+  }
+}

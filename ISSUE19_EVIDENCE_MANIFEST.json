@@ -1,0 +1,348 @@
+{
+  "schema_version": "1.0",
+  "manifest_name": "ISSUE19_FORMAL_BENCHMARK_IMMUTABLE_EVIDENCE_MANIFEST",
+  "timestamp": "2026-10-05T16:49:49.078483+00:00",
+  "immutable_bindings": {
+    "reader_v3_freeze_sha": "4139ca7b0b1ae72c0930801df5e50653b59a7e92",
+    "evaluation_protocol_sha256": "3f68d0b34d27c21914c113a901bf22c4377bb967ed0c51a1f4178948f984507c",
+    "unseen_selection_receipt_sha256": "3e739e909ce16f68857a417af6cebba861c89079c2fdb05260025bcaac5f5fb9",
+    "canonical_model": "antigravity/gemini-3.8-flash [magpie]",
+    "benchmark_report_md_sha256": "783f4a8ebb6b1df77eea511144de0b7ada14948042850262fb02d18f16cd03e2",
+    "benchmark_data_json_sha256": "d1e412392b42f1b70128dde6da4a17f19b4b8b00afd4918177b1ba0672844472",
+    "release_gate_verdict": "PASS"
+  },
+  "corpus_evidence": [
+    {
+      "benchmark_id": "BENCH-01",
+      "paper_id": "BENCH-01-VASWANI-ATTENTION",
+      "source_pdf": {
+        "path": "reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/source/paper.pdf",
+        "sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+        "size_bytes": 2215244
+      },
+      "condition_a": {
+        "output_path": "reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/evals/reader_v3/BENCH-01-VASWANI-ATTENTION/direct_ai.json",
+        "output_sha256": "fa0d623e7961e4a4976e20c3b7a0a38f5727d37c89e24443fbeaed78ca6d66b2",
+        "run_receipt_path": "reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/agent_runs/TASK-V3-DIRECT-BENCH-01-VASWANI-ATTENTION/run-001.json",
+        "run_receipt_sha256": "5531849500e2db01935d62e441ff3dc6a9b49dd25a49509767d8a017577c2032"
+      },
+      "condition_b": {
+        "lead_reader_draft_sha256": "1a76e5ae80d0141406b073ef77877f092e742b764bbe44f9e86f041878ab3fd7",
+        "lens_outputs": {
+          "argument_narrative.json": "86f3ee82f26999d8666f800f7c5fa3b6a589837aa74d9b0bb3e2b2ba49f1dfd9",
+          "assumption_sensitivity.json": "a3d4366631de3247a689a9210dea8e5198b385915aee58649e1f97f4e69bb762",
+          "evidence_results.json": "0f21e3738459c83897340df72f92fd945d0124d6707532f60c74ffdcc30e3ed7",
+          "method_study_design.json": "bdf8b548c375e9fb22edac8b207563ec166773fade9c6473840cc33fbf3b156e",
+          "proof_integrity.json": "c5ca3ec587764a94f2811695286ed853451f1329238a57c834fc435282ccfdf1",
+          "validity_boundary.json": "e5f77073ee520114291d01659bf3ec6accb1b226208bd784a518c054977e54d0"
+        },
+        "lens_run_receipts": {
+          "agent_runs/TASK-V3-LENS-ARGUMENT_NARRATIVE/run-001.json": "c2edf08a4542cd1fe4f9ba35bbc5a779bf673540ee7d3b8e79db52dfe6d9ae48",
+          "agent_runs/TASK-V3-LENS-ASSUMPTION_SENSITIVITY/run-001.json": "3525989b7496d49d9d14fb0aca4e9ea5148d6e9d9447ef9fe2cb08de477fe820",
+          "agent_runs/TASK-V3-LENS-EVIDENCE_RESULTS/run-001.json": "0c26f68f5d74e3261337f7e2a019904254fbf0e761da9b47d3d3ea3b02f75278",
+          "agent_runs/TASK-V3-LENS-METHOD_STUDY_DESIGN/run-001.json": "0a35ba9f73a81214eafd1b0e0d72414938af3514da75015e8cc05adb4c16709e",
+          "agent_runs/TASK-V3-LENS-PROOF_INTEGRITY/run-001.json": "d43ce6f1fb2aceb0eb9732cabd4ad16c0b784b0119a6348260ece694fe8574e9",
+          "agent_runs/TASK-V3-LENS-VALIDITY_BOUNDARY/run-001.json": "1e777e5af415afd6cfcfb176da63dfa077eed9098d2351807f850883d34342bc"
+        },
+        "revision_memo_sha256": "6122048a9b9f8c4317ca534479aa94b22d19fba579df612f53a95364dab66db6",
+        "narrative_plan_sha256": null,
+        "manuscript": {
+          "path": "reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/reader/narrative_manuscript.json",
+          "sha256": "378de00d284f1bddafc5e9b1a82ca900d5052a7126c30a0e6fd9292ea1bc995e"
+        },
+        "rendered_reader": {
+          "html_path": "reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/reader/paper_reader.html",
+          "html_sha256": "bfa8dba4aeb2f970964288a6f1043aced9c3ee2fb4af9060b56ec8acb9694814",
+          "pdf_path": "reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/reader/paper_reader.pdf",
+          "pdf_sha256": "f8e698786cd34263105505def61f1f5239e97b2265506488b63ab604dc8627b0",
+          "evidence_atlas_path": "reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/reader/evidence_atlas.html",
+          "evidence_atlas_sha256": "3b76bd0ffb3afaf780e864105d46e60e49969181b66d8486306be852d8983387"
+        }
+      },
+      "evaluation": {
+        "blind_packet1_sha256": "8d47af7d792256c1ced66cb15738a3309b258f33b9574776e0987d50186b8043",
+        "blind_packet2_sha256": "28921907d3ec0297bed55e52081ae7746b5a9103c1c8c73cf7883945cddefd13",
+        "pair_evaluation_json": "ISSUE19_BENCH-01-VASWANI-ATTENTION_PAIR_EVALUATION.json",
+        "pair_evaluation_sha256": "ef62ceddce041077b7263ef35229b4de8942ceaca3cf80d2a0ac436f1233088c"
+      }
+    },
+    {
+      "benchmark_id": "BENCH-02",
+      "paper_id": "BENCH-02-LORA-ADAPTATION",
+      "source_pdf": {
+        "path": "reader-v3-runs/workspaces/BENCH-02-LORA-ADAPTATION/source/paper.pdf",
+        "sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+        "size_bytes": 1609513
+      },
+      "condition_a": {
+        "output_path": "reader-v3-runs/workspaces/BENCH-02-LORA-ADAPTATION/evals/reader_v3/BENCH-02-LORA-ADAPTATION/direct_ai.json",
+        "output_sha256": "2dcda1da3129b6703177c05c78c05e669a1e9c1fe9f67910a6c0272a50d44887",
+        "run_receipt_path": "reader-v3-runs/workspaces/BENCH-02-LORA-ADAPTATION/agent_runs/TASK-V3-DIRECT-BENCH-02-LORA-ADAPTATION/run-001.json",
+        "run_receipt_sha256": "3b490949f4e0eb62ac36fac74e4e073e9326c8872f8dbd4a7e67f0f84fafcab4"
+      },
+      "condition_b": {
+        "lead_reader_draft_sha256": "7f5377fff58ba5872ff805196eba449fa044edc91bbfec485f954b1fa212b0a9",
+        "lens_outputs": {
+          "argument_narrative.json": "74e1188e255a8a18dccb4b4ba6e73ebde6107dadf1497ee7c192994e6053cb95",
+          "evidence_results.json": "8fcb47b1236dfc2710ca68f8acc79e6af2306192cff0da3c7b4d4535a49abf5b",
+          "mechanism_causality.json": "7a05ec0cf53a8969710f84f8aab087c9073aba293d55644c42c6bf70ba7fa497",
+          "method_study_design.json": "9ddb7087d7c1e1bdc4f65591b24df2df41fce9c7d37d5d3c434a2374587e9a26",
+          "reproducibility_implementation.json": "722d217a00968831bdbc3df6513dd0697e68cc8d9ac14367186188cc89975845",
+          "validity_boundary.json": "815d0ab44ae3395d52a1a421986dde41300c7367f8182fd6b7dd48d412d7196f"
+        },
+        "lens_run_receipts": {
+          "agent_runs/TASK-V3-LENS-ARGUMENT_NARRATIVE/run-001.json": "f025da0fa310b0812c816e6534f5c269941386dc59fca11be6f6c7459fc458fd",
+          "agent_runs/TASK-V3-LENS-ARGUMENT_NARRATIVE/run-002.json": "f025da0fa310b0812c816e6534f5c269941386dc59fca11be6f6c7459fc458fd",
+          "agent_runs/TASK-V3-LENS-EVIDENCE_RESULTS/run-001.json": "5758bced4a56ef23beb040d1cb391436b2185c5346ffedadffeea5918d48bec0",
+          "agent_runs/TASK-V3-LENS-EVIDENCE_RESULTS/run-002.json": "5758bced4a56ef23beb040d1cb391436b2185c5346ffedadffeea5918d48bec0",
+          "agent_runs/TASK-V3-LENS-MECHANISM_CAUSALITY/run-001.json": "3177a4662c640e1d2c06a3013d9a4dad80ab5f700afdc7c0dde010854746159f",
+          "agent_runs/TASK-V3-LENS-METHOD_STUDY_DESIGN/run-001.json": "d35ba9ffc34b4a8926b6b5681c32e42f8f1a2bdb22ab90bdfe19171049c799d3",
+          "agent_runs/TASK-V3-LENS-METHOD_STUDY_DESIGN/run-002.json": "d35ba9ffc34b4a8926b6b5681c32e42f8f1a2bdb22ab90bdfe19171049c799d3",
+          "agent_runs/TASK-V3-LENS-REPRODUCIBILITY_IMPLEMENTATION/run-001.json": "cc23e1dbd596da941092cc1ea4c4d9250c276fe414bc924728eaf34cc2507b18",
+          "agent_runs/TASK-V3-LENS-VALIDITY_BOUNDARY/run-001.json": "891042e77c820c072e470c1c2bae91057d9644c133e57625fc1de284d7dfde40",
+          "agent_runs/TASK-V3-LENS-VALIDITY_BOUNDARY/run-002.json": "891042e77c820c072e470c1c2bae91057d9644c133e57625fc1de284d7dfde40"
+        },
+        "revision_memo_sha256": "4ba4ff4ef39b6736f3d3373b06e9be4da27d12cf6e6a451dd0b473d54a516683",
+        "narrative_plan_sha256": "20648b998fd004bb29ce7b88d541487fe6c6c3c557c4a9e224b79790b2aa49a3",
+        "manuscript": {
+          "path": "reader-v3-runs/workspaces/BENCH-02-LORA-ADAPTATION/reader/narrative_manuscript.json",
+          "sha256": "096ad5587b71edd3a979409c6849a6facb1ea4e935d87357c77cc44960c12dbf"
+        },
+        "rendered_reader": {
+          "html_path": "reader-v3-runs/workspaces/BENCH-02-LORA-ADAPTATION/reader/paper_reader.html",
+          "html_sha256": "010a86a77848ab5ddc33b30cbeef9fb0e8edc67b4ae5ca5622771ad8718ceede",
+          "pdf_path": "reader-v3-runs/workspaces/BENCH-02-LORA-ADAPTATION/reader/paper_reader.pdf",
+          "pdf_sha256": "a8ab8cf71a9dc4af17979f16931ac4e1461cfce9fb68aacda148c567b689bba0",
+          "evidence_atlas_path": "reader-v3-runs/workspaces/BENCH-02-LORA-ADAPTATION/reader/evidence_atlas.html",
+          "evidence_atlas_sha256": "948143aba90b14a965c42d73f4ee89d549d35122400e06c32e8a67a249a9a901"
+        }
+      },
+      "evaluation": {
+        "blind_packet1_sha256": "9ef516dde8f45c9be512012012f92c76f664b1c2c9dea1a78f7934fe3288e75c",
+        "blind_packet2_sha256": "38fac46b090044aa2d99bb7db59741ca92d75f12616e9112b930d990f6569829",
+        "pair_evaluation_json": "ISSUE19_BENCH-02-LORA-ADAPTATION_PAIR_EVALUATION.json",
+        "pair_evaluation_sha256": "5fe3957df949ff5d063efeaf585f89d30b52b6c3f6d540f982b72dc2eb5dc06c"
+      }
+    },
+    {
+      "benchmark_id": "BENCH-03",
+      "paper_id": "BENCH-03-REMOTE-SENSING-FOREST",
+      "source_pdf": {
+        "path": "reader-v3-runs/workspaces/BENCH-03-REMOTE-SENSING-FOREST/source/paper.pdf",
+        "sha256": "b4d103e6ab0664d96c31a00a0ee4d99e9fbc54a9f1a8eeea500716843d4eabce",
+        "size_bytes": 13099308
+      },
+      "condition_a": {
+        "output_path": "reader-v3-runs/workspaces/BENCH-03-REMOTE-SENSING-FOREST/evals/reader_v3/BENCH-03-REMOTE-SENSING-FOREST/direct_ai.json",
+        "output_sha256": "69412e32367bb090427a6ab791e6b86edcb96c98f6f95feca87fab547e72b243",
+        "run_receipt_path": "reader-v3-runs/workspaces/BENCH-03-REMOTE-SENSING-FOREST/agent_runs/TASK-V3-DIRECT-BENCH-03-REMOTE-SENSING-FOREST/run-001.json",
+        "run_receipt_sha256": "638e2f8a553864929f5784081a14d2bc4afcacca9d0c3dabfdcf454d88c117fd"
+      },
+      "condition_b": {
+        "lead_reader_draft_sha256": "a9940ed7b26fa355fcd47a2bdde791798ac177b95ab9b521b68abb7345b1c46d",
+        "lens_outputs": {
+          "argument_narrative.json": "9c35c9498f3e75cc853f05006dcfb191da1c7b0e9f86707b317ed9341f9b5893",
+          "evidence_results.json": "0cb49d3c4b9f08ad4f77668c2b73e0c52990d50fd4935c3edbcaa5fca83c5810",
+          "mechanism_causality.json": "64c74cfda230dbc88f759f9dc086e64e1d49a39c96ecc58bec9a254835abfe03",
+          "method_study_design.json": "ef025bb3819bc446d6d3c12195c3023060a4ff312aae615a1fd45b4f6be1b9a4",
+          "reproducibility_implementation.json": "19eb05b15fda071e7f83be459e71d843aec81b5904c78d409d5fc0d3554c68e2",
+          "validity_boundary.json": "cf28ac10145f51b8fd3b14a9cca0736e2182f39ba701fd3933940b4c6a925272"
+        },
+        "lens_run_receipts": {
+          "agent_runs/TASK-V3-LENS-ARGUMENT_NARRATIVE/run-001.json": "f220f63fab8d287ffbaa28c9970e98096fad1455d427b901bb012a6bb53cb110",
+          "agent_runs/TASK-V3-LENS-EVIDENCE_RESULTS/run-001.json": "c5c2569c8a222f7359aa4ea715a70844ce34377873f0bbf1f63a893ce6d6880a",
+          "agent_runs/TASK-V3-LENS-MECHANISM_CAUSALITY/run-001.json": "f6d388e3c506a75513232c79c3e7b77e6cabf57f421cb0d82a6d9ecdcaa6642f",
+          "agent_runs/TASK-V3-LENS-METHOD_STUDY_DESIGN/run-001.json": "80bb3ac5ced6c0658f6fa20f0397e1040d88357a6e3bb092eaf8ca4448fabb95",
+          "agent_runs/TASK-V3-LENS-REPRODUCIBILITY_IMPLEMENTATION/run-001.json": "998849f06f50f714d321a99cde010051a158b5a4a949585cead8493a1fe4f746",
+          "agent_runs/TASK-V3-LENS-VALIDITY_BOUNDARY/run-001.json": "0e473ac18d08a506bbed2a3cead764903ff4132613839fad8b96f9a2b0d35abb"
+        },
+        "revision_memo_sha256": "6cae4d4309d3e54b4655e464d8ea5a28b4b49b72b536a296bce976a59f357a81",
+        "narrative_plan_sha256": "602f6b5cde817cf60cad97b39208d14047d07f63a09b831e37065ed3e273c642",
+        "manuscript": {
+          "path": "reader-v3-runs/workspaces/BENCH-03-REMOTE-SENSING-FOREST/reader/narrative_manuscript.json",
+          "sha256": "be08a4c140a1be243d1e11e088955a9d9247297d389c8fe84567ed438caa330b"
+        },
+        "rendered_reader": {
+          "html_path": "reader-v3-runs/workspaces/BENCH-03-REMOTE-SENSING-FOREST/reader/paper_reader.html",
+          "html_sha256": "33eb0509644f460e2948b0344aa5af1b1960f02df76fde86a31b8760517c3aa1",
+          "pdf_path": "reader-v3-runs/workspaces/BENCH-03-REMOTE-SENSING-FOREST/reader/paper_reader.pdf",
+          "pdf_sha256": "0dc09060ba8977f4f0e586d591098b0c8734bb19c9bf7df43fdc0b38ea122377",
+          "evidence_atlas_path": "reader-v3-runs/workspaces/BENCH-03-REMOTE-SENSING-FOREST/reader/evidence_atlas.html",
+          "evidence_atlas_sha256": "b1326cc631538c1ec3129dc94f92fb9e49863ab8ea29e31761c9f1b8652b02b4"
+        }
+      },
+      "evaluation": {
+        "blind_packet1_sha256": "205d47efd0c9d8f27afc0ca5eee7eb8ac3cb7e8064fa6361513b7388dd31659c",
+        "blind_packet2_sha256": "f9aefc51a8a22a0404ceafefa82c4324cfc8cac440756aa6a28fe3e495dc384b",
+        "pair_evaluation_json": "ISSUE19_BENCH-03-REMOTE-SENSING-FOREST_PAIR_EVALUATION.json",
+        "pair_evaluation_sha256": "cc7c583ddcada030912b4849c0184ca5125e40072afbeadb685e42489ba8ab7d"
+      }
+    },
+    {
+      "benchmark_id": "BENCH-04",
+      "paper_id": "BENCH-04-ALPHAFOLD2-STRUCTURE",
+      "source_pdf": {
+        "path": "reader-v3-runs/workspaces/BENCH-04-ALPHAFOLD2-STRUCTURE/source/paper.pdf",
+        "sha256": "6eae057a9faf4f671c3101e0745ed704460c6d3dec77243dfd3a9f2d2ab68970",
+        "size_bytes": 3651992
+      },
+      "condition_a": {
+        "output_path": "reader-v3-runs/workspaces/BENCH-04-ALPHAFOLD2-STRUCTURE/evals/reader_v3/BENCH-04-ALPHAFOLD2-STRUCTURE/direct_ai.json",
+        "output_sha256": "cf483b8d7ecd67833cb3bae9ab9a4e87bd0f1c619e62e0198d6c7a8df2c73ef1",
+        "run_receipt_path": "reader-v3-runs/workspaces/BENCH-04-ALPHAFOLD2-STRUCTURE/agent_runs/TASK-V3-DIRECT-BENCH-04-ALPHAFOLD2-STRUCTURE/run-001.json",
+        "run_receipt_sha256": "d0feb451dbd5dfc7849d2088eba90f2ec31634b7d6a3cfd9b586ba3d3672dc78"
+      },
+      "condition_b": {
+        "lead_reader_draft_sha256": "8b5d23e2847d89205452c786f89c83776f487e0d2a8fc741db69ce28c9bd8774",
+        "lens_outputs": {
+          "argument_narrative.json": "222cb69bf34fa2175e74c2d1aa2e549c6489c710825bed392405146707117a74",
+          "evidence_results.json": "6e2868cdfb174ad31738b1c9593672c98b6ec2a5af72e2952c9df4699836046b",
+          "mechanism_causality.json": "982daa1034b2272803fd5be6ec351e6af09e4560d3f581668d84ee73277cb45f",
+          "method_study_design.json": "84465b0eedf32a0888419590de38717b4ed40bf8c4c239c6b5f8d50b132298ac",
+          "reproducibility_implementation.json": "631d85d00ed79aad3431b91652a217786fcee0c18e18040701623813bbb5fba3",
+          "validity_boundary.json": "b4addf2563105d9c6013ff872ab776447f94c9d4ee3d37010c8cd58fdc4a55c6"
+        },
+        "lens_run_receipts": {},
+        "revision_memo_sha256": "19fda41e294b4cd244b1a0182e8569556dc3e9589c89ddb455d6de602f87c578",
+        "narrative_plan_sha256": "d5b972e68944d8ea4ef1a85d7c04391108be77da7afab99d1ae42641fa024ee0",
+        "manuscript": {
+          "path": "reader-v3-runs/workspaces/BENCH-04-ALPHAFOLD2-STRUCTURE/reader/narrative_manuscript.json",
+          "sha256": "b602293bc12f0ce5b795f0d40530098dafe92e1e2fe36b0fa26910ba8dc8ff48"
+        },
+        "rendered_reader": {
+          "html_path": "reader-v3-runs/workspaces/BENCH-04-ALPHAFOLD2-STRUCTURE/reader/paper_reader.html",
+          "html_sha256": "5f92a7c9fce41a69e78237ed075dea1fb657b2d4783b3238973a68d939d56db6",
+          "pdf_path": "reader-v3-runs/workspaces/BENCH-04-ALPHAFOLD2-STRUCTURE/reader/paper_reader.pdf",
+          "pdf_sha256": "b3afd4f4066acf74b07bf8b57469e160d066e177cc155ecda6cba9f1a041f2cc",
+          "evidence_atlas_path": "reader-v3-runs/workspaces/BENCH-04-ALPHAFOLD2-STRUCTURE/reader/evidence_atlas.html",
+          "evidence_atlas_sha256": "9c5febd7d7b4616151c0f5a46a0618a2bd4273cfb0263de7382f668d1ff4f1e6"
+        }
+      },
+      "evaluation": {
+        "blind_packet1_sha256": "66e480030801cf595a5d63ecf4a7247ad1adce7f4eb5f6cca1baf24be8b58101",
+        "blind_packet2_sha256": "66643bb0fba9d0c31535be413c37740a5baff87b29fa156498f82698f2b4e8ca",
+        "pair_evaluation_json": "ISSUE19_BENCH-04-ALPHAFOLD2-STRUCTURE_PAIR_EVALUATION.json",
+        "pair_evaluation_sha256": "db1f30c2b0e17d1470e870120b980837bfde5efd64e87db869c8ef6300aa8bff"
+      }
+    },
+    {
+      "benchmark_id": "BENCH-05",
+      "paper_id": "BENCH-05-QUANTUM-SUPREMACY-ABLATION",
+      "source_pdf": {
+        "path": "reader-v3-runs/workspaces/BENCH-05-QUANTUM-SUPREMACY-ABLATION/source/paper.pdf",
+        "sha256": "6f3030abb7d9d4f0624a5cbe5ca2ff673df63afc85c97fadd0bf7db780c8dbaf",
+        "size_bytes": 1644579
+      },
+      "condition_a": {
+        "output_path": "reader-v3-runs/workspaces/BENCH-05-QUANTUM-SUPREMACY-ABLATION/evals/reader_v3/BENCH-05-QUANTUM-SUPREMACY-ABLATION/direct_ai.json",
+        "output_sha256": "f0208d7605a8d64d3e0f393c7d208def3f06a0f9863675da2444399d7a5b0a96",
+        "run_receipt_path": "reader-v3-runs/workspaces/BENCH-05-QUANTUM-SUPREMACY-ABLATION/agent_runs/TASK-V3-DIRECT-BENCH-05-QUANTUM-SUPREMACY-ABLATION/run-001.json",
+        "run_receipt_sha256": "6c7edacc40db20a89baf34fd9cdcb624fef749fdc3640945786cac46f7dbe0fa"
+      },
+      "condition_b": {
+        "lead_reader_draft_sha256": "0330cd973b54a50e9fadfb5f71bcee4864182624ddc6444663496531f1dca124",
+        "lens_outputs": {
+          "argument_narrative.json": "ac209063b48dc2095aeee9cfd01adf4882d3eb5d8f6a94b72102ae84b4e832de",
+          "evidence_results.json": "d6f9447a88df8292fca01346a6320463c0b3d67e7018386c98edcfc10edcaec1",
+          "measurement_integrity.json": "1c7aa91bae90368d9491d2f5c90c8802bbeb47da277544d67d21920791681d40",
+          "mechanism_causality.json": "9689edb5b7c299abd891db6a1c7ac858b1ea8ddd5547ba8819ae7c5e61043f24",
+          "method_study_design.json": "99715e8cc13b6e91a3dba6a7ff99caa1b93a081121d65bbec6a07ea5d557905e",
+          "validity_boundary.json": "43449446af8d7ca2a89e79149fbfb6836ce1555ddcd7f398dde3451d4ea5a15e"
+        },
+        "lens_run_receipts": {
+          "agent_runs/TASK-V3-LENS-ARGUMENT_NARRATIVE/run-001.json": "7bb732d4e5c97246bde7478df841fc1ce52e620d383e4bc14a3ecc0fd8738964",
+          "agent_runs/TASK-V3-LENS-EVIDENCE_RESULTS/run-001.json": "1baf0f8e83b1d57a0151deab53c6a706192b5ceb454318086bc80b88c8249e3a",
+          "agent_runs/TASK-V3-LENS-MEASUREMENT_INTEGRITY/run-001.json": "91d0e44cf39426688c54911adb8f919c59efb7e7475ee28852e0fc7626eaed36",
+          "agent_runs/TASK-V3-LENS-MECHANISM_CAUSALITY/run-001.json": "2d79adc1d016e7b1196496946c39bf14327856659c968cf9995b8069bd6b7af4",
+          "agent_runs/TASK-V3-LENS-METHOD_STUDY_DESIGN/run-001.json": "acb8a40b93a92f9f4aa7c2c0f59484cee6c5abb121dc38f46fc71336ed8598ac",
+          "agent_runs/TASK-V3-LENS-VALIDITY_BOUNDARY/run-001.json": "6b523a1f6d68fe7151d6900484b8f903173487f57216afe944e16ba8d906a22c"
+        },
+        "revision_memo_sha256": "6200f8fbb96c8f3762cff412fe2066ec8088fae14fa952e52ebdb62d299edb11",
+        "narrative_plan_sha256": "557058c79b41aa1eeca0200950e5c4ecf37fcdd4c603f4feb6be584138380ec8",
+        "manuscript": {
+          "path": "reader-v3-runs/workspaces/BENCH-05-QUANTUM-SUPREMACY-ABLATION/reader/narrative_manuscript.json",
+          "sha256": "869977cb403b2d23a04a44e371d3669212232cef93993be2ce0913db5ffbb9c1"
+        },
+        "rendered_reader": {
+          "html_path": "reader-v3-runs/workspaces/BENCH-05-QUANTUM-SUPREMACY-ABLATION/reader/paper_reader.html",
+          "html_sha256": "f747e2a92f5adc8f002eb3f288cbbcb8d8a01757656c78e3d9dd06a76eb6cc6d",
+          "pdf_path": "reader-v3-runs/workspaces/BENCH-05-QUANTUM-SUPREMACY-ABLATION/reader/paper_reader.pdf",
+          "pdf_sha256": "06c6c9948a2e252cb4e60daf4397cf87cca8a5ce388e8e46bb46c96b0c7a6fa9",
+          "evidence_atlas_path": "reader-v3-runs/workspaces/BENCH-05-QUANTUM-SUPREMACY-ABLATION/reader/evidence_atlas.html",
+          "evidence_atlas_sha256": "9de51bbd74fb21a0ce0b650e152a91dad08069ecf6d5e8bc411a0cd70f31134d"
+        }
+      },
+      "evaluation": {
+        "blind_packet1_sha256": "dfab6112e1ae169359a8de70f70887a270959b3dc8fffc6c246931e9e6639330",
+        "blind_packet2_sha256": "2be7101eec78e32bbfddf426a8d522cdd73fd2c2856886e1a6c9e130ae4c15e7",
+        "pair_evaluation_json": "ISSUE19_BENCH-05-QUANTUM-SUPREMACY-ABLATION_PAIR_EVALUATION.json",
+        "pair_evaluation_sha256": "c23c18de90ee42a19c4139fe7102282bdd074969a338ab1e7b16192aa8644354"
+      }
+    },
+    {
+      "benchmark_id": "UNSEEN-01",
+      "paper_id": "UNSEEN-01-RETHINKING-GENERALIZATION",
+      "source_pdf": {
+        "path": "reader-v3-runs/workspaces/UNSEEN-01-RETHINKING-GENERALIZATION/source/paper.pdf",
+        "sha256": "a71f1294a021cebc6939ec977fc073b6d7b4f183950eba761ec55364d30b729f",
+        "size_bytes": 403563
+      },
+      "condition_a": {
+        "output_path": "reader-v3-runs/workspaces/UNSEEN-01-RETHINKING-GENERALIZATION/evals/reader_v3/UNSEEN-01-RETHINKING-GENERALIZATION/direct_ai.json",
+        "output_sha256": "f46062db0bb6a3d137b673f63851d404815ebe645b567559ff23f30af1ea98c4",
+        "run_receipt_path": "reader-v3-runs/workspaces/UNSEEN-01-RETHINKING-GENERALIZATION/agent_runs/TASK-V3-DIRECT-UNSEEN-01-RETHINKING-GENERALIZATION/run-001.json",
+        "run_receipt_sha256": "89f16d0eeae36518a00df48769ef3a9b197ea5042301cf0f0fb62969a5bc22b7"
+      },
+      "condition_b": {
+        "lead_reader_draft_sha256": "55607fb18f8b13e0e8b2bb7953642a6a3211b4964e4badfbbe0a2b1808d3ac88",
+        "lens_outputs": {
+          "argument_narrative.json": "fde5c36a6dcbc989ac0cf2d8c20b96338d02c93f2d118ffe427da0ec10c2be09",
+          "evidence_results.json": "f3850049f7ef69699ab0a6cb3d2de07592a7c50e76cc179435aea6c5df9332d9",
+          "mechanism_causality.json": "366d7fda78932887089799e5219de31ddffb8ba88ec6c1f83786df753fd752bf",
+          "method_study_design.json": "f9cee7012ad6ecfde899e014123c0d95ec7fd9c1c2a8aad8f6b7d0b0248af4c2",
+          "reproducibility_implementation.json": "de4667511c0c3dbd54b07daa293b1da8573956f5a949eed599c6f68711c60e30",
+          "validity_boundary.json": "236b6401962a2c5a3c3b7b9fa2a078319acb1166c386c15223a0d9beeecddff1"
+        },
+        "lens_run_receipts": {
+          "agent_runs/TASK-V3-LENS-ARGUMENT_NARRATIVE/run-001.json": "24494726368631bd0d2124a2b8e2c9c052e12624ab823efb560bef3272a247f9",
+          "agent_runs/TASK-V3-LENS-EVIDENCE_RESULTS/run-001.json": "c15fb01d70840e2bf4cc19b6021b55075d62b9340abb8cbe1c76c94da77b14ce",
+          "agent_runs/TASK-V3-LENS-MECHANISM_CAUSALITY/run-001.json": "0b052bc4dd1e98a4fa1857d81a18fc1dee1f03eacdbf24f0c2cfb0ece31bcf96",
+          "agent_runs/TASK-V3-LENS-METHOD_STUDY_DESIGN/run-001.json": "b67fdaa7d36b392c8b56ad22c43b26b5b57e56a371634d14a1e92411a02cdb4e",
+          "agent_runs/TASK-V3-LENS-REPRODUCIBILITY_IMPLEMENTATION/run-001.json": "6660f0325db83c795c1082c8e943ac84b725d61f4ac1caee474ed866bbada462",
+          "agent_runs/TASK-V3-LENS-VALIDITY_BOUNDARY/run-001.json": "594516bc9bd1e379a5dcb508738336ac84afa37cbc644f5dd4414f763bdd933d"
+        },
+        "revision_memo_sha256": "56e5fc5cba65229a96d57d3553e7563333794860e6ba522bb415881b37218199",
+        "narrative_plan_sha256": "d16626ec1262d3899dc3148b9ac6d6a61c67612d9bc8427008930d84aa513395",
+        "manuscript": {
+          "path": "reader-v3-runs/workspaces/UNSEEN-01-RETHINKING-GENERALIZATION/reader/narrative_manuscript.json",
+          "sha256": "1505df8bbfa67d1d1b195c2cae30ada0d34744119e0cf0fc11a5322e463b29a2"
+        },
+        "rendered_reader": {
+          "html_path": "reader-v3-runs/workspaces/UNSEEN-01-RETHINKING-GENERALIZATION/reader/paper_reader.html",
+          "html_sha256": "b7cfbd6fabbfe71ed607938b880333fa34c6e86ec27b0aeced33838ecc5abfc9",
+          "pdf_path": "reader-v3-runs/workspaces/UNSEEN-01-RETHINKING-GENERALIZATION/reader/paper_reader.pdf",
+          "pdf_sha256": "7b4f4b64851569891ec151416ce2eb10a8ad537d1a33e48304b9f0ceadd34daa",
+          "evidence_atlas_path": "reader-v3-runs/workspaces/UNSEEN-01-RETHINKING-GENERALIZATION/reader/evidence_atlas.html",
+          "evidence_atlas_sha256": "31f8214fd50d900be36f472facbce0e1e91d95625b397d627062cde647883c72"
+        }
+      },
+      "evaluation": {
+        "blind_packet1_sha256": "fe71a68f1611faae0387b5c377fc82807bf8271f6958f6ef78035c6c438fa31c",
+        "blind_packet2_sha256": "cf8bedc2de1dd2a7057c38ec6efeffd3b1b1d071e73230826c0fe027b6546667",
+        "pair_evaluation_json": "ISSUE19_UNSEEN-01-RETHINKING-GENERALIZATION_PAIR_EVALUATION.json",
+        "pair_evaluation_sha256": "62da55ce5c91d94a16a77b96848829432e60163d8166685de90e0595dd5e08ac"
+      }
+    }
+  ],
+  "verdict_summary": {
+    "status": "PASS",
+    "no_regression_core_pass": true,
+    "unseen_mandatory_pass": true,
+    "added_value_pass": true,
+    "hallucination_safe": true,
+    "template_bias_safe": true,
+    "evaluator_consistency": "100%",
+    "all_six_papers_retained": true
+  },
+  "manifest_sha256": "94611e5a3cdb5f29394b1c5c1f9453329c3e11f832016de65fbf2c09d2b19e15"
+}

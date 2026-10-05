@@ -1,0 +1,59 @@
+{
+  "task_id": "TASK-V3-VISUAL-P008",
+  "execution_kind": "HOST_AGENT",
+  "executor": {
+    "kind": "HOST_AGENT",
+    "host": "pi-parent-direct",
+    "host_version": "UNKNOWN",
+    "provider": "openai-codex",
+    "model": "gpt-6.1-sol",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "high",
+    "tool_profile": "paper-only"
+  },
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "input_hashes": {
+    "source/paper.pdf": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+    "task": "80e6ecaf89ec62ee9b7b0ddf320f666c1da5ddc07762051f64702ae94ac14728"
+  },
+  "result": {
+    "schema_version": "1.0",
+    "source_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+    "page": 8,
+    "bindings": [
+      {
+        "evidence_id": "T02",
+        "kind": "table",
+        "bbox_norm": [
+          0.17,
+          0.08,
+          0.835,
+          0.325
+        ],
+        "panel_bboxes_norm": [],
+        "status": "VERIFIED",
+        "complete": true,
+        "caption_match": true,
+        "confidence": 0.99,
+        "notes": "Full-page inspection confirms the complete Table 2 caption, header, comparison rows, Transformer base/big rows, BLEU columns, and training-cost columns."
+      },
+      {
+        "evidence_id": "T02-p8",
+        "kind": "table",
+        "bbox_norm": [
+          0.17,
+          0.08,
+          0.835,
+          0.325
+        ],
+        "panel_bboxes_norm": [],
+        "status": "REJECTED",
+        "complete": false,
+        "caption_match": false,
+        "confidence": 0.99,
+        "notes": "Candidate is a duplicate lower-page crop mislabeled as Table 2; full-page inspection shows the associated text is narrative prose, not a second table."
+      }
+    ]
+  }
+}

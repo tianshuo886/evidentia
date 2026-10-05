@@ -104,11 +104,11 @@ def main():
                 sections.append(line)
 
         mentions = []
-        for m in re.finditer(r'\b(Fig(?:ure)?\.?\s*[S]?\d+[A-Za-z]?|Table\s*[S]?\d+[A-Za-z]?|Eq(?:uation)?\.?\s*(?:\(\s*\d+\s*\)|\d+))', txt, re.I):
+        for m in re.finditer(r'\b((?:Extended\s+Data\s+)?(?:Fig(?:ure)?\.?\s*[S]?\d+[A-Za-z]?|Table\s*[S]?\d+[A-Za-z]?|Supplementary\s+(?:Fig(?:ure)?\.?|Table)\s*[S]?\d+[A-Za-z]?|Eq(?:uation)?\.?\s*(?:\(\s*\d+\s*\)|\d+)))', txt, re.I):
             lbl = m.group(1).strip()
-            if lbl.lower().startswith('table'):
+            if re.search(r'(?:^|\s)table\s', lbl, re.I):
                 kind = 'table'
-            elif lbl.lower().startswith(('eq', '(')):
+            elif re.match(r'^(?:eq|equation|\()', lbl, re.I):
                 kind = 'equation'
             else:
                 kind = 'figure'

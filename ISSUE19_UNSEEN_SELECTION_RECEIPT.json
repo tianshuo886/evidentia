@@ -1,0 +1,128 @@
+{
+  "schema_version": "1.0",
+  "receipt_kind": "ISSUE19_UNSEEN_SELECTION_RECEIPT",
+  "selection_timestamp": "2026-10-05T13:20:24.163369+00:00",
+  "architecture_frozen": true,
+  "reader_v3_freeze_sha": "4139ca7b0b1ae72c0930801df5e50653b59a7e92",
+  "selected_paper": {
+    "candidate_id": "POOL-02",
+    "title": "Understanding deep learning requires rethinking generalization",
+    "authors": [
+      "Chiyuan Zhang",
+      "Samy Bengio",
+      "Moritz Hardt",
+      "Benjamin Recht",
+      "Oriol Vinyals"
+    ],
+    "year": 2017,
+    "venue": "ICLR (International Conference on Learning Representations)",
+    "doi": "10.48550/arXiv.1611.03530",
+    "canonical_identifier": "10.48550/arXiv.1611.03530",
+    "arxiv_id": "1611.03530",
+    "paper_type": "theorem_empirical_generalization",
+    "structural_role": "Fundamental learning theory & statistical learning bounds / randomization falsification paradigm",
+    "structural_gap_filled": "Fills the crucial theoretical gap in Reader v3: a foundational paper whose primary argumentative structure is mathematical theorem proving (finite sample expressivity theorems) combined with negative counterfactual experimental falsification (randomized labels/pixels refuting classical uniform convergence bounds like VC-dimension and Rademacher complexity). This contrast sharply with engineering methods (LoRA/Transformers) or empirical physical/biological pipelines (AlphaFold/Sycamore).",
+    "acquired_source_pdf": {
+      "path": "evals/unseen/source/paper.pdf",
+      "source_url": "https://arxiv.org/pdf/1611.03530.pdf",
+      "source_sha256": "a71f1294a021cebc6939ec977fc073b6d7b4f183950eba761ec55364d30b729f",
+      "size_bytes": 403563
+    }
+  },
+  "prior_development_exposure_check": {
+    "used_in_architecture_development": false,
+    "is_existing_benchmark_paper": false,
+    "used_in_issue22_validation": false,
+    "used_in_prompt_or_schema_tuning": false,
+    "existing_workspace_in_repo": false,
+    "git_commit_history_hits": 0,
+    "git_grep_hits": 0,
+    "evidence_statement": "The full paper had not been used to modify or tune Reader v3 before this selection."
+  },
+  "selection_protocol": {
+    "pool_size": 10,
+    "highest_priority_category": "Priority 1 (Theorem/Proof & Foundations of Generalization/Optimization)",
+    "tie_breaking_algorithm": "SHA-256(READER_V3_FREEZE_SHA + ':' + canonical_doi)",
+    "candidate_pool": [
+      {
+        "id": "POOL-01",
+        "title": "On the Convergence of Adam and Beyond",
+        "doi": "10.48550/arXiv.1904.09237",
+        "category": "theorem_proof_optimization",
+        "priority": 1,
+        "tie_breaker_hash": "f45c308dd897c4300c059736f88f2bb61be8e1267ed9ee687d2c97d1af45e9a1"
+      },
+      {
+        "id": "POOL-02",
+        "title": "Understanding deep learning requires rethinking generalization",
+        "doi": "10.48550/arXiv.1611.03530",
+        "category": "theorem_empirical_generalization",
+        "priority": 1,
+        "tie_breaker_hash": "4b87bef36651001a852900501dcc3ad8866e746719d9562657766544eb8e6018",
+        "selected": true
+      },
+      {
+        "id": "POOL-03",
+        "title": "Observation of Gravitational Waves from a Binary Black Hole Merger",
+        "doi": "10.48550/arXiv.1602.03837",
+        "category": "experimental_metrology_astrophysics",
+        "priority": 2
+      },
+      {
+        "id": "POOL-04",
+        "title": "Direct observation of anyonic fractional statistics at the nu = 1/3 fractional quantum Hall state",
+        "doi": "10.48550/arXiv.2006.14115",
+        "category": "experimental_mesoscopic_physics",
+        "priority": 2
+      },
+      {
+        "id": "POOL-05",
+        "title": "Ranking the effectiveness of worldwide COVID-19 government interventions",
+        "doi": "10.1038/s41562-020-01009-0",
+        "category": "observational_causal_epidemiology",
+        "priority": 3
+      },
+      {
+        "id": "POOL-06",
+        "title": "The global human day",
+        "doi": "10.1073/pnas.2219564120",
+        "category": "observational_macro_sociology",
+        "priority": 3
+      },
+      {
+        "id": "POOL-07",
+        "title": "A Survey on In-Context Learning",
+        "doi": "10.48550/arXiv.2301.00234",
+        "category": "survey_taxonomy_synthesis",
+        "priority": 4
+      },
+      {
+        "id": "POOL-08",
+        "title": "Deep Learning in Neural Networks: An Overview",
+        "doi": "10.48550/arXiv.1404.7828",
+        "category": "survey_historical_foundations",
+        "priority": 4
+      },
+      {
+        "id": "POOL-09",
+        "title": "Statistical mechanics of money",
+        "doi": "10.48550/arXiv.cond-mat/0001432",
+        "category": "interdisciplinary_econophysics",
+        "priority": 5
+      },
+      {
+        "id": "POOL-10",
+        "title": "Scaling Laws for Neural Language Models",
+        "doi": "10.48550/arXiv.2001.08361",
+        "category": "empirical_scaling_phenomenology",
+        "priority": 5
+      }
+    ]
+  },
+  "selector_metadata": {
+    "model": "antigravity/gemini-3.8-flash",
+    "provider": "magpie",
+    "host": "local"
+  },
+  "receipt_sha256": "3e739e909ce16f68857a417af6cebba861c89079c2fdb05260025bcaac5f5fb9"
+}

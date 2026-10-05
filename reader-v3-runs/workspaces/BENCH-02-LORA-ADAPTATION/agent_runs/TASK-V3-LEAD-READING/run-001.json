@@ -1,0 +1,358 @@
+{
+  "task_id": "TASK-V3-LEAD-READING",
+  "execution_kind": "HOST_AGENT",
+  "executor": {
+    "kind": "HOST_AGENT",
+    "host": "pi",
+    "host_version": "UNKNOWN",
+    "provider": "openai-codex",
+    "model": "gpt-6-sol",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "high",
+    "tool_profile": "paper-only",
+    "started_at": "2026-10-04T03:00:00+00:00",
+    "completed_at": "2026-10-04T03:00:00+00:00"
+  },
+  "started_at": "2026-10-04T03:00:00+00:00",
+  "completed_at": "2026-10-04T03:00:00+00:00",
+  "input_hashes": {
+    "source/paper.pdf": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+    "model/source_map.json": "2fcb61fcc5fe6d72f4134b0d0f02455582fbcb74f796be494afbbf6fd8d36f7b",
+    "model/figure_inventory.json": "75a2c38fb10537e2939e3f85c339309fedd862dc7781f797bffbbdaf49d69afa"
+  },
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "result": {
+    "schema_version": "1.0",
+    "paper_id": "BENCH-02-LORA-ADAPTATION",
+    "source_sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+    "paper_type": "machine_learning",
+    "paper_characterization": "一篇以工程约束为出发点、以低秩参数化假设为方法核心、再以跨模型跨任务实证和子空间分析收束的参数高效语言模型适配方法论文。",
+    "structure_characterization": "论文不是简单的“方法—结果”流水账：先以 GPT-3 部署成本和适配延迟建立问题，再形式化下游条件语言建模与参数增量，逐项比较既有方案的瓶颈；随后给出 LoRA 的低秩重参数化、Transformer 施加位置与部署折叠性质；实证按 RoBERTa/DeBERTa、GPT-2、GPT-3 逐级放大，最后转向 rank、矩阵位置及子空间相似度来解释何以有效，并把大部分协议细节留在附录。",
+    "argument_topology": {
+      "characterization": "成本约束 → 低秩更新假设 → 可合并的参数化 → 逐级实验比较 → rank/子空间机制解释 → 条件性结论",
+      "nodes": [
+        {
+          "id": "N1",
+          "role": "deployment_problem",
+          "proposition": "全量微调为每个下游任务复制完整大模型参数，GPT-3 175B 使存储、优化器状态和部署切换成本成为瓶颈。",
+          "explanation": "引言与问题陈述把适配问题定义为任务质量之外的参数、显存、存储和在线延迟约束。",
+          "evidence_refs": [
+            "p.1",
+            "p.2"
+          ],
+          "source_anchors": [
+            "p.1",
+            "p.2"
+          ],
+          "epistemic_status": "VERIFIED"
+        },
+        {
+          "id": "N2",
+          "role": "prior_solution_failure",
+          "proposition": "Adapter 的额外深度引入在线延迟，prefix/prompt 类方法占用序列长度且优化表现不稳定。",
+          "evidence_refs": [
+            "T01",
+            "p.3"
+          ],
+          "source_anchors": [
+            "p.3",
+            "T01"
+          ],
+          "epistemic_status": "SUPPORTED"
+        },
+        {
+          "id": "N3",
+          "role": "method_proposition",
+          "proposition": "冻结 W0 并以 ΔW=BA 的低秩分解替代密集更新，使训练只优化 A、B。",
+          "explanation": "A 随机高斯初始化、B 零初始化使初始增量为零，前向为 W0x+BAx 并按 α/r 缩放。",
+          "evidence_refs": [
+            "F01",
+            "p.4"
+          ],
+          "source_anchors": [
+            "F01",
+            "p.4"
+          ],
+          "epistemic_status": "VERIFIED"
+        },
+        {
+          "id": "N4",
+          "role": "deployment_property",
+          "proposition": "部署时可将 W0 与 BA 合并，因此不增加推理层深度或额外延迟，但合并后跨任务 batch 切换不再直接。",
+          "evidence_refs": [
+            "p.4"
+          ],
+          "source_anchors": [
+            "p.4"
+          ],
+          "epistemic_status": "SUPPORTED"
+        },
+        {
+          "id": "N5",
+          "role": "empirical_case",
+          "proposition": "在 RoBERTa、DeBERTa、GPT-2 和 GPT-3 的多组任务上，LoRA 以少得多的可训练参数达到与全量微调相当或更好的指标。",
+          "evidence_refs": [
+            "T02",
+            "T03",
+            "T04",
+            "F02",
+            "p.6",
+            "p.8"
+          ],
+          "source_anchors": [
+            "T02",
+            "T03",
+            "T04",
+            "F02",
+            "p.6",
+            "p.8"
+          ],
+          "epistemic_status": "SUPPORTED"
+        },
+        {
+          "id": "N6",
+          "role": "mechanism_evidence",
+          "proposition": "rank 与适配矩阵位置的消融显示 Wq/Wv 组合及很小 rank 常已足够，而子空间分析提示更新放大了预训练模型中任务相关但未被强调的方向。",
+          "evidence_refs": [
+            "T08",
+            "F05",
+            "F06",
+            "F07",
+            "T18",
+            "p.17",
+            "p.25",
+            "p.26"
+          ],
+          "source_anchors": [
+            "T08",
+            "F05",
+            "F06",
+            "F07",
+            "T18",
+            "p.17",
+            "p.25",
+            "p.26"
+          ],
+          "epistemic_status": "SUPPORTED"
+        },
+        {
+          "id": "N7",
+          "role": "boundary",
+          "proposition": "结论受限于所选 Transformer attention 权重、任务/模型范围、调参与复用基线；论文没有系统验证 MLP、LayerNorm、bias 或所有下游分布。",
+          "evidence_refs": [
+            "p.5",
+            "p.26"
+          ],
+          "source_anchors": [
+            "p.5",
+            "p.26"
+          ],
+          "epistemic_status": "VERIFIED"
+        }
+      ],
+      "relations": [
+        {
+          "id": "R1",
+          "from": "N1",
+          "to": "N2",
+          "relation": "motivates",
+          "origin": "author",
+          "evidence_refs": [
+            "p.1",
+            "p.3"
+          ],
+          "source_anchors": [
+            "p.1",
+            "p.3"
+          ]
+        },
+        {
+          "id": "R2",
+          "from": "N2",
+          "to": "N3",
+          "relation": "opens_method_alternative",
+          "origin": "evidentia_assessment",
+          "evidence_refs": [
+            "T01",
+            "p.3",
+            "F01"
+          ],
+          "source_anchors": [
+            "T01",
+            "p.3",
+            "F01"
+          ]
+        },
+        {
+          "id": "R3",
+          "from": "N3",
+          "to": "N4",
+          "relation": "enables",
+          "origin": "author",
+          "evidence_refs": [
+            "p.4"
+          ],
+          "source_anchors": [
+            "p.4"
+          ]
+        },
+        {
+          "id": "R4",
+          "from": "N3",
+          "to": "N5",
+          "relation": "tested_by",
+          "origin": "author",
+          "evidence_refs": [
+            "T02",
+            "T03",
+            "T04",
+            "F02"
+          ],
+          "source_anchors": [
+            "T02",
+            "T03",
+            "T04",
+            "F02"
+          ]
+        },
+        {
+          "id": "R5",
+          "from": "N5",
+          "to": "N6",
+          "relation": "questions_explained_by",
+          "origin": "evidentia_assessment",
+          "evidence_refs": [
+            "T08",
+            "F05",
+            "F06",
+            "F07",
+            "T18"
+          ],
+          "source_anchors": [
+            "T08",
+            "F05",
+            "F06",
+            "F07",
+            "T18"
+          ]
+        },
+        {
+          "id": "R6",
+          "from": "N5",
+          "to": "N7",
+          "relation": "bounded_by",
+          "origin": "evidentia_assessment",
+          "evidence_refs": [
+            "p.5",
+            "p.26"
+          ],
+          "source_anchors": [
+            "p.5",
+            "p.26"
+          ]
+        }
+      ],
+      "ordering": [
+        "N1",
+        "N2",
+        "N3",
+        "N4",
+        "N5",
+        "N6",
+        "N7"
+      ]
+    },
+    "narrative": "本文把参数高效适配作为一个部署约束问题来构造，而不是先提出一个孤立的矩阵技巧。作者先指出全量微调会为每个任务复制完整模型，随后用 GPT-3 175B 的显存、checkpoint 和在线推理压力说明现有 adapter/prefix 路线的不同代价。LoRA 的关键重参数化是冻结预训练矩阵 W0，只训练低秩因子 A、B，使增量 ΔW=BA；A 的高斯初始化与 B 的零初始化保持训练起点不变，缩放 α/r 稳定不同 rank 的比较。因为训练后的 BA 可并入 W0，方法把参数效率与无额外推理层延迟连接起来，但这也牺牲了合并权重后在同一 batch 里自由混用多个任务模块的便利。论文接着以 attention 中的 query/value 等矩阵为主，在 RoBERTa、DeBERTa、GPT-2 和 GPT-3 上与 full fine-tuning、adapter、prefix、bias-only 等比较；这些实验共同支持“少量可训练参数仍可保持质量”的经验主张，但不是对任意任务或任意模块的普遍保证。最后，作者把方法效果转化为一个 rank 与子空间问题：适配不同 attention 矩阵、改变 rank、观察不同随机种子和 ΔW 与 W 的方向关系，以说明低秩更新并非纯随机压缩，而是在放大与下游任务相关的方向。该解释性证据与指标结果相互补充，却仍不能替代跨任务、跨架构和未报告模块的系统验证。",
+    "decisive_evidence": [
+      {
+        "evidence": [
+          "F01",
+          "p.4"
+        ],
+        "claim": "LoRA 将密集更新表示为 BA 并冻结 W0。",
+        "why_it_matters": "这是参数量、初始行为和可合并部署性质的共同来源。",
+        "does_not_establish": "低 rank 对所有任务都足够。",
+        "source_anchors": [
+          "F01",
+          "p.4"
+        ]
+      },
+      {
+        "evidence": [
+          "T01",
+          "p.3"
+        ],
+        "claim": "adapter 在小 batch/短序列条件下出现明显延迟增量。",
+        "why_it_matters": "把“参数少”与“在线部署快”区分开，构成 LoRA 的动机。",
+        "does_not_establish": "所有硬件或 batch 设置都同样受影响。",
+        "source_anchors": [
+          "T01",
+          "p.3"
+        ]
+      },
+      {
+        "evidence": [
+          "T02",
+          "T03",
+          "T04",
+          "F02",
+          "p.6",
+          "p.8"
+        ],
+        "claim": "多模型多任务结果显示 LoRA 常与 full fine-tuning 持平或更好。",
+        "why_it_matters": "提供跨规模的质量—参数效率证据。",
+        "does_not_establish": "统计上普遍优于全量微调或对未测任务无损。",
+        "source_anchors": [
+          "T02",
+          "T03",
+          "T04",
+          "F02",
+          "p.6",
+          "p.8"
+        ]
+      },
+      {
+        "evidence": [
+          "T08",
+          "F05",
+          "F06",
+          "F07",
+          "T18",
+          "p.17",
+          "p.25",
+          "p.26"
+        ],
+        "claim": "rank 与子空间实验证明小 rank 的性能平台和方向结构。",
+        "why_it_matters": "把经验结果与低 intrinsic rank 解释联系起来。",
+        "does_not_establish": "因果机制已被唯一识别。",
+        "source_anchors": [
+          "T08",
+          "F05",
+          "F06",
+          "F07",
+          "T18",
+          "p.17",
+          "p.25",
+          "p.26"
+        ]
+      }
+    ],
+    "uncertainties": [
+      "论文报告的许多比较依赖既有工作或单次配置，跨随机种子的完整不确定性并未对所有表格给出。",
+      "主要实验聚焦 attention 权重，MLP、LayerNorm 与 bias 的组合效果留作未来工作。",
+      "合并权重后的任务切换优势与多任务 batch 灵活性之间存在未量化的系统权衡。",
+      "子空间相关性支持一种解释，但不能单独证明 ΔW 的唯一生成机制。"
+    ],
+    "open_issues": [
+      "低 rank 在跨语言、更困难或分布偏移任务上的所需规模。",
+      "不同基础模型架构和优化/量化设置下的收益是否保持。",
+      "不合并 LoRA 模块以支持混合任务 batch 时的真实延迟代价。"
+    ],
+    "open_questions": [
+      "哪些预训练方向被 LoRA 放大以及它们如何对应具体下游任务？",
+      "attention-only 约束何时成为性能瓶颈？"
+    ],
+    "notes": "Lead Reader performed from source PDF plus verified page/figure inventory only; no project or memory context."
+  }
+}

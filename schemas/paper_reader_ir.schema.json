@@ -6,12 +6,7 @@
     "schema_version",
     "paper_id",
     "title",
-    "one_minute_summary",
-    "problem_and_context",
-    "method_and_mechanisms",
-    "decisive_experiments",
-    "scientific_assessment",
-    "reusable_components",
+    "narrative_units",
     "audit_appendix"
   ],
   "properties": {
@@ -173,6 +168,10 @@
     "evidence_promotion": {
       "type": "object"
     },
+    "compatibility_projection": {
+      "const": true,
+      "description": "Downstream-only legacy projection; never an input to scientific reasoning or Reader ordering."
+    },
     "narrative_units": {
       "type": "array",
       "items": {
@@ -191,7 +190,8 @@
           "caveat_ids": {"type": "array", "items": {"type": "string"}},
           "source_anchors": {"type": "array", "items": {"type": "string"}},
           "epistemic_status": {"type": "string"},
-          "audit_refs": {"type": "array", "items": {"type": "string"}}
+          "audit_refs": {"type": "array", "items": {"type": "string"}},
+          "bindings": {"type": "array", "items": {"type": "string"}}
         },
         "additionalProperties": false
       }

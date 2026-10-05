@@ -1,0 +1,177 @@
+{
+  "task_id": "TASK-V3-REVISION-MEMO",
+  "execution_kind": "HOST_AGENT",
+  "executor": {
+    "kind": "HOST_AGENT",
+    "host": "pi",
+    "host_version": "UNKNOWN",
+    "provider": "openai-codex",
+    "model": "gpt-6-sol",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "high",
+    "tool_profile": "paper-only",
+    "started_at": "2026-10-04T03:20:00+00:00",
+    "completed_at": "2026-10-04T03:20:00+00:00"
+  },
+  "started_at": "2026-10-04T03:20:00+00:00",
+  "completed_at": "2026-10-04T03:20:00+00:00",
+  "input_hashes": {
+    "source/paper.pdf": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+    "model/paper_understanding_draft.json": "7f5377fff58ba5872ff805196eba449fa044edc91bbfec485f954b1fa212b0a9",
+    "model/lens_v3_manifest.json": "852193e56120aa6260e2fe069005b085eeedf605f8863fbd5be258918c20593e",
+    "lens_v3/argument_narrative.json": "74e1188e255a8a18dccb4b4ba6e73ebde6107dadf1497ee7c192994e6053cb95",
+    "lens_v3/evidence_results.json": "8fcb47b1236dfc2710ca68f8acc79e6af2306192cff0da3c7b4d4535a49abf5b",
+    "lens_v3/mechanism_causality.json": "7a05ec0cf53a8969710f84f8aab087c9073aba293d55644c42c6bf70ba7fa497",
+    "lens_v3/method_study_design.json": "9ddb7087d7c1e1bdc4f65591b24df2df41fce9c7d37d5d3c434a2374587e9a26",
+    "lens_v3/reproducibility_implementation.json": "722d217a00968831bdbc3df6513dd0697e68cc8d9ac14367186188cc89975845",
+    "lens_v3/validity_boundary.json": "815d0ab44ae3395d52a1a421986dde41300c7367f8182fd6b7dd48d412d7196f"
+  },
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "result": {
+    "schema_version": "1.0",
+    "paper_id": "BENCH-02-LORA-ADAPTATION",
+    "source_sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+    "summary": "编辑核对后保留论文的成本→参数化→跨模型实证→子空间解释结构；需补强 evidence 与 boundary 的区分，避免把相关性写成机制证明，也避免把 GPT-3 结果泛化为所有任务保证。",
+    "revisions": [
+      {
+        "id": "REV1",
+        "priority": "P0",
+        "action": "QUALIFY",
+        "instruction": "将主张改写为在所测 Transformer/任务/配置下与 full fine-tuning 相当或更好的经验结果，不写成普遍无损。",
+        "rationale": "跨模型实验支持范围广但仍有限；rank 结果与基线调参有条件。",
+        "evidence": [
+          "T02",
+          "T03",
+          "T04",
+          "T06",
+          "T18",
+          "p.5",
+          "p.26"
+        ],
+        "source_lenses": [
+          "argument_narrative",
+          "validity_boundary",
+          "evidence_results"
+        ],
+        "verification_required": true
+      },
+      {
+        "id": "REV2",
+        "priority": "P0",
+        "action": "ADD",
+        "instruction": "补入 adapter 延迟的具体 batch/sequence 情境，并与 LoRA 合并权重后的无额外层延迟分开。",
+        "rationale": "这是论文动机与部署贡献的关键逻辑桥。",
+        "evidence": [
+          "T01",
+          "p.3",
+          "p.4"
+        ],
+        "source_lenses": [
+          "argument_narrative",
+          "evidence_results",
+          "method_study_design"
+        ],
+        "verification_required": true
+      },
+      {
+        "id": "REV3",
+        "priority": "P1",
+        "action": "ADD",
+        "instruction": "说明 attention-only 设计：主实验适配 Wq/Wv、冻结 MLP，MLP/LayerNorm/bias 未系统验证。",
+        "rationale": "避免读者误以为所有 Transformer 参数都注入 LoRA。",
+        "evidence": [
+          "p.5"
+        ],
+        "source_lenses": [
+          "method_study_design",
+          "reproducibility_implementation"
+        ],
+        "verification_required": true
+      },
+      {
+        "id": "REV4",
+        "priority": "P1",
+        "action": "QUALIFY",
+        "instruction": "将 rank/子空间部分写成与低 intrinsic rank 一致的机制线索，并明确不构成唯一因果识别。",
+        "rationale": "子空间相关性和随机对照支持解释但不能排除优化、任务方向和调参替代解释。",
+        "evidence": [
+          "T07",
+          "F05",
+          "F07",
+          "F08",
+          "p.12",
+          "p.17",
+          "p.26"
+        ],
+        "source_lenses": [
+          "mechanism_causality",
+          "evidence_results",
+          "validity_boundary"
+        ],
+        "verification_required": true
+      },
+      {
+        "id": "REV5",
+        "priority": "P1",
+        "action": "ADD",
+        "instruction": "交代 GPT-3 与 GPT-2 结果的协议依赖、波动和表 12/18 的调参边界。",
+        "rationale": "复现与外推需要知道哪些数字是特定协议下的观测。",
+        "evidence": [
+          "T04",
+          "T12",
+          "T18",
+          "p.8",
+          "p.26"
+        ],
+        "source_lenses": [
+          "reproducibility_implementation",
+          "validity_boundary"
+        ],
+        "verification_required": true
+      },
+      {
+        "id": "REV6",
+        "priority": "P2",
+        "action": "ADD",
+        "instruction": "保留合并后任务切换与混合任务 batch 的工程权衡，避免只呈现收益。",
+        "rationale": "作者在方法段明确指出该限制，是解释部署适用范围的必要组成。",
+        "evidence": [
+          "p.4"
+        ],
+        "source_lenses": [
+          "method_study_design",
+          "validity_boundary"
+        ],
+        "verification_required": false
+      }
+    ],
+    "unresolved": [
+      {
+        "issue": "低 rank 的跨语言、困难任务及分布偏移边界未在本文系统测量。",
+        "evidence": [
+          "p.5",
+          "p.26"
+        ],
+        "reason": "作者留下未来工作，现有实验无法支持更宽泛结论。"
+      },
+      {
+        "issue": "ΔW 与预训练方向关系的具体下游因果机制仍未识别。",
+        "evidence": [
+          "T07",
+          "F08",
+          "p.12",
+          "p.26"
+        ],
+        "reason": "相关/投影分析提供机制线索而非干预证据。"
+      },
+      {
+        "issue": "合并与不合并 LoRA 在多任务 batch 下的端到端系统权衡未量化。",
+        "evidence": [
+          "p.4"
+        ],
+        "reason": "论文只陈述操作限制，未给出完整 benchmark。"
+      }
+    ]
+  }
+}

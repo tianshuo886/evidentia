@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-"""Cross-Lens Scientific Synthesis Agent for Evidentia (Issue #8).
+"""DEPRECATED: Legacy v1/v2 deterministic scientific synthesis agent.
 
-Responsibilities:
-- Synthesizes findings across 6 independent Lenses: Author, Reviewer, Mechanism, Builder, Anomaly, Counterfactual.
-- Derives topics dynamically from argument reconstruction, reconciled tensions, and empirical findings.
-- Zero predefined domain topic templates or ML-specific boilerplate.
-- Zero majority voting: strictly preserves contradictions, anomalies, caveats, and alternative explanations.
-- Produces model/scientific_synthesis.json and updates model/paper_model.json.
+Retained for downstream compatibility and historical replays only.
+In canonical Reader v3, cross-lens scientific findings are reconciled through
+the Editorial Revision Memo (schemas/revision_memo.schema.json) and dynamically
+structured by the Lead Writer.
+Prohibited in canonical Reader v3 scientific execution.
 """
 import argparse, json, os, re, sys
 from pathlib import Path

@@ -1,0 +1,28 @@
+{
+  "schema_version": "2.0",
+  "status": "NEEDS_REVIEW",
+  "release_ready": false,
+  "errors": [
+    "missing acceptance input: model/paper_model.json",
+    "missing acceptance input: model/argument_reconstruction.json"
+  ],
+  "diagnostics": [
+    {
+      "gate": "artifacts",
+      "message": "missing acceptance input: model/paper_model.json"
+    },
+    {
+      "gate": "artifacts",
+      "message": "missing acceptance input: model/argument_reconstruction.json"
+    }
+  ],
+  "narrative_complete": false,
+  "lens_invisible": false,
+  "inline_evidence_complete": false,
+  "equations_valid": false,
+  "intent_isolated": false,
+  "unsupported_prose_free": false,
+  "html_md_pdf_parity": false,
+  "visual_review": "NEEDS_REVIEW",
+  "implementation_sha256": "3c461506e5b174d8cc75084ca0d665bf67fead05634f0bd5ac03414ceaddea44"
+}

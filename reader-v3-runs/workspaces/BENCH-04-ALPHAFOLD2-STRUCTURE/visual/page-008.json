@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0",
+  "source_sha256": "6eae057a9faf4f671c3101e0745ed704460c6d3dec77243dfd3a9f2d2ab68970",
+  "page": 8,
+  "bindings": [{
+    "evidence_id": "T01", "kind": "table", "bbox_norm": [0.050, 0.060, 0.490, 0.550],
+    "status": "REJECTED", "complete": false, "caption_match": false, "confidence": 0.99,
+    "notes": "No Table 1 is visibly present on page 8; candidate is a phantom extraction from prose mentioning supplementary tables."
+  }]
+}

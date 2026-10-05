@@ -1,0 +1,101 @@
+{
+  "task_id": "TASK-V3-LENS-VALIDITY_BOUNDARY",
+  "execution_kind": "HOST_AGENT",
+  "executor": {
+    "kind": "HOST_AGENT",
+    "host": "pi",
+    "host_version": "UNKNOWN",
+    "provider": "openai-codex",
+    "model": "gpt-6-sol",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "high",
+    "tool_profile": "paper-only",
+    "started_at": "2026-10-04T03:10:00+00:00",
+    "completed_at": "2026-10-04T03:10:00+00:00"
+  },
+  "started_at": "2026-10-04T03:10:00+00:00",
+  "completed_at": "2026-10-04T03:10:00+00:00",
+  "input_hashes": {
+    "source/paper.pdf": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+    "model/source_map.json": "2fcb61fcc5fe6d72f4134b0d0f02455582fbcb74f796be494afbbf6fd8d36f7b",
+    "model/figure_inventory.json": "75a2c38fb10537e2939e3f85c339309fedd862dc7781f797bffbbdaf49d69afa",
+    "model/paper_understanding_draft.json": "7f5377fff58ba5872ff805196eba449fa044edc91bbfec485f954b1fa212b0a9"
+  },
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "result": {
+    "schema_version": "1.0",
+    "lens": "validity_boundary",
+    "lens_kind": "core",
+    "source_sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+    "base_sha256": "7f5377fff58ba5872ff805196eba449fa044edc91bbfec485f954b1fa212b0a9",
+    "summary": "证据对“参数高效且质量不显著下降”的结论支持较强，但对通用性、因果机制和所有部署场景的外推边界清楚。主要风险来自实验选择、复用基线、未覆盖模块和合并权重后的 batch 约束。",
+    "findings": [
+      {
+        "id": "VB1",
+        "statement": "比较覆盖多个架构与任务，但实验仍聚焦 Transformer 语言模型，不能直接推出其他网络或任务分布上的结果。",
+        "evidence": [
+          "p.5",
+          "p.6",
+          "p.26"
+        ],
+        "epistemic": "VERIFIED",
+        "action": "QUALIFY",
+        "importance": "MAJOR",
+        "reason": "Independent source-grounded pass; finding records what the Lead Reader should preserve or qualify.",
+        "cross_cutting_checks": {
+          "anomaly": null,
+          "counterfactual": null
+        }
+      },
+      {
+        "id": "VB2",
+        "statement": "LoRA 与 full fine-tuning 的指标差距常在波动范围内，论文并未为所有结果提供统一统计显著性检验。",
+        "evidence": [
+          "T04",
+          "p.8"
+        ],
+        "epistemic": "SUPPORTED",
+        "action": "VERIFY",
+        "importance": "MINOR",
+        "reason": "Independent source-grounded pass; finding records what the Lead Reader should preserve or qualify.",
+        "cross_cutting_checks": {
+          "anomaly": null,
+          "counterfactual": null
+        }
+      },
+      {
+        "id": "VB3",
+        "statement": "adapter 延迟测量来自 GPT-2 medium/RTX8000/100 次 forward，说明一种在线情境而非硬件无关定律。",
+        "evidence": [
+          "T01",
+          "p.3",
+          "F05"
+        ],
+        "epistemic": "VERIFIED",
+        "action": "QUALIFY",
+        "importance": "MAJOR",
+        "reason": "Independent source-grounded pass; finding records what the Lead Reader should preserve or qualify.",
+        "cross_cutting_checks": {
+          "anomaly": null,
+          "counterfactual": null
+        }
+      },
+      {
+        "id": "VB4",
+        "statement": "合并 BA 虽消除额外层延迟，但混合任务 batch 切换困难，系统约束应与质量结果分开表述。",
+        "evidence": [
+          "p.4"
+        ],
+        "epistemic": "VERIFIED",
+        "action": "EXPAND",
+        "importance": "MAJOR",
+        "reason": "Independent source-grounded pass; finding records what the Lead Reader should preserve or qualify.",
+        "cross_cutting_checks": {
+          "anomaly": null,
+          "counterfactual": null
+        }
+      }
+    ]
+  }
+}

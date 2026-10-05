@@ -1,0 +1,80 @@
+{
+  "schema_version": "1.0",
+  "lens": "mechanism_causality",
+  "lens_kind": "specialist",
+  "source_sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+  "base_sha256": "7f5377fff58ba5872ff805196eba449fa044edc91bbfec485f954b1fa212b0a9",
+  "summary": "作者提出低 intrinsic rank 使 LoRA 有效，并用 rank、seed 子空间相似度以及 ΔW 与 Wq 的方向投影支持该解释；这些是机制一致性证据而非干预式因果识别。",
+  "findings": [
+    {
+      "id": "MC1",
+      "statement": "不同 seed 的低 rank 模块在若干层呈现相似列向量子空间，支持更新受低维结构约束。",
+      "evidence": [
+        "F05",
+        "F07",
+        "p.17",
+        "p.26"
+      ],
+      "epistemic": "SUPPORTED",
+      "action": "KEEP",
+      "importance": "MINOR",
+      "reason": "Independent source-grounded pass; finding records what the Lead Reader should preserve or qualify.",
+      "cross_cutting_checks": {
+        "anomaly": null,
+        "counterfactual": null
+      }
+    },
+    {
+      "id": "MC2",
+      "statement": "ΔW 与 Wq 的投影及放大因子表明 LoRA 强调预训练模型已有但未被强调的方向；随机矩阵对照使该解释不只是“任意低秩都一样”。",
+      "evidence": [
+        "T07",
+        "F08",
+        "p.12",
+        "p.26"
+      ],
+      "epistemic": "SUPPORTED",
+      "action": "EXPAND",
+      "importance": "MAJOR",
+      "reason": "Independent source-grounded pass; finding records what the Lead Reader should preserve or qualify.",
+      "cross_cutting_checks": {
+        "anomaly": null,
+        "counterfactual": null
+      }
+    },
+    {
+      "id": "MC3",
+      "statement": "替代机制仍包括优化便利性、任务/数据特定方向和超参选择；论文没有逐项干预冻结方向来排除这些解释。",
+      "evidence": [
+        "T06",
+        "T12",
+        "p.10",
+        "p.26"
+      ],
+      "epistemic": "UNRESOLVED",
+      "action": "QUALIFY",
+      "importance": "MAJOR",
+      "reason": "Independent source-grounded pass; finding records what the Lead Reader should preserve or qualify.",
+      "cross_cutting_checks": {
+        "anomaly": null,
+        "counterfactual": null
+      }
+    },
+    {
+      "id": "MC4",
+      "statement": "可证伪预测是改变任务难度、架构或适配 MLP 后 rank/子空间结构与性能平台应发生可观测变化。",
+      "evidence": [
+        "p.5",
+        "p.26"
+      ],
+      "epistemic": "MODEL_UNCERTAIN",
+      "action": "VERIFY",
+      "importance": "MINOR",
+      "reason": "Independent source-grounded pass; finding records what the Lead Reader should preserve or qualify.",
+      "cross_cutting_checks": {
+        "anomaly": null,
+        "counterfactual": null
+      }
+    }
+  ]
+}

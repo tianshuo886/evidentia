@@ -1,0 +1,75 @@
+{
+  "schema_version": "1.0",
+  "lens": "method_study_design",
+  "lens_kind": "core",
+  "source_sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+  "base_sha256": "7f5377fff58ba5872ff805196eba449fa044edc91bbfec485f954b1fa212b0a9",
+  "summary": "研究设计先定义条件语言建模中的任务参数增量，再将 ΔΦ 用低秩 Θ 编码；实验冻结 W0 与 MLP，仅在 attention 权重上训练 LoRA，分别覆盖 GLUE、生成任务及 GPT-3 大模型。",
+  "findings": [
+    {
+      "id": "MD1",
+      "statement": "A∈R^{r×k} 与 B∈R^{d×r}，W0 冻结，ΔW=BA；A 高斯初始化、B 零初始化，缩放 α/r。",
+      "evidence": [
+        "p.4",
+        "F01"
+      ],
+      "epistemic": "VERIFIED",
+      "action": "KEEP",
+      "importance": "MINOR",
+      "reason": "Independent source-grounded pass; finding records what the Lead Reader should preserve or qualify.",
+      "cross_cutting_checks": {
+        "anomaly": null,
+        "counterfactual": null
+      }
+    },
+    {
+      "id": "MD2",
+      "statement": "实验主要适配 Wq/Wv，冻结 MLP，并将 MLP、LayerNorm、bias 的系统实验留到未来工作。",
+      "evidence": [
+        "p.5"
+      ],
+      "epistemic": "VERIFIED",
+      "action": "QUALIFY",
+      "importance": "MAJOR",
+      "reason": "Independent source-grounded pass; finding records what the Lead Reader should preserve or qualify.",
+      "cross_cutting_checks": {
+        "anomaly": null,
+        "counterfactual": null
+      }
+    },
+    {
+      "id": "MD3",
+      "statement": "rank 与矩阵位置消融保持相近参数预算，用于区分“更多参数”与“在哪些矩阵上适配”的影响。",
+      "evidence": [
+        "T05",
+        "T08",
+        "p.10",
+        "p.17"
+      ],
+      "epistemic": "SUPPORTED",
+      "action": "EXPAND",
+      "importance": "MAJOR",
+      "reason": "Independent source-grounded pass; finding records what the Lead Reader should preserve or qualify.",
+      "cross_cutting_checks": {
+        "anomaly": null,
+        "counterfactual": null
+      }
+    },
+    {
+      "id": "MD4",
+      "statement": "GPT-3 实验采用 tuned learning rate 后对数据集复用其余超参；读者需把表格比较理解为特定协议下的比较。",
+      "evidence": [
+        "T12",
+        "p.26"
+      ],
+      "epistemic": "VERIFIED",
+      "action": "VERIFY",
+      "importance": "MINOR",
+      "reason": "Independent source-grounded pass; finding records what the Lead Reader should preserve or qualify.",
+      "cross_cutting_checks": {
+        "anomaly": null,
+        "counterfactual": null
+      }
+    }
+  ]
+}

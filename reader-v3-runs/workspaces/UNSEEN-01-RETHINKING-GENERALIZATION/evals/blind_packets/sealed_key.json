@@ -1,0 +1,13 @@
+{
+  "paper_id": "UNSEEN-01-RETHINKING-GENERALIZATION",
+  "eval1": {
+    "REPORT_X": "Condition_B_Evidentia_Reader_v3",
+    "REPORT_Y": "Condition_A_Direct_Gemini",
+    "packet_sha256": "22d9b6edf101c781711f20b157013a15dde07a824e75872b767477c6272e0347"
+  },
+  "eval2": {
+    "REPORT_X": "Condition_A_Direct_Gemini",
+    "REPORT_Y": "Condition_B_Evidentia_Reader_v3",
+    "packet_sha256": "70793fc9f67ffd032ee268ce52d33f28f9d82cec29092cad21c63feb18916076"
+  }
+}

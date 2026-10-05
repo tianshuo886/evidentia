@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0",
+  "lens": "evidence_results",
+  "lens_kind": "core",
+  "source_sha256": "a71f1294a021cebc6939ec977fc073b6d7b4f183950eba761ec55364d30b729f",
+  "base_sha256": "55607fb18f8b13e0e8b2bb7953642a6a3211b4964e4badfbbe0a2b1808d3ac88",
+  "summary": "实证数据无可辩驳：CIFAR-10与ImageNet上所有标准架构均能拟合随机标签至0训练误差；损失衰减步数仅常数倍增加；显式正则化剥离后测试准确率降幅极小（89%降至86%），而随机标签下依然100%记忆。",
+  "findings": [
+    {
+      "id": "ER1",
+      "statement": "Figure 1 与 Table 1 确立了标签完全随机时训练精度 100% 而测试精度 10% 的决定性实证事实。",
+      "evidence": [
+        "F01",
+        "T01",
+        "p.4",
+        "p.6"
+      ],
+      "epistemic": "SUPPORTED",
+      "action": "KEEP",
+      "importance": "CRITICAL",
+      "reason": "核心实证基石。",
+      "cross_cutting_checks": {
+        "anomaly": null,
+        "counterfactual": null
+      }
+    },
+    {
+      "id": "ER2",
+      "statement": "Table 2 证明在 ImageNet 百万级样本与千分类上，Inception v3 依然达到 91.18% top-1 / 97.90% top-5 训练精度，排除小样本特例假说。",
+      "evidence": [
+        "T02",
+        "p.13"
+      ],
+      "epistemic": "SUPPORTED",
+      "action": "EXPAND",
+      "importance": "MAJOR",
+      "reason": "大尺度工业级数据集验证。",
+      "cross_cutting_checks": {
+        "anomaly": null,
+        "counterfactual": null
+      }
+    }
+  ]
+}

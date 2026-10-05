@@ -1,0 +1,56 @@
+{
+  "task_id": "TASK-V3-VISUAL-P004",
+  "execution_kind": "HOST_AGENT",
+  "executor": {
+    "kind": "HOST_AGENT",
+    "host": "pi-parent-direct",
+    "host_version": "UNKNOWN",
+    "provider": "openai-codex",
+    "model": "gpt-6.1-sol",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "high",
+    "tool_profile": "paper-only"
+  },
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "input_hashes": {
+    "source/paper.pdf": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+    "task": "818121d062c5d5fa3d1e0b75207d577be16e49bbb76c0632fd86a5342e93d97c"
+  },
+  "result": {
+    "schema_version": "1.0",
+    "source_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+    "page": 4,
+    "bindings": [
+      {
+        "evidence_id": "F02",
+        "kind": "figure",
+        "bbox_norm": [
+          0.17,
+          0.085,
+          0.835,
+          0.385
+        ],
+        "panel_bboxes_norm": [
+          [
+            0.235,
+            0.09,
+            0.425,
+            0.31
+          ],
+          [
+            0.55,
+            0.09,
+            0.77,
+            0.315
+          ]
+        ],
+        "status": "VERIFIED",
+        "complete": true,
+        "caption_match": true,
+        "confidence": 0.99,
+        "notes": "Full-page inspection confirms both labeled panels: Scaled Dot-Product Attention at left and Multi-Head Attention at right, including titles, operators, arrows, Q/K/V labels, and the caption."
+      }
+    ]
+  }
+}

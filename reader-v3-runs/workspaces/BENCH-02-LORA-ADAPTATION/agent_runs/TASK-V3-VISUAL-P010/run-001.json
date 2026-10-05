@@ -1,0 +1,62 @@
+{
+  "task_id": "TASK-V3-VISUAL-P010",
+  "execution_kind": "HOST_AGENT",
+  "executor": {
+    "kind": "HOST_AGENT",
+    "host": "pi",
+    "host_version": "UNKNOWN",
+    "provider": "openai-codex",
+    "model": "gpt-6-sol",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "high",
+    "tool_profile": "paper-only",
+    "started_at": "2026-10-04T03:00:00+00:00",
+    "completed_at": "2026-10-04T03:00:00+00:00"
+  },
+  "started_at": "2026-10-04T03:00:00+00:00",
+  "completed_at": "2026-10-04T03:00:00+00:00",
+  "input_hashes": {
+    "source/paper.pdf": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+    "source_pages/page-010.png": "3cd37c23c696d78e304588eebbb07a5f5d9ba63437df56202768f02d0a70e4b3",
+    "model/figure_inventory.json": "75a2c38fb10537e2939e3f85c339309fedd862dc7781f797bffbbdaf49d69afa"
+  },
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "result": {
+    "schema_version": "1.0",
+    "source_sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+    "page": 10,
+    "bindings": [
+      {
+        "evidence_id": "T05",
+        "kind": "table",
+        "bbox_norm": [
+          0.16830050399880003,
+          0.47465777156328914,
+          0.6692240596596711,
+          0.8828952673709753
+        ],
+        "status": "VERIFIED",
+        "complete": true,
+        "caption_match": true,
+        "confidence": 0.9,
+        "notes": "Full-page visual inspection confirmed complete semantic region and caption match; overlapping geometry candidate corrected where needed."
+      },
+      {
+        "evidence_id": "T06",
+        "kind": "table",
+        "bbox_norm": [
+          0.16830050399880003,
+          0.8007518113261521,
+          0.6548685809366064,
+          0.9686326306275647
+        ],
+        "status": "VERIFIED",
+        "complete": true,
+        "caption_match": true,
+        "confidence": 0.9,
+        "notes": "Full-page visual inspection confirmed complete semantic region and caption match; overlapping geometry candidate corrected where needed."
+      }
+    ]
+  }
+}

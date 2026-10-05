@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "paper_id": "BENCH-01-VASWANI-ATTENTION",
+  "source_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+  "dimensions": [
+    {"name":"narrative_clarity","direct_ai":4.0,"evidentia_v3":4.0,"evidence_note":"Both reports explain the motivation and architecture coherently. Reader v3 adds a paper-specific progression and local visual blocks; Direct-AI is shorter and more immediately linear."},
+    {"name":"scientific_completeness","direct_ai":3.5,"evidentia_v3":4.5,"evidence_note":"Reader v3 explicitly separates Tables 1-4, ablation sensitivity, parsing transfer, and qualitative appendix boundaries; Direct-AI covers these but with less local evidence detail."},
+    {"name":"method_explanation","direct_ai":4.0,"evidentia_v3":4.5,"evidence_note":"Both explain scaled dot-product, multi-head attention, masking and positional encoding. Reader v3 binds the explanation to Figure 1 and Figure 2 and states the encoder/decoder asymmetry."},
+    {"name":"experiment_result_understanding","direct_ai":4.0,"evidentia_v3":4.5,"evidence_note":"Reader v3 preserves base/big and En-De/En-Fr distinctions, FLOP caveats, ablations and parsing comparator limits; Direct-AI reports the main numbers accurately but more compactly."},
+    {"name":"figure_table_correctness","direct_ai":2.5,"evidentia_v3":4.5,"evidence_note":"Direct-AI mentions the tables and visualizations but does not reconstruct their visual organization. Reader v3 binds all material figures/tables to verified page-localized assets and identifies the duplicate T02-p8 candidate as rejected."},
+    {"name":"conclusion_calibration","direct_ai":4.0,"evidentia_v3":4.5,"evidence_note":"Both avoid claiming universal replacement. Reader v3 makes asymptotic, FLOP-estimate, parsing and qualitative-interpretability limits explicit in the conclusion path."},
+    {"name":"boundary_coverage","direct_ai":3.5,"evidentia_v3":4.5,"evidence_note":"Reader v3 gives dedicated boundary prose for quadratic cost, selected comparisons, no repeated-seed uncertainty, and qualitative attention evidence."},
+    {"name":"critical_insight","direct_ai":3.5,"evidentia_v3":4.0,"evidence_note":"Reader v3's strongest added insight is that the result is a configuration-and-protocol package, not attention alone; Direct-AI states the same idea but less forcefully."},
+    {"name":"unsupported_prose","direct_ai":4.0,"evidentia_v3":4.0,"evidence_note":"Neither report contains a major unsupported scientific claim. Reader v3 has more prose and therefore more surface area, but its visible claims are source-bound."},
+    {"name":"provenance_usefulness","direct_ai":2.0,"evidentia_v3":5.0,"evidence_note":"Reader v3 provides source SHA, page-localized visual bindings, task/envelope records and an Evidence Atlas. Direct-AI records source identity but has no page-level evidence graph."},
+    {"name":"overall_understandability","direct_ai":4.0,"evidentia_v3":4.5,"evidence_note":"Both make the paper understandable. Reader v3 is more useful for source-assisted audit and visual inspection; Direct-AI has a lower cognitive overhead for a quick first read."}
+  ],
+  "qualitative_notes": "PRE_ANTITEMPLATE_SMOKE diagnostic only. Reader v3 adds concrete value in source/page provenance, figure/table localization, explicit asymptotic-versus-measured distinctions, and boundary analysis. It is worse where the generated Reader is longer, more visually dense, and inherits renderer/CJK typography and sparse-page defects. The pair is not a blinded human study and the continuation direct baseline is newly generated because the historical cloud baseline was unavailable.",
+  "release_blockers": [
+    "Historical cloud Lead Reader and Direct-AI artifacts are unavailable; continuation outputs cannot be used as historical-run evidence.",
+    "Lens execution used parent-direct sequential role passes after the context-isolated worker harness failed; context isolation is not independently verified.",
+    "Kami reports Songti-SC CJK fallback and sparse pages 11-13; visual QA requires human review of every rendered page.",
+    "No human blind evaluation or repeated-seed quality study was performed."
+  ]
+}

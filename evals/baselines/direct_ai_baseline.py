@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
-"""Direct Strong-Model + Kami Presentation Baseline (Condition A_Direct_AI).
+"""SYNTHETIC UNIT-TEST FIXTURE — NOT an empirical Direct-AI benchmark.
 
-Simulates giving a paper PDF directly to a strong frontier AI model,
+This module simulates the shape of a direct-reading baseline for deterministic
+tests only. It MUST NOT be used to claim that Evidentia matches or outperforms a
+real strong model reading a real PDF. Reader v3 empirical comparisons are created
+by scripts/reader_v3_benchmark.py.
+
+Historically this fixture simulated giving a paper PDF directly to a strong model,
 which outputs a single-pass reading report with Kami-styled presentation.
 
 Characteristics:

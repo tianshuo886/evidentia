@@ -1,0 +1,200 @@
+{
+  "task_id": "TASK-V3-LEAD-READING",
+  "execution_kind": "HOST_AGENT",
+  "executor": {
+    "kind": "HOST_AGENT",
+    "host": "pi",
+    "host_version": "frozen-v3",
+    "provider": "magpie",
+    "model": "antigravity/gemini-3.8-flash",
+    "model_version": "canonical-high",
+    "reasoning_profile": "high",
+    "tool_profile": "paper-only",
+    "started_at": "2026-10-05T14:34:10.475623+00:00",
+    "completed_at": "2026-10-05T14:34:10.475623+00:00"
+  },
+  "started_at": "2026-10-05T14:34:10.475623+00:00",
+  "completed_at": "2026-10-05T14:34:10.475623+00:00",
+  "input_hashes": {
+    "source/paper.pdf": "a71f1294a021cebc6939ec977fc073b6d7b4f183950eba761ec55364d30b729f",
+    "model/source_map.json": "bf5eb0b57e24a063e2fa70562b14b36f11abc624ed90315be8466cd666609f02",
+    "model/figure_inventory.json": "5c4570ac709a954a7b0804b9781465810ff911debaa98aeddac636d91ba0c4e3"
+  },
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "result": {
+    "schema_version": "1.0",
+    "paper_id": "UNSEEN-01-RETHINKING-GENERALIZATION",
+    "source_sha256": "a71f1294a021cebc6939ec977fc073b6d7b4f183950eba761ec55364d30b729f",
+    "paper_type": "theoretical_and_empirical_learning_theory",
+    "paper_characterization": "一篇通过随机化反事实经验检验发现现代过参数化深度网络可轻易拟合随机标签与纯噪声，并结合有限样本容量构造定理，从根本上系统证伪经典统计学习理论（VC维、Rademacher复杂度、一致稳定性）对深度学习泛化解释力的里程碑式理论反思论文。",
+    "argument_topology": {
+      "nodes": [
+        {
+          "id": "N01",
+          "role": "paradox_problem",
+          "label": "经典泛化理论与现代过参数化网络的认知脱节",
+          "statement": "过参数化深度网络参数量远超样本量却具备极佳泛化能力，经典基于容量控制的理论无法合理解释这一现象。",
+          "grounding": [
+            "p.1",
+            "p.2"
+          ]
+        },
+        {
+          "id": "N02",
+          "role": "experimental_falsification",
+          "label": "随机化检验与标签/像素噪声拟合",
+          "statement": "标准卷积网络（Inception, AlexNet）和MLP在完全随机赋予的标签或高斯噪声像素上依然能无阻碍达到0训练误差，且收敛时间仅常数级减缓。",
+          "grounding": [
+            "F01",
+            "T01",
+            "T02",
+            "p.4",
+            "p.6",
+            "p.13"
+          ]
+        },
+        {
+          "id": "N03",
+          "role": "empirical_disproof",
+          "label": "显式正则化的非必要性证伪",
+          "statement": "权重衰减、Dropout和数据增强等显式正则项对泛化具有调优作用，但既非泛化控制的必要条件，也非充分条件。",
+          "grounding": [
+            "F02",
+            "T01",
+            "T04",
+            "p.6",
+            "p.7",
+            "p.14"
+          ]
+        },
+        {
+          "id": "N04",
+          "role": "constructive_theorem",
+          "label": "有限样本表达力定理（定理1）",
+          "statement": "存在深度为2且仅含 p = 2n + d 个参数的简单ReLU网络，可完美表达任意 n 个点在 d 维空间中的任意离散标签分配。",
+          "grounding": [
+            "p.8",
+            "p.9"
+          ]
+        },
+        {
+          "id": "N05",
+          "role": "theoretical_implication",
+          "label": "传统复杂度界与一致收敛框架的失效",
+          "statement": "由于网络能拟合随机标记，其经验Rademacher复杂度接近1，导致VC维、Rademacher界与一致稳定性无法区分有效泛化与纯记忆网络。",
+          "grounding": [
+            "p.9",
+            "p.10",
+            "T03",
+            "p.14"
+          ]
+        },
+        {
+          "id": "N06",
+          "role": "synthesis_and_boundary",
+          "label": "隐式正则化指向与理论边界",
+          "statement": "泛化机理必然源自SGD优化轨迹和模型参数化带来的隐式正则化，但论文并未给出其精确解析形式，留下深度学习泛化的核心未决问题。",
+          "grounding": [
+            "p.10",
+            "p.11"
+          ]
+        }
+      ],
+      "relations": [
+        {
+          "from": "N01",
+          "to": "N02",
+          "kind": "tested_by",
+          "evidence": [
+            "p.2",
+            "F01"
+          ]
+        },
+        {
+          "from": "N02",
+          "to": "N03",
+          "kind": "refined_by",
+          "evidence": [
+            "F02",
+            "T01"
+          ]
+        },
+        {
+          "from": "N02",
+          "to": "N04",
+          "kind": "theoretically_substantiated_by",
+          "evidence": [
+            "p.8"
+          ]
+        },
+        {
+          "from": "N02",
+          "to": "N05",
+          "kind": "disproves_classical_theory",
+          "evidence": [
+            "p.9",
+            "p.10"
+          ]
+        },
+        {
+          "from": "N04",
+          "to": "N05",
+          "kind": "establishes_capacity_bound",
+          "evidence": [
+            "p.8",
+            "p.9"
+          ]
+        },
+        {
+          "from": "N05",
+          "to": "N06",
+          "kind": "points_to_open_challenge",
+          "evidence": [
+            "p.10",
+            "p.11"
+          ]
+        }
+      ]
+    },
+    "narrative_draft": "本研究彻底重塑了学术界对深度学习泛化能力的认知。作者并没有将过拟合视为非凸优化的失败，而是利用非参数统计中的随机化测试，直接展示了过参数化网络不可思议的记忆容量：标准CNN在真实图像被赋予完全随机标签时，依然能在常数倍时间内达到0训练误差，但测试误差完全等同于随机猜测（F01, T01, T02）。这一经验事实直接推翻了“深度网络因为容量受限或非凸优化困难而无法过拟合”的传统假设。\n\n为了排除这是复杂启发式网络的偶发现象，作者给出了构造性定理（定理1）：一个仅含 2n + d 个参数的双层 ReLU 网络就足以精确插值任意 n 个样本的离散标签。这从数学上确立了现代网络具备容纳任意大数据的本征能力。\n\n在正则化方面，作者通过消融实验证实（F02, T01），移除所有显式正则化项（Dropout、Weight Decay、数据增强）后，模型依然能够维持极佳的泛化水准，表明显式正则项只是性能调节器而非根本因果源。最终，论文从数理逻辑上闭环证明：由于经验 Rademacher 复杂度接近 1，所有基于假设空间最坏情况覆盖的传统复杂度界（VC维、Rademacher、一致稳定性）在此全部失效，泛化的真正秘密必然深藏于优化算法与数据几何的隐式协同之中。",
+    "decisive_evidence": [
+      {
+        "evidence_id": "F01",
+        "statement": "Figure 1 展示了无论面对真实标签、随机标签还是高斯白噪声像素，CNN 的训练损失均能平滑收敛至 0，且标签破坏率与测试误差呈单调线性关系，收敛时间仅常数级延长。",
+        "grounding": [
+          "p.4",
+          "F01"
+        ]
+      },
+      {
+        "evidence_id": "T01",
+        "statement": "Table 1 证明在 CIFAR-10 上即使完全关闭权重衰减与数据增强，Inception 依然达到 86% 测试准确率；而在随机标签下仍达到 100% 训练精度。",
+        "grounding": [
+          "p.6",
+          "T01"
+        ]
+      },
+      {
+        "evidence_id": "p.8",
+        "statement": "Section 3 定理 1 构造了参数量为 2n + d 的双层 ReLU 网络对任意 n 个样本点的精确插值证明，确立了有限样本表达力下界。",
+        "grounding": [
+          "p.8",
+          "p.9"
+        ]
+      }
+    ],
+    "uncertainties_and_open_issues": [
+      {
+        "issue": "隐式正则化缺乏精确闭式度量",
+        "description": "论文指认随机梯度下降（SGD）本身提供了某种未被刻画的隐式正则化，但未能给出定量的数学泛化界。",
+        "epistemic_status": "OPEN_RESEARCH_FRONTIER"
+      },
+      {
+        "issue": "自然图像流形对优化的加速机制",
+        "description": "真实图像训练速度快于随机像素的事实表明数据流形参与了优化导引，但二者如何解耦尚未完全厘清。",
+        "epistemic_status": "EMPIRICALLY_DEMONSTRATED_BUT_THEORETICALLY_OPEN"
+      }
+    ]
+  }
+}

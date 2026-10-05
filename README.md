@@ -4,263 +4,141 @@
 
 ## Evidence-Grounded Paper Research OS
 
-Evidentia is a single-paper research system for turning a supplied PDF into a durable, inspectable research object. It reconstructs the paper’s evidence surface, reads it from six independent perspectives, freezes the paper facts, renders a unified reader, and optionally maps the paper into a project without mutating the original understanding.
+Evidentia is a single-paper scientific research operating system for turning a supplied research PDF into an auditable, durable, deeply reasoned research object. It reconstructs the paper's multi-modal evidence surface, reads it through 4 Core + 2 Adaptive Specialist Lenses, reconciles findings through an Editorial Revision Memo, structures the narrative with a dynamic paper-specific plan, authors a publication-grade Chinese Academic Reader via a strong model, and renders it through Kami's presentation backend alongside an interactive Evidence Atlas.
 
-The repository contains the reusable skill only. It does not contain a particular paper, benchmark article, or project.
+The repository contains the reusable agent skill and research harness. It is validated against real-world, peer-reviewed scientific papers.
 
-## Why Evidentia exists
+---
 
-Normal paper summaries lose the parts that matter for research work:
+## Why Evidentia Exists
 
-- figures become prose and their original evidence disappears;
-- conclusions are detached from the figures, tables and experiments that support them;
-- the reader follows the paper’s narrative without testing its weak links or alternatives;
-- project goals bias the first reading and make the paper appear to confirm existing plans;
-- later review starts from chat history instead of a stable, machine-readable object;
-- fixed templates encourage chapter-by-chapter paraphrase and miss anomalies, negative results and reusable technical components.
+Conventional AI paper reading suffers from fundamental failure modes that make summaries unreliable for research decisions:
 
-Evidentia addresses these problems with a frozen Paper Model, typed Evidence Graph, source reconstruction, six independent Lens rereads, a unified Paper/Project Reader and a provenance-linked Research Delta.
+- **Evidence Erasure:** Figures and tables are flattened into brief prose; their quantitative backing disappears.
+- **Rhetorical Parroting:** Language models follow the author's narrative unquestioningly, missing unstated assumptions, weak controls, and alternative explanations.
+- **Template Imposition:** Enforcing rigid IMRaD templates forces theory, metrology, survey, and empirical papers into identical cookie-cutter molds, destroying their unique argumentative logic.
+- **Premature Project Bias:** Feeding project goals into the first reading biases the model to see what the researcher wants to see, confirming existing hypotheses rather than faithfully understanding the paper.
+- **Epistemic Collapse:** Disagreements, anomalies, and uncertainties are averaged away into smooth but uncalibrated statements.
 
-## Core architecture
+Evidentia solves these challenges with an architecture founded on three core tenets:
 
-> **Target Architecture**: The workflow diagram below illustrates Evidentia's complete target architecture. Evidentia Standard Mode operates host-agnostically on a single compatible model/host across source reconstruction, baseline lock, six independent lenses, semantic reconciliation, evidence verification, immutable freeze, and reader generation. Multi-Model Ensemble Mode is an optional multi-model extension layer on top of Standard Mode.
+> **Paper decides the story. Evidentia enforces rigor. Kami presents the story.**
 
-![Evidentia workflow overview (Target Architecture)](docs/workflow-overview.png)
+---
+
+## Canonical Reader v3 Architecture
 
 ```text
 paper.pdf
    ↓
-page-first source reconstruction (source_pages/ + clean crops, bound to SOURCE_SHA256)
+Page-First Multimodal Source Reconstruction (Full Text + Rasterized Pages + Clean Crops, bound to source_sha256)
    ↓
-   ├── Evidence Structure Track (Claims, O/I/A, Figures, Tables, Evidence Graph)
-   └── Argument Reconstruction Track (model/argument_reconstruction.json, Author vs Assessed Argument, Evidence Promotion)
+Deterministic Source Lock & Semantic Visual Verification (apply_visual_verification.py)
    ↓
-Open Reading draft (project invisible) → Baseline Lock
+Lead Reader Pass (Strong Model: Paper Characterization, Open Argument Topology, Specialist Lens Plan)
    ↓
-Six independent Lenses (Author / Reviewer / Mechanism / Builder / Anomaly / Counterfactual)
-(bound to source_sha256 + base_model_sha256)
+4 Universal Core + 2 Adaptive Specialist Lenses (Independent Context-Isolated Execution, Zero Crosstalk)
    ↓
-cross-lens semantic reconciliation (conflicts recorded without majority voting)
+Editorial Revision Memo (Structured Revisions: ADD, REWRITE, CORRECT, QUALIFY; Zero Majority Voting)
    ↓
-dynamic cross-lens scientific synthesis (model/scientific_synthesis.json, argument-aware)
+Dynamic Narrative Plan (Custom Section Architecture & Structural Diversity, Strictly Anti-Template)
    ↓
-evidence verification (fail-closed verifier)
+Lead Writer (Strong Model: Publication-Grade Chinese Academic Manuscript conforming to narrative_manuscript schema)
    ↓
-Final Paper Model + Evidence Graph
+Integrity & Anti-Template Validation (Fail-Closed Asset Verification, Citation Grounding, Structure Diversity)
    ↓
-freeze + SHA-256 integrity gate (fail closed on any SHA mismatch)
+Kami Presentation Transformation (Typography, Spacing, Visual Hierarchy, Vector PDF Export)
    ↓
-Chinese-first Paper Reader (HTML + MD + PDF, 7-layer hierarchy, renderer purity enforced)
+Publication-Grade Paper Reader (HTML + Markdown + Print PDF) & Secondary Evidence Atlas (evidence_atlas.html)
    ↓
-PAPER_COMPLETE (Default run stops here)
+PAPER_COMPLETE (Canonical reading stops here)
 
-[Explicit user intent only]
+[Explicit User Intent Only]
    ↓
-contextual apply to one project (/evidentia-apply)
+Contextual Apply (/evidentia-apply) → Project-Specific Reader & Research Delta (apply/<project>/)
    ↓
-separate Project Reader + Research Delta (apply/<project>/)
-   ↓
-optional Frozen Research Memory (objects/ + memory.sqlite)
+Optional Frozen Research Memory (/evidentia-memory)
 ```
 
-The Paper Model is canonical truth. Renderers, Kami-compatible presentation and project analysis are downstream adapters.
+---
 
-## Installation
+## Formal Issue #19 Benchmark Validation
 
-### Requirements
+Evidentia Reader v3 is frozen and proven on real scientific papers under **GitHub Issue #19**:
 
-- Python 3.9+ (tested on Python 3.9.6 and 3.10+)
-- PyMuPDF (figure/table extraction)
-- jsonschema (schema + freeze gates)
-- pytest (run the gates)
-- WeasyPrint: required for the PDF snapshot, which the Kami visual QA needs; HTML-only reading works without it.
-- Kami (required): Evidentia's presentation + visual QA backend — typography, MathJax, PDF rendering, and the orphan/density/font/visual checks run through Kami's `build.py`. Evidentia owns the Reader information architecture; Kami never defines the science. Without Kami, `kami_adapter.py` fails and the Reader ships without visual QA.
+- **Frozen Commit:** `4139ca7b0b1ae72c0930801df5e50653b59a7e92`
+- **Canonical Model:** `antigravity/gemini-3.8-flash [magpie]` (High Reasoning Profile)
+- **Primary 6-Paper Corpus:**
+  1. `BENCH-01`: *Attention Is All You Need* (Foundational ML Architecture)
+  2. `BENCH-02`: *LoRA: Low-Rank Adaptation of Large Language Models* (PEFT / Systems)
+  3. `BENCH-03`: *A high-resolution canopy height model of the Earth* (Remote Sensing & Geospatial)
+  4. `BENCH-04`: *Highly accurate protein structure prediction with AlphaFold* (Biophysics & Geometric DL)
+  5. `BENCH-05`: *Quantum supremacy using a programmable superconducting processor* (Quantum Metrology)
+  6. `UNSEEN-01`: *Understanding deep learning requires rethinking generalization* (Mandatory Post-Freeze Unseen Paper)
+- **Benchmark Outcome:** **`ISSUE19_RELEASE_GATE = PASS`**
+  - **Zero Core Regressions:** 0 losses across 18 core evaluation trials against Direct Gemini.
+  - **Unseen Paper Robustness:** Successfully discovered the theorem/falsification logic of UNSEEN-01 without template collapse.
+  - **Proven Added Value:** 6/6 Wins on Figure/Table Correctness and 6/6 Wins on Provenance/Auditability.
+  - Complete report: [`ISSUE19_FORMAL_AB_BENCHMARK_REPORT.md`](ISSUE19_FORMAL_AB_BENCHMARK_REPORT.md)
 
-### Install
+---
+
+## Core Principles
+
+1. **Faithful Reading First, Transfer Second:**
+   The default intent is always `PAPER_READING`. Project context, application proposals, and codebases are strictly invisible during paper reading. Project transfer is invoked only via explicit `/evidentia-apply`.
+2. **Universal Core + Adaptive Specialist Lenses:**
+   Every paper receives the 4 Universal Core lenses:
+   - **Argument & Narrative:** How the paper constructs its case and links claims to evidence.
+   - **Method & Study Design:** Mathematical formulation, algorithm logic, and study architecture.
+   - **Evidence & Results:** Quantitative benchmarks, baselines, and ablation margins.
+   - **Validity & Boundary:** Underlying assumptions, counterfactual explanations, and epistemic limits.
+   Two additional specialist lenses (e.g. Mechanism & Causality, Proof Integrity, Measurement Integrity, Reproducibility) are dynamically selected according to the paper's characterization.
+3. **Context Isolation with Cryptographic Proofs:**
+   Each lens runs in an isolated input boundary (`provenance/lens/<task_id>`) with its own execution receipt. Sibling lenses cannot see each other's outputs or vote.
+4. **Editorial Revision Memo:**
+   Replaces lossy voting with an editor who reconciles lens findings into clear directives (Keep, Expand, Correct, Qualify, Boundary Actions) while preserving genuine scientific tensions and anomalies.
+5. **Anti-Template Dynamic Narrative Plan:**
+   Different papers have fundamentally different argument topologies. The Lead Writer follows a custom section plan designed specifically for the paper.
+6. **Kami Presentation-Only Boundary:**
+   Kami handles visual styling, typography, page composition, and PDF vector rendering. Kami never invents claims, alters section order, or modifies scientific conclusions.
+
+---
+
+## Quick Start
+
+### 1. Read a Paper
 
 ```bash
-git clone https://github.com/tianshuo886/evidentia.git
-cd evidentia
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
+# Automated canonical reading with active host agent:
+python scripts/evidentia.py run --pdf /path/to/paper.pdf --out workspace/
+
+# Run via DOI or arXiv ID (auto-acquisition):
+python scripts/evidentia.py run --doi 10.48550/arXiv.2106.09685 --out workspace/
 ```
 
-#### Kami setup (required)
-
-Evidentia calls Kami's `build.py` for the Reader visual QA. Point `KAMI_ROOT` at either a full Kami checkout or your installed kami skill:
+### 2. Inspect Progress & Submit Tasks
 
 ```bash
-# Option A: you already have the /kami skill installed
-export KAMI_ROOT=~/.agents/skills/kami
+# Check current Reader v3 status:
+python scripts/evidentia.py status --out workspace/
 
-# Option B: clone the full Kami repo (tested with v1.16.0)
-git clone https://github.com/tw93/Kami.git
-export KAMI_ROOT=/path/to/Kami
+# Identify next active task packet:
+python scripts/evidentia.py next --out workspace/
+
+# Submit agent execution result:
+python scripts/evidentia.py submit --out workspace/ --task TASK-V3-LEAD-READING --result result.json
 ```
 
-Verify Kami can render and check on your machine:
+### 3. Apply to a Project (Explicit Request Only)
 
 ```bash
-python "$KAMI_ROOT/skills/kami/scripts/build.py" --doctor
-# if KAMI_ROOT points at the installed skill dir instead:
-# python "$KAMI_ROOT/scripts/build.py" --doctor
+python scripts/pipeline.py apply --paper workspace/ --project my_project.md
+python scripts/validate_delta.py --paper workspace/ --delta workspace/apply/my_project/research_delta.json
 ```
 
-Windows PowerShell:
+---
 
-```powershell
-python -m venv .venv
-.venv\\Scripts\\Activate.ps1
-pip install -r requirements.txt
-```
+## License
 
-## Basic use
-
-### 1. Start a source-only read
-
-```bash
-python scripts/pipeline.py read \\
-  --pdf /path/to/paper.pdf \\
-  --out /path/to/paper-output
-```
-
-With supplements:
-
-```bash
-python scripts/pipeline.py read \\
-  --pdf paper.pdf \\
-  --supplement supplement.pdf \\
-  --out paper-output
-```
-
-This creates the isolated `working/` bundle, copies the source PDF, extracts the Figure/Table inventory, and builds the source map. It does not load any project context.
-
-### 2. Snapshot the Open Reading baseline, then build the six Lens task packets
-
-```bash
-# after populating model/paper_model.json as the Open Reading draft:
-python scripts/snapshot_baseline.py --out paper-output
-python scripts/lens_runner.py --out paper-output
-```
-
-Run the six packets independently against the source PDF and frozen baseline model. Write the six corresponding files under `paper-output/lens/`. Every lens output must carry the same `source_sha256` and `base_sha256` — `check_lenses.py` refuses wrong-paper or stale-baseline lenses.
-
-### 3. Validate and freeze
-
-```bash
-python scripts/check_lenses.py --out paper-output
-python scripts/merge_lenses.py --out paper-output
-python scripts/build_graph.py --out paper-output
-python scripts/validate_model.py --out paper-output
-python scripts/freeze_check.py --out paper-output
-```
-
-A freeze fails on missing Lens files, dangling IDs, uninspected Figures/Tables, missing critical assets, invalid coverage declarations, unsupported claims, source/base SHA mismatch, missing baseline snapshot, reconciliation provenance loss, or invalid figure binding.
-
-### 4. Render and audit the Reader
-
-```bash
-python scripts/render_reader.py --out paper-output
-python scripts/reader_audit.py --out paper-output
-python scripts/reader_acceptance.py --out paper-output
-```
-
-The Reader is one coherent Chinese-first paper narrative: question → method → experiments → evidence assessment → conclusion and boundaries. Evidence Atlas is an audit appendix, not a prerequisite for understanding the paper. HTML, Markdown, and PDF are rendered from the same semantic manuscript. The default `PAPER_READING` intent has no project-transfer or reuse chapter; request `--intent PAPER_TECHNICAL_EXTRACTION` explicitly for paper-scoped technical extraction. Project application remains an explicit Apply operation and never mutates the frozen Paper Reader.
-
-> **Permanent Design Rule: First understand the paper on its own terms. Only transfer it when the user asks. Relevance is not permission.** During paper reading, the input firewall physically isolates `apply/`, `project/`, and project memory. Evidentia never infers project transfer from relevance alone.
-
-### 4b. Kami visual QA (required for a shippable Reader)
-
-Evidentia's own `reader_audit.py` checks content links (claims/figures/tables present, no placeholders, assets exist). It does not check visual quality. That is Kami's job — `kami_adapter.py` runs Kami's orphan/density/font/visual checks against `reader/reader.pdf` and writes `reader/kami_audit.json`:
-
-```bash
-export KAMI_ROOT=~/.agents/skills/kami   # or /path/to/Kami
-python scripts/kami_adapter.py --out paper-output --kami-root "$KAMI_ROOT"
-```
-
-The adapter refuses to run without `KAMI_ROOT` and fails if `reader/reader.pdf` is missing, so the PDF snapshot (hence WeasyPrint) is required at this stage. A Reader without `kami_audit.json` status OK is draft-only, not shippable. `reader_acceptance.py` additionally requires the semantic story spine, Lens/Atlas invisibility in the main body, local figure/table bindings, formula safety, intent isolation, and HTML/Markdown/PDF parity. After the machine checks pass, still open the page images and confirm figure clarity, caption binding, page breaks, math, and the Paper/Project visual distinction by eye.
-
-### 5. Apply the frozen paper to a project
-
-```bash
-python scripts/pipeline.py apply \\
-  --paper paper-output \\
-  --project /path/to/project.md \\
-  --focus "water-vapor reconstruction"
-```
-
-Apply first verifies the frozen hashes and copies exactly one project document into `apply/<project>/`. Complete the contextual reread there, fill `project_context.json` and `research_delta.json`, then validate:
-
-```bash
-python scripts/validate_delta.py \\
-  --paper paper-output \\
-  --delta paper-output/apply/project/research_delta.json
-```
-
-A valid Research Delta may change a belief, expose an unknown, transfer a component, invalidate an experiment, propose an experiment with decision value, or explicitly conclude `NO_NEW_ACTIONABLE_EXPERIMENT`.
-
-## Output objects
-
-| Object | Purpose |
-|---|---|
-| `paper_model.json` | Final reconciled facts and epistemic states |
-| `open_reading_model.json` | Immutable lens baseline snapshot |
-| `open_reading_manifest.json` | Baseline hashes + contract/prompt versions |
-| `lens_reconciliation.json` | Converged findings with supporting_lenses + recorded conflicts |
-| `evidence_graph.json` | Typed links between claims, observations, figures, tables and experiments |
-| `source_map.json` | Page, section, equation and in-text mention provenance |
-| `lens/*.json` | Six independent reread outputs |
-| `manifest.json` | Freeze status and SHA-256 hashes |
-| `reader/reader.html` | Primary human reading surface (Evidence Atlas) |
-| `research_delta.json` | Project-specific consequences kept separate from paper facts |
-| `Frozen Research Memory` | Durable cross-paper knowledge layer with typed relations and experiment outcomes (`objects/` + `memory.sqlite`) |
-
-## Design principles
-
-- **Open Reading before project projection:** project context changes what to inspect later, not what the paper says.
-- **Natural structure before schema:** recover the paper’s argument before filling fields.
-- **Figure-first evidence:** every Figure and Table is inventoried and inspected.
-- **Observation / interpretation / assessment separation:** data, author explanation and reader judgment remain distinct.
-- **Independent Lens passes:** six rereads cannot be replaced by one blended summary.
-- **Freeze before Apply:** project analysis cannot silently edit paper facts.
-- **Kami as presentation:** display tooling cannot define the paper’s information architecture.
-- **Uncertainty is legitimate:** the system preserves unresolved and insufficient evidence states.
-
-## Use cases
-
-- Deep reading of a method paper before adapting its protocol.
-- Auditing whether a paper’s strongest claim is actually supported by its figures and experiments.
-- Finding reusable losses, diagnostics, ablations, sampling strategies and failure modes.
-- Comparing a paper’s evidence with a project’s explicit research gaps.
-- Deciding whether a planned experiment should be transferred, adapted, deprioritized or rejected.
-- Building a durable, searchable memory of papers without relying on chat history.
-
-## Security and isolation
-
-Open Reading receives only the paper bundle and skill resources. Project repositories, plans, chats, memory and connectors are outside its input boundary. Apply is a separate phase and starts only after the Paper Model is frozen and hash-verified.
-
-## P0 Contract Audit
-
-The repository publishes a conservative capability matrix. Run `python scripts/contract_audit.py --out .` to compare documented capabilities with schemas, scripts and tests. See [`references/contract-audit.md`](references/contract-audit.md).
-
-## Tests
-
-```bash
-pytest -q
-```
-
-The tests include negative cases for dangling evidence, missing Lens files, missing critical assets and tampered frozen models.
-
-## Naming
-
-The repository is `evidentia`. The Skill name is **Evidentia** and the descriptor is **Evidence-Grounded Paper Research OS**. The old `paper-read` URL redirects to the new location.
-
-
-## Kami integration (required backend, not optional)
-
-Evidentia owns the Reader information architecture (Paper Model, Evidence Graph, natural structure, Lens rereads, Delta, `render_ir.json`, `reader.html`). Kami owns presentation and visual QA: typography, MathJax, PDF rendering, and the orphan/density/font/visual checks invoked via `scripts/kami_adapter.py` → Kami's `build.py`.
-
-Consequences: the Paper→Project dependency is one-way. Evidentia pins a known-good Kami (tested with v1.16.0) and `KAMI_ROOT` is mandatory for a shippable Reader. If Kami's `build.py` interface changes, only `kami_adapter.py` needs updating — paper facts, schemas, and gates are untouched.
-
-Full setup and run order: see "Kami setup (required)" above and "4b. Kami visual QA". Detail: `references/kami-integration.md`.
+Apache License 2.0. See [LICENSE](LICENSE) for details.

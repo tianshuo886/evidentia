@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "benchmark_id": "BENCH-02-LORA-ADAPTATION",
+  "source_sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+  "code_sha": "d7f32ad690a51eec5bcaac19bd64a25eec866d4d",
+  "status": "COMPLETE",
+  "stages": {
+    "semantic_visual_verification": {"status": "COMPLETE", "artifact": "visual/", "verified_pages": 17, "needs_review": ["T13", "F08"]},
+    "lead_reader": {"status": "COMPLETE", "artifact": "model/paper_understanding_draft.json"},
+    "core_lenses": {"status": "COMPLETE", "artifacts": ["lens_v3/argument_narrative.json", "lens_v3/method_study_design.json", "lens_v3/evidence_results.json", "lens_v3/validity_boundary.json"]},
+    "adaptive_lenses": {"status": "COMPLETE", "artifacts": ["lens_v3/mechanism_causality.json", "lens_v3/reproducibility_implementation.json"]},
+    "revision_memo": {"status": "COMPLETE", "artifact": "model/revision_memo.json"},
+    "dynamic_narrative_plan": {"status": "COMPLETE", "artifact": "model/narrative_plan.json"},
+    "lead_writer": {"status": "COMPLETE", "artifact": "reader/narrative_manuscript.json"},
+    "source_grounded_integrity_validation": {"status": "PASS", "artifact": "reader/issue22_integrity_validation.json"}
+  },
+  "final_manuscript": {
+    "path": "reader/narrative_manuscript.json",
+    "sha256": "096ad5587b71edd3a979409c6849a6facb1ea4e935d87357c77cc44960c12dbf"
+  },
+  "validation_note": "reader/issue22_validation_note.md"
+}

@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "lens": "validity_boundary",
+  "lens_kind": "core",
+  "source_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+  "base_sha256": "1a76e5ae80d0141406b073ef77877f092e742b764bbe44f9e86f041878ab3fd7",
+  "summary": "The paper supports a scoped claim on the tested translation and parsing settings. Threats include selected baselines, estimated FLOPs, no repeated-seed uncertainty, limited long-sequence evaluation, and qualitative rather than systematic interpretability evidence.",
+  "findings": [
+    {
+      "id": "VB-1",
+      "statement": "The state-of-the-art language should be bound to the paper’s datasets, comparison set, decoding and training protocols.",
+      "evidence": [
+        "T02",
+        "T04"
+      ],
+      "epistemic": "SUPPORTED",
+      "action": "QUALIFY",
+      "importance": "CRITICAL",
+      "reason": "Role-specific review finding grounded in source evidence."
+    },
+    {
+      "id": "VB-2",
+      "statement": "The O(1) sequential-operation advantage is conditional on unrestricted attention and does not remove quadratic token-pair computation or memory pressure.",
+      "evidence": [
+        "T01",
+        "p.6"
+      ],
+      "epistemic": "VERIFIED",
+      "action": "EXPAND",
+      "importance": "CRITICAL",
+      "reason": "Role-specific review finding grounded in source evidence."
+    },
+    {
+      "id": "VB-3",
+      "statement": "The appendix figures show examples of head behavior but cannot establish that heads consistently encode syntax or anaphora across examples.",
+      "evidence": [
+        "F03",
+        "F04",
+        "F05"
+      ],
+      "epistemic": "SUPPORTED",
+      "action": "QUALIFY",
+      "importance": "MAJOR",
+      "reason": "Role-specific review finding grounded in source evidence."
+    }
+  ]
+}

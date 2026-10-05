@@ -1,0 +1,58 @@
+{
+  "schema_version": "1.0",
+  "lens": "evidence_results",
+  "lens_kind": "core",
+  "source_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+  "base_sha256": "1a76e5ae80d0141406b073ef77877f092e742b764bbe44f9e86f041878ab3fd7",
+  "summary": "The evidence chain is strongest for reported translation quality and the cost/parallelization tradeoff. Table 2 contains the decisive BLEU/FLOP comparisons, Table 3 exposes sensitivity, and Table 4 tests transfer to parsing. The paper reports results rather than uncertainty intervals or repeated seeds.",
+  "findings": [
+    {
+      "id": "ER-1",
+      "statement": "Table 2 reports 28.4 BLEU for Transformer big on En-De and 41.8 on En-Fr, with a reported 3.5-day/8-P100 training schedule for the big model.",
+      "evidence": [
+        "T02",
+        "p.8"
+      ],
+      "epistemic": "VERIFIED",
+      "action": "KEEP",
+      "importance": "CRITICAL",
+      "reason": "Role-specific review finding grounded in source evidence."
+    },
+    {
+      "id": "ER-2",
+      "statement": "The base Transformer also outperforms the listed prior systems on En-De while using the lowest displayed estimated training cost, but FLOPs are estimates rather than a full wall-clock benchmark.",
+      "evidence": [
+        "T02",
+        "p.8"
+      ],
+      "epistemic": "SUPPORTED",
+      "action": "QUALIFY",
+      "importance": "MAJOR",
+      "reason": "Role-specific review finding grounded in source evidence."
+    },
+    {
+      "id": "ER-3",
+      "statement": "Table 3 shows non-monotonic head-count effects and sensitivity to d_k, dropout, and scale; this weakens any claim that attention alone guarantees gains.",
+      "evidence": [
+        "T03",
+        "p.9"
+      ],
+      "epistemic": "VERIFIED",
+      "action": "EXPAND",
+      "importance": "MAJOR",
+      "reason": "Role-specific review finding grounded in source evidence."
+    },
+    {
+      "id": "ER-4",
+      "statement": "Table 4 shows transfer to WSJ parsing, with 92.7 semi-supervised F1, while the 93.3 generative comparator remains higher.",
+      "evidence": [
+        "T04",
+        "p.10"
+      ],
+      "epistemic": "VERIFIED",
+      "action": "CORRECT",
+      "importance": "MAJOR",
+      "reason": "Role-specific review finding grounded in source evidence."
+    }
+  ]
+}

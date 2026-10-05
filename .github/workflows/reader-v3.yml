@@ -1,0 +1,113 @@
+name: Reader v3 Migration CI
+
+on:
+  push:
+    branches: [ reader-reset-v3 ]
+  pull_request:
+    branches: [ reader-reset-v3, master, main ]
+    paths:
+      - "scripts/reader_v3*.py"
+      - "scripts/lens_registry.py"
+      - "scripts/visual_localization_protocol.py"
+      - "scripts/apply_visual_verification.py"
+      - "scripts/render_evidence_atlas_v3.py"
+      - "scripts/agent_submit.py"
+      - "scripts/memory_manager.py"
+      - "scripts/intent_router.py"
+      - "schemas/*v3*.json"
+      - "schemas/paper_understanding_draft.schema.json"
+      - "schemas/paper_argument_topology.schema.json"
+      - "schemas/narrative_plan.schema.json"
+      - "schemas/narrative_manuscript.schema.json"
+      - "schemas/paper_reader_ir.schema.json"
+      - "schemas/revision_memo.schema.json"
+      - "schemas/visual_page_verification.schema.json"
+      - "schemas/direct_reading_baseline.schema.json"
+      - "schemas/reader_pair_evaluation.schema.json"
+      - "schemas/agent_task.schema.json"
+      - "tests/test_reader_v3.py"
+      - "tests/test_issue22_antitemplate.py"
+      - "tests/test_visual_v3.py"
+      - ".github/workflows/reader-v3.yml"
+
+jobs:
+  reader-v3:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10", "3.11"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest jsonschema
+
+      - name: Validate Reader v3 schemas
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+          names = [
+              "agent_task.schema.json",
+              "paper_understanding_draft.schema.json",
+              "paper_argument_topology.schema.json",
+              "narrative_plan.schema.json",
+              "narrative_manuscript.schema.json",
+              "paper_reader_ir.schema.json",
+              "lens_v3.schema.json",
+              "revision_memo.schema.json",
+              "visual_page_verification.schema.json",
+              "direct_reading_baseline.schema.json",
+              "reader_pair_evaluation.schema.json",
+          ]
+          for name in names:
+              path = Path("schemas") / name
+              schema = json.loads(path.read_text())
+              Draft202012Validator.check_schema(schema)
+              print("OK", path)
+          PY
+
+      - name: Run Reader v3 unit tests
+        run: |
+          python -m pytest -q tests/test_reader_v3.py tests/test_issue22_antitemplate.py tests/test_visual_v3.py
+
+      - name: Reader v3 CLI smoke
+        run: |
+          python scripts/reader_v3.py --help
+          python scripts/reader_v3_agent.py --help
+          python scripts/reader_v3_benchmark.py --help
+          python scripts/reader_v3_corpus.py --help
+          python scripts/reader_structure_diversity.py --help
+          python scripts/visual_localization_protocol.py --help
+          python scripts/apply_visual_verification.py --help
+          python scripts/render_evidence_atlas_v3.py --help
+          python scripts/evidentia.py reader-v3 --help
+          python scripts/evidentia.py visual-v3 --help
+          python scripts/evidentia.py benchmark-v3 --help
+
+      - name: Assert no hard-coded provider routing in Reader v3 core
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          files = [
+              Path("scripts/reader_v3.py"),
+              Path("scripts/reader_v3_protocol.py"),
+              Path("scripts/reader_v3_agent.py"),
+              Path("scripts/lens_registry.py"),
+          ]
+          forbidden = ("claude-", "gemini-", "gpt-", "ensemble-model-")
+          for path in files:
+              text = path.read_text().lower()
+              hits = [x for x in forbidden if x in text]
+              assert not hits, f"{path}: hard-coded model/provider routing leaked: {hits}"
+          print("Reader v3 core is provider-neutral")
+          PY

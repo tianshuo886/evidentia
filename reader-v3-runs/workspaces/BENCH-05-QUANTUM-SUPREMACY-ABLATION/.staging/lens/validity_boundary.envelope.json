@@ -1,0 +1,83 @@
+{
+  "task_id": "TASK-V3-LENS-VALIDITY_BOUNDARY",
+  "execution_kind": "HOST_AGENT",
+  "executor": {
+    "kind": "HOST_AGENT",
+    "host": "claude-code",
+    "host_version": "env",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4",
+    "model_version": "2025",
+    "reasoning_profile": "deep",
+    "tool_profile": "paper-only",
+    "started_at": "2026-10-04T02:00:44.494668+00:00",
+    "completed_at": "2026-10-04T02:00:44.494668+00:00"
+  },
+  "started_at": "2026-10-04T02:00:44.494668+00:00",
+  "completed_at": "2026-10-04T02:00:44.494668+00:00",
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "result": {
+    "schema_version": "1.0",
+    "lens": "validity_boundary",
+    "lens_kind": "core",
+    "source_sha256": "6f3030abb7d9d4f0624a5cbe5ca2ff673df63afc85c97fadd0bf7db780c8dbaf",
+    "base_sha256": "0330cd973b54a50e9fadfb5f71bcee4864182624ddc6444663496531f1dca124",
+    "findings": [
+      {
+        "id": "VB-1",
+        "statement": "就特定主张(RCS 处于霸权区间)而言，控制在其真正要紧处足够：误差被孤立/同时对照刻画，估计器在可模拟域经 patch/elided/full 三方对照验证。",
+        "evidence": [
+          "F02",
+          "F04",
+          "p.3",
+          "p.5"
+        ],
+        "epistemic": "SUPPORTED",
+        "action": "KEEP",
+        "importance": "MAJOR"
+      },
+      {
+        "id": "VB-2",
+        "statement": "推断跳跃：从'elided 读数 F_XEB>0.1%'到'已证明量子霸权'，唯一桥梁是 Fig.4a 的估计器有效性——一处已获担保但仍是外推的跳跃(有效域止于可模拟规模)。",
+        "evidence": [
+          "p.4",
+          "p.5"
+        ],
+        "epistemic": "PARTIAL",
+        "action": "QUALIFY",
+        "importance": "CRITICAL",
+        "reason": "把外推说成证明会夸大结论。"
+      },
+      {
+        "id": "VB-3",
+        "statement": "经典代价主张是最脆弱处：它依赖所选经典算法(Schrödinger 全态到 n≤43，Schrödinger–Feynman 混合)与按 F_XEB 缩放验证成本的规则；更强的张量/切割式算法可能压缩'一万年'，作者也预期更低成本会出现。",
+        "evidence": [
+          "F04",
+          "p.4",
+          "p.5"
+        ],
+        "epistemic": "MODEL_UNCERTAIN",
+        "action": "QUALIFY",
+        "importance": "CRITICAL",
+        "cross_cutting_checks": {
+          "anomaly": null,
+          "counterfactual": "若出现匹配该采样成本的经典算法，或若相关性误差被证明超出 Pauli 乘积模型，霸权主张将同时从'经典侧硬度'与'硬件侧保真'两端被削弱；这正是该主张可被未来证伪的路径。"
+        }
+      },
+      {
+        "id": "VB-4",
+        "statement": "边界与未解：主张任务特定(RCS)，非通用加速；仍属 NISQ、未通向容错(Shor/Grover 需逻辑比特)；相关性误差仅被间接压低而非被完全刻画；扩展 Church–Turing thesis 的提法超出物理证据，属哲学性外推。",
+        "evidence": [
+          "p.1",
+          "p.5",
+          "p.6"
+        ],
+        "epistemic": "SUPPORTED",
+        "action": "QUALIFY",
+        "importance": "MAJOR"
+      }
+    ],
+    "summary": "就'随机线路采样已进入霸权区间'这一特定主张，方法学控制在其关键处是强的(估计器经 Fig.4a 受控验证；误差区分孤立/同时)。最弱的一环是经典代价主张:它按算法与 F_XEB 缩放外推,对后续算法进步高度敏感,作者本人亦承认更低成本终会出现。'由 elided 读数跳到量子霸权'是一处已获担保但属外推的推断。"
+  }
+}

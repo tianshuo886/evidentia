@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0",
+  "lens": "argument_narrative",
+  "lens_kind": "core",
+  "source_sha256": "a71f1294a021cebc6939ec977fc073b6d7b4f183950eba761ec55364d30b729f",
+  "base_sha256": "55607fb18f8b13e0e8b2bb7953642a6a3211b4964e4badfbbe0a2b1808d3ac88",
+  "summary": "论文论证完全不同于工程改进论文。它从反事实经验证伪（随机标签实验）出发，递进到有限样本定理构造（定理1），进而系统性摧毁传统最坏情况复杂度界，最后将学术支点引向隐式正则化与优化几何。",
+  "findings": [
+    {
+      "id": "AN1",
+      "statement": "论文的叙事主线是“悖论建立 → 经验证伪 → 定理构造 → 理论范式反思”，不包含任何新的网络组件设计或工程 SOTA 声明。",
+      "evidence": [
+        "p.1",
+        "p.2",
+        "p.8",
+        "p.10"
+      ],
+      "epistemic": "SUPPORTED",
+      "action": "KEEP",
+      "importance": "MAJOR",
+      "reason": "确立本篇论文的根本反模板拓扑。",
+      "cross_cutting_checks": {
+        "anomaly": null,
+        "counterfactual": null
+      }
+    },
+    {
+      "id": "AN2",
+      "statement": "随机标签实验与真实标签实验的对比是全篇论证的经验基石，它证明了经验损失归零与泛化能力完全脱钩。",
+      "evidence": [
+        "p.2",
+        "F01",
+        "T01"
+      ],
+      "epistemic": "SUPPORTED",
+      "action": "EXPAND",
+      "importance": "MAJOR",
+      "reason": "深化对统计学习泛化概念的理解。",
+      "cross_cutting_checks": {
+        "anomaly": null,
+        "counterfactual": null
+      }
+    }
+  ]
+}

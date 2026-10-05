@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "benchmark_id": "BENCH-05-QUANTUM-SUPREMACY-ABLATION",
+  "source_sha256": "6f3030abb7d9d4f0624a5cbe5ca2ff673df63afc85c97fadd0bf7db780c8dbaf",
+  "code_sha256": "d7f32ad690a51eec5bcaac19bd64a25eec866d4d",
+  "validated_at": "2026-10-04T02:47:59.392710+00:00",
+  "manuscript_sha256": "869977cb403b2d23a04a44e371d3669212232cef93993be2ce0913db5ffbb9c1",
+  "status": "PASS",
+  "errors": [],
+  "stages": {
+    "semantic_visual_verification": true,
+    "lead_reader": true,
+    "six_specialist_lenses": true,
+    "revision_memo": true,
+    "dynamic_narrative_plan": true,
+    "lead_writer": true,
+    "rendered_reader": true
+  },
+  "contracts": {
+    "reader_v3_contract_version": "3.0",
+    "prompt_version": "3.0",
+    "source_policy": "REAL_PUBLIC_FULL_PDF_ONLY"
+  },
+  "evidence_boundary": {
+    "source_pdf": "source/paper.pdf",
+    "visual_dir": "visual/",
+    "lead_reader": "model/paper_understanding_draft.json",
+    "lenses": "lens_v3/",
+    "revision_memo": "model/revision_memo.json",
+    "narrative_plan": "model/narrative_plan.json",
+    "manuscript": "reader/narrative_manuscript.json"
+  }
+}

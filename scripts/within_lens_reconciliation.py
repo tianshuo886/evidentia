@@ -1,14 +1,9 @@
 #!/usr/bin/env python3
-"""Within-Lens Reconciliation for Multi-Model Ensemble Mode.
+"""DEPRECATED: Legacy v1/v2 within-lens reconciliation for ensemble mode.
 
-Reconciles multiple independent model runs for a single lens (lens_runs/<lens>/run-*.json)
-into a canonical lens output (lens/<lens>.json).
-Detects:
-- MODEL_SINGLETON
-- CROSS_MODEL_CONVERGENCE
-- MODEL_CONFLICT
-- MODEL_PARTIAL_AGREEMENT
-Principle 4 preserved: model count does NOT decide truth; it provides provenance and diagnostic signal.
+Retained for historical replays only. In canonical Reader v3, single strong-model
+with context isolation is the default; multi-model is targeted verification.
+Prohibited in canonical Reader v3 scientific execution.
 """
 import argparse, glob, json, os, sys
 from pathlib import Path

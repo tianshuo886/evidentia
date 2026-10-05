@@ -1,0 +1,46 @@
+{
+  "schema_version": "1.0",
+  "lens": "proof_integrity",
+  "lens_kind": "specialist",
+  "source_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+  "base_sha256": "1a76e5ae80d0141406b073ef77877f092e742b764bbe44f9e86f041878ab3fd7",
+  "summary": "The paper’s core equations and diagrams are internally aligned: scaled dot-product attention, multi-head composition, feed-forward blocks, and positional encodings match the architecture. The evidence is an empirical method paper, so proof-like language should be avoided for performance claims.",
+  "findings": [
+    {
+      "id": "PI-1",
+      "statement": "The scaling factor 1/sqrt(d_k) is motivated by variance growth of dot products and is presented as a stabilization rationale, not a theorem that guarantees optimization.",
+      "evidence": [
+        "EQ-05",
+        "p.4"
+      ],
+      "epistemic": "SUPPORTED",
+      "action": "QUALIFY",
+      "importance": "MAJOR",
+      "reason": "Role-specific review finding grounded in source evidence."
+    },
+    {
+      "id": "PI-2",
+      "statement": "The complexity comparison is an asymptotic argument with explicit assumptions n, d, k, and r; it should not be paraphrased as universal measured speedup.",
+      "evidence": [
+        "T01",
+        "p.6"
+      ],
+      "epistemic": "VERIFIED",
+      "action": "CORRECT",
+      "importance": "CRITICAL",
+      "reason": "Role-specific review finding grounded in source evidence."
+    },
+    {
+      "id": "PI-3",
+      "statement": "The qualitative visualization captions use cautious language such as “apparently” and “seems”; the Reader should preserve that epistemic level.",
+      "evidence": [
+        "F04",
+        "F05"
+      ],
+      "epistemic": "SUPPORTED",
+      "action": "KEEP",
+      "importance": "MAJOR",
+      "reason": "Role-specific review finding grounded in source evidence."
+    }
+  ]
+}

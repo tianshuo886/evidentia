@@ -1,0 +1,64 @@
+{
+  "status": "OK",
+  "kami_root": "/Users/shentianshuo/.agents/skills/kami",
+  "pdf": "reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/reader/paper_reader.pdf",
+  "pdf_sha256": "f8e698786cd34263105505def61f1f5239e97b2265506488b63ab604dc8627b0",
+  "html": "reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/reader/paper_reader.html",
+  "html_sha256": "bfa8dba4aeb2f970964288a6f1043aced9c3ee2fb4af9060b56ec8acb9694814",
+  "checks": [
+    {
+      "args": [
+        "--check-placeholders",
+        "/Users/shentianshuo/.agents/skills/evidentia/reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/reader/paper_reader.html"
+      ],
+      "returncode": 0,
+      "stdout": "OK: /Users/shentianshuo/.agents/skills/evidentia/reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/reader/paper_reader.html: no placeholders\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "--check-style",
+        "/Users/shentianshuo/.agents/skills/evidentia/reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/reader/paper_reader.html"
+      ],
+      "returncode": 0,
+      "stdout": "OK: /Users/shentianshuo/.agents/skills/evidentia/reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/reader/paper_reader.html: no style drift\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "--check-visual",
+        "/Users/shentianshuo/.agents/skills/evidentia/reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/reader/paper_reader.pdf"
+      ],
+      "returncode": 0,
+      "stdout": "/page-01.png\n  /Users/shentianshuo/.agents/skills/evidentia/reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/reader/paper_reader-visual/page-02.png\n  /Users/shentianshuo/.agents/skills/evidentia/reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/reader/paper_reader-visual/page-03.png\n  /Users/shentianshuo/.agents/skills/evidentia/reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/reader/paper_reader-visual/page-04.png\n  /Users/shentianshuo/.agents/skills/evidentia/reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/reader/paper_reader-visual/page-05.png\n  /Users/shentianshuo/.agents/skills/evidentia/reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/reader/paper_reader-visual/page-06.png\n  /Users/shentianshuo/.agents/skills/evidentia/reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/reader/paper_reader-visual/page-07.png\n  /Users/shentianshuo/.agents/skills/evidentia/reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/reader/paper_reader-visual/page-08.png\n  /Users/shentianshuo/.agents/skills/evidentia/reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/reader/paper_reader-visual/page-09.png\n  /Users/shentianshuo/.agents/skills/evidentia/reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/reader/paper_reader-visual/page-10.png\n  /Users/shentianshuo/.agents/skills/evidentia/reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/reader/paper_reader-visual/page-11.png\n  /Users/shentianshuo/.agents/skills/evidentia/reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/reader/paper_reader-visual/page-12.png\n  /Users/shentianshuo/.agents/skills/evidentia/reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/reader/paper_reader-visual/page-13.png\nFont check (deterministic, settles checklist item 1):\nWARN: /Users/shentianshuo/.agents/skills/evidentia/reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/reader/paper_reader.pdf: CJK body text in Songti-SC, a serif fallback, not the kami primary\n  acceptable, but the page is not the reference rendering\nReview checklist (view every page image before shipping):\n  - fonts: no fallback boxes or mixed families; CJK bold is a real weight, not synthetic\n  - tags and chips: solid backgrounds, no double rectangle or double ring artifacts\n  - figures: no overlapping labels, arrows never touch module edges, arrowheads visible\n  - page breaks: no heading stranded at a page bottom, no card or table split mid-body\n  - emphasis: brand color only on numbers or distinctive phrases, at most 2 per line\n  - density: body pages read 60-80% full (cover and last page exempt), no orphan trailing line\n  - wraps: no line one word from wrapping, no line wrapping early before filling its container\n  - alignment: columns share baselines, margins are even, nothing crowds the page edge\n  - tables: one neutral rule color, hairline dividers, and enough vertical padding for each row to breathe\n  - subtraction: no decorative ticks, short rules, or side accents; every visible rule separates data, regions, relationships, or state\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "--check-orphans",
+        "/Users/shentianshuo/.agents/skills/evidentia/reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/reader/paper_reader.pdf"
+      ],
+      "returncode": 0,
+      "stdout": "OK: no orphans found across 1 PDF(s)\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "--check-density",
+        "/Users/shentianshuo/.agents/skills/evidentia/reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/reader/paper_reader.pdf"
+      ],
+      "returncode": 0,
+      "stdout": "  WARN: /Users/shentianshuo/.agents/skills/evidentia/reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/reader/paper_reader.pdf p11: 41% trailing whitespace\n  SPARSE: /Users/shentianshuo/.agents/skills/evidentia/reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/reader/paper_reader.pdf p12: 78% trailing whitespace\n  SPARSE: /Users/shentianshuo/.agents/skills/evidentia/reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/reader/paper_reader.pdf p13: 71% trailing whitespace\n\n3 density warning(s) across 1 PDF(s)\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "--check-fonts",
+        "/Users/shentianshuo/.agents/skills/evidentia/reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/reader/paper_reader.pdf"
+      ],
+      "returncode": 0,
+      "stdout": "WARN: /Users/shentianshuo/.agents/skills/evidentia/reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/reader/paper_reader.pdf: CJK body text in Songti-SC, a serif fallback, not the kami primary\n  acceptable, but the page is not the reference rendering\n",
+      "stderr": ""
+    }
+  ]
+}

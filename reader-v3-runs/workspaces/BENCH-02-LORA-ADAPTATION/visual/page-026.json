@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0",
+  "source_sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+  "page": 26,
+  "bindings": [
+    {
+      "evidence_id": "F07",
+      "kind": "figure",
+      "bbox_norm": [
+        0.18,
+        0.1,
+        0.82,
+        0.4
+      ],
+      "status": "VERIFIED",
+      "complete": true,
+      "caption_match": true,
+      "confidence": 0.99,
+      "notes": "Full-page visual inspection confirmed complete semantic region and caption match; overlapping geometry candidate corrected where needed."
+    },
+    {
+      "evidence_id": "T18",
+      "kind": "table",
+      "bbox_norm": [
+        0.24,
+        0.4,
+        0.76,
+        0.66
+      ],
+      "status": "VERIFIED",
+      "complete": true,
+      "caption_match": true,
+      "confidence": 0.9,
+      "notes": "Full-page visual inspection confirmed complete semantic region and caption match; overlapping geometry candidate corrected where needed."
+    },
+    {
+      "evidence_id": "F08",
+      "kind": "figure",
+      "bbox_norm": [
+        0.22,
+        0.7,
+        0.78,
+        0.93
+      ],
+      "status": "NEEDS_REVIEW",
+      "complete": false,
+      "caption_match": false,
+      "confidence": 0.4,
+      "notes": "No complete crop candidate; retained NEEDS_REVIEW (fail-closed)."
+    }
+  ]
+}

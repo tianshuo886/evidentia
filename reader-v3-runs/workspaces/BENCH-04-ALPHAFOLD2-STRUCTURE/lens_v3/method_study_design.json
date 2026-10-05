@@ -1,0 +1,9 @@
+{
+  "schema_version":"1.0","lens":"method_study_design","lens_kind":"core","source_sha256":"6eae057a9faf4f671c3101e0745ed704460c6d3dec77243dfd3a9f2d2ab68970","base_sha256":"8b5d23e2847d89205452c786f89c83776f487e0d2a8fc741db69ce28c9bd8774",
+  "summary":"The study combines blind CASP14 evaluation, filtered recent-PDB transfer analysis, a multi-stage neural architecture, controlled component ablations, intermediate-structure trajectories, and boundary analyses of MSA depth and contact context.",
+  "findings":[
+    {"id":"MD-1","statement":"The input design combines a target sequence, an MSA, and available templates; Evoformer jointly updates MSA and pair arrays before the structure module generates coordinates.","evidence":["F01","F03","p.2","p.4"],"epistemic":"VERIFIED","action":"KEEP","importance":"CRITICAL","reason":"These inputs and representation transitions are necessary to interpret every later experiment.","cross_cutting_checks":{"anomaly":null,"counterfactual":"Removing pair/MSA exchange would test a different model, not a small implementation substitution."}},
+    {"id":"MD-2","statement":"Recycling, local-frame FAPE, masked-MSA learning, self-distillation and auxiliary losses are design choices evaluated as a connected training/inference regime.","evidence":["F01","F04","p.2","p.5","p.8"],"epistemic":"SUPPORTED","action":"EXPAND","importance":"MAJOR","reason":"The paper's method is the interaction of these choices, not IPA alone.","cross_cutting_checks":{"anomaly":null,"counterfactual":null}},
+    {"id":"MD-3","statement":"Evaluation uses different target sets and uncertainty estimates: CASP14 domains, recent PDB chains, local lDDT-Cα, global TM-score and bootstrap intervals.","evidence":["F02","F04","p.3","p.5"],"epistemic":"VERIFIED","action":"KEEP","importance":"MAJOR","reason":"Separating target sets and metrics prevents a metric or sample-set conflation.","cross_cutting_checks":{"anomaly":null,"counterfactual":null}}
+  ]
+}

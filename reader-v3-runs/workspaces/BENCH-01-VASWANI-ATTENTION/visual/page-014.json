@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "source_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+  "page": 14,
+  "bindings": [
+    {
+      "evidence_id": "F04",
+      "kind": "figure",
+      "bbox_norm": [0.17, 0.17, 0.84, 0.8],
+      "panel_bboxes_norm": [[0.18, 0.19, 0.84, 0.48], [0.18, 0.5, 0.84, 0.77]],
+      "status": "VERIFIED",
+      "complete": true,
+      "caption_match": true,
+      "confidence": 0.99,
+      "notes": "Full-page inspection confirms both top full-attention and bottom isolated-attention panels, token labels, highlighted links, and the Figure 4 caption."
+    }
+  ]
+}

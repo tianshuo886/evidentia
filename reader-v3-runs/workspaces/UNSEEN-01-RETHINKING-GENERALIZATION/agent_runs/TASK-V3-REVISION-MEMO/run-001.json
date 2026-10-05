@@ -1,0 +1,120 @@
+{
+  "task_id": "TASK-V3-REVISION-MEMO",
+  "execution_kind": "HOST_AGENT",
+  "executor": {
+    "kind": "HOST_AGENT",
+    "host": "pi",
+    "host_version": "frozen-v3",
+    "provider": "magpie",
+    "model": "antigravity/gemini-3.8-flash",
+    "model_version": "canonical-high",
+    "reasoning_profile": "high",
+    "tool_profile": "paper-only",
+    "started_at": "2026-10-05T14:35:07.211978+00:00",
+    "completed_at": "2026-10-05T14:35:07.211978+00:00"
+  },
+  "started_at": "2026-10-05T14:35:07.211978+00:00",
+  "completed_at": "2026-10-05T14:35:07.211978+00:00",
+  "input_hashes": {
+    "source/paper.pdf": "a71f1294a021cebc6939ec977fc073b6d7b4f183950eba761ec55364d30b729f",
+    "model/paper_understanding_draft.json": "55607fb18f8b13e0e8b2bb7953642a6a3211b4964e4badfbbe0a2b1808d3ac88",
+    "model/lens_v3_manifest.json": "c9685ebdfe91dda489d700f84803c420eba15ad8cf3983a8a809878647b5e4f5"
+  },
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "result": {
+    "schema_version": "1.0",
+    "paper_id": "UNSEEN-01-RETHINKING-GENERALIZATION",
+    "source_sha256": "a71f1294a021cebc6939ec977fc073b6d7b4f183950eba761ec55364d30b729f",
+    "base_sha256": "55607fb18f8b13e0e8b2bb7953642a6a3211b4964e4badfbbe0a2b1808d3ac88",
+    "editorial_summary": "6个独立透镜达成高度共识：手稿必须严格遵循论文独有的“反常经验现象（随机标签） → 有限样本定理构造（定理1） → 经典理论证伪（VC/Rademacher/稳定性） → 隐式正则化未决问题”拓扑，绝对禁止套用工程改进类或SOTA流水线模板。手稿应将 Figure 1 与 Table 1 作为核心实证展开，并详细解析定理 1 的构造性下三角矩阵求逆机制。",
+    "revisions": [
+      {
+        "id": "REV-01",
+        "action": "EXPAND",
+        "target_section_hint": "随机化检验与反事实经验实证",
+        "instruction": "详尽呈现 CIFAR-10 和 ImageNet 上的随机标签与高斯噪声对照实验，明确指出在随机标签下训练误差达到 0% 而测试误差降至随机猜测水平（10%），收敛时间仅常数级减缓（Figure 1, Table 1, Table 2）。",
+        "supporting_evidence": [
+          "F01",
+          "T01",
+          "T02",
+          "p.4",
+          "p.6",
+          "p.13"
+        ],
+        "source_lenses": [
+          "argument_narrative",
+          "evidence_results",
+          "method_study_design"
+        ]
+      },
+      {
+        "id": "REV-02",
+        "action": "EXPAND",
+        "target_section_hint": "有限样本表达力定理的数学构造",
+        "instruction": "完整写出定理 1 的形式化表述，并拆解其三步构造机制（随机投影标量化、下三角阶梯ReLU激活偏置、非退化线性方程组求逆），强调 p = 2n + d 的极简双层浅网络即可拟合任意样本离散标记。",
+        "supporting_evidence": [
+          "p.8",
+          "p.9"
+        ],
+        "source_lenses": [
+          "method_study_design",
+          "argument_narrative"
+        ]
+      },
+      {
+        "id": "REV-03",
+        "action": "QUALIFY",
+        "target_section_hint": "显式正则化的角色与边界",
+        "instruction": "明确说明数据增强、权重衰减和 Dropout 是调节器而非必要条件，同时在正文和附录中结合核方法（Table 3）指出无显式正则化的最小范数解同样能实现零误差插值并泛化良好。",
+        "supporting_evidence": [
+          "F02",
+          "T01",
+          "T03",
+          "p.6",
+          "p.7",
+          "p.14"
+        ],
+        "source_lenses": [
+          "evidence_results",
+          "validity_boundary"
+        ]
+      },
+      {
+        "id": "REV-04",
+        "action": "QUALIFY",
+        "target_section_hint": "传统统计学习理论的失效剖析与科学边界",
+        "instruction": "严密论证为何经验 Rademacher 复杂度逼近 1 导致所有最坏情况一致收敛界失效；同时恪守科学诚实边界：指出论文未给出隐式正则化的定量闭式解，这是后继理论界的核心未决课题。",
+        "supporting_evidence": [
+          "p.9",
+          "p.10",
+          "p.11"
+        ],
+        "source_lenses": [
+          "validity_boundary",
+          "mechanism_causality"
+        ]
+      }
+    ],
+    "visual_evidence_bindings": [
+      {
+        "evidence_id": "F01",
+        "status": "APPROVED",
+        "asset": "assets/figures/v3_F01_p4_899x397.png",
+        "editorial_instruction": "绑定至经验证伪章节，直观展现随机标签、打乱像素与高斯噪声的损失收敛与减缓倍数曲线。"
+      },
+      {
+        "evidence_id": "T01",
+        "status": "APPROVED",
+        "asset": "assets/figures/v3_T01_p6_879x340.png",
+        "editorial_instruction": "绑定至正则化剥离与模型对比章节，详述 Inception 与 AlexNet 在噪声设置下的训练与测试表现。"
+      },
+      {
+        "evidence_id": "F02",
+        "status": "APPROVED",
+        "asset": "assets/figures/v3_F02_p7_879x485.png",
+        "editorial_instruction": "绑定至显式正则化与隐式正则化对比章节。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "status": "BLOCKED_REGISTRY_IDENTITY_MISMATCH",
+  "benchmark_id": "BENCH-03-REMOTE-SENSING-FOREST",
+  "registry_identifier": "10.1016/j.rse.2022.113070",
+  "registry_title": "High-Resolution Canopy Height Modeling from GEDI and Sentinel-2",
+  "registry_authors": [
+    "N. Lang",
+    "K. Schindler",
+    "J. Wegner"
+  ],
+  "attempted_candidate_identifier": "10.48550/arXiv.2204.08322",
+  "attempted_candidate_url": "https://arxiv.org/pdf/2204.08322.pdf",
+  "candidate_title": "A high-resolution canopy height model of the Earth",
+  "candidate_sha256": "0e94f20b028c82a3d74df6d966a0b93ee4f1d063c71e8c63c359aefb560d5a82",
+  "candidate_full_pdf_validation": "PASS",
+  "evidence": {
+    "registry_doi_crossref_title": "A two-step deep learning framework for mapping gapless all-weather land surface temperature using thermal infrared and passive microwave data",
+    "registry_doi_crossref_authors": [
+      "Penghai Wu",
+      "Yang Su",
+      "Si-bo Duan",
+      "Xinghua Li",
+      "Hui Yang",
+      "Chao Zeng",
+      "Xiaoshuang Ma",
+      "Yanlan Wu",
+      "Huanfeng Shen"
+    ],
+    "matching_candidate_title": "A high-resolution canopy height model of the Earth",
+    "matching_candidate_authors": [
+      "Nico Lang",
+      "Walter Jetz",
+      "Konrad Schindler",
+      "Jan Dirk Wegner"
+    ],
+    "possible_publisher_doi": "10.1038/s41559-023-02206-6"
+  },
+  "decision_needed": "Owner confirmation that the registry identifier/metadata may be corrected to the matching canopy-height paper; no substitute was silently accepted."
+}

@@ -1,0 +1,378 @@
+{
+  "task_id": "TASK-V3-LEAD-WRITING",
+  "execution_kind": "HOST_AGENT",
+  "executor": {
+    "kind": "HOST_AGENT",
+    "host": "pi-parent-direct",
+    "host_version": "UNKNOWN",
+    "provider": "openai-codex",
+    "model": "gpt-6.1-sol",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "high",
+    "tool_profile": "paper-only"
+  },
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "input_hashes": {
+    "source/paper.pdf": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+    "lead_reader_draft": "1a76e5ae80d0141406b073ef77877f092e742b764bbe44f9e86f041878ab3fd7",
+    "revision_memo": "6122048a9b9f8c4317ca534479aa94b22d19fba579df612f53a95364dab66db6"
+  },
+  "result": {
+    "schema_version": "2.0",
+    "paper_id": "BENCH-01-VASWANI-ATTENTION",
+    "source_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+    "created_at": "2026-10-03T18:30:00+00:00",
+    "document": {
+      "title": "Attention Is All You Need",
+      "subtitle": "从循环序列模型到纯注意力的 Transformer",
+      "paper_meta": {
+        "authors": [
+          "Ashish Vaswani",
+          "Noam Shazeer",
+          "Llion Jones",
+          "Aidan N. Gomez",
+          "Niki Parmar",
+          "Jakob Uszkoreit",
+          "Łukasz Kaiser",
+          "Illia Polosukhin"
+        ],
+        "venue": "NeurIPS 2017",
+        "year": 2017,
+        "doi": "10.48550/arXiv.1706.03762",
+        "pdf_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697"
+      },
+      "executive_summary": {
+        "lead": "这篇论文提出 Transformer：用注意力机制替代序列到序列模型中的循环和卷积，使不同位置可以直接交互，并显著提高训练并行性。论文在机器翻译上报告了很强的 BLEU 结果，并用消融、解析任务和注意力可视化补充验证。",
+        "takeaways": [
+          "核心优势是更短的依赖路径与更少的顺序操作，但无限制注意力仍有 O(n²d) 的序列长度成本。",
+          "Table 2 的翻译结果是主要实证支柱；Table 3 表明头数、维度、规模和正则化都会影响结果。",
+          "解析实验显示跨任务迁移，但并非在表中所有比较中都超过最强基线。",
+          "注意力图展示的是定性例子，不能单独证明系统性可解释性。"
+        ],
+        "key_question": "能否只用注意力构造高质量且高度可并行的序列转导模型？",
+        "core_finding": "在论文报告的 WMT 翻译和 WSJ 解析设置中，可以；但结论受数据、配置、硬件估算和长序列边界约束。",
+        "core_boundary": "这不是对所有序列任务或所有硬件条件下循环模型的普遍否定。"
+      },
+      "story_spine": {
+        "central_question": "能否以纯注意力替代循环/卷积序列转导？",
+        "motivation": "循环计算按位置串行，长距离依赖路径长；卷积虽可并行但仍需堆叠路径。",
+        "prior_gap": "注意力通常作为循环模型的附加机制，纯注意力转导模型尚未被完整验证。",
+        "central_move": "Transformer 采用注意力、前馈层、残差归一化和位置编码组成编码器-解码器。",
+        "method_logic": "缩放点积注意力负责匹配，多头投影并行捕捉不同表示子空间，解码器掩码保持自回归。",
+        "experimental_questions": [
+          "计算和路径长度是否改善？",
+          "翻译质量和训练成本是否有优势？",
+          "组件变化是否影响性能？",
+          "能否迁移到成分句法解析？"
+        ],
+        "major_findings": [
+          "Table 1 给出 O(1) 顺序操作/路径长度与 O(n²d) 层计算的权衡。",
+          "Table 2 报告 En-De 28.4 BLEU 和 En-Fr 41.8 BLEU（big）。",
+          "Table 3 显示头数、键维度、模型规模、dropout 等敏感性。",
+          "Table 4 显示 WSJ 解析上的跨任务表现。"
+        ],
+        "justified_conclusion": "纯注意力架构在所测试任务上实现了强质量与并行性的组合，但收益不是脱离规模、数据、解码和训练协议的单一机制效果。",
+        "scope_and_limits": [
+          "长序列的二次成本未被消除。",
+          "FLOP 是估算值。",
+          "没有多随机种子不确定性报告。",
+          "可解释性图是示例而非系统性测试。"
+        ]
+      },
+      "chapters": [
+        {
+          "id": "problem",
+          "chapter_num": 1,
+          "title": "问题：序列建模为何难以并行",
+          "lead": "论文从循环模型的顺序瓶颈出发。",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "循环编码器-解码器按符号位置推进隐藏状态，因此训练样本内部的计算难以并行；长距离依赖还要经过更长的路径。卷积模型改善并行性，却仍需要随距离增长的路径。Transformer 的问题不是简单地增加一个注意力模块，而是询问：注意力能否承担整个转导过程。",
+              "evidence_refs": [
+                "p.2"
+              ],
+              "presentation_role": "narrative_core"
+            },
+            {
+              "type": "table",
+              "evidence_id": "T01",
+              "caption": "Table 1：不同层类型的复杂度、顺序操作与最大路径长度。",
+              "analysis": "表格把核心权衡写清楚：无限制自注意力具有 O(1) 顺序操作和 O(1) 路径长度，但每层计算为 O(n²·d)；循环层为 O(n·d²) 且需要 O(n) 顺序操作。",
+              "supports": [
+                "短路径与并行性是架构动机"
+              ],
+              "limits": [
+                "这是渐近比较，不是所有硬件上的端到端速度证明。"
+              ],
+              "evidence_refs": [
+                "T01",
+                "p.6"
+              ],
+              "presentation_role": "narrative_core",
+              "asset": "assets/figures/v3_T01_p6_1217x413.png",
+              "page": 6
+            }
+          ]
+        },
+        {
+          "id": "architecture",
+          "chapter_num": 2,
+          "title": "设计：把编码器—解码器改造成注意力网络",
+          "lead": "Transformer 的关键不是单个公式，而是各个子层如何组合。",
+          "blocks": [
+            {
+              "type": "figure",
+              "evidence_id": "F01",
+              "caption": "Figure 1：Transformer 模型架构。",
+              "analysis": "左侧编码器堆叠多头自注意力与逐位置前馈层；右侧解码器增加对编码器输出的注意力，并以掩码阻止当前位置读取未来目标词。输入/输出嵌入与位置编码相加，残差连接和 LayerNorm 包围子层。",
+              "supports": [
+                "完整架构与编码器/解码器差异"
+              ],
+              "limits": [
+                "架构图不单独证明性能。"
+              ],
+              "evidence_refs": [
+                "F01",
+                "p.3"
+              ],
+              "presentation_role": "narrative_core",
+              "asset": "assets/figures/v3_F01_p3_580x1139.png",
+              "page": 3
+            },
+            {
+              "type": "figure",
+              "evidence_id": "F02",
+              "caption": "Figure 2：缩放点积注意力与多头注意力。",
+              "analysis": "缩放点积注意力计算 softmax(QKᵀ/√d_k)V；多头注意力先把 Q、K、V 投影到多个低维子空间，再并行计算并拼接。缩放用于抑制大点积把 softmax 推入小梯度区域。",
+              "supports": [
+                "机制公式与多头并行"
+              ],
+              "limits": [
+                "公式说明计算机制，不保证训练总是稳定。"
+              ],
+              "evidence_refs": [
+                "F02",
+                "EQ-05",
+                "p.4"
+              ],
+              "presentation_role": "narrative_core",
+              "asset": "assets/figures/v3_F02_p4_1245x727.png",
+              "page": 4
+            },
+            {
+              "type": "paragraph",
+              "text": "基础模型使用 d_model=512、6 层、8 个头，每个头 d_k=d_v=64；前馈层内维度为 2048。解码器的未来位置掩码和移位输出保持自回归条件，而位置编码补回没有循环结构后丢失的顺序信息。",
+              "evidence_refs": [
+                "p.3",
+                "p.5",
+                "p.6"
+              ],
+              "presentation_role": "narrative_support"
+            }
+          ]
+        },
+        {
+          "id": "translation",
+          "chapter_num": 3,
+          "title": "主要证据：机器翻译质量与训练代价",
+          "lead": "翻译实验是论文最重要的实证检验。",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "在 WMT 2014 English-to-German 上，Transformer big 达到 28.4 BLEU，base 达到 27.3；在 English-to-French 上，big 达到 41.8 BLEU。论文还报告 big 模型在 8 张 P100 GPU 上训练 3.5 天，并用估算 FLOP 与此前系统比较。",
+              "evidence_refs": [
+                "T02",
+                "p.8"
+              ],
+              "presentation_role": "narrative_core"
+            },
+            {
+              "type": "table",
+              "evidence_id": "T02",
+              "caption": "Table 2：WMT 2014 翻译 BLEU 与训练 FLOP 比较。",
+              "analysis": "Transformer big 的 En-De 28.4 和 En-Fr 41.8 是表中关键结果；base 也以较低估算代价取得较强 En-De 结果。",
+              "supports": [
+                "论文报告的翻译质量/成本权衡"
+              ],
+              "limits": [
+                "FLOP 是基于时间、GPU 数量和持续浮点能力的估算；结果依赖数据、解码和比较协议。"
+              ],
+              "evidence_refs": [
+                "T02",
+                "p.8"
+              ],
+              "presentation_role": "narrative_core",
+              "asset": "assets/figures/v3_T02_p8_1245x594.png",
+              "page": 8
+            },
+            {
+              "type": "callout",
+              "question": "这是否证明注意力在所有场景都更快？",
+              "text": "不能。Table 1 的 O(1) 是顺序操作和路径长度的渐近性质，注意力仍有随 n² 增长的层计算和内存压力。论文证明的是其报告设置下的质量与并行化组合，而不是硬件无关的速度定理。",
+              "evidence_refs": [
+                "T01",
+                "T02",
+                "p.6",
+                "p.8"
+              ],
+              "presentation_role": "narrative_support"
+            }
+          ]
+        },
+        {
+          "id": "ablations",
+          "chapter_num": 4,
+          "title": "消融：性能来自怎样的配置组合",
+          "lead": "Table 3 让‘注意力取代循环’这一口号变得更具体。",
+          "blocks": [
+            {
+              "type": "table",
+              "evidence_id": "T03",
+              "caption": "Table 3：Transformer 架构变化。",
+              "analysis": "头数过少或过多、键维度变小、模型规模、dropout 和位置表示都会改变开发集结果；big 模型和大前馈层通常更强。正弦与学习位置嵌入在报告行中几乎相同，选择正弦编码带有外推假设。",
+              "supports": [
+                "组件敏感性与设计取舍"
+              ],
+              "limits": [
+                "不是完整的匹配预算因果分解，也没有覆盖所有交互。"
+              ],
+              "evidence_refs": [
+                "T03",
+                "p.9"
+              ],
+              "presentation_role": "narrative_core",
+              "asset": "assets/figures/v3_T03_p9_1245x1054.png",
+              "page": 9
+            },
+            {
+              "type": "paragraph",
+              "text": "因此，结果不应被解释为‘只要使用注意力就会提升性能’。头数、表示维度、规模、正则化和训练程序共同构成有效配置。",
+              "evidence_refs": [
+                "T03",
+                "p.9"
+              ],
+              "presentation_role": "narrative_support"
+            }
+          ]
+        },
+        {
+          "id": "transfer",
+          "chapter_num": 5,
+          "title": "跨任务检验：成分句法解析",
+          "lead": "论文进一步问 Transformer 是否只适合机器翻译。",
+          "blocks": [
+            {
+              "type": "table",
+              "evidence_id": "T04",
+              "caption": "Table 4：英语成分句法解析的 WSJ 23 F1。",
+              "analysis": "4 层 Transformer 在 WSJ-only discriminative 设置达到 91.3 F1，在 semi-supervised 设置达到 92.7 F1，超过表中多项此前系统；但表中 generative 的 93.3 仍更高，因此结论是强迁移表现而非全面胜出。",
+              "supports": [
+                "跨任务泛化的支持性证据"
+              ],
+              "limits": [
+                "只覆盖一个解析数据/协议族，且并未超过所有列出的基线。"
+              ],
+              "evidence_refs": [
+                "T04",
+                "p.10"
+              ],
+              "presentation_role": "narrative_core",
+              "asset": "assets/figures/v3_T04_p10_1245x570.png",
+              "page": 10
+            },
+            {
+              "type": "paragraph",
+              "text": "这个结果扩大了论文的范围，但不能替代更广泛的跨领域验证。它显示注意力架构能够处理结构约束很强、输出通常比输入更长的解析任务，同时也保留了比较表中未胜出的结果。",
+              "evidence_refs": [
+                "T04",
+                "p.10"
+              ],
+              "presentation_role": "narrative_support"
+            }
+          ]
+        },
+        {
+          "id": "interpretation",
+          "chapter_num": 6,
+          "title": "可视化与边界：学到了什么，尚未证明什么",
+          "lead": "附录图把注意力头的行为展示出来，但其证据等级不同于翻译表格。",
+          "blocks": [
+            {
+              "type": "figure",
+              "evidence_id": "F03",
+              "caption": "Figure 3：长距离依赖示例。",
+              "analysis": "不同颜色的线连接词语位置，展示若干头对长距离依赖的关注。",
+              "supports": [
+                "定性说明部分头可能关注远距离关系"
+              ],
+              "limits": [
+                "单个示例不能证明系统性句法解释。"
+              ],
+              "evidence_refs": [
+                "F03",
+                "p.13"
+              ],
+              "presentation_role": "narrative_support",
+              "asset": "assets/figures/v3_F03_p13_1245x957.png",
+              "page": 13
+            },
+            {
+              "type": "figure",
+              "evidence_id": "F04",
+              "caption": "Figure 4：与指代消解相关的注意力头示例。",
+              "analysis": "图中展示 layer 5 的两个头在特定词语上的全注意力与孤立注意力。原文使用 apparently，说明这是解释性假设而非确定性证明。",
+              "supports": [
+                "展示头行为与指代关系的可能联系"
+              ],
+              "limits": [
+                "示例规模小，不能推出所有头或所有句子的功能。"
+              ],
+              "evidence_refs": [
+                "F04",
+                "p.14"
+              ],
+              "presentation_role": "narrative_support",
+              "asset": "assets/figures/v3_F04_p14_1254x1525.png",
+              "page": 14
+            },
+            {
+              "type": "figure",
+              "evidence_id": "F05",
+              "caption": "Figure 5：与句子结构相关的头示例。",
+              "analysis": "绿色与红色头显示不同连线模式，原文说行为 seems related to structure。",
+              "supports": [
+                "说明不同头可能学习不同任务"
+              ],
+              "limits": [
+                "视觉相关性不是因果解释，也没有跨样本稳定性报告。"
+              ],
+              "evidence_refs": [
+                "F05",
+                "p.15"
+              ],
+              "presentation_role": "narrative_support",
+              "asset": "assets/figures/v3_F05_p15_1254x1477.png",
+              "page": 15
+            },
+            {
+              "type": "takeaway",
+              "text": "结论边界：论文在所测翻译和解析设置中证明了一个强而可并行的注意力架构。它没有消除长序列的二次成本，没有用重复种子给出不确定性区间，也没有用定性图证明普遍可解释性。",
+              "evidence_refs": [
+                "T01",
+                "T02",
+                "T03",
+                "T04",
+                "F03",
+                "F04",
+                "F05"
+              ],
+              "presentation_role": "narrative_core"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

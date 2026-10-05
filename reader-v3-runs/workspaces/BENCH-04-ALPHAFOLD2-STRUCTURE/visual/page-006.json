@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "source_sha256": "6eae057a9faf4f671c3101e0745ed704460c6d3dec77243dfd3a9f2d2ab68970",
+  "page": 6,
+  "bindings": [{
+    "evidence_id": "F05", "kind": "figure", "bbox_norm": [0.055, 0.050, 0.945, 0.315],
+    "panel_bboxes_norm": [[0.065,0.055,0.390,0.275],[0.450,0.055,0.940,0.275]],
+    "status": "VERIFIED", "complete": true, "caption_match": true, "confidence": 0.99,
+    "notes": "Full two-panel Fig. 5 on MSA depth and cross-chain contacts."
+  }]
+}

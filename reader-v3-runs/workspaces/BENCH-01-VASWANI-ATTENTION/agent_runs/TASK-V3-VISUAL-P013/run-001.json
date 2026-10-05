@@ -1,0 +1,43 @@
+{
+  "task_id": "TASK-V3-VISUAL-P013",
+  "execution_kind": "HOST_AGENT",
+  "executor": {
+    "kind": "HOST_AGENT",
+    "host": "pi-parent-direct",
+    "host_version": "UNKNOWN",
+    "provider": "openai-codex",
+    "model": "gpt-6.1-sol",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "high",
+    "tool_profile": "paper-only"
+  },
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "input_hashes": {
+    "source/paper.pdf": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+    "task": "69a21e7f5ab2ae901852843d4a94aef9126ee6b36d6f0388cc9983510084975f"
+  },
+  "result": {
+    "schema_version": "1.0",
+    "source_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+    "page": 13,
+    "bindings": [
+      {
+        "evidence_id": "F03",
+        "kind": "figure",
+        "bbox_norm": [
+          0.17,
+          0.085,
+          0.835,
+          0.48
+        ],
+        "panel_bboxes_norm": [],
+        "status": "VERIFIED",
+        "complete": true,
+        "caption_match": true,
+        "confidence": 0.99,
+        "notes": "Full-page inspection confirms the Attention Visualizations heading, complete long-distance dependency visualization, token labels, colored links, and Figure 3 caption."
+      }
+    ]
+  }
+}

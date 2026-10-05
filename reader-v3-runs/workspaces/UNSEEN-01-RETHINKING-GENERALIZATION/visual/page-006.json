@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "source_sha256": "a71f1294a021cebc6939ec977fc073b6d7b4f183950eba761ec55364d30b729f",
+  "page": 6,
+  "bindings": [
+    {
+      "evidence_id": "T01",
+      "kind": "table",
+      "bbox_norm": [
+        0.1715686274509804,
+        0.11994949494949494,
+        0.8251633986928104,
+        0.3472222222222222
+      ],
+      "status": "VERIFIED",
+      "complete": true,
+      "caption_match": true,
+      "confidence": 0.95,
+      "notes": "Table 1 accuracy on CIFAR10 under random labels/pixels."
+    }
+  ]
+}

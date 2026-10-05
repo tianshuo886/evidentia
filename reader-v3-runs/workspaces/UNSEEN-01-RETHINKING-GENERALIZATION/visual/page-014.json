@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "source_sha256": "a71f1294a021cebc6939ec977fc073b6d7b4f183950eba761ec55364d30b729f",
+  "page": 14,
+  "bindings": [
+    {
+      "evidence_id": "T03",
+      "kind": "table",
+      "bbox_norm": [
+        0.1715686274509804,
+        0.4734848484848485,
+        0.8251633986928104,
+        0.6439393939393939
+      ],
+      "status": "VERIFIED",
+      "complete": true,
+      "caption_match": true,
+      "confidence": 0.95,
+      "notes": "Table 3 Generalizing with kernels (Gaussian, Laplacian, Polynomial)."
+    },
+    {
+      "evidence_id": "T04",
+      "kind": "table",
+      "bbox_norm": [
+        0.1715686274509804,
+        0.7765151515151515,
+        0.8251633986928104,
+        0.946969696969697
+      ],
+      "status": "VERIFIED",
+      "complete": true,
+      "caption_match": true,
+      "confidence": 0.95,
+      "notes": "Table 4 CIFAR10 random labels with explicit regularization."
+    }
+  ]
+}

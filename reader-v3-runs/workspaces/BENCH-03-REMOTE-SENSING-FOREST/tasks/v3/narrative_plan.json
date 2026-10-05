@@ -1,0 +1,56 @@
+{
+  "task_id": "TASK-V3-NARRATIVE-PLAN",
+  "task_type": "NARRATIVE_PLAN",
+  "required_capability": "SCIENTIFIC_NARRATIVE_PLANNING",
+  "scientific_contract": "Design an open paper-specific narrative plan before final composition; fixed universal chapter slots are forbidden.",
+  "description": "Paper-specific dynamic narrative plan for the Lead Writer.",
+  "input_artifacts": {
+    "source_pdf": "source/paper.pdf",
+    "lead_reader_draft": "model/paper_understanding_draft.json",
+    "revision_memo": "model/revision_memo.json"
+  },
+  "target_output": "model/narrative_plan.json",
+  "output_schema": "narrative_plan",
+  "source_sha256": "b4d103e6ab0664d96c31a00a0ee4d99e9fbc54a9f1a8eeea500716843d4eabce",
+  "base_sha256": "a9940ed7b26fa355fcd47a2bdde791798ac177b95ab9b521b68abb7345b1c46d",
+  "contract_version": "3.0",
+  "prompt_version": "3.1",
+  "allowed_inputs": [
+    "source/",
+    "source_pages/",
+    "assets/",
+    "model/paper_understanding_draft.json",
+    "model/revision_memo.json"
+  ],
+  "forbidden_inputs": [
+    "apply/",
+    "project/",
+    "memory/project/",
+    "reader/paper_reader_ir.json",
+    "reader/render_ir.json"
+  ],
+  "prohibited_context": [
+    "PROJECT_APPLY",
+    "RESEARCH_MEMORY",
+    "legacy Reader IR"
+  ],
+  "constraints": [
+    "PAPER_SPECIFIC_STRUCTURE",
+    "OPEN_ORDER",
+    "SOURCE_GROUNDED",
+    "NO_FIXED_STORY_SLOTS",
+    "PRESERVE_UNCERTAINTY"
+  ],
+  "instructions": "Determine the paper's own narrative architecture from the Lead Reader comprehension and Revision Memo. Return ordered dynamic sections. Each section needs a title, purpose, proposition or question when one exists, evidence refs, source anchors, and local figure/table/equation bindings when relevant. The count, identity and order must be chosen by the paper, not by a universal template. A section may be a proof step, taxonomy branch, measurement protocol, design trade-off, contradiction, result cluster, or another form. Do not read or emit any legacy Reader IR.",
+  "executor_template": {
+    "host": "generic-host",
+    "host_version": "UNKNOWN",
+    "provider": "magpie",
+    "model": "antigravity/gemini-3.8-flash",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "standard",
+    "tool_profile": "paper-only",
+    "started_at": "2026-10-05T15:58:55.338230+00:00",
+    "completed_at": "2026-10-05T15:58:55.338230+00:00"
+  }
+}

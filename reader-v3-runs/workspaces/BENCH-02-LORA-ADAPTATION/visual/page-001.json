@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "source_sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+  "page": 1,
+  "bindings": [
+    {
+      "evidence_id": "F01",
+      "kind": "figure",
+      "bbox_norm": [
+        0.625,
+        0.65,
+        0.82,
+        0.91
+      ],
+      "status": "VERIFIED",
+      "complete": true,
+      "caption_match": true,
+      "confidence": 0.9,
+      "notes": "Full-page visual inspection confirmed complete semantic region and caption match; overlapping geometry candidate corrected where needed."
+    }
+  ]
+}

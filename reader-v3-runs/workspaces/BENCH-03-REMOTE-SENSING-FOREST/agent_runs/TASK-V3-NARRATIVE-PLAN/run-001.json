@@ -1,0 +1,121 @@
+{
+  "task_id": "TASK-V3-NARRATIVE-PLAN",
+  "execution_kind": "HOST_AGENT",
+  "executor": {
+    "kind": "HOST_AGENT",
+    "host": "pi",
+    "host_version": "frozen-v3",
+    "provider": "magpie",
+    "model": "antigravity/gemini-3.8-flash",
+    "model_version": "canonical-high",
+    "reasoning_profile": "high",
+    "tool_profile": "paper-only",
+    "started_at": "2026-10-05T15:59:09.971721+00:00",
+    "completed_at": "2026-10-05T15:59:09.971721+00:00"
+  },
+  "started_at": "2026-10-05T15:59:09.971721+00:00",
+  "completed_at": "2026-10-05T15:59:09.971721+00:00",
+  "input_hashes": {
+    "source/paper.pdf": "b4d103e6ab0664d96c31a00a0ee4d99e9fbc54a9f1a8eeea500716843d4eabce",
+    "model/revision_memo.json": "6cae4d4309d3e54b4655e464d8ea5a28b4b49b72b536a296bce976a59f357a81"
+  },
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "result": {
+    "schema_version": "1.0",
+    "paper_id": "BENCH-03-REMOTE-SENSING-FOREST",
+    "source_sha256": "b4d103e6ab0664d96c31a00a0ee4d99e9fbc54a9f1a8eeea500716843d4eabce",
+    "paper_characterization": "全球尺度高分辨率遥感概率推断与生态系统建模论文",
+    "rationale": "论文论证围绕全球森林高度观测矛盾、概率深度集成网络、跨洲机载LiDAR严密验证与全球生态统计推断展开，章节依此自然分布。",
+    "sections": [
+      {
+        "id": "SEC-01",
+        "title": "全球森林高度的观测困境与融合契机",
+        "purpose": "阐述 GEDI 稀疏垂直采样与 Sentinel-2 密集二维覆盖之间的互补性，以及既有高冠层低估偏差问题。",
+        "evidence_refs": [
+          "p.1",
+          "p.2"
+        ],
+        "source_anchors": [
+          "p.1",
+          "p.2"
+        ]
+      },
+      {
+        "id": "SEC-02",
+        "title": "无下采样残差架构与高斯异方差似然机制",
+        "purpose": "剖析 8 残差块全卷积网络与高斯 NLL 损失函数，解释如何同时学习高度均值与偶然不确定性。",
+        "evidence_refs": [
+          "p.2",
+          "p.3",
+          "F01"
+        ],
+        "source_anchors": [
+          "p.2",
+          "p.3"
+        ]
+      },
+      {
+        "id": "SEC-03",
+        "title": "深度集成策略与多时相方差倒数加权融合",
+        "purpose": "介绍 5 模型集成估计认知不确定性，以及多时相自适应方差倒数加权在抑制云雪异常中的机制。",
+        "evidence_refs": [
+          "p.3",
+          "p.5"
+        ],
+        "source_anchors": [
+          "p.3",
+          "p.5"
+        ]
+      },
+      {
+        "id": "SEC-04",
+        "title": "留出GEDI与跨洲机载LiDAR双重验证",
+        "purpose": "呈现 GEDI balanced RMSE 7.3m、偏差改善以及 24 个 Sentinel-2 图幅独立机载 LVIS/ALS 外部对比数据。",
+        "evidence_refs": [
+          "F01",
+          "p.3",
+          "p.4",
+          "p.22"
+        ],
+        "source_anchors": [
+          "p.3",
+          "p.4",
+          "p.22"
+        ]
+      },
+      {
+        "id": "SEC-05",
+        "title": "不确定性空间校准与全球生态宏观统计",
+        "purpose": "展示不确定性对误差的筛选效用、全球41%植被高度分布以及34%高树位于保护区的生态发现。",
+        "evidence_refs": [
+          "p.4",
+          "p.5",
+          "p.6"
+        ],
+        "source_anchors": [
+          "p.4",
+          "p.5",
+          "p.6"
+        ]
+      },
+      {
+        "id": "SEC-06",
+        "title": "物理不可辨识性与全球部署边界",
+        "purpose": "严谨厘清10m产品像元间距与真实地面观测的区别，分析同谱异质与高纬复杂环境下的局限性。",
+        "evidence_refs": [
+          "p.6",
+          "p.7"
+        ],
+        "source_anchors": [
+          "p.6",
+          "p.7"
+        ]
+      }
+    ],
+    "uncertainties": [
+      "低矮灌木与植被（<5m）存在系统性偏高现象",
+      "高纬积雪冻原区域的不确定性校准曲线具有生物群系异质性"
+    ]
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "task_id": "TASK-V3-VISUAL-P010",
+  "execution_kind": "HOST_AGENT",
+  "executor": {
+    "kind": "HOST_AGENT",
+    "host": "pi-parent-direct",
+    "host_version": "UNKNOWN",
+    "provider": "openai-codex",
+    "model": "gpt-6.1-sol",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "high",
+    "tool_profile": "paper-only"
+  },
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "input_hashes": {
+    "source/paper.pdf": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+    "task": "901445719107d3406d67e265b3d86816b1289653c25c9bb51da0b4fbe8ac8a0c"
+  },
+  "result": {
+    "schema_version": "1.0",
+    "source_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+    "page": 10,
+    "bindings": [
+      {
+        "evidence_id": "T04",
+        "kind": "table",
+        "bbox_norm": [
+          0.17,
+          0.08,
+          0.835,
+          0.315
+        ],
+        "panel_bboxes_norm": [],
+        "status": "VERIFIED",
+        "complete": true,
+        "caption_match": true,
+        "confidence": 0.99,
+        "notes": "Full-page inspection confirms the complete Table 4 caption and all parser/training/WSJ 23 F1 rows, including the Transformer rows."
+      }
+    ]
+  }
+}

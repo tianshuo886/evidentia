@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "source_sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+  "page": 24,
+  "bindings": [
+    {
+      "evidence_id": "T17",
+      "kind": "table",
+      "bbox_norm": [
+        0.16830065359477125,
+        0.3768275867808949,
+        0.6785632862764246,
+        0.7685214726611821
+      ],
+      "status": "VERIFIED",
+      "complete": true,
+      "caption_match": true,
+      "confidence": 0.9,
+      "notes": "Full-page visual inspection confirmed complete semantic region and caption match; overlapping geometry candidate corrected where needed."
+    }
+  ]
+}

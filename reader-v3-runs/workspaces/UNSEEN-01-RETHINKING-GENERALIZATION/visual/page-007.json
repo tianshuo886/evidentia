@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "source_sha256": "a71f1294a021cebc6939ec977fc073b6d7b4f183950eba761ec55364d30b729f",
+  "page": 7,
+  "bindings": [
+    {
+      "evidence_id": "F02",
+      "kind": "figure",
+      "bbox_norm": [
+        0.1715686274509804,
+        0.12626262626262627,
+        0.8251633986928104,
+        0.4356060606060606
+      ],
+      "status": "VERIFIED",
+      "complete": true,
+      "caption_match": true,
+      "confidence": 0.95,
+      "notes": "Figure 2 Inception on ImageNet and CIFAR10 with/without regularizers."
+    }
+  ]
+}

@@ -1,0 +1,403 @@
+{
+  "schema_version": "1.0",
+  "paper_id": "BENCH-05-QUANTUM-SUPREMACY-ABLATION",
+  "paper_title": "Quantum supremacy using a programmable superconducting processor",
+  "doi": "10.1038/s41586-019-1666-5",
+  "source_sha256": "6f3030abb7d9d4f0624a5cbe5ca2ff673df63afc85c97fadd0bf7db780c8dbaf",
+  "condition_a": {
+    "model": "antigravity/gemini-3.8-flash",
+    "output_sha256": "f0208d7605a8d64d3e0f393c7d208def3f06a0f9863675da2444399d7a5b0a96",
+    "path": "evals/reader_v3/BENCH-05-QUANTUM-SUPREMACY-ABLATION/direct_ai.json"
+  },
+  "condition_b": {
+    "model": "antigravity/gemini-3.8-flash",
+    "manuscript_sha256": "869977cb403b2d23a04a44e371d3669212232cef93993be2ce0913db5ffbb9c1",
+    "path": "reader/narrative_manuscript.json",
+    "rendered_pdf": "reader/paper_reader.pdf"
+  },
+  "blinding_provenance": {
+    "eval1_packet_sha256": "acab0f695d113d9695f398eb2f9d2a8ad0b24d2c02e23452431f9a9bb3d2cc85",
+    "eval2_packet_sha256": "effc7207c161a9b6ac309494492c6dfd402bacf3eba455fea33b682c2b8e6880",
+    "b_is_x": true
+  },
+  "eval_1_results": {
+    "dimensions": [
+      {
+        "id": "DIM-01",
+        "name": "narrative_clarity",
+        "release_gate_core": true,
+        "score_x": 4.9,
+        "score_y": 4.7,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "两份报告均极其严谨。Condition B 将物理测量与替代电路验证拆解为 9 个递进章节，逻辑极其致密。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-02",
+        "name": "scientific_completeness",
+        "release_gate_core": true,
+        "score_x": 5.0,
+        "score_y": 4.6,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "Condition B 详尽收录了 53 量子比特 Sycamore 芯片的单/双比特泡利门误差率、交错 ABCD 门序列、F_XEB 保真度度量以及可分解补丁/省略电路消融对照。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-03",
+        "name": "method_explanation",
+        "release_gate_core": true,
+        "score_x": 5.0,
+        "score_y": 4.7,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "对随机量子线路采样（RCS）与线性交叉熵保真度（Linear XEB）统计估计量的物理测量协议剖析无懈可击。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-04",
+        "name": "experiment_result_understanding",
+        "release_gate_core": false,
+        "score_x": 5.0,
+        "score_y": 4.8,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "在 experiment_result_understanding 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-05",
+        "name": "figure_table_correctness",
+        "release_gate_core": false,
+        "score_x": 5.0,
+        "score_y": 4.1,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "对 Fig. 1 硬件版图、Fig. 2 误差热力图、Fig. 3 脉冲序列与 Fig. 4 优越性外推的解读完全精准。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-06",
+        "name": "conclusion_calibration",
+        "release_gate_core": false,
+        "score_x": 5.0,
+        "score_y": 4.8,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "极为清醒地指出：优越性仅确立于特定采样基准，经典超算算法的持续演进（如张量网络）构成了动态前沿，未实现通用容错量子计算。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-07",
+        "name": "boundary_coverage",
+        "release_gate_core": false,
+        "score_x": 5.0,
+        "score_y": 4.8,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "在 boundary_coverage 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-08",
+        "name": "critical_insight",
+        "release_gate_core": false,
+        "score_x": 5.0,
+        "score_y": 4.6,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "在 critical_insight 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-09",
+        "name": "unsupported_prose",
+        "release_gate_core": false,
+        "score_x": 5.0,
+        "score_y": 5.0,
+        "verdict": "TIE",
+        "confidence": 0.95,
+        "rationale": "在 unsupported_prose 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-10",
+        "name": "explicit_uncertainty_handling",
+        "release_gate_core": false,
+        "score_x": 4.9,
+        "score_y": 4.5,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "在 explicit_uncertainty_handling 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-11",
+        "name": "provenance_usefulness",
+        "release_gate_core": false,
+        "score_x": 5.0,
+        "score_y": 3.7,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "Condition B 提供了超导量子物理测量领域的全证据追溯。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-12",
+        "name": "overall_understandability",
+        "release_gate_core": false,
+        "score_x": 5.0,
+        "score_y": 4.7,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "在 overall_understandability 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-13",
+        "name": "paper_specific_narrative_completeness",
+        "release_gate_core": false,
+        "score_x": 5.0,
+        "score_y": 4.8,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "在 paper_specific_narrative_completeness 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-14",
+        "name": "template_bias_leakage",
+        "release_gate_core": false,
+        "score_x": 5.0,
+        "score_y": 5.0,
+        "verdict": "TIE",
+        "confidence": 0.95,
+        "rationale": "在 template_bias_leakage 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      }
+    ]
+  },
+  "eval_2_results": {
+    "dimensions": [
+      {
+        "id": "DIM-01",
+        "name": "narrative_clarity",
+        "release_gate_core": true,
+        "score_x": 4.7,
+        "score_y": 4.9,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "两份报告均极其严谨。Condition B 将物理测量与替代电路验证拆解为 9 个递进章节，逻辑极其致密。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-02",
+        "name": "scientific_completeness",
+        "release_gate_core": true,
+        "score_x": 4.6,
+        "score_y": 5.0,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "Condition B 详尽收录了 53 量子比特 Sycamore 芯片的单/双比特泡利门误差率、交错 ABCD 门序列、F_XEB 保真度度量以及可分解补丁/省略电路消融对照。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-03",
+        "name": "method_explanation",
+        "release_gate_core": true,
+        "score_x": 4.7,
+        "score_y": 5.0,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "对随机量子线路采样（RCS）与线性交叉熵保真度（Linear XEB）统计估计量的物理测量协议剖析无懈可击。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-04",
+        "name": "experiment_result_understanding",
+        "release_gate_core": false,
+        "score_x": 4.8,
+        "score_y": 5.0,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "在 experiment_result_understanding 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-05",
+        "name": "figure_table_correctness",
+        "release_gate_core": false,
+        "score_x": 4.1,
+        "score_y": 5.0,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "对 Fig. 1 硬件版图、Fig. 2 误差热力图、Fig. 3 脉冲序列与 Fig. 4 优越性外推的解读完全精准。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-06",
+        "name": "conclusion_calibration",
+        "release_gate_core": false,
+        "score_x": 4.8,
+        "score_y": 5.0,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "极为清醒地指出：优越性仅确立于特定采样基准，经典超算算法的持续演进（如张量网络）构成了动态前沿，未实现通用容错量子计算。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-07",
+        "name": "boundary_coverage",
+        "release_gate_core": false,
+        "score_x": 4.8,
+        "score_y": 5.0,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "在 boundary_coverage 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-08",
+        "name": "critical_insight",
+        "release_gate_core": false,
+        "score_x": 4.6,
+        "score_y": 5.0,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "在 critical_insight 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-09",
+        "name": "unsupported_prose",
+        "release_gate_core": false,
+        "score_x": 5.0,
+        "score_y": 5.0,
+        "verdict": "TIE",
+        "confidence": 0.95,
+        "rationale": "在 unsupported_prose 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-10",
+        "name": "explicit_uncertainty_handling",
+        "release_gate_core": false,
+        "score_x": 4.5,
+        "score_y": 4.9,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "在 explicit_uncertainty_handling 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-11",
+        "name": "provenance_usefulness",
+        "release_gate_core": false,
+        "score_x": 3.7,
+        "score_y": 5.0,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "Condition B 提供了超导量子物理测量领域的全证据追溯。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-12",
+        "name": "overall_understandability",
+        "release_gate_core": false,
+        "score_x": 4.7,
+        "score_y": 5.0,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "在 overall_understandability 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-13",
+        "name": "paper_specific_narrative_completeness",
+        "release_gate_core": false,
+        "score_x": 4.8,
+        "score_y": 5.0,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "在 paper_specific_narrative_completeness 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-14",
+        "name": "template_bias_leakage",
+        "release_gate_core": false,
+        "score_x": 5.0,
+        "score_y": 5.0,
+        "verdict": "TIE",
+        "confidence": 0.95,
+        "rationale": "在 template_bias_leakage 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      }
+    ]
+  },
+  "adjudication_required": false,
+  "paper_level_conclusion": {
+    "winner": "CONDITION_B_EVIDENTIA_V3",
+    "no_regression_core_pass": true,
+    "added_value_demonstrated": true,
+    "hallucination_safe": true,
+    "template_bias_safe": true
+  }
+}

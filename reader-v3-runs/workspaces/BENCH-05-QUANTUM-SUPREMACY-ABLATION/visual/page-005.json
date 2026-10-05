@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "source_sha256": "6f3030abb7d9d4f0624a5cbe5ca2ff673df63afc85c97fadd0bf7db780c8dbaf",
+  "page": 5,
+  "bindings": [
+    {
+      "evidence_id": "F04",
+      "kind": "figure",
+      "bbox_norm": [
+        0.0746,
+        0.0774,
+        0.9332,
+        0.3706
+      ],
+      "panel_bboxes_norm": [
+        [
+          0.0746,
+          0.0774,
+          0.503,
+          0.3706
+        ],
+        [
+          0.505,
+          0.0774,
+          0.9332,
+          0.3706
+        ]
+      ],
+      "status": "VERIFIED",
+      "complete": true,
+      "caption_match": true,
+      "confidence": 0.97,
+      "notes": "Fig.4 spans the top band of page 5 (the candidate captured only a small sub-panel; the full region is verified here). Panel a 'Classically verifiable': F_XEB vs qubit number for prediction/full/elided/patch circuits; panel b 'Supremacy regime': F_XEB vs cycle depth m with classical sampling and verification cost annotations; caption 'Demonstrating quantum supremacy' matches."
+    }
+  ]
+}

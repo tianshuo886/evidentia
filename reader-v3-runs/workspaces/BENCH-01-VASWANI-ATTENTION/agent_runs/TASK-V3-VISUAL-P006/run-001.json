@@ -1,0 +1,43 @@
+{
+  "task_id": "TASK-V3-VISUAL-P006",
+  "execution_kind": "HOST_AGENT",
+  "executor": {
+    "kind": "HOST_AGENT",
+    "host": "pi-parent-direct",
+    "host_version": "UNKNOWN",
+    "provider": "openai-codex",
+    "model": "gpt-6.1-sol",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "high",
+    "tool_profile": "paper-only"
+  },
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "input_hashes": {
+    "source/paper.pdf": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+    "task": "a9278a789be0d68faf08ebf48a2f945edc751d1b3f8a673dcfe11b547bf5827b"
+  },
+  "result": {
+    "schema_version": "1.0",
+    "source_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+    "page": 6,
+    "bindings": [
+      {
+        "evidence_id": "T01",
+        "kind": "table",
+        "bbox_norm": [
+          0.17,
+          0.085,
+          0.82,
+          0.255
+        ],
+        "panel_bboxes_norm": [],
+        "status": "VERIFIED",
+        "complete": true,
+        "caption_match": true,
+        "confidence": 0.99,
+        "notes": "Full-page inspection confirms Table 1 caption and the complete four-row comparison with Layer Type, Complexity per Layer, Sequential Operations, and Maximum Path Length columns."
+      }
+    ]
+  }
+}

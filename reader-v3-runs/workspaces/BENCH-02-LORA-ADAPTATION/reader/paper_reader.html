@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang='zh-CN'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'><title>LoRA：大型语言模型的低秩适配</title><style>
+/* Keep release rendering offline and deterministic.  The prior remote font
+   fetch could block a release on a CDN/network timeout; installed CJK fonts
+   remain the presentation fallback. */
+
+@page {
+  size: A4;
+  margin: 20mm 22mm 22mm 22mm;
+  background: #f5f4ed;
+
+  @top-right {
+    content: string(section-title);
+    font-family: "TsangerJinKai02", "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", Georgia, serif;
+    font-size: 8pt;
+    color: #6b6a64;
+  }
+
+  @bottom-center {
+    content: counter(page);
+    font-family: "TsangerJinKai02", "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", Georgia, serif;
+    font-size: 9pt;
+    color: #6b6a64;
+  }
+}
+
+@page:first {
+  @top-right { content: ""; }
+  @bottom-center { content: ""; }
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --parchment: #f5f4ed;
+  --ivory:     #faf9f5;
+  --near-black:#141413;
+  --dark-warm: #3d3d3a;
+  --olive:     #504e49;
+  --stone:     #6b6a64;
+  --brand:     #1B365D;
+  --border:    #e8e6dc;
+  --border-soft:#e5e3d8;
+  --tag-bg:    #E4ECF5;
+  --serif: "TsangerJinKai02", "Source Han Serif SC", "Source Han Serif CN", "Noto Serif CJK SC", "Noto Serif SC", "Songti SC", "STSong", "SimSun", Georgia, serif;
+  --sans: var(--serif);
+  --rhythm-module: 14pt;
+  --rhythm-section: 18pt;
+}
+
+html, body {
+  background: var(--parchment);
+  color: var(--near-black);
+  font-family: var(--serif);
+  font-size: 10.5pt;
+  line-height: 1.55;
+  letter-spacing: 0.2pt;
+  widows: 3;
+  orphans: 3;
+}
+
+@media screen {
+  body {
+    max-width: 210mm;
+    margin: 0 auto;
+    padding: 20mm 22mm;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+}
+
+/* ========== COVER ========== */
+.cover {
+  min-height: 240mm;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 36mm 0 0 0;
+  break-after: page;
+}
+.cover-eyebrow {
+  font-family: var(--sans);
+  font-size: 9.5pt;
+  color: var(--brand);
+  letter-spacing: 1.5pt;
+  text-transform: uppercase;
+  font-weight: 500;
+  margin-bottom: 18pt;
+}
+.cover-title {
+  font-size: 30pt;
+  font-weight: 500;
+  color: var(--near-black);
+  line-height: 1.25;
+  letter-spacing: 0.3pt;
+  margin-bottom: 16pt;
+}
+.cover-sub {
+  font-size: 13pt;
+  color: var(--olive);
+  line-height: 1.5;
+  max-width: 90%;
+  margin-bottom: 24pt;
+}
+.cover-meta {
+  font-size: 9.5pt;
+  color: var(--stone);
+  line-height: 1.55;
+  border-top: 0.5pt solid var(--border);
+  padding-top: 14pt;
+}
+.cover-meta strong {
+  color: var(--dark-warm);
+  font-weight: 500;
+}
+
+/* ========== TOC ========== */
+.toc {
+  break-after: page;
+  padding-top: 16pt;
+}
+.toc h2 {
+  font-size: 20pt;
+  font-weight: 500;
+  margin-bottom: var(--rhythm-module);
+  color: var(--near-black);
+}
+.toc-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 7pt 0;
+  border-bottom: 0.3pt dotted var(--border);
+  font-size: 10.5pt;
+}
+.toc-num {
+  color: var(--brand);
+  font-weight: 500;
+  min-width: 28pt;
+}
+.toc-title {
+  flex: 1;
+  color: var(--near-black);
+  text-decoration: none;
+  display: block;
+}
+.toc-title[href]::after {
+  content: target-counter(attr(href), page);
+  color: var(--stone);
+  font-variant-numeric: tabular-nums;
+  float: right;
+}
+
+/* ========== CHAPTERS ========== */
+.chapter {
+  break-before: page;
+  padding-top: 10pt;
+}
+.chapter-num {
+  font-family: var(--sans);
+  font-size: 9.5pt;
+  color: var(--brand);
+  letter-spacing: 1pt;
+  text-transform: uppercase;
+  margin-bottom: 6pt;
+  font-weight: 500;
+}
+h1 {
+  font-size: 20pt;
+  font-weight: 500;
+  line-height: 1.25;
+  margin: 0 0 10pt 0;
+  color: var(--near-black);
+  break-after: avoid;
+  string-set: section-title content();
+}
+h2 {
+  font-size: 14pt;
+  font-weight: 500;
+  line-height: 1.3;
+  margin: 20pt 0 8pt 0;
+  color: var(--near-black);
+  break-after: avoid;
+}
+.lead {
+  font-size: 11.5pt;
+  line-height: 1.55;
+  color: var(--dark-warm);
+  margin-bottom: var(--rhythm-module);
+  font-style: normal;
+  border-left: 2pt solid var(--brand);
+  padding-left: 10pt;
+}
+
+p {
+  margin: 0 0 10pt 0;
+  line-height: 1.55;
+  color: var(--near-black);
+  break-inside: avoid;
+}
+
+/* ========== CALLOUTS & TAKEAWAYS ========== */
+.callout {
+  background: var(--ivory);
+  border-left: 2.5pt solid var(--brand);
+  padding: 10pt 14pt;
+  border-radius: 0 3pt 3pt 0;
+  margin: 12pt 0;
+  line-height: 1.55;
+  break-inside: avoid;
+}
+.takeaway {
+  background: var(--ivory);
+  border: 1pt solid var(--border);
+  border-radius: 4pt;
+  padding: 10pt 14pt;
+  margin: 14pt 0;
+  break-inside: avoid;
+}
+.takeaway-label {
+  font-family: var(--sans);
+  font-size: 8.5pt;
+  color: var(--brand);
+  letter-spacing: 0.8pt;
+  text-transform: uppercase;
+  font-weight: 500;
+  margin-bottom: 4pt;
+}
+
+/* ========== FIGURES & TABLES ========== */
+figure.kami-figure {
+  margin: 16pt 0;
+  break-inside: avoid;
+  background: var(--ivory);
+  border: 1pt solid var(--border);
+  border-radius: 4pt;
+  padding: 12pt;
+}
+figure.kami-figure img {
+  max-width: 100%;
+  max-height: 380px;
+  display: block;
+  margin: 0 auto 8pt auto;
+  border-radius: 2pt;
+}
+figcaption {
+  font-family: var(--sans);
+  font-size: 9pt;
+  color: var(--stone);
+  text-align: center;
+  margin-bottom: 8pt;
+  font-weight: 500;
+}
+.figure-analysis {
+  font-size: 9.5pt;
+  color: var(--dark-warm);
+  line-height: 1.55;
+  border-top: 0.3pt solid var(--border);
+  padding-top: 8pt;
+}
+
+.equation-block {
+  background: var(--ivory);
+  border-radius: 4pt;
+  padding: 10pt 14pt;
+  margin: 12pt 0;
+  break-inside: avoid;
+  text-align: center;
+}
+.math-display {
+  font-size: 11pt;
+  margin: 6pt 0;
+}
+.math-source { display: inline-block; max-width: 100%; overflow-wrap: anywhere; }
+.equation-fallback, .table-asset { max-width: 100%; height: auto; display: block; margin: 6pt auto; }
+.equation-uncertain { color: var(--stone); font-style: italic; }
+.eq-explanation {
+  font-size: 9pt;
+  color: var(--stone);
+  margin-top: 4pt;
+  text-align: left;
+}
+
+/* Quiet evidence anchors */
+.evidence-cite {
+  display: inline-block;
+  white-space: nowrap;
+  font-family: var(--sans);
+  font-size: 8pt;
+  color: var(--brand);
+  background: var(--tag-bg);
+  padding: 1pt 5pt;
+  border-radius: 2pt;
+  margin-left: 4pt;
+  vertical-align: 1pt;
+  text-decoration: none;
+}
+.evidence-cite:hover {
+  text-decoration: underline;
+}
+@media print {
+  .evidence-cite { display: none; }
+}
+.evidence-binding { font-family: var(--sans); font-size: 8pt; color: var(--brand); margin-right: 5pt; }
+
+/* ========== APPENDIX ========== */
+.appendix {
+  border-top: 0.5pt solid var(--border);
+  padding-top: 14pt;
+  margin-top: 20pt;
+}
+.appendix details {
+  background: var(--ivory);
+  border: 1pt solid var(--border);
+  border-radius: 4pt;
+  padding: 10pt 14pt;
+  margin: 12pt 0;
+}
+.appendix summary {
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--brand);
+}
+</style></head>
+<body>
+<section class='cover'><div><div class='cover-title'>LoRA：大型语言模型的低秩适配</div><div class='cover-sub'>从部署瓶颈、低秩更新到跨规模实证与子空间线索</div></div><div class='cover-meta'>Edward J. Hu、Yelong Shen、Phillip Wallis、Zeyuan Allen-Zhu、Yuanzhi Li、Shean Wang、Lu Wang、Weizhu Chen · ICLR · 2021</div><div class="cover-orientation">本文提出一种冻结预训练权重、仅训练低秩增量的语言模型适配方法。</div></section>
+<section class='toc'><h2>目录</h2><div class='toc-item'><a class='toc-title' href='#ch-s1'><span class='toc-num'>01</span> · 为什么“适配”首先是部署问题</a></div><div class='toc-item'><a class='toc-title' href='#ch-s2'><span class='toc-num'>02</span> · 从任务增量到低秩重参数化</a></div><div class='toc-item'><a class='toc-title' href='#ch-s3'><span class='toc-num'>03</span> · 把低秩更新放进 Transformer，并折叠回部署图</a></div><div class='toc-item'><a class='toc-title' href='#ch-s4'><span class='toc-num'>04</span> · 跨模型实证：少量参数能否保住任务质量</a></div><div class='toc-item'><a class='toc-title' href='#ch-s5'><span class='toc-num'>05</span> · rank 与矩阵位置：效率来自哪里</a></div><div class='toc-item'><a class='toc-title' href='#ch-s6'><span class='toc-num'>06</span> · 子空间证据提供的机制线索</a></div><div class='toc-item'><a class='toc-title' href='#ch-s7'><span class='toc-num'>07</span> · 结论的有效范围与尚未回答的问题</a></div><div class='toc-item'><a class='toc-title' href='#ch-sources'><span class='toc-num'>08</span> · 证据来源与页面锚点</a></div></section>
+<section class='chapter' id='ch-s1'><h1>为什么“适配”首先是部署问题</h1><div class='lead'>论文的入口不是一个抽象的压缩率，而是同一基础模型要服务多个下游任务时，完整复制参数会让存储、显存与在线切换变得不可承受。</div><div class='chapter-body'><p>作者先把全量微调写成对每个任务都学习一个与基础模型同量级的参数增量。GPT-3 175B 让这个代价从“麻烦”变成部署问题：任务越多，越难保存和切换独立实例。论文随后比较两条既有路线的结构性代价：adapter 增加串行层，prefix 类方法占用输入序列长度且优化并不稳定。 <span class="evidence-cites"><a href="#p.1" class="evidence-cite" aria-label="证据 p.1">[p.1]</a> <a href="#p.2" class="evidence-cite" aria-label="证据 p.2">[p.2]</a> <a href="#p.3" class="evidence-cite" aria-label="证据 p.3">[p.3]</a></span></p>
+
+        <div class="takeaway" id="evidence-T01">
+          <div class="takeaway-label">表 1：GPT-2 medium 上单次前向的延迟。 <span class="evidence-binding">〔T01〕</span></div>
+          <img src='../assets/figures/crop_T01_p4_801x849.png' alt='表 1：GPT-2 medium 上单次前向的延迟。' class='table-asset' />
+          <div style="font-size:9.5pt; margin-top:6pt;">在 batch=1、sequence=128 的在线情境中，AdapterH 与 AdapterL 相对 Fine-Tune/LoRA 的慢化分别达到 30.3% 和 20.7%；这解释了为何“参数少”不自动意味着“部署快”。 <span class="evidence-cites"><a href="#evidence-T01" class="evidence-cite" aria-label="证据 T01">[T01]</a> <a href="#p.3" class="evidence-cite" aria-label="证据 p.3">[p.3]</a></span></div>
+        </div>
+        </div></section><section class='chapter' id='ch-s2'><h1>从任务增量到低秩重参数化</h1><div class='lead'>LoRA 的方法动作很窄却承担了整篇论文的桥梁：不改基础权重本身，而把任务变化限制在一个低秩子空间里。</div><div class='chapter-body'><p>在条件语言建模目标中，作者把原本直接优化的 ΔΦ 改写为由更小参数 Θ 编码的增量。对任意 dense weight W0，LoRA 取 ΔW=BA，其中 A 与 B 的秩 r 远小于矩阵维度；训练期间 W0 不接收梯度，只训练 A、B。A 用高斯随机初始化、B 置零，因此一开始 BA=0，随后用 α/r 缩放更新。 <span class="evidence-cites"><a href="#p.2" class="evidence-cite" aria-label="证据 p.2">[p.2]</a> <a href="#p.4" class="evidence-cite" aria-label="证据 p.4">[p.4]</a> <a href="#evidence-F01" class="evidence-cite" aria-label="证据 F01">[F01]</a></span></p>
+
+        <figure class="kami-figure" id="evidence-F01">
+          <img src='../assets/figures/crop_F01_p1_151x153.png' alt='图 1：LoRA 的重参数化。' />
+          <figcaption>图 1：LoRA 的重参数化。 <span class="evidence-binding">〔F01〕</span></figcaption>
+          <div class="figure-analysis">图示把冻结的预训练权重路径与只训练 A、B 的低秩旁路并列，前向输出相加；它具体化了 ΔW=BA 的计算位置。 <span class="evidence-cites"><a href="#evidence-F01" class="evidence-cite" aria-label="证据 F01">[F01]</a> <a href="#p.4" class="evidence-cite" aria-label="证据 p.4">[p.4]</a></span></div>
+        </figure>
+        </div></section><section class='chapter' id='ch-s3'><h1>把低秩更新放进 Transformer，并折叠回部署图</h1><div class='lead'>论文把 LoRA 的普适 dense-layer 原则收窄到可测的 Transformer attention 配置，再利用矩阵可合并性获得部署收益。</div><div class='chapter-body'><p>在 Transformer 中，作者把研究范围限定为 self-attention 的权重，主实验主要适配 Wq 与 Wv，冻结 MLP；Wk、Wo、LayerNorm 与 bias 的系统组合不在这篇论文的实证范围内。训练结束后可显式计算 W=W0+BA 并像普通模型一样推理，因此没有额外 adapter 层深度。代价是若把不同任务的 BA 都吸收到 W 中，同一 batch 里混合任务的模块切换不再直接。 <span class="evidence-cites"><a href="#p.4" class="evidence-cite" aria-label="证据 p.4">[p.4]</a> <a href="#p.5" class="evidence-cite" aria-label="证据 p.5">[p.5]</a></span></p>
+<p>这个设计使“训练时只存小增量”和“推理时不加层”形成一条连贯链条，但不能把它简化为所有参数都低秩更新。论文报告 GPT-3 训练显存可从约 1.2 TB 降至 350 GB，r=4 且只适配 query/value 时 checkpoint 约由 350 GB 变为 35 MB；这些数字描述的是特定规模与配置。 <span class="evidence-cites"><a href="#p.4" class="evidence-cite" aria-label="证据 p.4">[p.4]</a></span></p>
+<div class='takeaway'><div class='takeaway-label'>核心关注</div><p>贡献的边界与贡献本身同样重要：attention-only 与可合并部署是本文测得的具体选择，不是无条件的模型改造承诺。 <span class="evidence-cites"><a href="#p.4" class="evidence-cite" aria-label="证据 p.4">[p.4]</a> <a href="#p.5" class="evidence-cite" aria-label="证据 p.5">[p.5]</a></span></p></div></div></section><section class='chapter' id='ch-s4'><h1>跨模型实证：少量参数能否保住任务质量</h1><div class='lead'>实证章节按模型规模逐步放大：先看 GLUE，再看生成任务，最后把方法推到 GPT-3 175B，从而同时检验参数效率与质量保持。</div><div class='chapter-body'><p>在 RoBERTa、DeBERTa、GPT-2 和 GPT-3 上，LoRA 与 full fine-tuning、adapter、prefix tuning、bias-only 等方法比较。GLUE 表显示 RoBERTa-base 的 LoRA 只训练约 0.3M 参数而平均分 87.2，DeBERTa-XXL 用约 4.7M 参数达到 91.3；GPT-2 的 E2E NLG 以及 GPT-3 的 WikiSQL、MultiNLI-m、SAMSum 则把比较推进到生成与超大模型。 <span class="evidence-cites"><a href="#evidence-T02" class="evidence-cite" aria-label="证据 T02">[T02]</a> <a href="#evidence-T03" class="evidence-cite" aria-label="证据 T03">[T03]</a> <a href="#p.6" class="evidence-cite" aria-label="证据 p.6">[p.6]</a></span></p>
+
+        <div class="takeaway" id="evidence-T04">
+          <div class="takeaway-label">表 4：GPT-3 175B 上不同适配方法的表现。 <span class="evidence-binding">〔T04〕</span></div>
+          <img src='../assets/figures/crop_T04_p8_1068x338.png' alt='表 4：GPT-3 175B 上不同适配方法的表现。' class='table-asset' />
+          <div style="font-size:9.5pt; margin-top:6pt;">4.7M 参数的 LoRA 在 WikiSQL/MNLI-m/SAMSum 上报告 73.4/91.7/53.8-29.8-45.9，37.7M 版本 WikiSQL 为 74.0；这支撑“在这些任务和协议下接近或超过 full fine-tuning”。 <span class="evidence-cites"><a href="#evidence-T04" class="evidence-cite" aria-label="证据 T04">[T04]</a> <a href="#p.8" class="evidence-cite" aria-label="证据 p.8">[p.8]</a></span></div>
+        </div>
+        
+
+        <figure class="kami-figure" id="evidence-F02">
+          <img src='../assets/figures/crop_F02_p8_1068x338.png' alt='图 2：GPT-3 175B 验证准确率与可训练参数量。' />
+          <figcaption>图 2：GPT-3 175B 验证准确率与可训练参数量。 <span class="evidence-binding">〔F02〕</span></figcaption>
+          <div class="figure-analysis">散点比较展示 LoRA 在 WikiSQL 与 MultiNLI-m 上较少参数即可落在高性能区域；它把表格中的离散比较扩展成参数规模趋势。 <span class="evidence-cites"><a href="#evidence-F02" class="evidence-cite" aria-label="证据 F02">[F02]</a> <a href="#p.8" class="evidence-cite" aria-label="证据 p.8">[p.8]</a></span></div>
+        </figure>
+        </div></section><section class='chapter' id='ch-s5'><h1>rank 与矩阵位置：效率来自哪里</h1><div class='lead'>作者把“为什么少量参数有效”拆成两个可操作变量：在哪些 attention 矩阵上适配，以及低秩 r 取多大。</div><div class='chapter-body'><p>相同参数预算下，Wq 与 Wv 同时适配通常优于只适配一种矩阵，说明参数位置比总量本身更关键。rank 消融显示，许多任务在很小 r 时就接近较高 rank；但结果并非单调，GPT-2 E2E 的不同 rank 仍有指标差异，且表 18 明确部分超参在 r=4 上调过。 <span class="evidence-cites"><a href="#evidence-T05" class="evidence-cite" aria-label="证据 T05">[T05]</a> <a href="#evidence-T06" class="evidence-cite" aria-label="证据 T06">[T06]</a> <a href="#evidence-T08" class="evidence-cite" aria-label="证据 T08">[T08]</a> <a href="#evidence-T18" class="evidence-cite" aria-label="证据 T18">[T18]</a> <a href="#p.10" class="evidence-cite" aria-label="证据 p.10">[p.10]</a> <a href="#p.17" class="evidence-cite" aria-label="证据 p.17">[p.17]</a> <a href="#p.26" class="evidence-cite" aria-label="证据 p.26">[p.26]</a></span></p>
+
+        <div class="takeaway" id="evidence-T08">
+          <div class="takeaway-label">表 8：adapter 相关的延迟实验对照。 <span class="evidence-binding">〔T08〕</span></div>
+          <img src='../assets/figures/crop_T08_p17_990x546.png' alt='表 8：adapter 相关的延迟实验对照。' class='table-asset' />
+          <div style="font-size:9.5pt; margin-top:6pt;">该页的表格与下方延迟图共同说明 adapter 的串行开销受 batch、序列长度和 bottleneck 影响；不要把低秩 rank 消融与延迟测量混为一类证据。 <span class="evidence-cites"><a href="#evidence-T08" class="evidence-cite" aria-label="证据 T08">[T08]</a> <a href="#p.17" class="evidence-cite" aria-label="证据 p.17">[p.17]</a></span></div>
+        </div>
+        
+
+        <div class="takeaway" id="evidence-T18">
+          <div class="takeaway-label">表 18：GPT-2 Medium E2E NLG 上不同 rank 的结果。 <span class="evidence-binding">〔T18〕</span></div>
+          <img src='../assets/figures/crop_T18_p26_1090x489.png' alt='表 18：GPT-2 Medium E2E NLG 上不同 rank 的结果。' class='table-asset' />
+          <div style="font-size:9.5pt; margin-top:6pt;">验证损失在 r≥16 后趋于平台，而 BLEU/METEOR/ROUGE-L/CIDEr 的峰值并不在同一 rank；这直接提醒读者不要把“更大 rank”理解为必然更好。 <span class="evidence-cites"><a href="#evidence-T18" class="evidence-cite" aria-label="证据 T18">[T18]</a> <a href="#p.26" class="evidence-cite" aria-label="证据 p.26">[p.26]</a></span></div>
+        </div>
+        </div></section><section class='chapter' id='ch-s6'><h1>子空间证据提供的机制线索</h1><div class='lead'>最后一组实验不再问“分数是多少”，而是问低秩更新是否在重复选择有结构的方向，以及这些方向与原模型有什么关系。</div><div class='chapter-body'><p>不同随机种子的 LoRA 模块在若干层显示相似的列向量子空间，且 ΔW 与 Wq 的投影相对随机矩阵基线更大。作者据此提出一种解释：更新可能放大预训练模型中与下游任务相关、却没有被充分强调的方向。rank 增大时又会吸收更多 Wq 已强调的方向。 <span class="evidence-cites"><a href="#evidence-F05" class="evidence-cite" aria-label="证据 F05">[F05]</a> <a href="#evidence-F06" class="evidence-cite" aria-label="证据 F06">[F06]</a> <a href="#evidence-F07" class="evidence-cite" aria-label="证据 F07">[F07]</a> <a href="#evidence-F08" class="evidence-cite" aria-label="证据 F08">[F08]</a> <a href="#evidence-T07" class="evidence-cite" aria-label="证据 T07">[T07]</a> <a href="#p.12" class="evidence-cite" aria-label="证据 p.12">[p.12]</a> <a href="#p.17" class="evidence-cite" aria-label="证据 p.17">[p.17]</a> <a href="#p.25" class="evidence-cite" aria-label="证据 p.25">[p.25]</a> <a href="#p.26" class="evidence-cite" aria-label="证据 p.26">[p.26]</a></span></p>
+
+        <figure class="kami-figure" id="evidence-F07">
+          <img src='../assets/figures/crop_F07_p26_1090x489.png' alt='图 7：不同随机种子的低秩模块之间的子空间相似度。' />
+          <figcaption>图 7：不同随机种子的低秩模块之间的子空间相似度。 <span class="evidence-binding">〔F07〕</span></figcaption>
+          <div class="figure-analysis">热图在多个层展示 ΔWq/ΔWv 的相似结构，并与文本所述的低秩方向一致；它支持“更新并非任意随机扰动”的解释线索。 <span class="evidence-cites"><a href="#evidence-F07" class="evidence-cite" aria-label="证据 F07">[F07]</a> <a href="#p.26" class="evidence-cite" aria-label="证据 p.26">[p.26]</a></span></div>
+        </figure>
+        
+
+        <figure class="kami-figure" id="evidence-F08">
+          
+          <figcaption>图 8：Wq 与 ΔWq 奇异方向的相似度。 <span class="evidence-binding">〔F08〕</span></figcaption>
+          <div class="figure-analysis">图 8 的题注在源页可见，但现有自动裁剪没有生成可验证资产，因此仅以文字结果保留其方向性解释，不把缺失图像伪装成已验证视觉证据。 <span class="evidence-cites"><a href="#evidence-F08" class="evidence-cite" aria-label="证据 F08">[F08]</a> <a href="#p.26" class="evidence-cite" aria-label="证据 p.26">[p.26]</a></span></div>
+        </figure>
+        </div></section><section class='chapter' id='ch-s7'><h1>结论的有效范围与尚未回答的问题</h1><div class='lead'>LoRA 的实证贡献清晰，但它的可解释性、普适性与系统部署边界都应随结论一起读。</div><div class='chapter-body'><p>这篇论文有力支持的命题是：在其测试的 Transformer 语言模型、下游任务和 attention 配置中，冻结基础模型并学习低秩增量可以大幅减少可训练/存储参数，同时保持接近全量微调的质量，并在合并权重后避免额外推理层。它没有系统解决 MLP、LayerNorm、bias 组合，也没有证明跨语言、困难任务或分布偏移下仍只需极低 rank。 <span class="evidence-cites"><a href="#p.4" class="evidence-cite" aria-label="证据 p.4">[p.4]</a> <a href="#p.5" class="evidence-cite" aria-label="证据 p.5">[p.5]</a> <a href="#p.26" class="evidence-cite" aria-label="证据 p.26">[p.26]</a></span></p>
+<p>子空间和 rank 实验证据让“低 intrinsic rank”成为可信的解释方向，但不排除优化便利性、任务特定方向或超参选择等替代解释。部署上，合并权重有利于单任务推理，却让不同任务模块在同一 batch 的灵活切换变得不直接；因此论文的贡献应读成一个有明确工程取舍的、证据支持范围内的适配方案。 <span class="evidence-cites"><a href="#p.4" class="evidence-cite" aria-label="证据 p.4">[p.4]</a> <a href="#evidence-T07" class="evidence-cite" aria-label="证据 T07">[T07]</a> <a href="#evidence-F07" class="evidence-cite" aria-label="证据 F07">[F07]</a> <a href="#evidence-F08" class="evidence-cite" aria-label="证据 F08">[F08]</a></span></p>
+<div class='takeaway'><div class='takeaway-label'>核心关注</div><p>读者最终应保留一个带边界的判断：LoRA 把适配增量压到低秩结构中，在多组语言模型实验里表现出强参数效率；其普适性与机制因果仍开放。 <span class="evidence-cites"><a href="#p.4" class="evidence-cite" aria-label="证据 p.4">[p.4]</a> <a href="#p.5" class="evidence-cite" aria-label="证据 p.5">[p.5]</a> <a href="#p.26" class="evidence-cite" aria-label="证据 p.26">[p.26]</a></span></p></div></div></section>
+
+    <section class='chapter appendix' id='ch-sources'>
+      <h1>证据来源与页面锚点</h1>
+      <div class='lead'>正文中的图表、公式和引文都保留了返回源材料的线索；需要逐项核对时可打开独立的审计视图。</div>
+      <p>当前稿件引用了 0 条主张、0 组图表和 0 张数据表。</p>
+      <p>页面锚点：<a id='p.1' href='#p.1'>p.1</a></p>
+      <p><a href='evidence_atlas.html'>查看逐项来源与核验记录</a></p>
+    </section>
+    
+</body></html>

@@ -1,0 +1,119 @@
+{
+  "task_id": "TASK-V3-NARRATIVE-PLAN",
+  "execution_kind": "HOST_AGENT",
+  "executor": {
+    "kind": "HOST_AGENT",
+    "host": "pi",
+    "host_version": "frozen-v3",
+    "provider": "magpie",
+    "model": "antigravity/gemini-3.8-flash",
+    "model_version": "canonical-high",
+    "reasoning_profile": "high",
+    "tool_profile": "paper-only",
+    "started_at": "2026-10-05T14:35:07.211978+00:00",
+    "completed_at": "2026-10-05T14:35:07.211978+00:00"
+  },
+  "started_at": "2026-10-05T14:35:07.211978+00:00",
+  "completed_at": "2026-10-05T14:35:07.211978+00:00",
+  "input_hashes": {
+    "source/paper.pdf": "a71f1294a021cebc6939ec977fc073b6d7b4f183950eba761ec55364d30b729f",
+    "model/revision_memo.json": "57b09e08f296a0eb82224d25890f4eb35b1c5e6b4b8f00ae83d89f6ce9b5bf50"
+  },
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "result": {
+    "schema_version": "1.0",
+    "paper_id": "UNSEEN-01-RETHINKING-GENERALIZATION",
+    "source_sha256": "a71f1294a021cebc6939ec977fc073b6d7b4f183950eba761ec55364d30b729f",
+    "base_sha256": "55607fb18f8b13e0e8b2bb7953642a6a3211b4964e4badfbbe0a2b1808d3ac88",
+    "narrative_architecture": {
+      "thesis": "深度学习的泛化无法由假设空间容量控制（VC维、Rademacher复杂度）或显式正则化解释；过参数化网络能够轻松蛮力记忆纯噪声，其真实泛化机理必然源自优化过程与数据几何的隐式协同。",
+      "argumentative_posture": "empirical_falsification_and_theoretical_construction",
+      "target_audience": "Machine Learning Theorists & Empirical Deep Learning Researchers"
+    },
+    "sections": [
+      {
+        "id": "SEC-01",
+        "title": "泛化悖论：过参数化现实与经典理论的根本断裂",
+        "purpose": "提出核心悖论：现代深层架构的参数量数倍于样本量，按传统理论应发生灾难性过拟合，但实践中却展现出非凡泛化力，表明经典容量界存在根本性盲区。",
+        "primary_evidence": [
+          "p.1",
+          "p.2"
+        ],
+        "key_nodes": [
+          "N01"
+        ]
+      },
+      {
+        "id": "SEC-02",
+        "title": "反事实经验证伪：随机化检验与全量噪声记忆",
+        "purpose": "详细展开 CIFAR-10 与 ImageNet 上的随机标签、打乱像素与高斯噪声实验；展示网络以 0 训练误差拟合随机标签，测试误差呈随机猜测（Figure 1, Table 1, Table 2）。",
+        "primary_evidence": [
+          "F01",
+          "T01",
+          "T02",
+          "p.4",
+          "p.6",
+          "p.13"
+        ],
+        "key_nodes": [
+          "N02"
+        ]
+      },
+      {
+        "id": "SEC-03",
+        "title": "显式正则化的非必要性：调节旋钮而非泛化基石",
+        "purpose": "通过剥离数据增强、Dropout 与权重衰减的对照消融，证实显式正则项既非泛化控制的必要条件亦非充分条件（Figure 2, Table 1, Table 4）。",
+        "primary_evidence": [
+          "F02",
+          "T01",
+          "T04",
+          "p.6",
+          "p.7",
+          "p.14"
+        ],
+        "key_nodes": [
+          "N03"
+        ]
+      },
+      {
+        "id": "SEC-04",
+        "title": "有限样本表达力定理：双层浅网络的任意插值构造",
+        "purpose": "严格证明定理 1：参数量仅为 p = 2n + d 的双层 ReLU 网络即可对任意 n 个样本的离散标记实现无损精确插值，确立深度学习在离散有限集上的泛化容量下界。",
+        "primary_evidence": [
+          "p.8",
+          "p.9"
+        ],
+        "key_nodes": [
+          "N04"
+        ]
+      },
+      {
+        "id": "SEC-05",
+        "title": "经典复杂度的破产：VC维、Rademacher界与一致收敛的失效",
+        "purpose": "从数理推导上说明为何经验 Rademacher 复杂度逼近 1 会摧毁所有基于假设空间最坏情况覆盖的一致收敛界，以及一致稳定性在任意标签拟合下的瓦解。",
+        "primary_evidence": [
+          "p.9",
+          "p.10",
+          "T03",
+          "p.14"
+        ],
+        "key_nodes": [
+          "N05"
+        ]
+      },
+      {
+        "id": "SEC-06",
+        "title": "隐式正则化假说与未解的几何前沿",
+        "purpose": "收束全篇：将泛化机理的探求支点转交至优化算法动力学（SGD的隐式偏好）与真实数据流形几何，同时诚实标定理论未决边界。",
+        "primary_evidence": [
+          "p.10",
+          "p.11"
+        ],
+        "key_nodes": [
+          "N06"
+        ]
+      }
+    ]
+  }
+}

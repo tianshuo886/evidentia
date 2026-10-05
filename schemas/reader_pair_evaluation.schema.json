@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evidentia.dev/schemas/reader_pair_evaluation.schema.json",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "paper_id",
+    "source_sha256",
+    "dimensions",
+    "qualitative_notes"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "paper_id": {
+      "type": "string"
+    },
+    "source_sha256": {
+      "type": "string"
+    },
+    "dimensions": {
+      "type": "array",
+      "minItems": 5,
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "direct_ai",
+          "evidentia_v3",
+          "evidence_note"
+        ],
+        "properties": {
+          "name": {
+            "enum": [
+              "narrative_clarity",
+              "scientific_completeness",
+              "method_explanation",
+              "experiment_result_understanding",
+              "figure_table_correctness",
+              "conclusion_calibration",
+              "boundary_coverage",
+              "critical_insight",
+              "unsupported_prose",
+              "provenance_usefulness",
+              "overall_understandability"
+            ]
+          },
+          "direct_ai": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 5
+          },
+          "evidentia_v3": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 5
+          },
+          "evidence_note": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "qualitative_notes": {
+      "type": "string"
+    },
+    "release_blockers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}

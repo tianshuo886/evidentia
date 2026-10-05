@@ -1,0 +1,11 @@
+{
+  "task_id":"TASK-V3-READER-VALIDATION-BENCH-04-ALPHAFOLD2-STRUCTURE",
+  "execution_kind":"HOST_AGENT",
+  "executor":{"kind":"HUMAN","host":"pi-worker","host_version":"UNKNOWN","provider":"openai-codex","model":"worker-authored-source-grounded","model_version":"UNKNOWN","reasoning_profile":"high","tool_profile":"paper-only","started_at":"2026-10-03T20:00:00Z","completed_at":"2026-10-03T20:35:00Z"},
+  "started_at":"2026-10-03T20:00:00Z",
+  "completed_at":"2026-10-03T20:35:00Z",
+  "input_hashes":{"source/paper.pdf":"6eae057a9faf4f671c3101e0745ed704460c6d3dec77243dfd3a9f2d2ab68970","model/paper_understanding_draft.json":"8b5d23e2847d89205452c786f89c83776f487e0d2a8fc741db69ce28c9bd8774","model/revision_memo.json":"19fda41e294b4cd244b1a0182e8569556dc3e9589c89ddb455d6de602f87c578","model/narrative_plan.json":"d5b972e68944d8ea4ef1a85d7c04391108be77da7afab99d1ae42641fa024ee0"},
+  "contract_version":"3.0",
+  "prompt_version":"3.1",
+  "result":{"schema_version":"1.0","paper_id":"BENCH-04-ALPHAFOLD2-STRUCTURE","source_sha256":"6eae057a9faf4f671c3101e0745ed704460c6d3dec77243dfd3a9f2d2ab68970","stages":{"semantic_visual_verification":"visual/ page-002,003,004,005,006 VERIFIED; page-008 T01 REJECTED","lead_reader":"model/paper_understanding_draft.json","lenses":["lens_v3/argument_narrative.json","lens_v3/method_study_design.json","lens_v3/evidence_results.json","lens_v3/validity_boundary.json","lens_v3/mechanism_causality.json","lens_v3/reproducibility_implementation.json"],"revision_memo":"model/revision_memo.json","narrative_plan":"model/narrative_plan.json","lead_writer":"reader/narrative_manuscript.json"},"notes":"Checkpointed paper-only Reader v3 validation; direct-AI envelope was recovered from the existing canonical run and reused after source-hash/schema/provenance checks."}
+}

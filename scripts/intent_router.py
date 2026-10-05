@@ -38,7 +38,11 @@ INTENT_INPUT_BOUNDARIES = {
             "lens/",
             "assets/",
             "tasks/",
-            "working/"
+            "working/",
+            "source_pages/",
+            "lens_v3/",
+            "visual/",
+            "reader/"
         ],
         "forbidden_inputs": [
             "apply/",
@@ -54,7 +58,11 @@ INTENT_INPUT_BOUNDARIES = {
             "lens/",
             "assets/",
             "tasks/",
-            "working/"
+            "working/",
+            "source_pages/",
+            "lens_v3/",
+            "visual/",
+            "reader/"
         ],
         "forbidden_inputs": [
             "apply/",

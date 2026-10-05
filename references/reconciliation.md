@@ -1,35 +1,20 @@
-# Semantic Cross-Lens Reconciliation
+# Scientific Reconciliation — Editorial Revision Memo
 
-Reconciliation integrates findings from the six independent Lens rereads into coherent, structured knowledge without erasing scientific tension.
+> Note: Supersedes legacy deterministic cluster merging (`merge_lenses.py` / `schemas/finding_cluster.schema.json`).
 
-## Two-Phase Pipeline
+In Evidentia Reader v3, reconciliation is performed by the **Editorial Revision Memo** (`model/revision_memo.json`, conforming to `schemas/revision_memo.schema.json`).
 
-### 1. Deterministic Pre-Clustering (`merge_lenses.py`)
-Deterministic code groups candidate findings by:
-- Exact duplicate statements and shared evidence
-- Shared source objects (e.g. both commenting on Figure 2)
-- Potential polarity opposition (one affirming, one critiquing)
+## Principle: Editorial Synthesis without Voting
 
-Deterministic code does NOT decide final scientific truth.
-
-### 2. Semantic Relation Classification
-Findings are categorized into canonical relations:
-- **AGREEMENT**: Independent lenses converge on identical or corroborating findings.
-- **COMPLEMENTARY**: Lenses reveal distinct, non-overlapping facets of the same evidence.
-- **PARTIAL_AGREEMENT**: Lenses agree on core mechanism but differ on scope or assumptions.
-- **TENSION**: Lenses observe divergent trends on the same evidence.
-- **CONTRADICTION**: Lenses state diametrically opposing conclusions.
-- **ORTHOGONAL**: Findings address unrelated aspects.
-- **UNRESOLVED**: Ambiguous or insufficient evidence prevents classification.
-
-## Finding Cluster Model
-
-Canonical `Finding Cluster` objects (`schemas/finding_cluster.schema.json`) capture:
-- `cluster_id`
-- `member_finding_ids`
-- `relation`
-- `canonical_statement` (Agent-formulated)
-- `supporting_lenses`
-- `evidence_ids`
-- `epistemic_state`
-- `verification_required`
+Reconciliation operates like a senior scientific editor:
+1. Re-reads the Lead Reader draft alongside all 6 isolated specialist lens findings.
+2. Identifies agreements, complementary observations, tensions, and contradictions.
+3. Issues concrete, structured revision directives (`revisions[]`):
+   - **ADD:** Insert a missing proof step, experimental margin, or ablation detail.
+   - **REWRITE:** Reconstruct a section whose narrative flow obscures the actual evidence.
+   - **CORRECT:** Fix an inaccurate formula, metric, or factual interpretation.
+   - **QUALIFY:** Demote an author overclaim to a calibrated evidence-backed assessment.
+   - **REMOVE:** Excise unsupported assertions.
+   - **VERIFY:** Flag a critical factual ambiguity for localized verification.
+4. Preserves genuine scientific tensions and anomalies as `unresolved[]` issues instead of erasing them via majority voting.
+5. Approves and binds verified visual assets (`visual_evidence_bindings[]`) for inclusion in the final Reader manuscript.
