@@ -119,22 +119,31 @@ def render_reader(workspace_root: Path, kami_root: Path = None, intent=None) -> 
     reader_dir = r / 'reader'
     reader_dir.mkdir(parents=True, exist_ok=True)
 
-    # A manuscript must be derived from the persisted argument artifact.  The
-    # compatibility fixture and ad-hoc callers may not have built it yet, so
-    # create that single upstream artifact before composing the Reader.
-    if not (r / 'model/argument_reconstruction.json').exists():
-        build_argument_reconstruction(r)
-
-    # 1. Compose semantic narrative manuscript
-    manuscript = compose_narrative_manuscript(r, intent=intent)
+    # 1. Use existing Lead Writer manuscript if present; only fall back to legacy
+    # deterministic composition for legacy workspaces or when explicitly enabled.
     manuscript_file = reader_dir / 'narrative_manuscript.json'
-    manuscript_file.write_text(json.dumps(manuscript, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
+    if manuscript_file.exists():
+        manuscript = load_json(manuscript_file)
+    elif os.environ.get("EVIDENTIA_ALLOW_LEGACY_COMPOSER") == "1" or not (r / 'model/lens_v3_manifest.json').exists():
+        if not (r / 'model/argument_reconstruction.json').exists():
+            build_argument_reconstruction(r)
+        manuscript = compose_narrative_manuscript(r, intent=intent)
+        manuscript_file.write_text(json.dumps(manuscript, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
+    else:
+        raise FileNotFoundError(
+            f"Missing Lead Writer manuscript at {manuscript_file}. "
+            "In Reader v3, the narrative manuscript must be produced by the strong-model Lead Writer."
+        )
 
     # 2. Render primary Paper Reader (HTML, MD, PDF via Kami)
     reader_res = render_paper_reader(r, kami_root=kami_root)
 
     # 3. Render secondary inspection Evidence Atlas (HTML, JSON)
-    atlas_res = render_evidence_atlas(r)
+    if (r / 'reader/narrative_manuscript.json').exists() and not (r / 'model/paper_model.json').exists():
+        from render_evidence_atlas_v3 import render as render_evidence_atlas_v3
+        atlas_res = render_evidence_atlas_v3(r)
+    else:
+        atlas_res = render_evidence_atlas(r)
 
     # 4. Generate backward compatibility IR files
     legacy_ir = build_legacy_reader_ir(r, manuscript=manuscript)
@@ -158,8 +167,8 @@ def render_reader(workspace_root: Path, kami_root: Path = None, intent=None) -> 
         shutil.copy2(str(paper_pdf), str(compat_pdf))
 
     # Paper-named copy if title/id exists
-    pm = load_json(r / 'model/paper_model.json')
-    paper_id = pm.get('paper_id') or r.name
+    pm = load_json(r / 'model/paper_model.json') if (r / 'model/paper_model.json').exists() else {}
+    paper_id = pm.get('paper_id') or manuscript.get('paper_id') or r.name
     safe_name = re.sub(r'[^a-zA-Z0-9_\-\.]', '_', str(paper_id)).strip('_')
     if safe_name and safe_name not in ('reader', 'paper_reader'):
         named_html = reader_dir / f'{safe_name}.html'

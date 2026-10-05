@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Compose the human Paper Reader from the paper's reconstructed argument.
+"""DEPRECATED: Legacy v1/v2 deterministic narrative composer.
 
-The composer is paper-centric. It consumes frozen paper truth, the reconstructed
-argument, Council synthesis, and promoted evidence, then writes a semantic
-manuscript whose section titles and order follow that paper rather than a
-pipeline dashboard. Audit roles remain in the Evidence Atlas.
+Retained for downstream compatibility and historical replays only.
+In canonical Reader v3, narrative manuscripts are strictly authored by the
+strong-model Lead Writer (schemas/narrative_manuscript.schema.json).
+Prohibited in canonical Reader v3 scientific execution.
 """
 import argparse
 import json

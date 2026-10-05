@@ -1,30 +1,20 @@
 {
-  "schema_version": "2.0",
-  "audit": "Contract Audit v1.0",
+  "schema_version": "3.0",
+  "audit": "Reader Reset v3.5 Canonicalization Audit (Issue #20)",
   "repository": "Evidentia",
-  "implementation_statuses": [
-    "IMPLEMENTED",
-    "PARTIAL",
-    "DECLARED_ONLY",
-    "MISSING",
-    "DEPRECATED"
-  ],
-  "validation_statuses": [
-    "UNVALIDATED",
-    "UNIT_TESTED",
-    "SYNTHETIC_VALIDATED",
-    "REPLAY_VALIDATED",
-    "LIVE_AGENT_VALIDATED",
-    "REAL_PAPER_VALIDATED",
-    "HUMAN_REVIEWED"
-  ],
   "statuses": [
+    "REAL_PAPER_VALIDATED",
     "IMPLEMENTED",
-    "PARTIAL",
-    "DECLARED_ONLY",
-    "MISSING",
-    "DEPRECATED"
+    "SYNTHETIC_ONLY",
+    "DEPRECATED",
+    "PLANNED"
   ],
+  "canonical_architecture": {
+    "version": "3.0",
+    "scientific_model": "antigravity/gemini-3.8-flash [magpie]",
+    "freeze_sha": "4139ca7b0b1ae72c0930801df5e50653b59a7e92",
+    "benchmark_status": "ISSUE19_RELEASE_GATE = PASS"
+  },
   "capabilities": [
     {
       "id": "source_reconstruction",
@@ -44,10 +34,8 @@
         "test_init_run_is_source_only",
         "test_phase_b2"
       ],
-      "implementation_status": "IMPLEMENTED",
-      "validation_status": "UNIT_TESTED",
-      "status": "IMPLEMENTED",
-      "evidence": "Dual-track text/visual extraction, caption-geometry binding, structured table/equation objects, supplement metadata, and mention linking implemented and validated."
+      "status": "REAL_PAPER_VALIDATED",
+      "evidence": "Dual-track text/visual extraction validated across all 6 real benchmark papers in Issue #19."
     },
     {
       "id": "source_lock",
@@ -56,24 +44,18 @@
       "schema": [
         "source_map",
         "figure_inventory",
-        "paper_model",
-        "evidence_graph",
-        "lens_reconciliation",
         "manifest"
       ],
       "scripts": [
         "extract_figs.py",
         "build_graph.py",
-        "lens_runner.py",
         "freeze_check.py"
       ],
       "tests": [
         "test_phase_a"
       ],
-      "implementation_status": "IMPLEMENTED",
-      "validation_status": "UNIT_TESTED",
-      "status": "IMPLEMENTED",
-      "evidence": "SOURCE_SHA256 chain is closed across source_map, inventory, paper_model, evidence_graph, lens runs, and manifest; freeze fails closed on any mismatch."
+      "status": "REAL_PAPER_VALIDATED",
+      "evidence": "Cryptographic SHA-256 chain closed across all 6 real benchmark papers."
     },
     {
       "id": "open_reading_base",
@@ -85,16 +67,13 @@
       ],
       "scripts": [
         "snapshot_baseline.py",
-        "lens_runner.py",
         "phase.py"
       ],
       "tests": [
         "test_phase_a"
       ],
-      "implementation_status": "IMPLEMENTED",
-      "validation_status": "UNIT_TESTED",
-      "status": "IMPLEMENTED",
-      "evidence": "snapshot_baseline.py freezes open_reading_model.json and open_reading_manifest.json with hashes and contract versions."
+      "status": "DEPRECATED",
+      "evidence": "Deprecated under Issue #20. Superseded by Lead Reader draft and argument topology in Reader v3."
     },
     {
       "id": "baseline_lock",
@@ -102,22 +81,17 @@
       "claim": "Lens runs and final model strictly bound to immutable baseline hash",
       "schema": [
         "open_reading_manifest",
-        "lens",
-        "lens_reconciliation",
-        "manifest"
+        "lens"
       ],
       "scripts": [
         "check_lenses.py",
         "freeze_check.py"
       ],
       "tests": [
-        "test_lens_runner_requires_base_model",
         "test_phase_a"
       ],
-      "implementation_status": "IMPLEMENTED",
-      "validation_status": "UNIT_TESTED",
-      "status": "IMPLEMENTED",
-      "evidence": "check_lenses.py and freeze_check.py refuse lenses with stale base_sha256 or mutated baseline."
+      "status": "DEPRECATED",
+      "evidence": "Deprecated under Issue #20. Superseded by Lead Reader draft hash binding."
     },
     {
       "id": "standard_agent_execution",
@@ -131,63 +105,51 @@
       "scripts": [
         "evidentia.py",
         "task_protocol.py",
-        "open_reading_agent.py",
         "agent_dispatch.py",
         "agent_submit.py"
       ],
       "tests": [
         "test_phase_b3",
-        "test_system_integrity",
         "test_replay_validation"
       ],
-      "implementation_status": "IMPLEMENTED",
-      "validation_status": "REPLAY_VALIDATED",
       "status": "IMPLEMENTED",
-      "evidence": "Task protocol, agent_dispatch, and evidentia.py orchestrate full host-agent loop; verified via Tier 2 recorded replay."
+      "evidence": "Host-agnostic execution protocol supported via generic agent_submit trust boundary."
     },
     {
       "id": "independent_lens_execution",
       "area": "Execution",
-      "claim": "Six independent Lens task execution packets with contract validation",
+      "claim": "Independent Lens task execution packets with contract validation",
       "schema": [
-        "lens_task",
-        "lens"
+        "lens_v3",
+        "agent_task"
       ],
       "scripts": [
-        "lens_runner.py",
-        "check_lenses.py",
-        "task_protocol.py",
-        "lens_agent.py"
+        "reader_v3_protocol.py",
+        "prepare_lens_isolation.py",
+        "agent_submit.py"
       ],
       "tests": [
-        "test_lens_runner_requires_base_model",
-        "test_phase_b3",
-        "test_replay_validation"
+        "test_lens_execution_manifest",
+        "test_reader_v3"
       ],
-      "implementation_status": "IMPLEMENTED",
-      "validation_status": "REPLAY_VALIDATED",
-      "status": "IMPLEMENTED",
-      "evidence": "task_protocol and lens_agent execute six independent task packets with executor metadata and contract validation; verified via recorded replay."
+      "status": "REAL_PAPER_VALIDATED",
+      "evidence": "Validated on 6 real papers under Issue #19 using 4 Core + 2 Adaptive Lenses."
     },
     {
       "id": "deterministic_pre_reconciliation",
       "area": "Core",
       "claim": "Deterministic duplicate clustering and exact finding merge preserving supporting lenses",
       "schema": [
-        "lens_reconciliation",
-        "lens_synthesis"
+        "lens_reconciliation"
       ],
       "scripts": [
-        "merge_lenses.py",
-        "check_lenses.py"
+        "merge_lenses.py"
       ],
       "tests": [
         "test_phase_a"
       ],
-      "implementation_status": "IMPLEMENTED",
-      "validation_status": "UNIT_TESTED",
-      "status": "IMPLEMENTED",
-      "evidence": "merge_lenses.py converges identical findings, preserves all supporting_lenses, and records TENSION."
+      "status": "DEPRECATED",
+      "evidence": "Deprecated under Issue #20. Superseded by Editorial Revision Memo in Reader v3."
     },
     {
       "id": "semantic_cross_lens_reconciliation",
@@ -198,123 +160,13 @@
         "finding_cluster"
       ],
       "scripts": [
-        "merge_lenses.py",
         "reconciliation_agent.py"
       ],
       "tests": [
         "test_phase_b4"
       ],
-      "implementation_status": "IMPLEMENTED",
-      "validation_status": "SYNTHETIC_VALIDATED",
-      "status": "IMPLEMENTED",
-      "evidence": "Pre-clustering into Finding Clusters with canonical relations (AGREEMENT, TENSION, etc.) and verification triggers implemented."
-    },
-    {
-      "id": "lens_council",
-      "area": "Core",
-      "claim": "Evidence-grounded Lens Council with immutable shared evidence, independent six-Lens Round 1, Chair reconciliation, bounded cross-examination, no voting, and unresolved states",
-      "schema": [
-        "frozen_evidence_package",
-        "lens_council",
-        "cross_examination"
-      ],
-      "scripts": [
-        "lens_council.py",
-        "council.py",
-        "merge_lenses.py"
-      ],
-      "tests": [
-        "test_lens_council"
-      ],
-      "implementation_status": "IMPLEMENTED",
-      "validation_status": "SYNTHETIC_VALIDATED",
-      "status": "IMPLEMENTED",
-      "evidence": "One frozen evidence package is hashed into six independent Round-1 snapshots; Chair output preserves relations and unresolved items, while cross-examination is explicit and bounded to three requests in one round without majority voting."
-    },
-    {
-      "id": "argument_reconstruction",
-      "area": "Core",
-      "claim": "First-class argument reconstruction topology separating author argument from Evidentia assessment with evidence promotion",
-      "schema": [
-        "argument_reconstruction"
-      ],
-      "scripts": [
-        "build_argument_reconstruction.py"
-      ],
-      "tests": [
-        "test_argument_reconstruction",
-        "test_argument_recovery",
-        "test_evidence_promotion"
-      ],
-      "implementation_status": "IMPLEMENTED",
-      "validation_status": "UNIT_TESTED",
-      "status": "IMPLEMENTED",
-      "evidence": "build_argument_reconstruction.py reconstructs paper argumentative topology, typed relations, author vs assessed argument, and evidence promotion."
-    },
-    {
-      "id": "scientific_synthesis",
-      "area": "Core",
-      "claim": "Cross-Lens topic-centered scientific synthesis with contradiction and anomaly preservation",
-      "schema": [
-        "scientific_synthesis"
-      ],
-      "scripts": [
-        "scientific_synthesis_agent.py"
-      ],
-      "tests": [
-        "test_scientific_synthesis",
-        "test_cross_domain_contamination"
-      ],
-      "implementation_status": "IMPLEMENTED",
-      "validation_status": "UNIT_TESTED",
-      "status": "IMPLEMENTED",
-      "evidence": "scientific_synthesis_agent.py dynamically discovers topics from argument units and 6 Lens perspectives without majority voting or predefined domain templates."
-    },
-    {
-      "id": "intent_isolation",
-      "area": "Core",
-      "claim": "Strict intent isolation between PAPER_READING, PAPER_TECHNICAL_EXTRACTION, and PROJECT_APPLY with input firewall",
-      "schema": [
-        "run_state"
-      ],
-      "scripts": [
-        "intent_router.py",
-        "phase.py",
-        "render_project_reader.py",
-        "reader_acceptance.py"
-      ],
-      "tests": [
-        "test_intent_isolation",
-        "test_reader_acceptance"
-      ],
-      "implementation_status": "IMPLEMENTED",
-      "validation_status": "UNIT_TESTED",
-      "status": "IMPLEMENTED",
-      "evidence": "Faithful-reading firewall enforces PAPER_READING default, paper-scoped PAPER_TECHNICAL_EXTRACTION, explicit-only PROJECT_APPLY, and physical input boundaries forbidding apply/ and project/ during paper reading."
-    },
-    {
-      "id": "chinese_deep_reader",
-      "area": "Presentation",
-      "claim": "Seven-layer Chinese-first narrative deep-reading report with dual HTML/MD generation",
-      "schema": [
-        "paper_reader_ir",
-        "narrative_manuscript"
-      ],
-      "scripts": [
-        "render_reader.py",
-        "render_paper_reader.py",
-        "narrative_composer_agent.py"
-      ],
-      "tests": [
-        "test_chinese_reader",
-        "test_renderer_purity",
-        "test_narrative_grounding",
-        "test_narrative_composer"
-      ],
-      "implementation_status": "IMPLEMENTED",
-      "validation_status": "UNIT_TESTED",
-      "status": "IMPLEMENTED",
-      "evidence": "narrative_manuscript.json drives unified Chinese-first narrative HTML and Markdown deep-reading reports with Kami presentation backend."
+      "status": "DEPRECATED",
+      "evidence": "Deprecated under Issue #20. Superseded by Editorial Revision Memo without majority voting."
     },
     {
       "id": "evidence_verifier",
@@ -331,10 +183,8 @@
       "tests": [
         "test_phase_b4"
       ],
-      "implementation_status": "IMPLEMENTED",
-      "validation_status": "SYNTHETIC_VALIDATED",
-      "status": "IMPLEMENTED",
-      "evidence": "verifier.py evaluates candidate claims/conflicts against localized evidence without majority voting, enforcing schemas and status vocabulary."
+      "status": "SYNTHETIC_ONLY",
+      "evidence": "Localized verifier implemented and tested with synthetic fixtures."
     },
     {
       "id": "canonical_paper_model",
@@ -351,10 +201,8 @@
         "test_phase_a",
         "test_phase_b6"
       ],
-      "implementation_status": "IMPLEMENTED",
-      "validation_status": "UNIT_TESTED",
       "status": "IMPLEMENTED",
-      "evidence": "Schema and freeze gates enforce O/I/A separation, coverage audits, and immutable paper truth without mutation during Apply."
+      "evidence": "O/I/A separation enforced across all reading artifacts and schemas."
     },
     {
       "id": "evidence_graph",
@@ -370,10 +218,8 @@
         "test_gates",
         "test_phase_b6"
       ],
-      "implementation_status": "IMPLEMENTED",
-      "validation_status": "UNIT_TESTED",
       "status": "IMPLEMENTED",
-      "evidence": "build_graph.py connects claims, evidence, figures, and tables, with source SHA locking."
+      "evidence": "build_graph.py connects claims, evidence, figures, and tables with source SHA locking."
     },
     {
       "id": "freeze_integrity",
@@ -388,13 +234,10 @@
       ],
       "tests": [
         "test_gates",
-        "test_phase_a",
         "test_system_integrity"
       ],
-      "implementation_status": "IMPLEMENTED",
-      "validation_status": "UNIT_TESTED",
-      "status": "IMPLEMENTED",
-      "evidence": "Freeze gates check source hash, baseline hash, complete 6-lens set, dangling IDs, and tamper rejection; refuses rewriting post-freeze."
+      "status": "REAL_PAPER_VALIDATED",
+      "evidence": "Fail-closed freeze verified across 6 real benchmark papers in Issue #19."
     },
     {
       "id": "reader_evidence_atlas",
@@ -404,38 +247,32 @@
         "render_ir"
       ],
       "scripts": [
-        "render_reader.py",
-        "render_evidence_atlas.py",
+        "render_evidence_atlas_v3.py",
         "reader_audit.py"
       ],
       "tests": [
-        "test_phase_b6",
         "test_chinese_reader"
       ],
-      "implementation_status": "IMPLEMENTED",
-      "validation_status": "UNIT_TESTED",
-      "status": "IMPLEMENTED",
-      "evidence": "Dedicated Evidence Atlas HTML reader with O/I/A grid, bidirectional return links, and broken anchor auditing implemented."
+      "status": "REAL_PAPER_VALIDATED",
+      "evidence": "Evidence Atlas v3 generated and validated for all 6 real benchmark papers in Issue #19."
     },
     {
       "id": "reader_visual_qa",
       "area": "Presentation",
       "claim": "Kami-backed visual QA boundary for typography, layout, and rendering",
       "schema": [
-        "render_ir"
+        "narrative_manuscript"
       ],
       "scripts": [
         "kami_adapter.py",
         "render_paper_reader.py"
       ],
       "tests": [
-        "test_phase_b6",
-        "test_chinese_reader"
+        "test_renderer_purity",
+        "test_reader_acceptance"
       ],
-      "implementation_status": "IMPLEMENTED",
-      "validation_status": "UNIT_TESTED",
-      "status": "IMPLEMENTED",
-      "evidence": "Kami adapter and reader audit v2 check presentation boundaries, image assets, and layout completeness."
+      "status": "REAL_PAPER_VALIDATED",
+      "evidence": "Kami visual audit verifies page layout, zero glyph fallback, and image bounds."
     },
     {
       "id": "project_apply_execution",
@@ -449,13 +286,11 @@
         "apply_agent.py"
       ],
       "tests": [
-        "test_phase_b6",
-        "test_system_integrity"
+        "test_phase_c_memory",
+        "test_intent_isolation"
       ],
-      "implementation_status": "IMPLEMENTED",
-      "validation_status": "SYNTHETIC_VALIDATED",
-      "status": "IMPLEMENTED",
-      "evidence": "apply_agent.py executes project gap mapping, contextual reread, and refuses unfrozen paper models."
+      "status": "SYNTHETIC_ONLY",
+      "evidence": "Apply workflow implemented and unit tested on synthetic project documents."
     },
     {
       "id": "research_delta",
@@ -469,12 +304,10 @@
         "apply_agent.py"
       ],
       "tests": [
-        "test_phase_b6"
+        "test_phase_c_memory"
       ],
-      "implementation_status": "IMPLEMENTED",
-      "validation_status": "UNIT_TESTED",
-      "status": "IMPLEMENTED",
-      "evidence": "Research Delta schema with Transfer Unit v2 contracts (assumptions, constraints, contracts) generated and validated."
+      "status": "SYNTHETIC_ONLY",
+      "evidence": "Research Delta schema and validation tests verified with synthetic fixtures."
     },
     {
       "id": "ensemble_execution",
@@ -487,13 +320,10 @@
         "evidentia.py"
       ],
       "tests": [
-        "test_phase_b5",
-        "test_system_integrity"
+        "test_phase_b5"
       ],
-      "implementation_status": "IMPLEMENTED",
-      "validation_status": "SYNTHETIC_VALIDATED",
-      "status": "IMPLEMENTED",
-      "evidence": "execution_config.schema.json, Pi adapter, and multi-model dispatch architecture implemented."
+      "status": "DEPRECATED",
+      "evidence": "Deprecated under Issue #20. Single strong model with context isolation is canonical."
     },
     {
       "id": "within_lens_reconciliation",
@@ -508,10 +338,8 @@
       "tests": [
         "test_phase_b5"
       ],
-      "implementation_status": "IMPLEMENTED",
-      "validation_status": "UNIT_TESTED",
-      "status": "IMPLEMENTED",
-      "evidence": "within_lens_reconciliation.py resolves multiple runs into canonical lens outputs with convergence/singleton/conflict tags."
+      "status": "DEPRECATED",
+      "evidence": "Deprecated under Issue #20. Superseded by Editorial Revision Memo."
     },
     {
       "id": "adaptive_model_escalation",
@@ -526,10 +354,8 @@
       "tests": [
         "test_phase_b5"
       ],
-      "implementation_status": "IMPLEMENTED",
-      "validation_status": "UNIT_TESTED",
-      "status": "IMPLEMENTED",
-      "evidence": "adaptive_escalation.py evaluates findings against explicit trigger policies (novel anomalies, uncertainty, weak evidence)."
+      "status": "DEPRECATED",
+      "evidence": "Deprecated under Issue #20. Superseded by targeted verification."
     },
     {
       "id": "frozen_research_memory",
@@ -538,40 +364,36 @@
       "schema": [
         "memory_commit",
         "memory_item",
-        "memory_relation",
-        "project_memory",
-        "experiment_outcome"
+        "memory_relation"
       ],
       "scripts": [
         "memory_manager.py",
         "memory_relation.py",
-        "memory_snapshot.py",
-        "memory_export.py",
-        "memory_import.py"
+        "memory_snapshot.py"
       ],
       "tests": [
         "test_phase_c_memory"
       ],
-      "implementation_status": "IMPLEMENTED",
-      "validation_status": "UNIT_TESTED",
-      "status": "IMPLEMENTED",
-      "evidence": "memory_manager.py implements immutable JSON storage under objects/, rebuildable SQLite+FTS5 index, paper/project commits, relations, snapshots, export/import, experiment outcomes, and Open Reading firewall."
+      "status": "SYNTHETIC_ONLY",
+      "evidence": "SQLite/FTS5 memory storage implemented and unit tested on synthetic commits."
     },
     {
       "id": "evaluation_framework",
       "area": "Evaluation",
       "claim": "Empirical evaluation corpus, benchmark runners, and quality metrics",
-      "schema": [],
+      "schema": [
+        "reader_pair_evaluation",
+        "direct_reading_baseline"
+      ],
       "scripts": [
-        "evals/runners/eval_runner.py"
+        "reader_v3_benchmark.py",
+        "reader_v3_corpus.py"
       ],
       "tests": [
         "test_phase_b7"
       ],
-      "implementation_status": "IMPLEMENTED",
-      "validation_status": "SYNTHETIC_VALIDATED",
-      "status": "IMPLEMENTED",
-      "evidence": "evals/ directory with 3-condition benchmark comparison (Single-pass vs Standard vs Ensemble), metrics, and detection fingerprints."
+      "status": "REAL_PAPER_VALIDATED",
+      "evidence": "Formal Issue #19 real-paper benchmark completed (6 papers, PASS)."
     },
     {
       "id": "ci_release_engineering",
@@ -582,10 +404,103 @@
       "tests": [
         "test_phase_b7"
       ],
-      "implementation_status": "IMPLEMENTED",
-      "validation_status": "UNIT_TESTED",
       "status": "IMPLEMENTED",
-      "evidence": ".github/workflows/ci.yml, pyproject.toml, LICENSE, CHANGELOG.md, and CONTRIBUTING.md created and verified."
+      "evidence": "CI workflows, pyproject.toml, and contract audits passing."
+    },
+    {
+      "id": "lead_reader_v3",
+      "area": "Reasoning",
+      "claim": "Strong-model Lead Reader generating open argument topology without dashboard templates",
+      "schema": [
+        "paper_understanding_draft",
+        "paper_argument_topology"
+      ],
+      "scripts": [
+        "reader_v3_protocol.py",
+        "reader_v3.py"
+      ],
+      "tests": [
+        "test_reader_v3",
+        "test_issue20_canonical"
+      ],
+      "status": "REAL_PAPER_VALIDATED",
+      "evidence": "Validated on 6 real papers in Issue #19."
+    },
+    {
+      "id": "adaptive_lens_orchestration",
+      "area": "Reasoning",
+      "claim": "4 Universal Core + 2 Adaptive Specialist Lenses with context-isolated input boundaries",
+      "schema": [
+        "lens_v3",
+        "agent_task",
+        "execution_receipt"
+      ],
+      "scripts": [
+        "reader_v3_protocol.py",
+        "prepare_lens_isolation.py",
+        "lens_execution_manifest.py"
+      ],
+      "tests": [
+        "test_lens_execution_manifest",
+        "test_reader_v3"
+      ],
+      "status": "REAL_PAPER_VALIDATED",
+      "evidence": "Validated across all 6 real papers in Issue #19 formal benchmark."
+    },
+    {
+      "id": "editorial_revision_memo",
+      "area": "Reasoning",
+      "claim": "Editorial reconciliation producing structured revisions without lossy majority voting",
+      "schema": [
+        "revision_memo"
+      ],
+      "scripts": [
+        "reader_v3_protocol.py",
+        "reader_v3.py"
+      ],
+      "tests": [
+        "test_reader_v3",
+        "test_issue20_canonical"
+      ],
+      "status": "REAL_PAPER_VALIDATED",
+      "evidence": "Reconciled specialist findings across 6 real papers, preserving anomalies and caveats."
+    },
+    {
+      "id": "dynamic_narrative_plan",
+      "area": "Reasoning",
+      "claim": "Paper-specific narrative architecture enforcing anti-template structural diversity",
+      "schema": [
+        "narrative_plan"
+      ],
+      "scripts": [
+        "reader_v3_protocol.py",
+        "reader_structure_diversity.py"
+      ],
+      "tests": [
+        "test_issue22_antitemplate",
+        "test_reader_v3"
+      ],
+      "status": "REAL_PAPER_VALIDATED",
+      "evidence": "Structural diversity verified across LoRA, AlphaFold2, Sycamore, and UNSEEN-01."
+    },
+    {
+      "id": "lead_writer_v3",
+      "area": "Generation",
+      "claim": "Strong-model authoring of publication-grade Chinese academic manuscripts",
+      "schema": [
+        "narrative_manuscript"
+      ],
+      "scripts": [
+        "reader_v3_protocol.py",
+        "reader_v3.py"
+      ],
+      "tests": [
+        "test_reader_v3",
+        "test_issue22_antitemplate",
+        "test_issue20_canonical"
+      ],
+      "status": "REAL_PAPER_VALIDATED",
+      "evidence": "Authored 6 publication-grade manuscripts evaluated in formal Issue #19 blind A/B trials."
     }
   ]
 }
