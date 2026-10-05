@@ -138,6 +138,11 @@ def lens_execution_provenance_errors(root):
                 errors.append(f"{task_id} dispatch {execution_id} was not consumed")
             if dispatch.get("dispatch_sha256") != receipt.get("dispatch_sha256"):
                 errors.append(f"{task_id} receipt/dispatch hash mismatch")
+            if dispatch.get("receipt_sha256") != receipt.get("receipt_sha256"):
+                errors.append(f"{task_id} receipt/dispatch receipt_sha256 mismatch")
+        unsigned_receipt = {k: v for k, v in receipt.items() if k != "receipt_sha256"}
+        if receipt.get("receipt_sha256") != canonical_sha256(unsigned_receipt):
+            errors.append(f"{task_id} receipt self-hash mismatch")
         run_files = sorted((root / "agent_runs" / task_id).glob("run-*.json"))
         matching = []
         for run_path in run_files:
@@ -148,6 +153,8 @@ def lens_execution_provenance_errors(root):
             errors.append(f"{task_id} must have one envelope bound to {execution_id}, found {len(matching)}")
             continue
         run_path, env = matching[0]
+        if receipt.get("envelope_sha256") != canonical_sha256(env):
+            errors.append(f"{task_id} receipt envelope hash mismatch")
         manifest = env.get("execution_manifest")
         if not isinstance(manifest, dict) or manifest.get("sibling_lens_outputs_present") is not False:
             errors.append(f"{task_id} envelope lacks executable sibling-Lens exclusion proof")
@@ -157,6 +164,18 @@ def lens_execution_provenance_errors(root):
         expected_output = result_payload_sha256(payload)
         if receipt.get("output_sha256") != expected_output:
             errors.append(f"{task_id} receipt output hash mismatch")
+        target_output_rel = task.get("target_output") or task.get("output")
+        if target_output_rel:
+            target_output = root / target_output_rel
+            if not target_output.exists():
+                errors.append(f"{task_id} target output missing: {target_output_rel}")
+            else:
+                try:
+                    promoted_payload = load_json(target_output)
+                    if result_payload_sha256(promoted_payload) != receipt.get("output_sha256"):
+                        errors.append(f"{task_id} promoted output hash mismatch")
+                except Exception:
+                    errors.append(f"{task_id} target output is not valid JSON")
     return errors
 
 
