@@ -167,3 +167,37 @@ def test_uncertain_visual_fails_closed_without_whole_page_asset(tmp_path):
     assert item['inspection_status'] == 'NEEDS_REVIEW'
     assert item['needs_visual_review'] is True
     assert item['id'] in inv['review_required']
+
+
+def test_drawing_background_mask_ignored_and_geometry_not_verified(tmp_path):
+    import fitz
+    pdf_path = tmp_path / 'multipart_vector.pdf'
+    inv_path = tmp_path / 'model/figure_inventory.json'
+    assets_dir = tmp_path / 'assets/figures'
+
+    doc = fitz.open()
+    page = doc.new_page(width=595, height=842)
+    # White background mask covering a large area
+    page.draw_rect(fitz.Rect(100, 200, 500, 600), fill=(1.0, 1.0, 1.0), color=None)
+    # Actual vector figure components
+    page.draw_rect(fitz.Rect(200, 300, 260, 380), color=(0.1, 0.2, 0.8), fill=(0.8, 0.9, 1.0))
+    page.draw_rect(fitz.Rect(300, 310, 340, 370), color=(0.8, 0.2, 0.1), fill=(1.0, 0.9, 0.8))
+    page.insert_text((180, 420), 'Figure 1: LoRA architecture with adaptation branch.', fontsize=10)
+    doc.save(str(pdf_path))
+
+    res = subprocess.run([
+        PY, str(ROOT / 'scripts/extract_figs.py'), '--pdf', str(pdf_path),
+        '--out', str(assets_dir), '--inventory', str(inv_path)
+    ], capture_output=True, text=True)
+    assert res.returncode == 0, res.stdout + res.stderr
+
+    items = json.loads(inv_path.read_text(encoding='utf-8'))['items']
+    fig = next(x for x in items if x['id'] == 'F01')
+    assert fig['file'] is not None
+    # Figure box should encompass the vector parts (~[200, 300, 340, 380]), NOT the full white mask [100, 200, 500, 600]
+    bbox = fig['figure_bbox']
+    assert bbox[0] >= 180 and bbox[2] <= 360
+    assert bbox[1] >= 280 and bbox[3] <= 400
+    # Must NOT prematurely mark inspection_status as VERIFIED
+    assert fig.get('inspection_status') != 'VERIFIED'
+
