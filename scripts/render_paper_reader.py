@@ -553,7 +553,8 @@ def render_paper_reader_html(manuscript: dict, root: Path) -> str:
     for idx, chapter in enumerate(chapters, 1):
         cid = chapter.get('id', f'spine-{idx:02d}')
         blocks = '\n'.join(render_block_html(block, root) for block in chapter.get('blocks', []))
-        chapters_html.append(f"<section class='chapter' id='ch-{esc(cid)}'><h1>{esc(chapter.get('title', ''))}</h1><div class='lead'>{esc(chapter.get('lead', ''))}</div><div class='chapter-body'>{blocks}</div></section>")
+        lead_text = chapter.get('lead_paragraph') or chapter.get('lead', '')
+        chapters_html.append(f"<section class='chapter' id='ch-{esc(cid)}'><h1>{esc(chapter.get('title', ''))}</h1><div class='lead'>{esc(lead_text)}</div><div class='chapter-body'>{blocks}</div></section>")
     app = doc.get('appendix_summary', {})
     refs = []
     pm = load_json(root / 'model/paper_model.json') if (root / 'model/paper_model.json').exists() else {}
@@ -603,7 +604,8 @@ def render_paper_reader_md(manuscript: dict, root=None) -> str:
     lines.extend(['', '---', ''])
     for idx, chapter in enumerate(chapters, 1):
         cid = chapter.get('id', f'spine-{idx:02d}')
-        lines.extend([f"## {idx}. {chapter.get('title', '')} <a id='{cid}'></a>", '', f"> *{chapter.get('lead', '')}*", ''])
+        lead_text = chapter.get('lead_paragraph') or chapter.get('lead', '')
+        lines.extend([f"## {idx}. {chapter.get('title', '')} <a id='{cid}'></a>", '', f"> *{lead_text}*", ''])
         for block in chapter.get('blocks', []):
             kind = block.get('type'); text = block.get('text', ''); refs = block.get('evidence_refs', [])
             cite = f" 〔{', '.join(refs)}〕" if refs else ''
