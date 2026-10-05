@@ -415,7 +415,10 @@ def rebind_visual_assets(manuscript: dict, root: Path) -> list[dict[str, str]]:
     changes = []
     document = manuscript.get("document", {})
     chapters = document.get("sections") or document.get("chapters", [])
-    seen_assets: dict[str, str] = {}
+
+    # Pass 1: Collect candidate asset claims across all figure and table blocks.
+    candidate_claims: dict[str, set[str]] = {}
+    claimants: list[tuple[dict, str, str]] = []
     for chapter in chapters:
         for block in chapter.get("blocks", []):
             if block.get("type") not in ("figure", "table") or not block.get("evidence_id"):
@@ -423,12 +426,19 @@ def rebind_visual_assets(manuscript: dict, root: Path) -> list[dict[str, str]]:
             eid = str(block["evidence_id"])
             resolved = resolve_visual_asset(block, root)
             if resolved:
-                if resolved in seen_assets and seen_assets[resolved] != eid:
-                    continue
-                seen_assets[resolved] = eid
-                if block.get("asset") != resolved:
-                    changes.append({"evidence_id": eid, "old_asset": block.get("asset"), "new_asset": resolved})
-                    block["asset"] = resolved
+                candidate_claims.setdefault(resolved, set()).add(eid)
+                claimants.append((block, eid, resolved))
+
+    # Pass 2: Mark any asset claimed by more than one distinct evidence ID as ambiguous.
+    ambiguous_assets = {asset for asset, eids in candidate_claims.items() if len(eids) > 1}
+
+    # Pass 3: Leave every claimant of an ambiguous asset unchanged; rebind unambiguous assets.
+    for block, eid, resolved in claimants:
+        if resolved in ambiguous_assets:
+            continue
+        if block.get("asset") != resolved:
+            changes.append({"evidence_id": eid, "old_asset": block.get("asset"), "new_asset": resolved})
+            block["asset"] = resolved
     return changes
 
 
