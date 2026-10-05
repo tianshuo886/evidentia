@@ -9,8 +9,6 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    env:
-      EVIDENTIA_FIXTURE_ACCEPTANCE: "1"
     strategy:
       matrix:
         python-version: ["3.9", "3.10", "3.11"]
@@ -107,6 +105,8 @@ jobs:
           python scripts/memory_relation.py --help
 
       - name: Reader Content & Structural Integrity Audit
+        env:
+          EVIDENTIA_FIXTURE_ACCEPTANCE: "1"
         run: |
           python scripts/reader_audit.py --out examples/demo-paper
           python scripts/reader_audit.py --out examples/real-paper-demo
