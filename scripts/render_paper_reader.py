@@ -380,22 +380,31 @@ figcaption {
 }
 """
 
-def _inventory_asset_map(root: Path) -> dict[str, str]:
+def _inventory_asset_map(root: Path, kind: str = None) -> dict[str, str]:
     inventory = root / "model" / "figure_inventory.json"
     if not inventory.exists():
         return {}
     data = load_json(inventory)
-    return {
-        str(item.get("id")): str(item.get("file") or item.get("asset"))
-        for item in data.get("items", [])
-        if item.get("id") and (item.get("file") or item.get("asset"))
-    }
+    asset_map = {}
+    for item in data.get("items", []):
+        iid = item.get("id")
+        if not iid:
+            continue
+        if kind and item.get("kind") and item.get("kind") != kind:
+            continue
+        if item.get("needs_visual_review") or item.get("inspection_status") == "NEEDS_REVIEW" or item.get("binding_method") == "VISUAL_BINDING_UNCERTAIN":
+            continue
+        asset = item.get("file") or item.get("asset")
+        if asset:
+            asset_map[str(iid)] = str(asset)
+    return asset_map
 
 
 def resolve_visual_asset(block: dict, root: Path):
     """Resolve by canonical evidence identity, never by a stale writer path."""
     eid = block.get("evidence_id")
-    inventory_asset = _inventory_asset_map(root).get(str(eid)) if eid else None
+    block_type = block.get("type")
+    inventory_asset = _inventory_asset_map(root, kind=block_type).get(str(eid)) if eid else None
     if inventory_asset and (root / inventory_asset).exists():
         return inventory_asset
     return block.get("asset")
@@ -406,14 +415,20 @@ def rebind_visual_assets(manuscript: dict, root: Path) -> list[dict[str, str]]:
     changes = []
     document = manuscript.get("document", {})
     chapters = document.get("sections") or document.get("chapters", [])
+    seen_assets: dict[str, str] = {}
     for chapter in chapters:
         for block in chapter.get("blocks", []):
             if block.get("type") not in ("figure", "table") or not block.get("evidence_id"):
                 continue
+            eid = str(block["evidence_id"])
             resolved = resolve_visual_asset(block, root)
-            if resolved and block.get("asset") != resolved:
-                changes.append({"evidence_id": str(block["evidence_id"]), "old_asset": block.get("asset"), "new_asset": resolved})
-                block["asset"] = resolved
+            if resolved:
+                if resolved in seen_assets and seen_assets[resolved] != eid:
+                    continue
+                seen_assets[resolved] = eid
+                if block.get("asset") != resolved:
+                    changes.append({"evidence_id": eid, "old_asset": block.get("asset"), "new_asset": resolved})
+                    block["asset"] = resolved
     return changes
 
 

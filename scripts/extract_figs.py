@@ -221,6 +221,12 @@ def main():
                 dr = d.get('rect')
                 if not dr:
                     continue
+                # Ignore pure white background rectangles (fill=(1,1,1) and no stroke)
+                # or drawings that extend outside page bounds
+                if d.get('fill') == (1.0, 1.0, 1.0) and d.get('color') is None:
+                    continue
+                if dr[0] < -1 or dr[1] < -1 or dr[2] > page_rect.width + 1 or dr[3] > page_rect.height + 1:
+                    continue
                 dr_area = max(0, dr[2] - dr[0]) * max(0, dr[3] - dr[1])
                 if 20 < dr_area < 0.80 * page_area:
                     boxes.append(list(dr))
@@ -276,6 +282,9 @@ def main():
                 best_cand = (table_text_bbox, None) if table_text_bbox else None
                 best_score = 0.92 if table_text_bbox else 0.0
                 for cand_bbox, xref in ([] if table_text_bbox else candidate_rects):
+                    # Tables should never bind to vector figure drawings (xref is None)
+                    if kind == 'table' and xref is None:
+                        continue
                     score = compute_binding_score(bbox, cand_bbox, kind, page_rect=page_rect)
                     if score > best_score:
                         best_score = score
@@ -360,7 +369,7 @@ def main():
                             item['binding_confidence'] = max(0.88, best_score)
                             item['localization_confidence'] = max(0.88, best_score)
                             item['confidence'] = 0.90
-                            item['inspection_status'] = 'VERIFIED'
+                            item['inspection_status'] = 'inspected'
                     except Exception:
                         pass
 
@@ -385,7 +394,7 @@ def main():
                             item['binding_confidence'] = round(best_score, 2)
                             item['localization_confidence'] = round(best_score, 2)
                             item['confidence'] = round(best_score, 2)
-                            item['inspection_status'] = 'VERIFIED'
+                            item['inspection_status'] = 'inspected'
                         except Exception:
                             pass
 
