@@ -1,0 +1,43 @@
+{
+  "task_id": "TASK-V3-VISUAL-P009",
+  "execution_kind": "HOST_AGENT",
+  "executor": {
+    "kind": "HOST_AGENT",
+    "host": "pi-parent-direct",
+    "host_version": "UNKNOWN",
+    "provider": "openai-codex",
+    "model": "gpt-6.1-sol",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "high",
+    "tool_profile": "paper-only"
+  },
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "input_hashes": {
+    "source/paper.pdf": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+    "task": "230b9d250c27c4a96215566a3a2c3f814a3ef244f63803804b7f5064f282a99f"
+  },
+  "result": {
+    "schema_version": "1.0",
+    "source_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+    "page": 9,
+    "bindings": [
+      {
+        "evidence_id": "T03",
+        "kind": "table",
+        "bbox_norm": [
+          0.17,
+          0.08,
+          0.835,
+          0.515
+        ],
+        "panel_bboxes_norm": [],
+        "status": "VERIFIED",
+        "complete": true,
+        "caption_match": true,
+        "confidence": 0.99,
+        "notes": "Full-page inspection confirms complete Table 3 caption and the full architecture-variation table through the big-model row; surrounding explanatory prose is excluded."
+      }
+    ]
+  }
+}

@@ -1,0 +1,1198 @@
+{
+  "schema_version": "3.0",
+  "paper_id": "10.1038/s41586-019-1666-5",
+  "source_sha256": "6f3030abb7d9d4f0624a5cbe5ca2ff673df63afc85c97fadd0bf7db780c8dbaf",
+  "items": [
+    {
+      "id": "F01",
+      "kind": "figure",
+      "page": 2,
+      "label": "Fig. 1",
+      "caption": "Fig. 1 The Sycamore processor. a, Layout of processor, showing a rectangular",
+      "asset": "assets/figures/v3_F01_p2_768x494.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.97,
+      "used_in": [
+        {
+          "chapter_id": "S3",
+          "chapter_title": "打造仪器：Sycamore 与高保真门",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "S3",
+          "chapter_title": "打造仪器：Sycamore 与高保真门",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "S3",
+          "chapter_title": "打造仪器：Sycamore 与高保真门",
+          "block_type": "figure"
+        }
+      ]
+    },
+    {
+      "id": "F02",
+      "kind": "figure",
+      "page": 3,
+      "label": "Fig. 2",
+      "caption": "Fig. 2 System-wide Pauli and measurement errors. a, Integrated histogram",
+      "asset": "assets/figures/v3_F02_p3_770x1276.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.97,
+      "used_in": [
+        {
+          "chapter_id": "S4",
+          "chapter_title": "读取仪器误差：从逐项误差到乘法模型",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "S4",
+          "chapter_title": "读取仪器误差：从逐项误差到乘法模型",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "S4",
+          "chapter_title": "读取仪器误差：从逐项误差到乘法模型",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "S4",
+          "chapter_title": "读取仪器误差：从逐项误差到乘法模型",
+          "block_type": "callout"
+        },
+        {
+          "chapter_id": "S8",
+          "chapter_title": "为何不是伪信号：数字化误差模型与可证伪性",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "S8",
+          "chapter_title": "为何不是伪信号：数字化误差模型与可证伪性",
+          "block_type": "list"
+        }
+      ]
+    },
+    {
+      "id": "F03",
+      "kind": "figure",
+      "page": 4,
+      "label": "Fig. 3",
+      "caption": "Fig. 3 Control operations for the quantum supremacy circuits. a, Example",
+      "asset": "assets/figures/v3_F03_p4_1645x487.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.97,
+      "used_in": []
+    },
+    {
+      "id": "F04",
+      "kind": "figure",
+      "page": 5,
+      "label": "Fig. 4",
+      "caption": "Fig. 4 Demonstrating quantum supremacy. a, Verification of benchmarking",
+      "asset": "assets/figures/v3_F04_p5_1563x709.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.97,
+      "used_in": [
+        {
+          "chapter_id": "S5",
+          "chapter_title": "关键一跃：让不可测者变得可测",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "S5",
+          "chapter_title": "关键一跃：让不可测者变得可测",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "S5",
+          "chapter_title": "关键一跃：让不可测者变得可测",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "S5",
+          "chapter_title": "关键一跃：让不可测者变得可测",
+          "block_type": "takeaway"
+        },
+        {
+          "chapter_id": "S6",
+          "chapter_title": "测量本身：霸权读数",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "S6",
+          "chapter_title": "测量本身：霸权读数",
+          "block_type": "table"
+        },
+        {
+          "chapter_id": "S6",
+          "chapter_title": "测量本身：霸权读数",
+          "block_type": "table"
+        },
+        {
+          "chapter_id": "S7",
+          "chapter_title": "对位：经典代价的外推",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "S7",
+          "chapter_title": "对位：经典代价的外推",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "S7",
+          "chapter_title": "对位：经典代价的外推",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "S7",
+          "chapter_title": "对位：经典代价的外推",
+          "block_type": "callout"
+        },
+        {
+          "chapter_id": "S8",
+          "chapter_title": "为何不是伪信号：数字化误差模型与可证伪性",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "S8",
+          "chapter_title": "为何不是伪信号：数字化误差模型与可证伪性",
+          "block_type": "list"
+        }
+      ]
+    },
+    {
+      "id": "p.1",
+      "kind": "page",
+      "page": 1,
+      "label": "p.1",
+      "caption": null,
+      "asset": "source_pages/page-001.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "S1",
+          "chapter_title": "起点：两个问题与一个里程碑",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "S1",
+          "chapter_title": "起点：两个问题与一个里程碑",
+          "block_type": "takeaway"
+        },
+        {
+          "chapter_id": "S9",
+          "chapter_title": "边界与未决：它证明了什么、没证明什么",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "p.2",
+      "kind": "page",
+      "page": 2,
+      "label": "p.2",
+      "caption": null,
+      "asset": "source_pages/page-002.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "S2",
+          "chapter_title": "选定任务与度量标尺",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "S2",
+          "chapter_title": "选定任务与度量标尺",
+          "block_type": "equation"
+        },
+        {
+          "chapter_id": "S2",
+          "chapter_title": "选定任务与度量标尺",
+          "block_type": "callout"
+        },
+        {
+          "chapter_id": "S3",
+          "chapter_title": "打造仪器：Sycamore 与高保真门",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "S3",
+          "chapter_title": "打造仪器：Sycamore 与高保真门",
+          "block_type": "figure"
+        }
+      ]
+    },
+    {
+      "id": "EQ-01",
+      "kind": "equation",
+      "page": 2,
+      "label": "EQ-01",
+      "caption": "= 2 ⟨( )⟩−1",
+      "asset": "assets/equations/EQ-01.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": [
+        {
+          "chapter_id": "S2",
+          "chapter_title": "选定任务与度量标尺",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "S2",
+          "chapter_title": "选定任务与度量标尺",
+          "block_type": "equation"
+        },
+        {
+          "chapter_id": "S2",
+          "chapter_title": "选定任务与度量标尺",
+          "block_type": "equation"
+        },
+        {
+          "chapter_id": "S2",
+          "chapter_title": "选定任务与度量标尺",
+          "block_type": "callout"
+        }
+      ]
+    },
+    {
+      "id": "EQ-02",
+      "kind": "equation",
+      "page": 2,
+      "label": "EQ-02",
+      "caption": "distribution will give ⟨P(xi)⟩i = 1/2n and produce F",
+      "asset": "assets/equations/EQ-02.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.3",
+      "kind": "page",
+      "page": 3,
+      "label": "p.3",
+      "caption": null,
+      "asset": "source_pages/page-003.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "S4",
+          "chapter_title": "读取仪器误差：从逐项误差到乘法模型",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "S4",
+          "chapter_title": "读取仪器误差：从逐项误差到乘法模型",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "S4",
+          "chapter_title": "读取仪器误差：从逐项误差到乘法模型",
+          "block_type": "callout"
+        }
+      ]
+    },
+    {
+      "id": "EQ-03",
+      "kind": "equation",
+      "page": 3,
+      "label": "EQ-03",
+      "caption": "qubit level (n = 1), to measure the probability of an error occurring",
+      "asset": "assets/equations/EQ-03.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-04",
+      "kind": "equation",
+      "page": 3,
+      "label": "EQ-04",
+      "caption": "ability. The state (Hilbert) space dimension term, D = 2n, which equals",
+      "asset": "assets/equations/EQ-04.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.4",
+      "kind": "page",
+      "page": 4,
+      "label": "p.4",
+      "caption": null,
+      "asset": "source_pages/page-004.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "S5",
+          "chapter_title": "关键一跃：让不可测者变得可测",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "S5",
+          "chapter_title": "关键一跃：让不可测者变得可测",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "S6",
+          "chapter_title": "测量本身：霸权读数",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "S6",
+          "chapter_title": "测量本身：霸权读数",
+          "block_type": "equation"
+        },
+        {
+          "chapter_id": "S6",
+          "chapter_title": "测量本身：霸权读数",
+          "block_type": "table"
+        },
+        {
+          "chapter_id": "S7",
+          "chapter_title": "对位：经典代价的外推",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "S7",
+          "chapter_title": "对位：经典代价的外推",
+          "block_type": "figure"
+        }
+      ]
+    },
+    {
+      "id": "EQ-05",
+      "kind": "equation",
+      "page": 4,
+      "label": "EQ-05",
+      "caption": "Ns = 5 × 106 total samples over ten circuit instances, where instances",
+      "asset": "assets/equations/EQ-05.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-06",
+      "kind": "equation",
+      "page": 4,
+      "label": "EQ-06",
+      "caption": "est circuit with 53 qubits and 20 cycles, we collected Ns = 30 × 106 samples",
+      "asset": "assets/equations/EQ-06.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-07",
+      "kind": "equation",
+      "page": 4,
+      "label": "EQ-07",
+      "caption": "= (2.24±0.21) × 10",
+      "asset": "assets/equations/EQ-07.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": [
+        {
+          "chapter_id": "S6",
+          "chapter_title": "测量本身：霸权读数",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "S6",
+          "chapter_title": "测量本身：霸权读数",
+          "block_type": "equation"
+        },
+        {
+          "chapter_id": "S6",
+          "chapter_title": "测量本身：霸权读数",
+          "block_type": "equation"
+        }
+      ]
+    },
+    {
+      "id": "EQ-08",
+      "kind": "equation",
+      "page": 4,
+      "label": "EQ-08",
+      "caption": "computers for two purposes: (1) verifying our quantum processor and",
+      "asset": "assets/equations/EQ-08.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-09",
+      "kind": "equation",
+      "page": 4,
+      "label": "EQ-09",
+      "caption": "plifiable circuits (Fig. 4a), and (2) estimating FXEB as well as the classical",
+      "asset": "assets/equations/EQ-09.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-10",
+      "kind": "equation",
+      "page": 4,
+      "label": "EQ-10",
+      "caption": "is most efficient at low depth44–47. At m = 20 the tensors do not reason-",
+      "asset": null,
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-11",
+      "kind": "equation",
+      "page": 4,
+      "label": "EQ-11",
+      "caption": "ably fit into node memory, so we can only measure runtimes up to m = 14,",
+      "asset": "assets/equations/EQ-11.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-12",
+      "kind": "equation",
+      "page": 4,
+      "label": "EQ-12",
+      "caption": "for m = 20 with 0.1% fidelity using the Schrödinger–Feynman algorithm",
+      "asset": "assets/equations/EQ-12.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.5",
+      "kind": "page",
+      "page": 5,
+      "label": "p.5",
+      "caption": null,
+      "asset": "source_pages/page-005.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "S5",
+          "chapter_title": "关键一跃：让不可测者变得可测",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "S5",
+          "chapter_title": "关键一跃：让不可测者变得可测",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "S5",
+          "chapter_title": "关键一跃：让不可测者变得可测",
+          "block_type": "takeaway"
+        },
+        {
+          "chapter_id": "S6",
+          "chapter_title": "测量本身：霸权读数",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "S7",
+          "chapter_title": "对位：经典代价的外推",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "S7",
+          "chapter_title": "对位：经典代价的外推",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "S7",
+          "chapter_title": "对位：经典代价的外推",
+          "block_type": "callout"
+        },
+        {
+          "chapter_id": "S8",
+          "chapter_title": "为何不是伪信号：数字化误差模型与可证伪性",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "S8",
+          "chapter_title": "为何不是伪信号：数字化误差模型与可证伪性",
+          "block_type": "list"
+        },
+        {
+          "chapter_id": "S9",
+          "chapter_title": "边界与未决：它证明了什么、没证明什么",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "S9",
+          "chapter_title": "边界与未决：它证明了什么、没证明什么",
+          "block_type": "callout"
+        }
+      ]
+    },
+    {
+      "id": "EQ-13",
+      "kind": "equation",
+      "page": 5,
+      "label": "EQ-13",
+      "caption": "m = 14 cycles",
+      "asset": "assets/equations/EQ-13.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-14",
+      "kind": "equation",
+      "page": 5,
+      "label": "EQ-14",
+      "caption": "to n = 53, m = 14 in a reasonable amount of time. Each data point is an average over",
+      "asset": "assets/equations/EQ-14.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-15",
+      "kind": "equation",
+      "page": 5,
+      "label": "EQ-15",
+      "caption": "= 39, 42 and 43 only two instances were simulated). For each n, each instance is",
+      "asset": "assets/equations/EQ-15.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-16",
+      "kind": "equation",
+      "page": 5,
+      "label": "EQ-16",
+      "caption": "Sycamore sampling (Ns = 106): 200 s",
+      "asset": "assets/equations/EQ-16.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-17",
+      "kind": "equation",
+      "page": 5,
+      "label": "EQ-17",
+      "caption": "n = 53 qubits",
+      "asset": "assets/equations/EQ-17.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-18",
+      "kind": "equation",
+      "page": 5,
+      "label": "EQ-18",
+      "caption": "which it is much harder to simulate. For the largest elided data (n = 53, m = 20,",
+      "asset": "assets/equations/EQ-18.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-19",
+      "kind": "equation",
+      "page": 5,
+      "label": "EQ-19",
+      "caption": "total Ns = 30 million), we find an average FXEB > 0.1% with 5σ confidence, where σ",
+      "asset": "assets/equations/EQ-19.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-20",
+      "kind": "equation",
+      "page": 5,
+      "label": "EQ-20",
+      "caption": "statistically significant fidelity. For m = 20, obtaining a million samples on the",
+      "asset": "assets/equations/EQ-20.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.6",
+      "kind": "page",
+      "page": 6,
+      "label": "p.6",
+      "caption": null,
+      "asset": "source_pages/page-006.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "S9",
+          "chapter_title": "边界与未决：它证明了什么、没证明什么",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "S9",
+          "chapter_title": "边界与未决：它证明了什么、没证明什么",
+          "block_type": "callout"
+        }
+      ]
+    },
+    {
+      "id": "EQ-21",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-21",
+      "caption": "Feynman, R. P. Simulating physics with computers. Int. J. Theor. Phys. 21, 467–488 (1982).",
+      "asset": "assets/equations/EQ-21.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-22",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-22",
+      "caption": "Lett. 55, 1908 (1985).",
+      "asset": "assets/equations/EQ-22.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-23",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-23",
+      "caption": "Phys. Rev. Lett. 79, 2328 (1997).",
+      "asset": "assets/equations/EQ-23.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-24",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-24",
+      "caption": "Mooij, J. et al. Josephson persistent-current qubit. Science 285, 1036–1039 (1999).",
+      "asset": "assets/equations/EQ-24.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-25",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-25",
+      "caption": "circuit quantum electrodynamics. Nature 431, 162–167 (2004).",
+      "asset": "assets/equations/EQ-25.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-26",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-26",
+      "caption": "Rev. A 76, 042319 (2007).",
+      "asset": "assets/equations/EQ-26.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-27",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-27",
+      "caption": "Nature 474, 589–597 (2011).",
+      "asset": "assets/equations/EQ-27.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-28",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-28",
+      "caption": "080501 (2016).",
+      "asset": "assets/equations/EQ-28.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-29",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-29",
+      "caption": "595 (2018).",
+      "asset": "assets/equations/EQ-29.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-30",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-30",
+      "caption": "quantum random circuit sampling. Nat. Phys. 15, 159 (2019).",
+      "asset": "assets/equations/EQ-30.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-31",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-31",
+      "caption": "qubits. Science 360, 195–199 (2018).",
+      "asset": "assets/equations/EQ-31.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-32",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-32",
+      "caption": "Preskill, J. Quantum computing in the NISQ era and beyond. Quantum 2, 79 (2018).",
+      "asset": "assets/equations/EQ-32.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-33",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-33",
+      "caption": "processes. Phys. Rev. Lett. 101, 130504 (2008).",
+      "asset": "assets/equations/EQ-33.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-34",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-34",
+      "caption": "processors. Preprint at https://arxiv.org/abs/1802.06002 (2018).",
+      "asset": "assets/equations/EQ-34.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-35",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-35",
+      "caption": "quantum neural network training landscapes. Nat. Commun. 9, 4812 (2018).",
+      "asset": "assets/equations/EQ-35.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-36",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-36",
+      "caption": "https://doi.org/10.1038/s41567-019-0648-8 (2019).",
+      "asset": "assets/equations/EQ-36.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-37",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-37",
+      "caption": "308–311 (2018).",
+      "asset": "assets/equations/EQ-37.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-38",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-38",
+      "caption": "computation of molecular energies. Science 309, 1704–1707 (2005).",
+      "asset": "assets/equations/EQ-38.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-39",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-39",
+      "caption": "Commun. 5, 4213 (2014).",
+      "asset": "assets/equations/EQ-39.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-40",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-40",
+      "caption": "Phys. Rev. X 8, 031022 (2018).",
+      "asset": "assets/equations/EQ-40.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-41",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-41",
+      "caption": "practical large-scale quantum computation. Phys. Rev. A 86, 032324 (2012).",
+      "asset": "assets/equations/EQ-41.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-42",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-42",
+      "caption": "fault tolerance. Nature 508, 500–503 (2014).",
+      "asset": "assets/equations/EQ-42.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-43",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-43",
+      "caption": "lattice of four superconducting qubits. Nat. Commun. 6, 6979 (2015).",
+      "asset": "assets/equations/EQ-43.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-44",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-44",
+      "caption": "superconducting circuits. Nature 536, 441 (2016).",
+      "asset": "assets/equations/EQ-44.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-45",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-45",
+      "caption": "Theory Appl. 45, 897–934 (2017).",
+      "asset": "assets/equations/EQ-45.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-46",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-46",
+      "caption": "Phys. Rev. Lett. 113, 220502 (2014).",
+      "asset": "assets/equations/EQ-46.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-47",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-47",
+      "caption": "Phys. Rev. Appl. 10, 054062 (2018).",
+      "asset": "assets/equations/EQ-47.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-48",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-48",
+      "caption": "445, 515 (2007).",
+      "asset": "assets/equations/EQ-48.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-49",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-49",
+      "caption": "Lett. 112, 190504 (2014).",
+      "asset": "assets/equations/EQ-49.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-50",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-50",
+      "caption": "qubit. Phys. Rev. Lett. 116, 020501 (2016).",
+      "asset": "assets/equations/EQ-50.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-51",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-51",
+      "caption": "Phys. Rev. Lett. 121, 090502 (2018).",
+      "asset": "assets/equations/EQ-51.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-52",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-52",
+      "caption": "Commun. 7, 12964 (2016).",
+      "asset": "assets/equations/EQ-52.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-53",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-53",
+      "caption": "(2008).",
+      "asset": "assets/equations/EQ-53.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-54",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-54",
+      "caption": "benchmarking of quantum processes. Phys. Rev. Lett. 106, 180504 (2011).",
+      "asset": "assets/equations/EQ-54.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-55",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-55",
+      "caption": "randomised benchmarking of non-Clifford gates. npj Quant. Inform. 2, 16012 (2016).",
+      "asset": "assets/equations/EQ-55.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-56",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-56",
+      "caption": "dispersive readout. Phys. Rev. Lett. 95, 060501 (2005).",
+      "asset": "assets/equations/EQ-56.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-57",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-57",
+      "caption": "Comput. Phys. Commun. 237, 47–61 (2019).",
+      "asset": "assets/equations/EQ-57.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-58",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-58",
+      "caption": "farther than it appears. Preprint at https://arxiv.org/abs/1807.10749 (2018).",
+      "asset": "assets/equations/EQ-58.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-59",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-59",
+      "caption": "the press); preprint at https://arxiv.org/abs/1811.09599 (2018).",
+      "asset": "assets/equations/EQ-59.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-60",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-60",
+      "caption": "abs/1712.05384 (2017).",
+      "asset": "assets/equations/EQ-60.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-61",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-61",
+      "caption": "size quantum circuits. Preprint at https://arxiv.org/abs/1805.01450 (2018).",
+      "asset": "assets/equations/EQ-61.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-62",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-62",
+      "caption": "simulation. Preprint at https://arxiv.org/abs/1905.00444 (2019).",
+      "asset": "assets/equations/EQ-62.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-63",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-63",
+      "caption": "Preprint at https://arxiv.org/abs/1710.05867 (2017).",
+      "asset": "assets/equations/EQ-63.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-64",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-64",
+      "caption": "49.\t Chen, Z. Y. et al. 64-qubit quantum circuit simulation. Sci. Bull. 63, 964–971 (2018).",
+      "asset": "assets/equations/EQ-64.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-65",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-65",
+      "caption": "quantum circuits. Preprint at https://arxiv.org/abs/1901.05003 (2019).",
+      "asset": "assets/equations/EQ-65.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-66",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-66",
+      "caption": "A 52, R2493–R2496 (1995).",
+      "asset": "assets/equations/EQ-66.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-67",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-67",
+      "caption": "outlook. Science 339, 1169–1174 (2013).",
+      "asset": "assets/equations/EQ-67.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-68",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-68",
+      "caption": "(2017).",
+      "asset": "assets/equations/EQ-68.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-69",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-69",
+      "caption": "Lett. 79, 325 (1997).",
+      "asset": "assets/equations/EQ-69.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.7",
+      "kind": "page",
+      "page": 7,
+      "label": "p.7",
+      "caption": null,
+      "asset": "source_pages/page-007.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    }
+  ]
+}

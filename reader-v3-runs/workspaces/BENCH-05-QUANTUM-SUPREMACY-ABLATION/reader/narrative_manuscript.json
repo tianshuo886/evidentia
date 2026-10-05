@@ -1,0 +1,290 @@
+{
+  "schema_version": "3.0",
+  "paper_id": "10.1038/s41586-019-1666-5",
+  "source_sha256": "6f3030abb7d9d4f0624a5cbe5ca2ff673df63afc85c97fadd0bf7db780c8dbaf",
+  "created_at": "2026-10-04T02:30:00+00:00",
+  "narrative_plan_ref": "model/narrative_plan.json",
+  "document": {
+    "title": "Quantum Supremacy Using a Programmable Superconducting Processor",
+    "subtitle": "一条由可验证中间量支撑、但仍受外推边界约束的实验论证",
+    "paper_meta": {
+      "authors": ["F. Arute", "K. Arya", "R. Babbush", "et al."],
+      "venue": "Nature",
+      "year": 2019,
+      "doi": "10.1038/s41586-019-1666-5",
+      "pdf_sha256": "6f3030abb7d9d4f0624a5cbe5ca2ff673df63afc85c97fadd0bf7db780c8dbaf"
+    },
+    "orientation": {
+      "lead": "这篇实验物理论文的主张不是量子计算已经普遍胜过经典计算，而是 Sycamore 在特定的随机量子线路采样任务上进入了经典方法难以追赶的区间。论证的承重墙，是先在可模拟线路上检验保真度估计，再把该估计用于最难线路；因此必须把直接测量、受控估计和经典成本外推分开阅读。",
+      "takeaways": [
+        "量子侧报告的是 53 比特、20 周期线路的受控估计保真度，而非完整最难线路的直接经典重算。",
+        "作者将约 200 秒与约一万年放在同一保真度尺度比较；后者主要来自算法和成本模型外推。",
+        "结果证明的是任务特定里程碑，不是通用量子优势，也不是已经容错的实用量子计算。"
+      ]
+    },
+    "sections": [
+      {
+        "id": "S1",
+        "chapter_num": 1,
+        "title": "起点：两个问题与一个里程碑",
+        "lead": "论文从 Feynman 关于量子系统模拟的设想出发，同时追问系统能否足够大且足够低噪，以及能否找到经典难而量子易的计算任务。",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "作者选择一个人为构造但复杂度可分析的基准任务来回答这两个问题：让可编程超导处理器执行随机量子线路采样，并把实验所得分布与经典模拟同一分布的代价比较。这里的“量子霸权”是任务特定的工程里程碑；它不等于任何有用应用都已经获得量子加速。",
+            "evidence_refs": ["p.1"],
+            "source_anchors": ["p.1"],
+            "presentation_role": "narrative_core"
+          },
+          {
+            "type": "takeaway",
+            "text": "先记住主张的范围：论文证明的是 RCS 这一特定任务上的速度分离，不是通用计算优越性。",
+            "evidence_refs": ["p.1"],
+            "presentation_role": "narrative_support"
+          }
+        ]
+      },
+      {
+        "id": "S2",
+        "chapter_num": 2,
+        "title": "选定任务与度量标尺",
+        "lead": "随机线路没有可利用的算法结构，因而随着线路宽度和深度增加，经典计算其输出分布会变得困难；但“是否跑对了”又必须有一个可量化的标尺。",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "作者以线性交叉熵基准保真度 F_XEB 衡量实验样本是否更像理想线路的输出，而不是均匀噪声。理想输出概率越集中在实验样本处，F_XEB 越高；完全混合的噪声分布给出接近零的值。这个定义把设备验证变成可比较的数值读数。",
+            "evidence_refs": ["EQ-01", "p.2"],
+            "source_anchors": ["p.2"],
+            "presentation_role": "narrative_core"
+          },
+          {
+            "type": "equation",
+            "evidence_id": "EQ-01",
+            "latex": null,
+            "fallback_asset": "assets/equations/EQ-01.png",
+            "explanation": "F_XEB = 2^n〈P(x_i)〉_i − 1；它将理想概率 P(x_i) 与实验样本联系起来。最难线路上的 P(x_i) 恰恰难以由经典机直接求出，所以后文需要估计程序。",
+            "source_confidence": "UNCERTAIN",
+            "evidence_refs": ["EQ-01", "p.2"],
+            "presentation_role": "narrative_core"
+          },
+          {
+            "type": "callout",
+            "text": "关键限制：验证指标本身依赖经典计算。论文的核心方法问题因此不是只把线路跑起来，而是如何在不能直接求 P(x_i) 时仍给出可信的 F_XEB 估计。",
+            "evidence_refs": ["EQ-01", "p.2"],
+            "presentation_role": "narrative_support"
+          }
+        ]
+      },
+      {
+        "id": "S3",
+        "chapter_num": 3,
+        "title": "打造仪器：Sycamore 与高保真门",
+        "lead": "Sycamore 是一个二维可编程超导处理器：芯片上有 54 个 transmon 位置，实际实验使用 53 个比特和 86 个耦合器。",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "设备设计允许每个比特与最多四个近邻快速耦合，并在并行操作时保持较低的串扰。论文把器件结构、可调耦合器和芯片图景放在一起展示，因为后续结论依赖的不是单个门在孤立测试中的表现，而是大规模线路中许多门同时工作时仍可保持可预测的质量。",
+            "evidence_refs": ["F01", "p.2"],
+            "source_anchors": ["p.2"],
+            "presentation_role": "narrative_core"
+          },
+          {
+            "type": "figure",
+            "evidence_id": "F01",
+            "caption": "Fig. 1｜Sycamore 处理器的二维布局、耦合结构与芯片照片。",
+            "analysis": "这张图回答的是“仪器是什么”，不是“霸权结果是什么”：它显示了可扩展的二维拓扑，以及实验为什么可以在固定硬件上编排随机线路。",
+            "asset": "assets/figures/v3_F01_p2_768x494.png",
+            "fallback_asset": null,
+            "page": 2,
+            "evidence_refs": ["F01", "p.2"],
+            "presentation_role": "narrative_support"
+          }
+        ]
+      },
+      {
+        "id": "S4",
+        "chapter_num": 4,
+        "title": "读取仪器误差：从逐项误差到乘法模型",
+        "lead": "作者用交叉熵基准协议测量单比特门、双比特门、双比特周期和读出误差，并比较孤立运行与全系统并行运行。",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "报告的代表性误差率为：单比特 0.15%/0.16%，双比特 0.36%/0.62%，双比特周期 0.65%/0.93%，读出 3.1%/3.8%（前者为孤立、后者为全系统同时运行）。把这些数值带入逐门无误差概率相乘的模型，作者预测最大线路的总保真度约为 0.2%。",
+            "evidence_refs": ["F02", "p.3"],
+            "source_anchors": ["p.3"],
+            "presentation_role": "narrative_core"
+          },
+          {
+            "type": "figure",
+            "evidence_id": "F02",
+            "caption": "Fig. 2｜系统范围的 Pauli 与测量误差。",
+            "analysis": "图中孤立与并行两组误差的差异支持“并行运行仍可控”的设备判断；但逐项测量值如何在更大线路上相乘，仍依赖误差近似独立且不产生新相关源这一模型假设。",
+            "asset": "assets/figures/v3_F02_p3_770x1276.png",
+            "fallback_asset": null,
+            "page": 3,
+            "evidence_refs": ["F02", "p.3"],
+            "presentation_role": "narrative_core"
+          },
+          {
+            "type": "callout",
+            "text": "这是支持性模型而非无条件定理：规模放大后若出现未被单、双比特测试捕获的相关误差，乘法预测就会失效。",
+            "evidence_refs": ["F02", "p.3"],
+            "presentation_role": "narrative_support"
+          }
+        ]
+      },
+      {
+        "id": "S5",
+        "chapter_num": 5,
+        "title": "关键一跃：让不可测者变得可测",
+        "lead": "最难线路不能直接计算理想概率，因此作者构造 patch、elided 和 verification 三类简化线路，把不可直接验证的问题变成可以逐步检查的问题。",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "patch 线路切断一部分双比特门并把相互隔离的区域组合起来；elided 线路只删去沿切片的一部分初始门，同时保留更多纠缠；verification 线路保持门数和深度但采用可简化的 tiling。关键不是简化本身，而是在可模拟范围内比较简化线路与完整 verification 线路的 F_XEB。",
+            "evidence_refs": ["F04", "p.4", "p.5"],
+            "source_anchors": ["p.4", "p.5"],
+            "presentation_role": "narrative_core"
+          },
+          {
+            "type": "figure",
+            "evidence_id": "F04",
+            "caption": "Fig. 4｜简化线路验证与随机线路采样结果。",
+            "analysis": "Fig. 4a 是承重的控制实验：在最多 53 个比特的可模拟范围内，patch/elided 估计与完整 verification 线路相符。只有在这一步成立后，Fig. 4b 的最难线路读数才有方法上的支撑。",
+            "asset": "assets/figures/v3_F04_p5_1563x709.png",
+            "fallback_asset": null,
+            "page": 5,
+            "evidence_refs": ["F04", "p.4", "p.5"],
+            "presentation_role": "narrative_core"
+          },
+          {
+            "type": "takeaway",
+            "text": "读图时不要跳过 Fig. 4a：它把“这是一个估计”提升为“这个估计在可检验域内被校准过”。它没有把不可模拟域变成直接观测，而是提供了受控外推的理由。",
+            "evidence_refs": ["F04", "p.5"],
+            "presentation_role": "narrative_core"
+          }
+        ]
+      },
+      {
+        "id": "S6",
+        "chapter_num": 6,
+        "title": "测量本身：霸权读数",
+        "lead": "在最难的 53 比特、20 周期线路上，实验收集了三千万个样本，并用经过验证的 elided 方法估计其输出保真度。",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "作者报告 F_XEB=(2.24±0.21)×10^-3，并据此在 5σ 水平上断言平均保真度高于 0.1%。这给出了量子侧进入所定义霸权区间的证据；但完整最难线路的理想概率无法直接重算，相关数据被归档而不是由论文读者端到端复核，因此这里必须称为受控制的估计，而不是直接测量。",
+            "evidence_refs": ["EQ-07", "F04", "p.4", "p.5"],
+            "source_anchors": ["p.4", "p.5"],
+            "presentation_role": "narrative_core"
+          },
+          {
+            "type": "equation",
+            "evidence_id": "EQ-07",
+            "latex": null,
+            "fallback_asset": "assets/equations/EQ-07.png",
+            "explanation": "最难线路的 F_XEB 结果及其不确定度；数值来自经过可模拟线路检验的估计流程。",
+            "source_confidence": "UNCERTAIN",
+            "evidence_refs": ["EQ-07", "p.4"],
+            "presentation_role": "narrative_core"
+          },
+          {
+            "type": "table",
+            "evidence_id": "F04",
+            "caption": "关键数字（源文 Table 1 与 Fig. 4 的对应结果）",
+            "analysis": "量子侧约 200 秒（净处理器时间约 30 秒）、53 比特、20 周期、F_XEB=(2.24±0.21)×10^-3、5σ 下高于 0.1%。源文同时给出完整线路数据未直接模拟这一限制。",
+            "asset": null,
+            "page": 4,
+            "evidence_refs": ["F04", "p.4"],
+            "presentation_role": "uncertain",
+            "source_confidence": "VERIFIED"
+          }
+        ]
+      },
+      {
+        "id": "S7",
+        "chapter_num": 7,
+        "title": "对位：经典代价的外推",
+        "lead": "量子侧的秒数只有在经典侧的比较口径一致时才有意义；作者因此组合全态和 Schrödinger–Feynman 模拟，并按保真度尺度外推成本。",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "对于较小线路，作者用 Schrödinger 全态算法在超算上实测；更大线路则使用 Schrödinger–Feynman 混合算法，并依据已测线路的成本随保真度变化的规律推断最难线路。得到的对位数字是：在约 0.1% 保真水平上，经典方法的资源量达到约 50 万亿核小时、约 1 petawatt-hour，换算成约一万年级；Sycamore 采样一百万次约需 200 秒。",
+            "evidence_refs": ["F04", "p.4", "p.5"],
+            "source_anchors": ["p.4", "p.5"],
+            "presentation_role": "narrative_core"
+          },
+          {
+            "type": "figure",
+            "evidence_id": "F04",
+            "caption": "Fig. 4b｜随机线路采样的保真度与经典模拟成本比较。",
+            "analysis": "图的视觉重点是数量级分离，但其经典端不是对最难线路逐次运行到完成的直接计时，而是由可计算区间的结果、算法模型与资源约束共同外推。",
+            "asset": "assets/figures/v3_F04_p5_1563x709.png",
+            "fallback_asset": null,
+            "page": 5,
+            "evidence_refs": ["F04", "p.4", "p.5"],
+            "presentation_role": "narrative_support"
+          },
+          {
+            "type": "callout",
+            "text": "“一万年对 200 秒”是同一任务、相近保真度口径下的模型化比较；它是有证据支撑的数量级判断，不是已完成的一万年现场实验。",
+            "evidence_refs": ["F04", "p.5"],
+            "presentation_role": "narrative_support"
+          }
+        ]
+      },
+      {
+        "id": "S8",
+        "chapter_num": 8,
+        "title": "为何不是伪信号：数字化误差模型与可证伪性",
+        "lead": "论文进一步问：为什么逐项误差相乘会在系统规模上工作，以及什么观察会推翻这一解释。",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "作者把随机线路中的干涉、输出斑纹分布和高保真门联系起来，并用数字化 Pauli 误差模型解释为何总保真度随门数近似乘法衰减。模型与系统误差数据的一致，使信号不太像简单的均匀噪声；不过它仍有适用域边界。若大规模相关误差令 F_XEB 比预测更快衰减，或经典算法在同一保真度下追上资源成本，这条论证链就需要被修正。",
+            "evidence_refs": ["F02", "F04", "p.5"],
+            "source_anchors": ["p.5"],
+            "presentation_role": "narrative_core"
+          },
+          {
+            "type": "list",
+            "items": [
+              "支持：并行门误差仍处于可量化范围，简化线路在可模拟域与完整线路吻合。",
+              "承载：误差模型把局部测量推广为大线路的保真度预测。",
+              "可证伪：保真度衰减或经典成本若偏离预测，速度分离主张的强度随之下降。"
+            ],
+            "evidence_refs": ["F02", "F04", "p.5"],
+            "presentation_role": "narrative_support"
+          }
+        ]
+      },
+      {
+        "id": "S9",
+        "chapter_num": 9,
+        "title": "边界与未决：它证明了什么、没证明什么",
+        "lead": "最稳妥的结论是：这是随机线路采样上的任务特定工程里程碑，强于概念演示，但弱于通用、容错、可直接复核的量子计算优势。",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "论文没有证明 RCS 之外的实用问题已经获得加速，也没有证明当前处理器已容错。经典一万年级成本依赖模拟算法、硬件和缩放假设；Pauli 误差模型在何种相关性和规模下仍适用没有被完全封闭；最难线路的完整理想分布无法由独立读者直接重算。因此读者应保留三层区分：设备和样本是实验事实，F_XEB 是经过可模拟控制检验的估计，经典成本是更远一层的外推。",
+            "evidence_refs": ["p.1", "p.5", "p.6"],
+            "source_anchors": ["p.1", "p.5", "p.6"],
+            "presentation_role": "narrative_core"
+          },
+          {
+            "type": "callout",
+            "text": "最终判断：论文的说服力主要来自它把不可直接观测的终点拆成了可验证的中间步骤；它的边界也正因此清晰可见——估计器有效性、误差模型适用域和经典成本外推，不能被叙述成同一等级的证据。",
+            "evidence_refs": ["p.5", "p.6"],
+            "presentation_role": "narrative_core"
+          }
+        ]
+      }
+    ],
+    "appendix_summary": {
+      "claims_count": 12,
+      "figures_count": 4,
+      "tables_count": 1,
+      "note": "正文引用保留至图、公式和页码锚点；完整验证边界见 BENCH-05 Issue #22 validation note。"
+    }
+  }
+}

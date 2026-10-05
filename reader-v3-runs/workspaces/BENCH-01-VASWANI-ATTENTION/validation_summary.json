@@ -1,0 +1,208 @@
+{
+  "source_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+  "run_class": "PRE_ANTITEMPLATE_SMOKE",
+  "artifacts": {
+    "visual/page-003.json": {
+      "schema": "visual_page_verification",
+      "errors": [],
+      "source_ok": true
+    },
+    "visual/page-004.json": {
+      "schema": "visual_page_verification",
+      "errors": [],
+      "source_ok": true
+    },
+    "visual/page-006.json": {
+      "schema": "visual_page_verification",
+      "errors": [],
+      "source_ok": true
+    },
+    "visual/page-008.json": {
+      "schema": "visual_page_verification",
+      "errors": [],
+      "source_ok": true
+    },
+    "visual/page-009.json": {
+      "schema": "visual_page_verification",
+      "errors": [],
+      "source_ok": true
+    },
+    "visual/page-010.json": {
+      "schema": "visual_page_verification",
+      "errors": [],
+      "source_ok": true
+    },
+    "visual/page-013.json": {
+      "schema": "visual_page_verification",
+      "errors": [],
+      "source_ok": true
+    },
+    "visual/page-014.json": {
+      "schema": "visual_page_verification",
+      "errors": [],
+      "source_ok": true
+    },
+    "visual/page-015.json": {
+      "schema": "visual_page_verification",
+      "errors": [],
+      "source_ok": true
+    },
+    "lens/argument_narrative.json": {
+      "schema": "lens_v3",
+      "errors": [],
+      "source_ok": true
+    },
+    "lens/assumption_sensitivity.json": {
+      "schema": "lens_v3",
+      "errors": [],
+      "source_ok": true
+    },
+    "lens/evidence_results.json": {
+      "schema": "lens_v3",
+      "errors": [],
+      "source_ok": true
+    },
+    "lens/method_study_design.json": {
+      "schema": "lens_v3",
+      "errors": [],
+      "source_ok": true
+    },
+    "lens/proof_integrity.json": {
+      "schema": "lens_v3",
+      "errors": [],
+      "source_ok": true
+    },
+    "lens/validity_boundary.json": {
+      "schema": "lens_v3",
+      "errors": [],
+      "source_ok": true
+    },
+    "model/paper_understanding_draft.json": {
+      "schema": "paper_understanding_draft",
+      "errors": [],
+      "source_ok": true
+    },
+    "model/revision_memo.json": {
+      "schema": "revision_memo",
+      "errors": [],
+      "source_ok": true
+    },
+    "reader/narrative_manuscript.json": {
+      "schema": "narrative_manuscript",
+      "errors": [],
+      "source_ok": true
+    },
+    "evals/reader_v3/BENCH-01-VASWANI-ATTENTION/direct_ai.json": {
+      "schema": "direct_reading_baseline",
+      "errors": [],
+      "source_ok": true
+    },
+    "evals/reader_v3/BENCH-01-VASWANI-ATTENTION/pair_evaluation.json": {
+      "schema": "reader_pair_evaluation",
+      "errors": [],
+      "source_ok": true
+    },
+    "envelope/TASK-V3-DIRECT-BENCH-01-VASWANI-ATTENTION": {
+      "schema": "agent_result_envelope",
+      "errors": [],
+      "source_ok": false
+    },
+    "envelope/TASK-V3-EVAL-BENCH-01-VASWANI-ATTENTION": {
+      "schema": "agent_result_envelope",
+      "errors": [],
+      "source_ok": false
+    },
+    "envelope/TASK-V3-LEAD-READING": {
+      "schema": "agent_result_envelope",
+      "errors": [],
+      "source_ok": false
+    },
+    "envelope/TASK-V3-LEAD-WRITING": {
+      "schema": "agent_result_envelope",
+      "errors": [],
+      "source_ok": false
+    },
+    "envelope/TASK-V3-LENS-ARGUMENT_NARRATIVE": {
+      "schema": "agent_result_envelope",
+      "errors": [],
+      "source_ok": false
+    },
+    "envelope/TASK-V3-LENS-ASSUMPTION_SENSITIVITY": {
+      "schema": "agent_result_envelope",
+      "errors": [],
+      "source_ok": false
+    },
+    "envelope/TASK-V3-LENS-EVIDENCE_RESULTS": {
+      "schema": "agent_result_envelope",
+      "errors": [],
+      "source_ok": false
+    },
+    "envelope/TASK-V3-LENS-METHOD_STUDY_DESIGN": {
+      "schema": "agent_result_envelope",
+      "errors": [],
+      "source_ok": false
+    },
+    "envelope/TASK-V3-LENS-PROOF_INTEGRITY": {
+      "schema": "agent_result_envelope",
+      "errors": [],
+      "source_ok": false
+    },
+    "envelope/TASK-V3-LENS-VALIDITY_BOUNDARY": {
+      "schema": "agent_result_envelope",
+      "errors": [],
+      "source_ok": false
+    },
+    "envelope/TASK-V3-REVISION-MEMO": {
+      "schema": "agent_result_envelope",
+      "errors": [],
+      "source_ok": false
+    },
+    "envelope/TASK-V3-VISUAL-P003": {
+      "schema": "agent_result_envelope",
+      "errors": [],
+      "source_ok": false
+    },
+    "envelope/TASK-V3-VISUAL-P004": {
+      "schema": "agent_result_envelope",
+      "errors": [],
+      "source_ok": false
+    },
+    "envelope/TASK-V3-VISUAL-P006": {
+      "schema": "agent_result_envelope",
+      "errors": [],
+      "source_ok": false
+    },
+    "envelope/TASK-V3-VISUAL-P008": {
+      "schema": "agent_result_envelope",
+      "errors": [],
+      "source_ok": false
+    },
+    "envelope/TASK-V3-VISUAL-P009": {
+      "schema": "agent_result_envelope",
+      "errors": [],
+      "source_ok": false
+    },
+    "envelope/TASK-V3-VISUAL-P010": {
+      "schema": "agent_result_envelope",
+      "errors": [],
+      "source_ok": false
+    },
+    "envelope/TASK-V3-VISUAL-P013": {
+      "schema": "agent_result_envelope",
+      "errors": [],
+      "source_ok": false
+    },
+    "envelope/TASK-V3-VISUAL-P014": {
+      "schema": "agent_result_envelope",
+      "errors": [],
+      "source_ok": false
+    },
+    "envelope/TASK-V3-VISUAL-P015": {
+      "schema": "agent_result_envelope",
+      "errors": [],
+      "source_ok": false
+    }
+  },
+  "all_schema_valid": true,
+  "all_payload_source_bound": false
+}

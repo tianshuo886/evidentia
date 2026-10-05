@@ -1,0 +1,464 @@
+{
+  "schema_version": "3.0",
+  "paper_id": "BENCH-02-LORA-ADAPTATION",
+  "source_sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+  "created_at": "2026-10-04T03:40:00+00:00",
+  "narrative_plan_ref": "model/narrative_plan.json",
+  "document": {
+    "title": "LoRA：大型语言模型的低秩适配",
+    "subtitle": "从部署瓶颈、低秩更新到跨规模实证与子空间线索",
+    "paper_meta": {
+      "authors": [
+        "Edward J. Hu",
+        "Yelong Shen",
+        "Phillip Wallis",
+        "Zeyuan Allen-Zhu",
+        "Yuanzhi Li",
+        "Shean Wang",
+        "Lu Wang",
+        "Weizhu Chen"
+      ],
+      "venue": "ICLR",
+      "year": 2021,
+      "doi": "10.48550/arXiv.2106.09685",
+      "pdf_sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a"
+    },
+    "orientation": {
+      "lead": "本文提出一种冻结预训练权重、仅训练低秩增量的语言模型适配方法。",
+      "takeaways": [
+        "核心重参数化是 ΔW=BA。",
+        "多模型结果支持强参数效率但不是普遍无损保证。",
+        "rank/子空间分析提供机制线索，仍有未识别的替代解释。"
+      ]
+    },
+    "executive_summary": {
+      "lead": "LoRA 将任务增量限制为低秩矩阵并在部署时折叠回基础权重。",
+      "takeaways": [
+        "主要实验证据覆盖 RoBERTa、DeBERTa、GPT-2、GPT-3。",
+        "attention-only、rank、调参与多任务 batch 是关键边界。"
+      ],
+      "key_question": "低秩任务增量能否在显著降低适配成本时保持质量？",
+      "core_finding": "在所测任务和配置下，LoRA 常达到与 full fine-tuning 相当或更好的质量。",
+      "core_boundary": "低 intrinsic rank 的普适性与因果机制尚未被完全证明。"
+    },
+    "sections": [
+      {
+        "id": "s1",
+        "title": "为什么“适配”首先是部署问题",
+        "lead": "论文的入口不是一个抽象的压缩率，而是同一基础模型要服务多个下游任务时，完整复制参数会让存储、显存与在线切换变得不可承受。",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "作者先把全量微调写成对每个任务都学习一个与基础模型同量级的参数增量。GPT-3 175B 让这个代价从“麻烦”变成部署问题：任务越多，越难保存和切换独立实例。论文随后比较两条既有路线的结构性代价：adapter 增加串行层，prefix 类方法占用输入序列长度且优化并不稳定。",
+            "evidence_refs": [
+              "p.1",
+              "p.2",
+              "p.3"
+            ],
+            "source_anchors": [
+              "p.1",
+              "p.2",
+              "p.3"
+            ]
+          },
+          {
+            "type": "table",
+            "evidence_id": "T01",
+            "asset": "assets/figures/crop_T01_p4_801x849.png",
+            "page": 3,
+            "caption": "表 1：GPT-2 medium 上单次前向的延迟。",
+            "analysis": "在 batch=1、sequence=128 的在线情境中，AdapterH 与 AdapterL 相对 Fine-Tune/LoRA 的慢化分别达到 30.3% 和 20.7%；这解释了为何“参数少”不自动意味着“部署快”。",
+            "question": "问题是额外 adapter 深度是否会在小 batch 下形成可见代价？",
+            "supports": [
+              "adapter 的低参数量仍可能伴随串行计算延迟"
+            ],
+            "limits": [
+              "这是 GPT-2 medium、RTX8000、100 次试验的测量，不是所有硬件/批量设置的定律。"
+            ],
+            "presentation_role": "narrative_support",
+            "source_confidence": "VERIFIED",
+            "evidence_refs": [
+              "T01",
+              "p.3"
+            ],
+            "source_anchors": [
+              "T01",
+              "p.3"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "s2",
+        "title": "从任务增量到低秩重参数化",
+        "lead": "LoRA 的方法动作很窄却承担了整篇论文的桥梁：不改基础权重本身，而把任务变化限制在一个低秩子空间里。",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "在条件语言建模目标中，作者把原本直接优化的 ΔΦ 改写为由更小参数 Θ 编码的增量。对任意 dense weight W0，LoRA 取 ΔW=BA，其中 A 与 B 的秩 r 远小于矩阵维度；训练期间 W0 不接收梯度，只训练 A、B。A 用高斯随机初始化、B 置零，因此一开始 BA=0，随后用 α/r 缩放更新。",
+            "evidence_refs": [
+              "p.2",
+              "p.4",
+              "F01"
+            ],
+            "source_anchors": [
+              "p.2",
+              "p.4",
+              "F01"
+            ]
+          },
+          {
+            "type": "figure",
+            "evidence_id": "F01",
+            "asset": "assets/figures/crop_F01_p1_151x153.png",
+            "page": 4,
+            "caption": "图 1：LoRA 的重参数化。",
+            "analysis": "图示把冻结的预训练权重路径与只训练 A、B 的低秩旁路并列，前向输出相加；它具体化了 ΔW=BA 的计算位置。",
+            "question": "低秩更新如何在不改变初始模型行为的前提下进入前向计算？",
+            "supports": [
+              "冻结 W0、训练 A/B、初始 ΔW 为零"
+            ],
+            "limits": [
+              "图示是参数化结构，不单独证明低秩在所有任务上足够。"
+            ],
+            "presentation_role": "narrative_support",
+            "source_confidence": "VERIFIED",
+            "evidence_refs": [
+              "F01",
+              "p.4"
+            ],
+            "source_anchors": [
+              "F01",
+              "p.4"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "s3",
+        "title": "把低秩更新放进 Transformer，并折叠回部署图",
+        "lead": "论文把 LoRA 的普适 dense-layer 原则收窄到可测的 Transformer attention 配置，再利用矩阵可合并性获得部署收益。",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "在 Transformer 中，作者把研究范围限定为 self-attention 的权重，主实验主要适配 Wq 与 Wv，冻结 MLP；Wk、Wo、LayerNorm 与 bias 的系统组合不在这篇论文的实证范围内。训练结束后可显式计算 W=W0+BA 并像普通模型一样推理，因此没有额外 adapter 层深度。代价是若把不同任务的 BA 都吸收到 W 中，同一 batch 里混合任务的模块切换不再直接。",
+            "evidence_refs": [
+              "p.4",
+              "p.5"
+            ],
+            "source_anchors": [
+              "p.4",
+              "p.5"
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "这个设计使“训练时只存小增量”和“推理时不加层”形成一条连贯链条，但不能把它简化为所有参数都低秩更新。论文报告 GPT-3 训练显存可从约 1.2 TB 降至 350 GB，r=4 且只适配 query/value 时 checkpoint 约由 350 GB 变为 35 MB；这些数字描述的是特定规模与配置。",
+            "evidence_refs": [
+              "p.4"
+            ],
+            "source_anchors": [
+              "p.4"
+            ]
+          },
+          {
+            "type": "takeaway",
+            "text": "贡献的边界与贡献本身同样重要：attention-only 与可合并部署是本文测得的具体选择，不是无条件的模型改造承诺。",
+            "evidence_refs": [
+              "p.4",
+              "p.5"
+            ],
+            "source_anchors": [
+              "p.4",
+              "p.5"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "s4",
+        "title": "跨模型实证：少量参数能否保住任务质量",
+        "lead": "实证章节按模型规模逐步放大：先看 GLUE，再看生成任务，最后把方法推到 GPT-3 175B，从而同时检验参数效率与质量保持。",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "在 RoBERTa、DeBERTa、GPT-2 和 GPT-3 上，LoRA 与 full fine-tuning、adapter、prefix tuning、bias-only 等方法比较。GLUE 表显示 RoBERTa-base 的 LoRA 只训练约 0.3M 参数而平均分 87.2，DeBERTa-XXL 用约 4.7M 参数达到 91.3；GPT-2 的 E2E NLG 以及 GPT-3 的 WikiSQL、MultiNLI-m、SAMSum 则把比较推进到生成与超大模型。",
+            "evidence_refs": [
+              "T02",
+              "T03",
+              "p.6"
+            ],
+            "source_anchors": [
+              "T02",
+              "T03",
+              "p.6"
+            ]
+          },
+          {
+            "type": "table",
+            "evidence_id": "T04",
+            "asset": "assets/figures/crop_T04_p8_1068x338.png",
+            "page": 8,
+            "caption": "表 4：GPT-3 175B 上不同适配方法的表现。",
+            "analysis": "4.7M 参数的 LoRA 在 WikiSQL/MNLI-m/SAMSum 上报告 73.4/91.7/53.8-29.8-45.9，37.7M 版本 WikiSQL 为 74.0；这支撑“在这些任务和协议下接近或超过 full fine-tuning”。",
+            "question": "GPT-3 规模上，少量可训练参数是否仍能维持任务质量？",
+            "supports": [
+              "跨模型、跨任务的质量—参数权衡"
+            ],
+            "limits": [
+              "数字依赖特定数据集、调参与波动，不能推出所有任务普遍优于全量微调。"
+            ],
+            "presentation_role": "narrative_support",
+            "source_confidence": "VERIFIED",
+            "evidence_refs": [
+              "T04",
+              "p.8"
+            ],
+            "source_anchors": [
+              "T04",
+              "p.8"
+            ]
+          },
+          {
+            "type": "figure",
+            "evidence_id": "F02",
+            "asset": "assets/figures/crop_F02_p8_1068x338.png",
+            "page": 8,
+            "caption": "图 2：GPT-3 175B 验证准确率与可训练参数量。",
+            "analysis": "散点比较展示 LoRA 在 WikiSQL 与 MultiNLI-m 上较少参数即可落在高性能区域；它把表格中的离散比较扩展成参数规模趋势。",
+            "question": "随着可训练参数变化，哪种方法更能保持可扩展性？",
+            "supports": [
+              "LoRA 的参数效率与任务表现同时出现"
+            ],
+            "limits": [
+              "图中趋势不是对所有 token/任务设置的理论保证。"
+            ],
+            "presentation_role": "narrative_support",
+            "source_confidence": "VERIFIED",
+            "evidence_refs": [
+              "F02",
+              "p.8"
+            ],
+            "source_anchors": [
+              "F02",
+              "p.8"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "s5",
+        "title": "rank 与矩阵位置：效率来自哪里",
+        "lead": "作者把“为什么少量参数有效”拆成两个可操作变量：在哪些 attention 矩阵上适配，以及低秩 r 取多大。",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "相同参数预算下，Wq 与 Wv 同时适配通常优于只适配一种矩阵，说明参数位置比总量本身更关键。rank 消融显示，许多任务在很小 r 时就接近较高 rank；但结果并非单调，GPT-2 E2E 的不同 rank 仍有指标差异，且表 18 明确部分超参在 r=4 上调过。",
+            "evidence_refs": [
+              "T05",
+              "T06",
+              "T08",
+              "T18",
+              "p.10",
+              "p.17",
+              "p.26"
+            ],
+            "source_anchors": [
+              "T05",
+              "T06",
+              "T08",
+              "T18",
+              "p.10",
+              "p.17",
+              "p.26"
+            ]
+          },
+          {
+            "type": "table",
+            "evidence_id": "T08",
+            "asset": "assets/figures/crop_T08_p17_990x546.png",
+            "page": 17,
+            "caption": "表 8：adapter 相关的延迟实验对照。",
+            "analysis": "该页的表格与下方延迟图共同说明 adapter 的串行开销受 batch、序列长度和 bottleneck 影响；不要把低秩 rank 消融与延迟测量混为一类证据。",
+            "question": "部署效率与适配质量是否由同一个参数量变量决定？",
+            "supports": [
+              "不同协议下参数位置、rank 与系统延迟需分开解释"
+            ],
+            "limits": [
+              "表格本身不证明 LoRA rank 的普遍最优值。"
+            ],
+            "presentation_role": "narrative_support",
+            "source_confidence": "VERIFIED",
+            "evidence_refs": [
+              "T08",
+              "p.17"
+            ],
+            "source_anchors": [
+              "T08",
+              "p.17"
+            ]
+          },
+          {
+            "type": "table",
+            "evidence_id": "T18",
+            "asset": "assets/figures/crop_T18_p26_1090x489.png",
+            "page": 26,
+            "caption": "表 18：GPT-2 Medium E2E NLG 上不同 rank 的结果。",
+            "analysis": "验证损失在 r≥16 后趋于平台，而 BLEU/METEOR/ROUGE-L/CIDEr 的峰值并不在同一 rank；这直接提醒读者不要把“更大 rank”理解为必然更好。",
+            "question": "rank 增大是否持续带来质量收益？",
+            "supports": [
+              "存在任务指标与 rank 的平台/非单调现象"
+            ],
+            "limits": [
+              "部分超参针对 r=4 调过，绝对比较受协议影响。"
+            ],
+            "presentation_role": "narrative_support",
+            "source_confidence": "VERIFIED",
+            "evidence_refs": [
+              "T18",
+              "p.26"
+            ],
+            "source_anchors": [
+              "T18",
+              "p.26"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "s6",
+        "title": "子空间证据提供的机制线索",
+        "lead": "最后一组实验不再问“分数是多少”，而是问低秩更新是否在重复选择有结构的方向，以及这些方向与原模型有什么关系。",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "不同随机种子的 LoRA 模块在若干层显示相似的列向量子空间，且 ΔW 与 Wq 的投影相对随机矩阵基线更大。作者据此提出一种解释：更新可能放大预训练模型中与下游任务相关、却没有被充分强调的方向。rank 增大时又会吸收更多 Wq 已强调的方向。",
+            "evidence_refs": [
+              "F05",
+              "F06",
+              "F07",
+              "F08",
+              "T07",
+              "p.12",
+              "p.17",
+              "p.25",
+              "p.26"
+            ],
+            "source_anchors": [
+              "F05",
+              "F06",
+              "F07",
+              "F08",
+              "T07",
+              "p.12",
+              "p.17",
+              "p.25",
+              "p.26"
+            ]
+          },
+          {
+            "type": "figure",
+            "evidence_id": "F07",
+            "asset": "assets/figures/crop_F07_p26_1090x489.png",
+            "page": 26,
+            "caption": "图 7：不同随机种子的低秩模块之间的子空间相似度。",
+            "analysis": "热图在多个层展示 ΔWq/ΔWv 的相似结构，并与文本所述的低秩方向一致；它支持“更新并非任意随机扰动”的解释线索。",
+            "question": "不同 seed 是否收敛到相似的更新子空间？",
+            "supports": [
+              "低秩更新存在可重复的方向结构"
+            ],
+            "limits": [
+              "相似度仍是相关性证据，不能单独识别唯一因果机制。"
+            ],
+            "presentation_role": "narrative_support",
+            "source_confidence": "VERIFIED",
+            "evidence_refs": [
+              "F07",
+              "p.26"
+            ],
+            "source_anchors": [
+              "F07",
+              "p.26"
+            ]
+          },
+          {
+            "type": "figure",
+            "evidence_id": "F08",
+            "asset": null,
+            "page": 26,
+            "caption": "图 8：Wq 与 ΔWq 奇异方向的相似度。",
+            "analysis": "图 8 的题注在源页可见，但现有自动裁剪没有生成可验证资产，因此仅以文字结果保留其方向性解释，不把缺失图像伪装成已验证视觉证据。",
+            "question": "ΔWq 是否放大 Wq 中原本不突出的方向？",
+            "supports": [
+              "题注和表 7 的投影分析支持方向性解释"
+            ],
+            "limits": [
+              "本图资产未通过完整视觉绑定，视觉呈现必须保持不确定。"
+            ],
+            "presentation_role": "uncertain",
+            "source_confidence": "NEEDS_REVIEW",
+            "evidence_refs": [
+              "F08",
+              "p.26"
+            ],
+            "source_anchors": [
+              "F08",
+              "p.26"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "s7",
+        "title": "结论的有效范围与尚未回答的问题",
+        "lead": "LoRA 的实证贡献清晰，但它的可解释性、普适性与系统部署边界都应随结论一起读。",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "这篇论文有力支持的命题是：在其测试的 Transformer 语言模型、下游任务和 attention 配置中，冻结基础模型并学习低秩增量可以大幅减少可训练/存储参数，同时保持接近全量微调的质量，并在合并权重后避免额外推理层。它没有系统解决 MLP、LayerNorm、bias 组合，也没有证明跨语言、困难任务或分布偏移下仍只需极低 rank。",
+            "evidence_refs": [
+              "p.4",
+              "p.5",
+              "p.26"
+            ],
+            "source_anchors": [
+              "p.4",
+              "p.5",
+              "p.26"
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "子空间和 rank 实验证据让“低 intrinsic rank”成为可信的解释方向，但不排除优化便利性、任务特定方向或超参选择等替代解释。部署上，合并权重有利于单任务推理，却让不同任务模块在同一 batch 的灵活切换变得不直接；因此论文的贡献应读成一个有明确工程取舍的、证据支持范围内的适配方案。",
+            "evidence_refs": [
+              "p.4",
+              "T07",
+              "F07",
+              "F08"
+            ],
+            "source_anchors": [
+              "p.4",
+              "T07",
+              "F07",
+              "F08"
+            ]
+          },
+          {
+            "type": "takeaway",
+            "text": "读者最终应保留一个带边界的判断：LoRA 把适配增量压到低秩结构中，在多组语言模型实验里表现出强参数效率；其普适性与机制因果仍开放。",
+            "evidence_refs": [
+              "p.4",
+              "p.5",
+              "p.26"
+            ],
+            "source_anchors": [
+              "p.4",
+              "p.5",
+              "p.26"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "source_sha256": "a71f1294a021cebc6939ec977fc073b6d7b4f183950eba761ec55364d30b729f",
+  "page": 4,
+  "bindings": [
+    {
+      "evidence_id": "F01",
+      "kind": "figure",
+      "bbox_norm": [
+        0.16339869281045752,
+        0.11994949494949494,
+        0.8333333333333334,
+        0.3661616161616162
+      ],
+      "status": "VERIFIED",
+      "complete": true,
+      "caption_match": true,
+      "confidence": 0.95,
+      "notes": "Figure 1 covers 3 panels: (a) learning curves, (b) convergence slowdown, (c) test error with caption."
+    }
+  ]
+}

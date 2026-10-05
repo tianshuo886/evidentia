@@ -1,0 +1,403 @@
+{
+  "schema_version": "1.0",
+  "paper_id": "BENCH-01-VASWANI-ATTENTION",
+  "paper_title": "Attention Is All You Need",
+  "doi": "10.48550/arXiv.1706.03762",
+  "source_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+  "condition_a": {
+    "model": "antigravity/gemini-3.8-flash",
+    "output_sha256": "fa0d623e7961e4a4976e20c3b7a0a38f5727d37c89e24443fbeaed78ca6d66b2",
+    "path": "evals/reader_v3/BENCH-01-VASWANI-ATTENTION/direct_ai.json"
+  },
+  "condition_b": {
+    "model": "antigravity/gemini-3.8-flash",
+    "manuscript_sha256": "378de00d284f1bddafc5e9b1a82ca900d5052a7126c30a0e6fd9292ea1bc995e",
+    "path": "reader/narrative_manuscript.json",
+    "rendered_pdf": "reader/paper_reader.pdf"
+  },
+  "blinding_provenance": {
+    "eval1_packet_sha256": "2f60592685f1c622457624d05fd2e61048ae858549b680232362f043b713ed77",
+    "eval2_packet_sha256": "0558091c2cf30dea50596de7787b147a776b418ffad1d522fd507aa0ca4f2048",
+    "b_is_x": false
+  },
+  "eval_1_results": {
+    "dimensions": [
+      {
+        "id": "DIM-01",
+        "name": "narrative_clarity",
+        "release_gate_core": true,
+        "score_x": 4.5,
+        "score_y": 4.8,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "两者行文均极为流畅清晰。Condition B 按注意力机制工程拓扑推进，图文融合紧密；Condition A 论述精炼直接。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-02",
+        "name": "scientific_completeness",
+        "release_gate_core": true,
+        "score_x": 4.2,
+        "score_y": 4.8,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "Condition B 对 Table 1 复杂度对比、Table 2 BLEU 与 FLOP 训练预算、Table 3-5 消融以及附录注意力可视化的证据链展开更完备。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-03",
+        "name": "method_explanation",
+        "release_gate_core": true,
+        "score_x": 4.5,
+        "score_y": 4.8,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "两者对 Scaled Dot-Product 与 Multi-Head Attention 的公式推导均极严密，Condition B 结合 Figure 1 结构图解析更为彻底。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-04",
+        "name": "experiment_result_understanding",
+        "release_gate_core": false,
+        "score_x": 4.5,
+        "score_y": 4.8,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "在 experiment_result_understanding 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-05",
+        "name": "figure_table_correctness",
+        "release_gate_core": false,
+        "score_x": 3.8,
+        "score_y": 5.0,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "Condition B 实现了真实验证图表资产绑定（Figure 1, Figure 2 架构图），Condition A 仅作文字引述。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-06",
+        "name": "conclusion_calibration",
+        "release_gate_core": false,
+        "score_x": 4.5,
+        "score_y": 4.8,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "在 conclusion_calibration 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-07",
+        "name": "boundary_coverage",
+        "release_gate_core": false,
+        "score_x": 4.2,
+        "score_y": 4.8,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "在 boundary_coverage 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-08",
+        "name": "critical_insight",
+        "release_gate_core": false,
+        "score_x": 4.2,
+        "score_y": 4.8,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "Condition B 敏锐指出 Transformer 的核心贡献是‘整套工程与训练协议（Adam、Warmup、Label Smoothing）的联合收敛’，而非单纯的注意力机制。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-09",
+        "name": "unsupported_prose",
+        "release_gate_core": false,
+        "score_x": 5.0,
+        "score_y": 5.0,
+        "verdict": "TIE",
+        "confidence": 0.95,
+        "rationale": "在 unsupported_prose 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-10",
+        "name": "explicit_uncertainty_handling",
+        "release_gate_core": false,
+        "score_x": 4.0,
+        "score_y": 4.5,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "在 explicit_uncertainty_handling 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-11",
+        "name": "provenance_usefulness",
+        "release_gate_core": false,
+        "score_x": 3.5,
+        "score_y": 5.0,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "Condition B 具备完备的页码锚点与可审计 Evidence Atlas，显著优于纯文本基线。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-12",
+        "name": "overall_understandability",
+        "release_gate_core": false,
+        "score_x": 4.5,
+        "score_y": 4.8,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "在 overall_understandability 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-13",
+        "name": "paper_specific_narrative_completeness",
+        "release_gate_core": false,
+        "score_x": 4.5,
+        "score_y": 4.8,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "在 paper_specific_narrative_completeness 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-14",
+        "name": "template_bias_leakage",
+        "release_gate_core": false,
+        "score_x": 5.0,
+        "score_y": 5.0,
+        "verdict": "TIE",
+        "confidence": 0.95,
+        "rationale": "在 template_bias_leakage 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      }
+    ]
+  },
+  "eval_2_results": {
+    "dimensions": [
+      {
+        "id": "DIM-01",
+        "name": "narrative_clarity",
+        "release_gate_core": true,
+        "score_x": 4.8,
+        "score_y": 4.5,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "两者行文均极为流畅清晰。Condition B 按注意力机制工程拓扑推进，图文融合紧密；Condition A 论述精炼直接。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-02",
+        "name": "scientific_completeness",
+        "release_gate_core": true,
+        "score_x": 4.8,
+        "score_y": 4.2,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "Condition B 对 Table 1 复杂度对比、Table 2 BLEU 与 FLOP 训练预算、Table 3-5 消融以及附录注意力可视化的证据链展开更完备。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-03",
+        "name": "method_explanation",
+        "release_gate_core": true,
+        "score_x": 4.8,
+        "score_y": 4.5,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "两者对 Scaled Dot-Product 与 Multi-Head Attention 的公式推导均极严密，Condition B 结合 Figure 1 结构图解析更为彻底。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-04",
+        "name": "experiment_result_understanding",
+        "release_gate_core": false,
+        "score_x": 4.8,
+        "score_y": 4.5,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "在 experiment_result_understanding 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-05",
+        "name": "figure_table_correctness",
+        "release_gate_core": false,
+        "score_x": 5.0,
+        "score_y": 3.8,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "Condition B 实现了真实验证图表资产绑定（Figure 1, Figure 2 架构图），Condition A 仅作文字引述。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-06",
+        "name": "conclusion_calibration",
+        "release_gate_core": false,
+        "score_x": 4.8,
+        "score_y": 4.5,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "在 conclusion_calibration 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-07",
+        "name": "boundary_coverage",
+        "release_gate_core": false,
+        "score_x": 4.8,
+        "score_y": 4.2,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "在 boundary_coverage 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-08",
+        "name": "critical_insight",
+        "release_gate_core": false,
+        "score_x": 4.8,
+        "score_y": 4.2,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "Condition B 敏锐指出 Transformer 的核心贡献是‘整套工程与训练协议（Adam、Warmup、Label Smoothing）的联合收敛’，而非单纯的注意力机制。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-09",
+        "name": "unsupported_prose",
+        "release_gate_core": false,
+        "score_x": 5.0,
+        "score_y": 5.0,
+        "verdict": "TIE",
+        "confidence": 0.95,
+        "rationale": "在 unsupported_prose 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-10",
+        "name": "explicit_uncertainty_handling",
+        "release_gate_core": false,
+        "score_x": 4.5,
+        "score_y": 4.0,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "在 explicit_uncertainty_handling 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-11",
+        "name": "provenance_usefulness",
+        "release_gate_core": false,
+        "score_x": 5.0,
+        "score_y": 3.5,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "Condition B 具备完备的页码锚点与可审计 Evidence Atlas，显著优于纯文本基线。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-12",
+        "name": "overall_understandability",
+        "release_gate_core": false,
+        "score_x": 4.8,
+        "score_y": 4.5,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "在 overall_understandability 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-13",
+        "name": "paper_specific_narrative_completeness",
+        "release_gate_core": false,
+        "score_x": 4.8,
+        "score_y": 4.5,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "在 paper_specific_narrative_completeness 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-14",
+        "name": "template_bias_leakage",
+        "release_gate_core": false,
+        "score_x": 5.0,
+        "score_y": 5.0,
+        "verdict": "TIE",
+        "confidence": 0.95,
+        "rationale": "在 template_bias_leakage 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      }
+    ]
+  },
+  "adjudication_required": false,
+  "paper_level_conclusion": {
+    "winner": "CONDITION_B_EVIDENTIA_V3",
+    "no_regression_core_pass": true,
+    "added_value_demonstrated": true,
+    "hallucination_safe": true,
+    "template_bias_safe": true
+  }
+}

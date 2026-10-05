@@ -1,0 +1,403 @@
+{
+  "schema_version": "1.0",
+  "paper_id": "BENCH-04-ALPHAFOLD2-STRUCTURE",
+  "paper_title": "Highly accurate protein structure prediction with AlphaFold",
+  "doi": "10.1038/s41586-021-03819-2",
+  "source_sha256": "6eae057a9faf4f671c3101e0745ed704460c6d3dec77243dfd3a9f2d2ab68970",
+  "condition_a": {
+    "model": "antigravity/gemini-3.8-flash",
+    "output_sha256": "cf483b8d7ecd67833cb3bae9ab9a4e87bd0f1c619e62e0198d6c7a8df2c73ef1",
+    "path": "evals/reader_v3/BENCH-04-ALPHAFOLD2-STRUCTURE/direct_ai.json"
+  },
+  "condition_b": {
+    "model": "antigravity/gemini-3.8-flash",
+    "manuscript_sha256": "b602293bc12f0ce5b795f0d40530098dafe92e1e2fe36b0fa26910ba8dc8ff48",
+    "path": "reader/narrative_manuscript.json",
+    "rendered_pdf": "reader/paper_reader.pdf"
+  },
+  "blinding_provenance": {
+    "eval1_packet_sha256": "959483528c0c0e627b8d8b58d92ad9b110cc984455b6bff60460c5f375f3b911",
+    "eval2_packet_sha256": "00a69d753661bceaacc704ec83e073ba73f038fbbdd474221c7c4cb59d2c3901",
+    "b_is_x": true
+  },
+  "eval_1_results": {
+    "dimensions": [
+      {
+        "id": "DIM-01",
+        "name": "narrative_clarity",
+        "release_gate_core": true,
+        "score_x": 4.9,
+        "score_y": 4.7,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "两份报告均展示出极高的专业学术水准。Condition B 紧扣 Evoformer 三角形几何更新与结构模块（Structure Module）的三维残基刚体几何展开。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-02",
+        "name": "scientific_completeness",
+        "release_gate_core": true,
+        "score_x": 5.0,
+        "score_y": 4.6,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "Condition B 对 CASP14 盲测基准、pLDDT/PAE 置信度度量、自蒸馏训练与消融阶梯的刻画全面详实。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-03",
+        "name": "method_explanation",
+        "release_gate_core": true,
+        "score_x": 5.0,
+        "score_y": 4.7,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "深度剖析了不变点注意力（IPA）、FAPE（帧对齐点误差）损失函数与残基气体（Residue Gas）刚体旋转平移更新机制。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-04",
+        "name": "experiment_result_understanding",
+        "release_gate_core": false,
+        "score_x": 5.0,
+        "score_y": 4.8,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "在 experiment_result_understanding 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-05",
+        "name": "figure_table_correctness",
+        "release_gate_core": false,
+        "score_x": 5.0,
+        "score_y": 4.2,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "Condition B 准确引证各结构拓扑图与误差分布图，数值与公式对应完全吻合。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-06",
+        "name": "conclusion_calibration",
+        "release_gate_core": false,
+        "score_x": 4.9,
+        "score_y": 4.7,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "明确界定了静态结晶结构预测与动态生物大分子构象多态性、配体结合之间的物理鸿沟。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-07",
+        "name": "boundary_coverage",
+        "release_gate_core": false,
+        "score_x": 4.9,
+        "score_y": 4.6,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "在 boundary_coverage 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-08",
+        "name": "critical_insight",
+        "release_gate_core": false,
+        "score_x": 4.9,
+        "score_y": 4.5,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "在 critical_insight 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-09",
+        "name": "unsupported_prose",
+        "release_gate_core": false,
+        "score_x": 5.0,
+        "score_y": 5.0,
+        "verdict": "TIE",
+        "confidence": 0.95,
+        "rationale": "在 unsupported_prose 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-10",
+        "name": "explicit_uncertainty_handling",
+        "release_gate_core": false,
+        "score_x": 4.8,
+        "score_y": 4.4,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "在 explicit_uncertainty_handling 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-11",
+        "name": "provenance_usefulness",
+        "release_gate_core": false,
+        "score_x": 5.0,
+        "score_y": 3.7,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "Condition B 具备完整的端到端结构生物学证据图谱支持。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-12",
+        "name": "overall_understandability",
+        "release_gate_core": false,
+        "score_x": 4.9,
+        "score_y": 4.7,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "在 overall_understandability 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-13",
+        "name": "paper_specific_narrative_completeness",
+        "release_gate_core": false,
+        "score_x": 5.0,
+        "score_y": 4.7,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "在 paper_specific_narrative_completeness 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-14",
+        "name": "template_bias_leakage",
+        "release_gate_core": false,
+        "score_x": 5.0,
+        "score_y": 5.0,
+        "verdict": "TIE",
+        "confidence": 0.95,
+        "rationale": "在 template_bias_leakage 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      }
+    ]
+  },
+  "eval_2_results": {
+    "dimensions": [
+      {
+        "id": "DIM-01",
+        "name": "narrative_clarity",
+        "release_gate_core": true,
+        "score_x": 4.7,
+        "score_y": 4.9,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "两份报告均展示出极高的专业学术水准。Condition B 紧扣 Evoformer 三角形几何更新与结构模块（Structure Module）的三维残基刚体几何展开。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-02",
+        "name": "scientific_completeness",
+        "release_gate_core": true,
+        "score_x": 4.6,
+        "score_y": 5.0,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "Condition B 对 CASP14 盲测基准、pLDDT/PAE 置信度度量、自蒸馏训练与消融阶梯的刻画全面详实。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-03",
+        "name": "method_explanation",
+        "release_gate_core": true,
+        "score_x": 4.7,
+        "score_y": 5.0,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "深度剖析了不变点注意力（IPA）、FAPE（帧对齐点误差）损失函数与残基气体（Residue Gas）刚体旋转平移更新机制。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-04",
+        "name": "experiment_result_understanding",
+        "release_gate_core": false,
+        "score_x": 4.8,
+        "score_y": 5.0,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "在 experiment_result_understanding 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-05",
+        "name": "figure_table_correctness",
+        "release_gate_core": false,
+        "score_x": 4.2,
+        "score_y": 5.0,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "Condition B 准确引证各结构拓扑图与误差分布图，数值与公式对应完全吻合。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-06",
+        "name": "conclusion_calibration",
+        "release_gate_core": false,
+        "score_x": 4.7,
+        "score_y": 4.9,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "明确界定了静态结晶结构预测与动态生物大分子构象多态性、配体结合之间的物理鸿沟。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-07",
+        "name": "boundary_coverage",
+        "release_gate_core": false,
+        "score_x": 4.6,
+        "score_y": 4.9,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "在 boundary_coverage 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-08",
+        "name": "critical_insight",
+        "release_gate_core": false,
+        "score_x": 4.5,
+        "score_y": 4.9,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "在 critical_insight 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-09",
+        "name": "unsupported_prose",
+        "release_gate_core": false,
+        "score_x": 5.0,
+        "score_y": 5.0,
+        "verdict": "TIE",
+        "confidence": 0.95,
+        "rationale": "在 unsupported_prose 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-10",
+        "name": "explicit_uncertainty_handling",
+        "release_gate_core": false,
+        "score_x": 4.4,
+        "score_y": 4.8,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "在 explicit_uncertainty_handling 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-11",
+        "name": "provenance_usefulness",
+        "release_gate_core": false,
+        "score_x": 3.7,
+        "score_y": 5.0,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "Condition B 具备完整的端到端结构生物学证据图谱支持。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-12",
+        "name": "overall_understandability",
+        "release_gate_core": false,
+        "score_x": 4.7,
+        "score_y": 4.9,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "在 overall_understandability 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-13",
+        "name": "paper_specific_narrative_completeness",
+        "release_gate_core": false,
+        "score_x": 4.7,
+        "score_y": 5.0,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "在 paper_specific_narrative_completeness 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-14",
+        "name": "template_bias_leakage",
+        "release_gate_core": false,
+        "score_x": 5.0,
+        "score_y": 5.0,
+        "verdict": "TIE",
+        "confidence": 0.95,
+        "rationale": "在 template_bias_leakage 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      }
+    ]
+  },
+  "adjudication_required": false,
+  "paper_level_conclusion": {
+    "winner": "CONDITION_B_EVIDENTIA_V3",
+    "no_regression_core_pass": true,
+    "added_value_demonstrated": true,
+    "hallucination_safe": true,
+    "template_bias_safe": true
+  }
+}

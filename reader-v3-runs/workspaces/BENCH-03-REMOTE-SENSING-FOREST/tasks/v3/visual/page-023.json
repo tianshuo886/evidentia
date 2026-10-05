@@ -20,7 +20,7 @@
           523.2523803710938,
           700.9198608398438
         ],
-        "candidate_asset": "assets/figures/fig10_p23_1857x2717.png",
+        "candidate_asset": "assets/figures/fig12_p23_1857x2717.png",
         "candidate_method": "MULTIMODAL_PAGE_LOCALIZATION",
         "candidate_confidence": 0.88
       }
@@ -58,12 +58,12 @@
   "executor_template": {
     "host": "generic-host",
     "host_version": "UNKNOWN",
-    "provider": "openai-codex",
-    "model": "gpt-6.1-sol",
+    "provider": "magpie",
+    "model": "antigravity/gemini-3.8-flash",
     "model_version": "UNKNOWN",
     "reasoning_profile": "standard",
     "tool_profile": "paper-only",
-    "started_at": "2026-10-04T01:46:49.665408+00:00",
-    "completed_at": "2026-10-04T01:46:49.665408+00:00"
+    "started_at": "2026-10-05T14:04:18.448841+00:00",
+    "completed_at": "2026-10-05T14:04:18.448841+00:00"
   }
 }

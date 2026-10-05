@@ -1,0 +1,105 @@
+{
+  "task_id": "TASK-V3-LENS-EVIDENCE_RESULTS",
+  "execution_kind": "HOST_AGENT",
+  "executor": {
+    "kind": "HOST_AGENT",
+    "host": "pi",
+    "host_version": "UNKNOWN",
+    "provider": "openai-codex",
+    "model": "gpt-6-sol",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "high",
+    "tool_profile": "paper-only",
+    "started_at": "2026-10-04T03:10:00+00:00",
+    "completed_at": "2026-10-04T03:10:00+00:00"
+  },
+  "started_at": "2026-10-04T03:10:00+00:00",
+  "completed_at": "2026-10-04T03:10:00+00:00",
+  "input_hashes": {
+    "source/paper.pdf": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+    "model/source_map.json": "2fcb61fcc5fe6d72f4134b0d0f02455582fbcb74f796be494afbbf6fd8d36f7b",
+    "model/figure_inventory.json": "75a2c38fb10537e2939e3f85c339309fedd862dc7781f797bffbbdaf49d69afa",
+    "model/paper_understanding_draft.json": "7f5377fff58ba5872ff805196eba449fa044edc91bbfec485f954b1fa212b0a9"
+  },
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "result": {
+    "schema_version": "1.0",
+    "lens": "evidence_results",
+    "lens_kind": "core",
+    "source_sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+    "base_sha256": "7f5377fff58ba5872ff805196eba449fa044edc91bbfec485f954b1fa212b0a9",
+    "summary": "指标、延迟、rank 消融及子空间图共同构成证据链，但每组证据承担不同命题：表格支撑质量/参数权衡，延迟表支撑 adapter 的部署动机，子空间分析只提供机制解释线索。",
+    "findings": [
+      {
+        "id": "ER1",
+        "statement": "GPT-3 表 4 中 LoRA 4.7M 参数在 WikiSQL/MNLI-m/SAMSum 上为 73.4/91.7/53.8-29.8-45.9，37.7M 版本 WikiSQL 为 74.0，接近或超过 full fine-tune。",
+        "evidence": [
+          "T04",
+          "p.8"
+        ],
+        "epistemic": "VERIFIED",
+        "action": "KEEP",
+        "importance": "MINOR",
+        "reason": "Independent source-grounded pass; finding records what the Lead Reader should preserve or qualify.",
+        "cross_cutting_checks": {
+          "anomaly": null,
+          "counterfactual": null
+        }
+      },
+      {
+        "id": "ER2",
+        "statement": "表 1 在 batch=1、sequence=128 时 AdapterH 相比 Fine-Tune/LoRA 慢 30.3%，AdapterL 慢 20.7%，使在线延迟情境具体化。",
+        "evidence": [
+          "T01",
+          "p.3"
+        ],
+        "epistemic": "VERIFIED",
+        "action": "KEEP",
+        "importance": "MINOR",
+        "reason": "Independent source-grounded pass; finding records what the Lead Reader should preserve or qualify.",
+        "cross_cutting_checks": {
+          "anomaly": null,
+          "counterfactual": null
+        }
+      },
+      {
+        "id": "ER3",
+        "statement": "表 6 的 rank 结果显示 Wq+Wv 在很小 rank 时已接近较高 rank，但最优 rank 依赖任务/模型；表 18 的 GPT-2 E2E 结果在不同 rank 上也非单调。",
+        "evidence": [
+          "T06",
+          "T18",
+          "p.10",
+          "p.26"
+        ],
+        "epistemic": "SUPPORTED",
+        "action": "QUALIFY",
+        "importance": "MAJOR",
+        "reason": "Independent source-grounded pass; finding records what the Lead Reader should preserve or qualify.",
+        "cross_cutting_checks": {
+          "anomaly": null,
+          "counterfactual": null
+        }
+      },
+      {
+        "id": "ER4",
+        "statement": "F07/F08 与表 7 将不同 seed、Wq 方向和 ΔW 关系可视化/量化，但相关性不是唯一因果证明。",
+        "evidence": [
+          "F07",
+          "F08",
+          "T07",
+          "p.12",
+          "p.26"
+        ],
+        "epistemic": "SUPPORTED",
+        "action": "QUALIFY",
+        "importance": "MAJOR",
+        "reason": "Independent source-grounded pass; finding records what the Lead Reader should preserve or qualify.",
+        "cross_cutting_checks": {
+          "anomaly": null,
+          "counterfactual": null
+        }
+      }
+    ]
+  }
+}

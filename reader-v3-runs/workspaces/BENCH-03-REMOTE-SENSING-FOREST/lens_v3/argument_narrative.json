@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "lens": "argument_narrative",
+  "lens_kind": "core",
+  "source_sha256": "b4d103e6ab0664d96c31a00a0ee4d99e9fbc54a9f1a8eeea500716843d4eabce",
+  "base_sha256": "a9940ed7b26fa355fcd47a2bdde791798ac177b95ab9b521b68abb7345b1c46d",
+  "summary": "论文论证围绕“数据融合机遇与空间分辨率矛盾 → 概率深度架构设计 → 留出与跨洲机载LiDAR双重验证 → 不确定性校准 → 全球宏观生态统计”递进，属于典型的全球尺度地球观测与推断方法研究。",
+  "findings": [
+    {
+      "id": "AN1",
+      "statement": "论文的核心论证在于确立‘稀疏LiDAR与稠密多光谱融合在特定统计与验证约束下的有效性’，而非宣称光学影像本身可无损反演三维结构。",
+      "evidence": [
+        "p.1",
+        "p.2",
+        "p.7"
+      ],
+      "epistemic": "SUPPORTED",
+      "action": "KEEP",
+      "importance": "MAJOR",
+      "reason": "校准论证边界。",
+      "cross_cutting_checks": {
+        "anomaly": null,
+        "counterfactual": null
+      }
+    }
+  ]
+}

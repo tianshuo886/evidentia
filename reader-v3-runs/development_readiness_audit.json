@@ -1,0 +1,116 @@
+{
+  "schema_version": "1.0",
+  "audited_at": "2026-10-04T01:20:31.774291+00:00",
+  "objective_status": "BLOCKED_PENDING_REGISTRY_CORRECTION_DECISION",
+  "checklist": [
+    {
+      "requirement": "Authoritative registry selection; exactly BENCH-02..05; BENCH-01 excluded; unseen paper not selected",
+      "evidence": [
+        "evals/real_corpus/benchmark_papers.json",
+        "development_readiness_matrix.json"
+      ],
+      "status": "PASS",
+      "note": "Matrix contains four remaining registry IDs and explicitly records excluded BENCH-01; no unseen ID."
+    },
+    {
+      "requirement": "Real publicly accessible full PDF; reject abstract-only/synthetic/HTML; immutable SHA",
+      "evidence": [
+        "workspaces/BENCH-02.../source/paper.pdf",
+        "workspaces/BENCH-04.../source/paper.pdf",
+        "workspaces/BENCH-05.../source/paper.pdf",
+        "workspaces/*/source/source_sha256.txt",
+        "scripts/paper_acquire_bridge.py:validate_full_pdf"
+      ],
+      "status": "PARTIAL",
+      "note": "Pass for BENCH-02/04/05. BENCH-03 candidate is a valid full PDF but blocked because registry DOI resolves to a different paper; preserved under blocked_candidate."
+    },
+    {
+      "requirement": "Workspace metadata: benchmark id/title/authors/identifier/source URL/acquisition provenance/current contract",
+      "evidence": [
+        "workspaces/BENCH-02,04,05/model/benchmark_manifest.json",
+        "workspaces/BENCH-03/acquisition_blocker.json"
+      ],
+      "status": "PARTIAL",
+      "note": "Complete for three accepted papers; BENCH-03 has blocker evidence instead of accepted manifest."
+    },
+    {
+      "requirement": "Source reconstruction and source pages complete",
+      "evidence": [
+        "workspaces/*/model/source_map.json",
+        "workspaces/*/source_pages/",
+        "development_readiness_matrix.json"
+      ],
+      "status": "PARTIAL",
+      "note": "Complete for three accepted papers; BENCH-03 candidate artifacts are explicitly non-accepted."
+    },
+    {
+      "requirement": "Figure/table/equation inventory and visual-localization task generation",
+      "evidence": [
+        "workspaces/*/model/figure_inventory.json",
+        "workspaces/*/model/equation_inventory.json",
+        "workspaces/*/model/visual_v3_manifest.json",
+        "tasks/v3/visual/"
+      ],
+      "status": "PARTIAL",
+      "note": "Complete/prepared for three accepted papers; deterministic NEEDS_REVIEW remains where localization is uncertain, as required fail-closed behavior."
+    },
+    {
+      "requirement": "Real Direct-AI only: original PDF, no Evidentia/project/memory context; immutable result artifacts",
+      "evidence": [
+        "workspaces/{02,04,05}/tasks/v3/benchmark/*/direct_ai.json",
+        "evals/reader_v3/*/direct_ai.json",
+        "agent_runs/TASK-V3-DIRECT-*",
+        "model/direct_ai_manifest.json"
+      ],
+      "status": "PARTIAL",
+      "note": "Envelope and baseline pass for three accepted papers. BENCH-03 candidate baseline is preserved only under blocked_candidate and not accepted."
+    },
+    {
+      "requirement": "direct_reading_baseline schema, AgentResultEnvelope schema, source/task/executor provenance",
+      "evidence": [
+        "target direct_ai.json files",
+        "agent_runs/run-*.json",
+        "development_readiness_matrix.json"
+      ],
+      "status": "PASS_FOR_THREE_BLOCKED_ONE",
+      "note": "Independent jsonschema audit passed for BENCH-02/04/05; blocked paper intentionally not counted."
+    },
+    {
+      "requirement": "Do not run Condition B: no Lead Reader/Lenses/Revision Memo/Writer/final Reader/pair evaluation",
+      "evidence": [
+        "find workspaces -path ...",
+        "matrix scope audit",
+        "source-only runner invocation"
+      ],
+      "status": "PASS",
+      "note": "Lead task files removed from accepted workspaces; no scientific outputs exist. BENCH-03 candidate artifacts remain quarantined under blocked_candidate."
+    },
+    {
+      "requirement": "Generalizable fixes only; regression tests; separate prep branch/PR; do not merge PR #21",
+      "evidence": [
+        "PR #27",
+        "benchmark-prep branch commits",
+        "pytest targeted result: 17 passed",
+        "gh PR #21 state"
+      ],
+      "status": "PASS",
+      "note": "PR #27 targets reader-reset-v3 and scopes fixes to acquisition/source prep; PR #21 remains unmerged."
+    },
+    {
+      "requirement": "Final readiness matrix with one row per development paper",
+      "evidence": [
+        "reader-v3-runs/development_readiness_matrix.md",
+        "reader-v3-runs/development_readiness_matrix.json"
+      ],
+      "status": "PASS",
+      "note": "Four rows present; one blocked with concrete evidence and required owner decision."
+    }
+  ],
+  "test_evidence": {
+    "targeted_tests": "17 passed",
+    "full_suite": "not a valid gate: pre-existing unrelated failures in frontmatter/evidence-promotion/release-gate tests",
+    "pr_number": 27,
+    "pr_state": "OPEN",
+    "pr_target": "reader-reset-v3"
+  }
+}

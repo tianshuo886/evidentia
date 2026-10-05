@@ -1,0 +1,194 @@
+{
+  "task_id": "TASK-V3-REVISION-MEMO",
+  "execution_kind": "HOST_AGENT",
+  "executor": {
+    "kind": "HOST_AGENT",
+    "host": "claude-code",
+    "host_version": "env",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4",
+    "model_version": "2025",
+    "reasoning_profile": "deep",
+    "tool_profile": "paper-only",
+    "started_at": "2026-10-04T02:02:40.918806+00:00",
+    "completed_at": "2026-10-04T02:02:40.918806+00:00"
+  },
+  "started_at": "2026-10-04T02:02:40.918806+00:00",
+  "completed_at": "2026-10-04T02:02:40.918806+00:00",
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "result": {
+    "schema_version": "1.0",
+    "paper_id": "10.1038/s41586-019-1666-5",
+    "source_sha256": "6f3030abb7d9d4f0624a5cbe5ca2ff673df63afc85c97fadd0bf7db780c8dbaf",
+    "summary": "六个独立视角对初稿的意见高度一致地指向同一处风险：读者极易把'约一万年对200秒'读成既成事实。综合意见是：最终稿必须把证据分成三层——直接测量（Fig.2 逐项误差）、受担保的估计（Fig.4a 验证 + Fig.4b/EQ-07 的 F_XEB 估计）、外推（经典代价）。其次是明确标注数字化 Pauli 误差模型为'被支持但未被证明'的假设，突出 Fig.4a 的估计器验证是承重墙，并显式给出'200秒受控制通信限制(净≈30秒)'与任务特定/未容错的边界。三处真实争议不作为结论收口，保留为未决。",
+    "revisions": [
+      {
+        "id": "REV-1",
+        "priority": "P0",
+        "action": "QUALIFY",
+        "instruction": "在最终读者稿中，把全部证据按三类分层表述并始终如一：直接测量（Fig.2 的 e1/e2/e2c/e_r）、受担保的估计（Fig.4a 验证估计器 + Fig.4b/EQ-07 的 F_XEB）、外推（经典十万核小时/一万年级代价）。每一个霸权相关数字首次出现时标明它属于哪一层。",
+        "rationale": "全篇主张的可信度取决于读者不把外推误读为实测；这是多条透镜共同指出的最大误导风险。",
+        "evidence": [
+          "F02",
+          "EQ-07",
+          "F04",
+          "p.3",
+          "p.4",
+          "p.5"
+        ],
+        "source_lenses": [
+          "argument_narrative",
+          "evidence_results",
+          "validity_boundary",
+          "measurement_integrity"
+        ],
+        "verification_required": true
+      },
+      {
+        "id": "REV-2",
+        "priority": "P0",
+        "action": "QUALIFY",
+        "instruction": "把'约一万年'这个经典代价表述为按算法与 F_XEB 缩放的外推，并点明作者自陈更低模拟成本终将出现、硬件进步会甩开；不要把等同于既定的经典复杂度下界。",
+        "rationale": "这是主张最脆弱、最可能被后续算法进步削弱的一环；夸大其词会损害全篇可信度。",
+        "evidence": [
+          "F04",
+          "p.4",
+          "p.5"
+        ],
+        "source_lenses": [
+          "validity_boundary",
+          "measurement_integrity",
+          "evidence_results"
+        ],
+        "verification_required": true
+      },
+      {
+        "id": "REV-3",
+        "priority": "P1",
+        "action": "QUALIFY",
+        "instruction": "将乘法式 Pauli 误差模型（各门无误差概率之积、预测 0.2%）表述为'被实验支持但未被证明'的假设；说明相关性误差仅经线路随机化、控制优化、快门设计被间接压低，而非被完全排除。",
+        "rationale": "该模型是硬件侧结论的承重前提，也是通向可纠错性的关键；把它写成已证明会过度断言。",
+        "evidence": [
+          "F02",
+          "F04",
+          "p.3",
+          "p.5"
+        ],
+        "source_lenses": [
+          "method_study_design",
+          "mechanism_causality",
+          "validity_boundary"
+        ],
+        "verification_required": true
+      },
+      {
+        "id": "REV-4",
+        "priority": "P1",
+        "action": "ADD",
+        "instruction": "在报出霸权读数之前，先清楚写出 Fig.4a 的估计器验证：在仍可模拟的 53 比特内，patch/elided 与完整 verification 线路的 F_XEB 吻合。明确这是'把不可算量换成可信估计量'得以成立的凭证，是整条论证链的关键一环。",
+        "rationale": "通用提纲会丢掉这一步，但它恰恰是从'估计'跨到'断言'的唯一桥梁；缺失会使后续霸权读数失去依据。",
+        "evidence": [
+          "F04",
+          "p.4",
+          "p.5"
+        ],
+        "source_lenses": [
+          "argument_narrative",
+          "evidence_results",
+          "validity_boundary"
+        ]
+      },
+      {
+        "id": "REV-5",
+        "priority": "P1",
+        "action": "QUALIFY",
+        "instruction": "在写'200 秒'时补一句：采样时间受控制硬件通信限制，净量子处理器时间约 30 秒；它更接近当前控制系统的工程数字，而非物理运行下限。",
+        "rationale": "避免把受通信开销主导的计时当成量子运算速度的度量。",
+        "evidence": [
+          "F04",
+          "p.5"
+        ],
+        "source_lenses": [
+          "measurement_integrity",
+          "evidence_results"
+        ],
+        "verification_required": true
+      },
+      {
+        "id": "REV-6",
+        "priority": "P1",
+        "action": "ADD",
+        "instruction": "用一段讲清因果机制与其可证伪条件：量子干涉+斑纹分布+高保真保留+计算体量如何共同产生 F_XEB>0 的信号；并指出若 F_XEB 比门乘法预测衰减更快（相关性误差）或经典算法达到同等采样成本，主张即被证伪。",
+        "rationale": "读者需要的不只是'多少比特、多少秒'，而是'为什么这件事能证明量子优势、又会在何时失效'。",
+        "evidence": [
+          "F04",
+          "p.2",
+          "p.4",
+          "p.5"
+        ],
+        "source_lenses": [
+          "mechanism_causality",
+          "validity_boundary"
+        ]
+      },
+      {
+        "id": "REV-7",
+        "priority": "P1",
+        "action": "QUALIFY",
+        "instruction": "显式给出范围声明：该加速对随机线路采样这一特定任务成立，非通用计算加速；仍属 NISQ、未通向容错（Shor/Grover 需逻辑比特）；近期直接用途是可证明随机数；对扩展 Church–Turing thesis 的挑战性论述属哲学性外推，应与物理证据分开表述。",
+        "rationale": "'量子霸权'是里程碑而非可用量子计算机的诞生；边界必须与主张一起读。",
+        "evidence": [
+          "p.1",
+          "p.5",
+          "p.6"
+        ],
+        "source_lenses": [
+          "validity_boundary",
+          "argument_narrative"
+        ]
+      },
+      {
+        "id": "REV-8",
+        "priority": "P2",
+        "action": "ADD",
+        "instruction": "可补充一处细节以增强严谨性：读出误差（≈3.1%/3.8%）比门误差高约一个量级，但由于双比特门数量最多，整条最大线路的保真度仍由门误差主导（预测 0.2%）。",
+        "rationale": "澄清误差结构，防止读者误以为读出误差会主导总保真度。",
+        "evidence": [
+          "F02",
+          "p.3"
+        ],
+        "source_lenses": [
+          "evidence_results"
+        ]
+      }
+    ],
+    "unresolved": [
+      {
+        "issue": "更强的经典张量/切割式算法会在多大程度上压缩'>一万年'的估计。",
+        "evidence": [
+          "F04",
+          "p.4",
+          "p.5"
+        ],
+        "reason": "作者只给出方向性预期（成本终将下降但被硬件甩开），未量化稳健边界；不宜替作者下结论，保留为未决。"
+      },
+      {
+        "issue": "数字化 Pauli 误差模型在更大规模下的有效域边界——相关性误差何时会破坏乘法预测。",
+        "evidence": [
+          "F04",
+          "p.5"
+        ],
+        "reason": "论文仅论证该模型在 2^53 尺度上被支持，并未证明其普适；这是开放式科学问题。"
+      },
+      {
+        "issue": "能否在不解算最难线路的前提下独立复核霸权读数的保真度。",
+        "evidence": [
+          "p.4",
+          "p.5"
+        ],
+        "reason": "完整最强线路数据被归档而未在线验证，最终读数的保真度无法被独立重算；这既是本论文的诚实限制，也是方法论上的开放缺口。"
+      }
+    ]
+  }
+}

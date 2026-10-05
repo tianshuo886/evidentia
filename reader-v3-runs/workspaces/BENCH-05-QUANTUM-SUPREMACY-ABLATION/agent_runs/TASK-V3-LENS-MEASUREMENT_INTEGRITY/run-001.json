@@ -1,0 +1,69 @@
+{
+  "task_id": "TASK-V3-LENS-MEASUREMENT_INTEGRITY",
+  "execution_kind": "HOST_AGENT",
+  "executor": {
+    "kind": "HOST_AGENT",
+    "host": "claude-code",
+    "host_version": "env",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4",
+    "model_version": "2025",
+    "reasoning_profile": "deep",
+    "tool_profile": "paper-only",
+    "started_at": "2026-10-04T02:00:44.494668+00:00",
+    "completed_at": "2026-10-04T02:00:44.494668+00:00"
+  },
+  "started_at": "2026-10-04T02:00:44.494668+00:00",
+  "completed_at": "2026-10-04T02:00:44.494668+00:00",
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "result": {
+    "schema_version": "1.0",
+    "lens": "measurement_integrity",
+    "lens_kind": "specialist",
+    "source_sha256": "6f3030abb7d9d4f0624a5cbe5ca2ff673df63afc85c97fadd0bf7db780c8dbaf",
+    "base_sha256": "0330cd973b54a50e9fadfb5f71bcee4864182624ddc6444663496531f1dca124",
+    "findings": [
+      {
+        "id": "MI-1",
+        "statement": "关键变量如何操作化：F_XEB(EQ-01)以'采样比特串对应的理想概率均值'衡量；读出用色散测量；单比特误差用降到 n=1 的 XEB 得分衰减 [1-e1/(1-1/D^2)]^m 随时间外推；双比特用逐周期 XEB 衰减并在扣除两个单比特误差后得 e2。",
+        "evidence": [
+          "EQ-01",
+          "p.2",
+          "p.3"
+        ],
+        "epistemic": "VERIFIED",
+        "action": "KEEP",
+        "importance": "MAJOR"
+      },
+      {
+        "id": "MI-2",
+        "statement": "影响有效性的标定/仪器选择：优化单比特频率并以脉冲整形压低两能级系统缺陷、杂散微波模、磁通噪声与脉冲失真；双比特 20 MHz/12 ns 并调轨迹优化；以'孤立 vs 同时'量化串扰。",
+        "evidence": [
+          "F02",
+          "p.3"
+        ],
+        "epistemic": "VERIFIED",
+        "action": "KEEP",
+        "importance": "MAJOR"
+      },
+      {
+        "id": "MI-3",
+        "statement": "测量假象能否解释部分结果：部分可以——200 s 采样受控制硬件通信限制(净量子时间≈30 s)，说明计时更多反映工程而非物理极限；经典代价为外推测量而非直接计时；在霸权区间 F_XEB 依赖可简化线路的理想概率，属间接测量。但估计器经 Fig.4a 受控验证，使假象影响受限。",
+        "evidence": [
+          "F04",
+          "p.4",
+          "p.5"
+        ],
+        "epistemic": "PARTIAL",
+        "action": "QUALIFY",
+        "importance": "CRITICAL",
+        "cross_cutting_checks": {
+          "anomaly": "'200 秒'与'净量子时间约 30 秒'的差距，暴露该计时主要为控制通信开销而非硬件运行下限。",
+          "counterfactual": null
+        }
+      }
+    ],
+    "summary": "核心变量经操作化为可采样估计：F_XEB(EQ-01)由采样比特串与经典模拟的理想概率之比定义；但用于评分的理想概率来自对可简化线路的模拟。张量与门波形经标定(优化单比特频率以压低 TLS/杂散/磁通噪声;双比特 20 MHz/12 ns)。测量假象部分存在:200 s 采样受控制-硬件通信限制(净量子时间≈30 s),而经典代价是外推测量而非直接计时。"
+  }
+}

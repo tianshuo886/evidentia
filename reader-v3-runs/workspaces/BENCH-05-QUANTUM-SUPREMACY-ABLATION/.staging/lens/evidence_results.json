@@ -1,0 +1,65 @@
+{
+  "schema_version": "1.0",
+  "lens": "evidence_results",
+  "lens_kind": "core",
+  "source_sha256": "6f3030abb7d9d4f0624a5cbe5ca2ff673df63afc85c97fadd0bf7db780c8dbaf",
+  "base_sha256": "0330cd973b54a50e9fadfb5f71bcee4864182624ddc6444663496531f1dca124",
+  "findings": [
+    {
+      "id": "ER-1",
+      "statement": "各决定性证据直接展示的内容：Fig.2 直接给出孤立/同时下的 e1、e2、e2c、e_r(直接测量)；Fig.4b/EQ-07 给出最难 tiling 下的 F_XEB 估计(受控估计)；Fig.4b 经典标注给出同等保真下的经典代价(外推)。",
+      "evidence": [
+        "F02",
+        "EQ-07",
+        "F04"
+      ],
+      "epistemic": "VERIFIED",
+      "action": "KEEP",
+      "importance": "CRITICAL"
+    },
+    {
+      "id": "ER-2",
+      "statement": "量级：F_XEB=(2.24±0.21)×10^-3(n=53,m=20, Ns=3×10^7, 5σ>0.1%)；e1=0.15%/0.16%、e2=0.36%/0.62%、e2c=0.65%/0.93%、e_r=3.1%/3.8%；预测总保真度 0.2%；经典估计 5×10^13 核小时、1 petawatt-hour；Sycamore 采样(s)200 s、净量子时间≈30 s。",
+      "evidence": [
+        "EQ-07",
+        "F02",
+        "p.3",
+        "p.4",
+        "p.5"
+      ],
+      "epistemic": "VERIFIED",
+      "action": "KEEP",
+      "importance": "MAJOR"
+    },
+    {
+      "id": "ER-3",
+      "statement": "证据未确立之处：完整霸权线路的保真度未直接验证(仅归档)；经典代价为外推非计时；Fig.4a 的有效性仅担保到仍可模拟的 53 比特规模。",
+      "evidence": [
+        "p.4",
+        "p.5"
+      ],
+      "epistemic": "SUPPORTED",
+      "action": "QUALIFY",
+      "importance": "CRITICAL",
+      "reason": "须在最终稿中区分实测、受担保估计、外推三类证据。"
+    },
+    {
+      "id": "ER-4",
+      "statement": "一个值得记录的异象：读出误差(~3.1%/3.8%)比门误差高约一个量级，却在总保真度预测中被门误差主导；同时完整最强线路数据'仅归档、未验证'，构成主张与可复核证据之间的一处真实缺口。",
+      "evidence": [
+        "F02",
+        "F04",
+        "p.3",
+        "p.4"
+      ],
+      "epistemic": "SUPPORTED",
+      "action": "QUALIFY",
+      "importance": "MAJOR",
+      "cross_cutting_checks": {
+        "anomaly": "最强霸权线路数据被归档而未在线验证，是主张与可复核证据间的一处真实缺口；读出误差的量级结构也值得读者注意。",
+        "counterfactual": null
+      }
+    }
+  ],
+  "summary": "决定性证据分两类：硬测量（Fig.2 的逐项误差）与受担保的估计读数（Fig.4b/EQ-07）。量子侧读数为 F_XEB=(2.24±0.21)×10^-3、5σ 下>0.1%；经典侧'一万年级'代价是外推而非直接计时。读出误差(≈3.1%/3.8%)比门误差高一个量级，但大线路总保真度由数量最多的双比特门主导，故 0.2% 预测仍成立。"
+}

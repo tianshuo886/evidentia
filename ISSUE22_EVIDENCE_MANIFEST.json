@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0",
+  "manifest_kind": "ISSUE22_FINAL_EVIDENCE_FREEZE",
+  "generated_at": "2026-10-05T21:05:00Z",
+  "verdict": "PASS",
+  "candidate_code_sha": "c2039ff687aa1034706e2a42299c4ec8024d47d5",
+  "pr": 26,
+  "issue": 22,
+  "canonical_model_policy": {
+    "lead_writer": "antigravity/gemini-3.8-flash [magpie]",
+    "bench02_lenses": "antigravity/gemini-3.8-flash [magpie]",
+    "bench04_05_lenses": "stepfun-cn/step-5-preview [magpie]"
+  },
+  "papers": [
+    {
+      "id": "BENCH-02-LORA-ADAPTATION",
+      "source_sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+      "figure_inventory_sha256": "71607d07e830545d0739e5cc4b2f52aa820664decb334cc600f099c856f6ab21",
+      "manuscript_sha256": "72032f8fb698ac23d487a751e0e82b9a4fc9eab69094a025fd908a4938e4a6fb",
+      "pdf_sha256": "6acff1f46468822aceef3258fdb2a87b9ee1786ef0e202b98c306f6698befb8c",
+      "sections_count": 6,
+      "repaired_visual_assets": {
+        "F01": "4d48ed984efa414426f72f619d87056ca304051cb98a8277488d9f811f0f6a29",
+        "T04": "fb74bae665942698f2664ee11c56c9b2a56cfd8c3f7085d976533aba2f5d2909",
+        "F02": "2d526143759a02e65e601b0650ebea2e44641ee34b0411e3da11ca6fab7cf131"
+      }
+    },
+    {
+      "id": "BENCH-04-ALPHAFOLD2-STRUCTURE",
+      "source_sha256": "6eae057a9faf4f671c3101e0745ed704460c6d3dec77243dfd3a9f2d2ab68970",
+      "figure_inventory_sha256": "76cd271ac79fb11dc3dd174ac471eaae74232113c6c3daa8e792f7cbf905a1cd",
+      "manuscript_sha256": "974a4d475a96b3add7dea9b3f38a27a15454dac32293d9db1c8f24972c6863e1",
+      "pdf_sha256": "1945d31e0cf60a155d443c4d77a1f455ca242339155096a45d2c8c701f06d3e1",
+      "sections_count": 8
+    },
+    {
+      "id": "BENCH-05-QUANTUM-SUPREMACY-ABLATION",
+      "source_sha256": "6f3030abb7d9d4f0624a5cbe5ca2ff673df63afc85c97fadd0bf7db780c8dbaf",
+      "figure_inventory_sha256": "c64e64b3856bc1603019a026c9530b25ae882f8c24489672738fde4decaab21a",
+      "manuscript_sha256": "5a3dc3ea17c9057ce807054dfca41b767c1b4c8770ae85a8cc41ed5aa2b408eb",
+      "pdf_sha256": "896cd38bda5fb815b11fe22a95dc657efeac390cd57277ab928c1ac1291290b2",
+      "sections_count": 12
+    }
+  ],
+  "structural_diversity_report_sha256": "b51488d096e1be8007baf1346f2cc8db183e8c5e3e4061537523fe558c013bb3",
+  "status": "PASS",
+  "manifest_sha256": "3e8b2827f89233ba0e327a9cde1c229db0636b59028e9c5fe3eb90782ab08a01"
+}

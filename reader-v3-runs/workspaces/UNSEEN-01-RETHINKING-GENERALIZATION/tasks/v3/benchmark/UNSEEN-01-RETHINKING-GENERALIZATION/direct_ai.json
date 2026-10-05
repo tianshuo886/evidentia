@@ -1,0 +1,49 @@
+{
+  "task_id": "TASK-V3-DIRECT-UNSEEN-01-RETHINKING-GENERALIZATION",
+  "task_type": "DIRECT_READING_BASELINE",
+  "required_capability": "DEEP_SCIENTIFIC_READING",
+  "scientific_contract": "Read the real paper directly with no Evidentia intermediate artifacts. Produce the strongest fair deep-reading baseline.",
+  "description": "Real direct strong-model paper-reading baseline.",
+  "input_artifacts": {
+    "source_pdf": "source/paper.pdf"
+  },
+  "target_output": "evals/reader_v3/UNSEEN-01-RETHINKING-GENERALIZATION/direct_ai.json",
+  "output_schema": "direct_reading_baseline",
+  "source_sha256": "a71f1294a021cebc6939ec977fc073b6d7b4f183950eba761ec55364d30b729f",
+  "base_sha256": null,
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "allowed_inputs": [
+    "source/paper.pdf"
+  ],
+  "forbidden_inputs": [
+    "model/",
+    "lens/",
+    "lens_v3/",
+    "reader/",
+    "apply/",
+    "project/",
+    "memory/"
+  ],
+  "prohibited_context": [
+    "Evidentia intermediate artifacts",
+    "PROJECT_APPLY",
+    "RESEARCH_MEMORY"
+  ],
+  "constraints": [
+    "REAL_MODEL_BASELINE",
+    "NO_EVIDENTIA_CONTEXT"
+  ],
+  "instructions": "Read this paper directly and produce the best deep-reading report you can for a researcher. First determine how this particular paper constructs its case and characterize its native structure. Explain the paper-specific claims, propositions, observations, design choices, proof or measurement steps, decisive evidence, what that evidence does and does not establish, and unresolved issues. Do not force a problem/gap/method/results/limitations sequence when the source does not use it. Use coherent Chinese-first narrative. Do not assume or reference any Evidentia output.",
+  "executor_template": {
+    "host": "generic-host",
+    "host_version": "UNKNOWN",
+    "provider": "magpie",
+    "model": "antigravity/gemini-3.8-flash",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "standard",
+    "tool_profile": "paper-only",
+    "started_at": "2026-10-05T14:04:29.561786+00:00",
+    "completed_at": "2026-10-05T14:04:29.561786+00:00"
+  }
+}

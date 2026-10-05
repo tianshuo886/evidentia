@@ -1,0 +1,49 @@
+{
+  "task_id": "TASK-V3-EVAL-BENCH-01-VASWANI-ATTENTION",
+  "task_type": "READER_EVALUATION",
+  "required_capability": "SCIENTIFIC_READER_EVALUATION",
+  "scientific_contract": "Compare the two real reading outputs dimension-by-dimension without collapsing them to one synthetic score.",
+  "description": "Real Direct-AI vs Evidentia Reader v3 evaluation.",
+  "input_artifacts": {
+    "source_pdf": "source/paper.pdf",
+    "direct_ai": "evals/reader_v3/BENCH-01-VASWANI-ATTENTION/direct_ai.json",
+    "evidentia_v3": "reader/narrative_manuscript.json"
+  },
+  "target_output": "evals/reader_v3/BENCH-01-VASWANI-ATTENTION/pair_evaluation.json",
+  "output_schema": "reader_pair_evaluation",
+  "source_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+  "base_sha256": null,
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "allowed_inputs": [
+    "source/paper.pdf",
+    "evals/reader_v3/BENCH-01-VASWANI-ATTENTION/direct_ai.json",
+    "reader/narrative_manuscript.json"
+  ],
+  "forbidden_inputs": [
+    "apply/",
+    "project/",
+    "memory/"
+  ],
+  "prohibited_context": [
+    "PROJECT_APPLY",
+    "RESEARCH_MEMORY"
+  ],
+  "constraints": [
+    "DIMENSION_LEVEL_EVALUATION",
+    "NO_SINGLE_OVERALL_SCORE",
+    "SOURCE_ASSISTED"
+  ],
+  "instructions": "Evaluate Direct AI and Evidentia v3 against the source paper. Score each requested dimension 1-5 and provide a concrete evidence note. Do not choose a single winner or collapse all dimensions into one score. Explicitly identify release blockers. Narrative clarity, scientific completeness and method explanation are non-regression dimensions; evidence grounding, visual interpretation, critique, uncertainty and provenance are intended Evidentia value-add dimensions.",
+  "executor_template": {
+    "host": "generic-host",
+    "host_version": "UNKNOWN",
+    "provider": "openai-codex",
+    "model": "gpt-6.1-sol",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "standard",
+    "tool_profile": "paper-only",
+    "started_at": "2026-10-03T20:19:37.270230+00:00",
+    "completed_at": "2026-10-03T20:19:37.270230+00:00"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "source_sha256": "6f3030abb7d9d4f0624a5cbe5ca2ff673df63afc85c97fadd0bf7db780c8dbaf",
+  "page": 3,
+  "bindings": [
+    {
+      "evidence_id": "F02",
+      "kind": "figure",
+      "bbox_norm": [
+        0.5176,
+        0.0648,
+        0.9402,
+        0.5923
+      ],
+      "panel_bboxes_norm": [
+        [
+          0.5176,
+          0.0648,
+          0.9402,
+          0.3793
+        ],
+        [
+          0.5176,
+          0.385,
+          0.9402,
+          0.588
+        ]
+      ],
+      "status": "VERIFIED",
+      "complete": true,
+      "caption_match": true,
+      "confidence": 0.97,
+      "notes": "Fig.2 full right-column figure: panel a is the ECDF of Pauli/readout errors (isolated dotted vs simultaneous solid) plus the average-error table; panel b is the processor-layout heat map; caption 'System-wide Pauli and measurement errors' matches."
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "task_id": "TASK-V3-VISUAL-P014",
+  "execution_kind": "HOST_AGENT",
+  "executor": {
+    "kind": "HOST_AGENT",
+    "host": "pi-parent-direct",
+    "host_version": "UNKNOWN",
+    "provider": "openai-codex",
+    "model": "gpt-6.1-sol",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "high",
+    "tool_profile": "paper-only"
+  },
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "input_hashes": {
+    "source/paper.pdf": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+    "task": "fc9a21f4959664e4bfcc459df8a2e15fe674c419d0bd1ff7bd54f005c25f9014"
+  },
+  "result": {
+    "schema_version": "1.0",
+    "source_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+    "page": 14,
+    "bindings": [
+      {
+        "evidence_id": "F04",
+        "kind": "figure",
+        "bbox_norm": [
+          0.17,
+          0.17,
+          0.84,
+          0.8
+        ],
+        "panel_bboxes_norm": [
+          [
+            0.18,
+            0.19,
+            0.84,
+            0.48
+          ],
+          [
+            0.18,
+            0.5,
+            0.84,
+            0.77
+          ]
+        ],
+        "status": "VERIFIED",
+        "complete": true,
+        "caption_match": true,
+        "confidence": 0.99,
+        "notes": "Full-page inspection confirms both top full-attention and bottom isolated-attention panels, token labels, highlighted links, and the Figure 4 caption."
+      }
+    ]
+  }
+}

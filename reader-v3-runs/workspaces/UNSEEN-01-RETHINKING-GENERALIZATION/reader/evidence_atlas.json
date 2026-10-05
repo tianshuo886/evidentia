@@ -1,0 +1,1029 @@
+{
+  "schema_version": "3.0",
+  "paper_id": "UNSEEN-01-RETHINKING-GENERALIZATION",
+  "source_sha256": "a71f1294a021cebc6939ec977fc073b6d7b4f183950eba761ec55364d30b729f",
+  "items": [
+    {
+      "id": "F01",
+      "kind": "figure",
+      "page": 4,
+      "label": "Figure 1",
+      "caption": "Figure 1 Fitting random labels and random pixels on CIFAR10. (a) shows the training loss of",
+      "asset": "assets/figures/v3_F01_p4_1254x597.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.95,
+      "used_in": [
+        {
+          "chapter_id": "SEC-02",
+          "chapter_title": "反事实经验证伪：随机化检验与全量噪声记忆",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "SEC-02",
+          "chapter_title": "反事实经验证伪：随机化检验与全量噪声记忆",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "SEC-02",
+          "chapter_title": "反事实经验证伪：随机化检验与全量噪声记忆",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "T01",
+      "kind": "table",
+      "page": 6,
+      "label": "Table 1",
+      "caption": "Table 1 The training and test accuracy (in percentage) of various models on the CIFAR10 dataset.",
+      "asset": "assets/figures/v3_T01_p6_1224x551.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.95,
+      "used_in": [
+        {
+          "chapter_id": "SEC-02",
+          "chapter_title": "反事实经验证伪：随机化检验与全量噪声记忆",
+          "block_type": "table"
+        },
+        {
+          "chapter_id": "SEC-02",
+          "chapter_title": "反事实经验证伪：随机化检验与全量噪声记忆",
+          "block_type": "table"
+        },
+        {
+          "chapter_id": "SEC-02",
+          "chapter_title": "反事实经验证伪：随机化检验与全量噪声记忆",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "SEC-03",
+          "chapter_title": "显式正则化的非必要性：调节旋钮而非泛化基石",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "F02",
+      "kind": "figure",
+      "page": 7,
+      "label": "Figure 2",
+      "caption": "Figure 2 Effects of implicit regularizers on generalization performance. aug is data augmentation,",
+      "asset": "assets/figures/v3_F02_p7_1224x750.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.95,
+      "used_in": [
+        {
+          "chapter_id": "SEC-03",
+          "chapter_title": "显式正则化的非必要性：调节旋钮而非泛化基石",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "SEC-03",
+          "chapter_title": "显式正则化的非必要性：调节旋钮而非泛化基石",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "SEC-03",
+          "chapter_title": "显式正则化的非必要性：调节旋钮而非泛化基石",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "F03",
+      "kind": "figure",
+      "page": 12,
+      "label": "Figure 3",
+      "caption": "Figure 3 The small Inception model adapted for the CIFAR10 dataset. On the left we show the",
+      "asset": "assets/figures/v3_F03_p12_1224x1055.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.95,
+      "used_in": []
+    },
+    {
+      "id": "T02",
+      "kind": "table",
+      "page": 13,
+      "label": "Table 2",
+      "caption": "Table 2 The top-1 and top-5 accuracy (in percentage) of the Inception v3 model on the ImageNet",
+      "asset": "assets/figures/v3_T02_p13_1224x413.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.95,
+      "used_in": [
+        {
+          "chapter_id": "SEC-02",
+          "chapter_title": "反事实经验证伪：随机化检验与全量噪声记忆",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "T03",
+      "kind": "table",
+      "page": 14,
+      "label": "Table 3",
+      "caption": "Table 3 Generalizing with kernels. The test error associated with solving the kernel equation (3) on",
+      "asset": "assets/figures/v3_T03_p14_1224x414.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.95,
+      "used_in": [
+        {
+          "chapter_id": "SEC-05",
+          "chapter_title": "经典复杂度的破产：VC维、Rademacher界与一致收敛的失效",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "T04",
+      "kind": "table",
+      "page": 14,
+      "label": "Table 4",
+      "caption": "Table 4 Results on ﬁtting random labels on the CIFAR10 dataset with weight decay and data aug-",
+      "asset": "assets/figures/v3_T04_p14_1224x413.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.95,
+      "used_in": [
+        {
+          "chapter_id": "SEC-03",
+          "chapter_title": "显式正则化的非必要性：调节旋钮而非泛化基石",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "p.1",
+      "kind": "page",
+      "page": 1,
+      "label": "p.1",
+      "caption": null,
+      "asset": "source_pages/page-001.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "SEC-01",
+          "chapter_title": "泛化悖论：过参数化现实与经典理论的根本断裂",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "p.2",
+      "kind": "page",
+      "page": 2,
+      "label": "p.2",
+      "caption": null,
+      "asset": "source_pages/page-002.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "SEC-01",
+          "chapter_title": "泛化悖论：过参数化现实与经典理论的根本断裂",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "SEC-02",
+          "chapter_title": "反事实经验证伪：随机化检验与全量噪声记忆",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "SEC-03",
+          "chapter_title": "显式正则化的非必要性：调节旋钮而非泛化基石",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "SEC-06",
+          "chapter_title": "隐式正则化假说与未解的几何前沿",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "EQ-01",
+      "kind": "equation",
+      "page": 2,
+      "label": "EQ-01",
+      "caption": "ror. As reported by Krizhevsky et al. (2012), ℓ2-regularization (weight decay) sometimes even helps",
+      "asset": "assets/equations/EQ-01.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-02",
+      "kind": "equation",
+      "page": 2,
+      "label": "EQ-02",
+      "caption": "data. More formally, we exhibit a very simple two-layer ReLU network with p = 2n+d parameters",
+      "asset": "assets/equations/EQ-02.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-03",
+      "kind": "equation",
+      "page": 2,
+      "label": "EQ-03",
+      "caption": "to Livni et al. (2014) achieved a similar result with far more parameters, namely, O(dn). While our",
+      "asset": "assets/equations/EQ-03.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.3",
+      "kind": "page",
+      "page": 3,
+      "label": "p.3",
+      "caption": null,
+      "asset": "source_pages/page-003.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "SEC-04",
+          "chapter_title": "有限样本表达力定理：双层浅网络的任意插值构造",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "EQ-04",
+      "kind": "equation",
+      "page": 3,
+      "label": "EQ-04",
+      "caption": "Hardt et al. (2016) give an upper bound on the generalization error of a model trained with stochastic",
+      "asset": "assets/equations/EQ-04.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-05",
+      "kind": "equation",
+      "page": 3,
+      "label": "EQ-05",
+      "caption": "highlights why the analysis of Hardt et al. (2016) for non-convex optimization was rather pessimistic,",
+      "asset": "assets/equations/EQ-05.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-06",
+      "kind": "equation",
+      "page": 3,
+      "label": "EQ-06",
+      "caption": "Bartlett (1998) proved bounds on the fat shattering dimension of multilayer perceptrons with sig-",
+      "asset": null,
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-07",
+      "kind": "equation",
+      "page": 3,
+      "label": "EQ-07",
+      "caption": "was raised in a thought-provoking work by Neyshabur et al. (2014), who argued through experi-",
+      "asset": null,
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.4",
+      "kind": "page",
+      "page": 4,
+      "label": "p.4",
+      "caption": null,
+      "asset": "source_pages/page-004.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "SEC-02",
+          "chapter_title": "反事实经验证伪：随机化检验与全量噪声记忆",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "SEC-02",
+          "chapter_title": "反事实经验证伪：随机化检验与全量噪声记忆",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "p.5",
+      "kind": "page",
+      "page": 5,
+      "label": "p.5",
+      "caption": null,
+      "asset": "source_pages/page-005.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "SEC-02",
+          "chapter_title": "反事实经验证伪：随机化检验与全量噪声记忆",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "EQ-08",
+      "kind": "equation",
+      "page": 5,
+      "label": "EQ-08",
+      "caption": "ˆRn(H) = Eσ",
+      "asset": "assets/equations/EQ-08.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-09",
+      "kind": "equation",
+      "page": 5,
+      "label": "EQ-09",
+      "caption": "unless we further restrict the network. While Bartlett (1998) proves a bound on the fat-shattering",
+      "asset": "assets/equations/EQ-09.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-10",
+      "kind": "equation",
+      "page": 5,
+      "label": "EQ-10",
+      "caption": "et al. (2015), but even these do not seem to explain the generalization behavior that we observe.",
+      "asset": "assets/equations/EQ-10.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.6",
+      "kind": "page",
+      "page": 6,
+      "label": "p.6",
+      "caption": null,
+      "asset": "source_pages/page-006.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "SEC-02",
+          "chapter_title": "反事实经验证伪：随机化检验与全量噪声记忆",
+          "block_type": "table"
+        },
+        {
+          "chapter_id": "SEC-03",
+          "chapter_title": "显式正则化的非必要性：调节旋钮而非泛化基石",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "p.7",
+      "kind": "page",
+      "page": 7,
+      "label": "p.7",
+      "caption": null,
+      "asset": "source_pages/page-007.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "SEC-03",
+          "chapter_title": "显式正则化的非必要性：调节旋钮而非泛化基石",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "SEC-03",
+          "chapter_title": "显式正则化的非必要性：调节旋钮而非泛化基石",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "p.8",
+      "kind": "page",
+      "page": 8,
+      "label": "p.8",
+      "caption": null,
+      "asset": "source_pages/page-008.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "SEC-04",
+          "chapter_title": "有限样本表达力定理：双层浅网络的任意插值构造",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "SEC-04",
+          "chapter_title": "有限样本表达力定理：双层浅网络的任意插值构造",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "EQ-11",
+      "kind": "equation",
+      "page": 8,
+      "label": "EQ-11",
+      "caption": "Much effort has gone into characterizing the expressivity of neural networks, e.g, Cybenko (1989);",
+      "asset": "assets/equations/EQ-11.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-12",
+      "kind": "equation",
+      "page": 8,
+      "label": "EQ-12",
+      "caption": "Mhaskar (1993); Delalleau & Bengio (2011); Mhaskar & Poggio (2016); Eldan & Shamir (2016);",
+      "asset": "assets/equations/EQ-12.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-13",
+      "kind": "equation",
+      "page": 8,
+      "label": "EQ-13",
+      "caption": "Telgarsky (2016); Cohen & Shashua (2016). Almost all of these results are at the “population level”",
+      "asset": "assets/equations/EQ-13.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-14",
+      "kind": "equation",
+      "page": 8,
+      "label": "EQ-14",
+      "caption": "if for every sample S ⊆Rd with |S| = n and every function f : S →R, there exists a setting of the",
+      "asset": "assets/equations/EQ-14.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-15",
+      "kind": "equation",
+      "page": 8,
+      "label": "EQ-15",
+      "caption": "weights of C such that C(x) = f(x) for every x ∈S.",
+      "asset": "assets/equations/EQ-15.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-16",
+      "kind": "equation",
+      "page": 8,
+      "label": "EQ-16",
+      "caption": "yi are labels. Letting loss denote a nonnegative loss function with loss(y, y) = 0, consider the",
+      "asset": "assets/equations/EQ-16.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-17",
+      "kind": "equation",
+      "page": 8,
+      "label": "EQ-17",
+      "caption": "i=1 loss(wT xi, yi)",
+      "asset": "assets/equations/EQ-17.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-18",
+      "kind": "equation",
+      "page": 8,
+      "label": "EQ-18",
+      "caption": "equations Xw = y has an inﬁnite number of solutions regardless of the right hand side. We can ﬁnd",
+      "asset": "assets/equations/EQ-18.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-19",
+      "kind": "equation",
+      "page": 8,
+      "label": "EQ-19",
+      "caption": "a global minimum in the ERM problem (2) by simply solving this linear system.",
+      "asset": "assets/equations/EQ-19.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.9",
+      "kind": "page",
+      "page": 9,
+      "label": "p.9",
+      "caption": null,
+      "asset": "source_pages/page-009.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "SEC-04",
+          "chapter_title": "有限样本表达力定理：双层浅网络的任意插值构造",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "SEC-04",
+          "chapter_title": "有限样本表达力定理：双层浅网络的任意插值构造",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "SEC-05",
+          "chapter_title": "经典复杂度的破产：VC维、Rademacher界与一致收敛的失效",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "EQ-20",
+      "kind": "equation",
+      "page": 9,
+      "label": "EQ-20",
+      "caption": "i=1 loss(wT xi, yi) = 1",
+      "asset": "assets/equations/EQ-20.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-21",
+      "kind": "equation",
+      "page": 9,
+      "label": "EQ-21",
+      "caption": "on the data K = XXT and solving the linear system Kα = y for α. This is an n × n linear system",
+      "asset": "assets/equations/EQ-21.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-22",
+      "kind": "equation",
+      "page": 9,
+      "label": "EQ-22",
+      "caption": "βi := ∂2 loss(z,yi)",
+      "asset": "assets/equations/EQ-22.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-23",
+      "kind": "equation",
+      "page": 9,
+      "label": "EQ-23",
+      "caption": "z=yi , ∀i",
+      "asset": "assets/equations/EQ-23.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-24",
+      "kind": "equation",
+      "page": 9,
+      "label": "EQ-24",
+      "caption": "to. Since the SGD update takes the form wt+1 = wt −ηtetxit where ηt is the step size and et is",
+      "asset": "assets/equations/EQ-24.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-25",
+      "kind": "equation",
+      "page": 9,
+      "label": "EQ-25",
+      "caption": "the prediction error loss. If w0 = 0, we must have that the solution has the form w = Pn",
+      "asset": null,
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-26",
+      "kind": "equation",
+      "page": 9,
+      "label": "EQ-26",
+      "caption": "i=1 αixi",
+      "asset": "assets/equations/EQ-26.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-27",
+      "kind": "equation",
+      "page": 9,
+      "label": "EQ-27",
+      "caption": "for some coefﬁcients α. Hence, if we run SGD we have that w = XT α lies in the span of the",
+      "asset": "assets/equations/EQ-27.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-28",
+      "kind": "equation",
+      "page": 9,
+      "label": "EQ-28",
+      "caption": "data points. If we also perfectly interpolate the labels we have Xw = y. Enforcing both of these",
+      "asset": "assets/equations/EQ-28.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-29",
+      "kind": "equation",
+      "page": 9,
+      "label": "EQ-29",
+      "caption": "XXT α = y",
+      "asset": "assets/equations/EQ-29.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-30",
+      "kind": "equation",
+      "page": 9,
+      "label": "EQ-30",
+      "caption": "On MNIST with no preprocessing, we are able to achieve a test error of 1.2% by simply solving (3).",
+      "asset": "assets/equations/EQ-30.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-31",
+      "kind": "equation",
+      "page": 9,
+      "label": "EQ-31",
+      "caption": "the data and then solving (3), the error on MNIST drops to 0.6%. Surprisingly, adding regularization",
+      "asset": "assets/equations/EQ-31.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-32",
+      "kind": "equation",
+      "page": 9,
+      "label": "EQ-32",
+      "caption": "Simple algebra reveals that it is equivalent to the minimum ℓ2-norm solution of Xw = y. That is,",
+      "asset": "assets/equations/EQ-32.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-33",
+      "kind": "equation",
+      "page": 9,
+      "label": "EQ-33",
+      "caption": "norm. It is very easy to construct solutions of Xw = y that don’t generalize: for example, one could",
+      "asset": "assets/equations/EQ-33.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-34",
+      "kind": "equation",
+      "page": 9,
+      "label": "EQ-34",
+      "caption": "2This conv-net is the Coates & Ng (2012) net, but with the ﬁlters selected at random instead of with k-means.",
+      "asset": "assets/equations/EQ-34.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.10",
+      "kind": "page",
+      "page": 10,
+      "label": "p.10",
+      "caption": null,
+      "asset": "source_pages/page-010.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "SEC-05",
+          "chapter_title": "经典复杂度的破产：VC维、Rademacher界与一致收敛的失效",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "SEC-05",
+          "chapter_title": "经典复杂度的破产：VC维、Rademacher界与一致收敛的失效",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "SEC-06",
+          "chapter_title": "隐式正则化假说与未解的几何前沿",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "SEC-06",
+          "chapter_title": "隐式正则化假说与未解的几何前沿",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "EQ-35",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-35",
+      "caption": "Signals and Systems, 2(4):303–314, 1989.",
+      "asset": "assets/equations/EQ-35.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.11",
+      "kind": "page",
+      "page": 11,
+      "label": "p.11",
+      "caption": null,
+      "asset": "source_pages/page-011.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "SEC-06",
+          "chapter_title": "隐式正则化假说与未解的几何前沿",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "SEC-06",
+          "chapter_title": "隐式正则化假说与未解的几何前沿",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "EQ-36",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-36",
+      "caption": "ral network. Advances in Computational Mathematics, 1(1):61–80, 1993.",
+      "asset": "assets/equations/EQ-36.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-37",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-37",
+      "caption": "tivity in learning theory. Nature, 428(6981):419–422, 2004.",
+      "asset": "assets/equations/EQ-37.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-38",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-38",
+      "caption": "115(3):211–252, 2015. ISSN 1573-1405. doi: 10.1007/s11263-015-0816-y.",
+      "asset": "assets/equations/EQ-38.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-39",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-39",
+      "caption": "Research, 15(1):1929–1958, 2014.",
+      "asset": "assets/equations/EQ-39.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-40",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-40",
+      "caption": "ing. Constructive Approximation, 26(2):289–315, 2007.",
+      "asset": "assets/equations/EQ-40.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.12",
+      "kind": "page",
+      "page": 12,
+      "label": "p.12",
+      "caption": null,
+      "asset": "source_pages/page-012.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "p.13",
+      "kind": "page",
+      "page": 13,
+      "label": "p.13",
+      "caption": null,
+      "asset": "source_pages/page-013.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "SEC-02",
+          "chapter_title": "反事实经验证伪：随机化检验与全量噪声记忆",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "EQ-41",
+      "kind": "equation",
+      "page": 13,
+      "label": "EQ-41",
+      "caption": "c(x) =",
+      "asset": "assets/equations/EQ-41.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-42",
+      "kind": "equation",
+      "page": 13,
+      "label": "EQ-42",
+      "caption": "xn, the n × n matrix A = [max{xi −bj, 0}]ij has full rank. Its smallest eigenvalue is mini xi −bi.",
+      "asset": "assets/equations/EQ-42.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-43",
+      "kind": "equation",
+      "page": 13,
+      "label": "EQ-43",
+      "caption": "Now, ﬁx a sample S = {z1, . . . , zn} of size n and a target vector y ∈Rn. To prove the theorem, we",
+      "asset": "assets/equations/EQ-43.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-44",
+      "kind": "equation",
+      "page": 13,
+      "label": "EQ-44",
+      "caption": "need to ﬁnd weights a, b, w so that yi = c(zi) for all i ∈{1, . . . , n}",
+      "asset": "assets/equations/EQ-44.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-45",
+      "kind": "equation",
+      "page": 13,
+      "label": "EQ-45",
+      "caption": "First, choose a and b such that with xi = ⟨a, zi⟩we have the interleaving property b1 < x1 < b2 <",
+      "asset": "assets/equations/EQ-45.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-46",
+      "kind": "equation",
+      "page": 13,
+      "label": "EQ-46",
+      "caption": "yi = c(zi) ,",
+      "asset": "assets/equations/EQ-46.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.14",
+      "kind": "page",
+      "page": 14,
+      "label": "p.14",
+      "caption": null,
+      "asset": "source_pages/page-014.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "SEC-03",
+          "chapter_title": "显式正则化的非必要性：调节旋钮而非泛化基石",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "SEC-05",
+          "chapter_title": "经典复杂度的破产：VC维、Rademacher界与一致收敛的失效",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "EQ-47",
+      "kind": "equation",
+      "page": 14,
+      "label": "EQ-47",
+      "caption": "We have c(zi) = Aw, where A = [max{xi −bi, 0}]ij is the matrix we encountered in Lemma 1.",
+      "asset": "assets/equations/EQ-47.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-48",
+      "kind": "equation",
+      "page": 14,
+      "label": "EQ-48",
+      "caption": "system y = Aw to ﬁnd suitable weights w.",
+      "asset": "assets/equations/EQ-48.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-49",
+      "kind": "equation",
+      "page": 14,
+      "label": "EQ-49",
+      "caption": "j=1 fj(x)oj, where oj is the output of layer j. This results in a single",
+      "asset": "assets/equations/EQ-49.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-50",
+      "kind": "equation",
+      "page": 14,
+      "label": "EQ-50",
+      "caption": "c. Setting k = b −c gives the next corollary.",
+      "asset": "assets/equations/EQ-50.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-51",
+      "kind": "equation",
+      "page": 14,
+      "label": "EQ-51",
+      "caption": "Table 3: Generalizing with kernels. The test error associated with solving the kernel equation (3) on",
+      "asset": "assets/equations/EQ-51.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.15",
+      "kind": "page",
+      "page": 15,
+      "label": "p.15",
+      "caption": null,
+      "asset": "source_pages/page-015.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    }
+  ]
+}

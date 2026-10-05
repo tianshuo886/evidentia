@@ -1,0 +1,143 @@
+{
+  "task_id": "TASK-V3-REVISION-MEMO",
+  "execution_kind": "HOST_AGENT",
+  "executor": {
+    "kind": "HOST_AGENT",
+    "host": "pi-parent-direct",
+    "host_version": "UNKNOWN",
+    "provider": "openai-codex",
+    "model": "gpt-6.1-sol",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "high",
+    "tool_profile": "paper-only"
+  },
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "input_hashes": {
+    "source/paper.pdf": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+    "lead_reader_draft": "1a76e5ae80d0141406b073ef77877f092e742b764bbe44f9e86f041878ab3fd7",
+    "lens_manifest": "95942d022a03b1be4f0dc0c86bc8cdced0d57f7d9885a3e1d21a04aee3521536"
+  },
+  "result": {
+    "schema_version": "1.0",
+    "paper_id": "BENCH-01-VASWANI-ATTENTION",
+    "source_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+    "summary": "Keep the Lead Reader's central architecture-to-evidence story, but sharpen the distinction between asymptotic rationale, reported translation results, ablation sensitivity, parsing transfer, and qualitative interpretability. Preserve the paper's conditional claims and explicitly state the continuation provenance limitation.",
+    "revisions": [
+      {
+        "id": "R1",
+        "priority": "P0",
+        "action": "QUALIFY",
+        "instruction": "State that O(1) sequential operations and O(1) path length are asymptotic properties of unrestricted self-attention, while its per-layer computation is O(n^2 d) and memory/runtime remain sequence-length dependent.",
+        "rationale": "Prevents the computational argument from becoming an unconditional speed claim.",
+        "evidence": [
+          "T01",
+          "p.6"
+        ],
+        "source_lenses": [
+          "validity_boundary",
+          "proof_integrity",
+          "assumption_sensitivity"
+        ],
+        "verification_required": true
+      },
+      {
+        "id": "R2",
+        "priority": "P0",
+        "action": "CORRECT",
+        "instruction": "Report Table 2 BLEU and FLOP values separately for base and big models, and preserve the exact WMT task distinction.",
+        "rationale": "The decisive result is otherwise vulnerable to conflating tasks and configurations.",
+        "evidence": [
+          "T02",
+          "p.8"
+        ],
+        "source_lenses": [
+          "evidence_results"
+        ],
+        "verification_required": true
+      },
+      {
+        "id": "R3",
+        "priority": "P1",
+        "action": "ADD",
+        "instruction": "Explain why Figure 1's decoder differs from the encoder: cross-attention and future-token masking are functionally necessary for autoregressive translation.",
+        "rationale": "Improves method comprehension beyond naming the blocks.",
+        "evidence": [
+          "F01",
+          "p.3"
+        ],
+        "source_lenses": [
+          "method_study_design"
+        ],
+        "verification_required": true
+      },
+      {
+        "id": "R4",
+        "priority": "P1",
+        "action": "QUALIFY",
+        "instruction": "Describe Tables 3 and 4 as ablation and transfer evidence, not a complete causal decomposition or universal generalization test; mention that the strongest listed parsing comparator remains higher in one setting.",
+        "rationale": "Preserves important negative and boundary information.",
+        "evidence": [
+          "T03",
+          "T04",
+          "p.9",
+          "p.10"
+        ],
+        "source_lenses": [
+          "evidence_results",
+          "validity_boundary",
+          "assumption_sensitivity"
+        ],
+        "verification_required": true
+      },
+      {
+        "id": "R5",
+        "priority": "P1",
+        "action": "QUALIFY",
+        "instruction": "Present Figures 3–5 as qualitative examples of learned attention patterns and retain the captions' cautious language rather than asserting systematic interpretability.",
+        "rationale": "Avoids overclaiming from illustrative appendix figures.",
+        "evidence": [
+          "F03",
+          "F04",
+          "F05"
+        ],
+        "source_lenses": [
+          "argument_narrative",
+          "proof_integrity",
+          "validity_boundary"
+        ],
+        "verification_required": true
+      },
+      {
+        "id": "R6",
+        "priority": "P1",
+        "action": "ADD",
+        "instruction": "Add a quiet provenance boundary stating that the historical cloud commit, archive, Lead Reader, and Direct-AI baseline were unavailable; this continuation uses a newly reconstructed full arXiv PDF and 22dcbcb code.",
+        "rationale": "Prevents historical and continuation provenance from being conflated.",
+        "evidence": [
+          "p.1"
+        ],
+        "source_lenses": [
+          "validity_boundary"
+        ],
+        "verification_required": true
+      }
+    ],
+    "unresolved": [
+      {
+        "issue": "Whether the unavailable historical cloud PDF bytes matched the reacquired arXiv PDF exactly.",
+        "evidence": [],
+        "reason": "Historical workspace and source hash were not recoverable."
+      },
+      {
+        "issue": "Whether the displayed attention-head patterns generalize across seeds and datasets.",
+        "evidence": [
+          "F03",
+          "F04",
+          "F05"
+        ],
+        "reason": "The source provides qualitative examples rather than a systematic replication study."
+      }
+    ]
+  }
+}

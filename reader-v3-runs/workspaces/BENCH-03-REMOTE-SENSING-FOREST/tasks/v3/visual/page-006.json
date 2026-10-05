@@ -15,14 +15,14 @@
         "paper_label": "Fig. 3",
         "caption_original": "Fig. 3 Global canopy height distributions of the entire landmass, protected",
         "candidate_bbox_pdf": [
-          120.06199645996094,
-          77.58203125,
-          210.92999267578125,
-          207.60601806640625
+          68.125,
+          67.33294677734375,
+          210.9304962158203,
+          207.60594177246094
         ],
-        "candidate_asset": "assets/figures/crop_F03_p6_253x362.png",
+        "candidate_asset": "assets/figures/crop_F03_p6_397x390.png",
         "candidate_method": "MULTIMODAL_PAGE_LOCALIZATION",
-        "candidate_confidence": 0.76
+        "candidate_confidence": 0.86
       }
     ]
   },
@@ -58,12 +58,12 @@
   "executor_template": {
     "host": "generic-host",
     "host_version": "UNKNOWN",
-    "provider": "openai-codex",
-    "model": "gpt-6.1-sol",
+    "provider": "magpie",
+    "model": "antigravity/gemini-3.8-flash",
     "model_version": "UNKNOWN",
     "reasoning_profile": "standard",
     "tool_profile": "paper-only",
-    "started_at": "2026-10-04T01:46:49.606117+00:00",
-    "completed_at": "2026-10-04T01:46:49.606117+00:00"
+    "started_at": "2026-10-05T14:04:18.393568+00:00",
+    "completed_at": "2026-10-05T14:04:18.393568+00:00"
   }
 }

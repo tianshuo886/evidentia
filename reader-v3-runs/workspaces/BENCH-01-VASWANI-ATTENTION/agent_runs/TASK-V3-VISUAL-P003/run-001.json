@@ -1,0 +1,43 @@
+{
+  "task_id": "TASK-V3-VISUAL-P003",
+  "execution_kind": "HOST_AGENT",
+  "executor": {
+    "kind": "HOST_AGENT",
+    "host": "pi-parent-direct",
+    "host_version": "UNKNOWN",
+    "provider": "openai-codex",
+    "model": "gpt-6.1-sol",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "high",
+    "tool_profile": "paper-only"
+  },
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "input_hashes": {
+    "source/paper.pdf": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+    "task": "8e5e1672933de71ea45cd40be6f030cf84988ec113ba8073c010560b916afb33"
+  },
+  "result": {
+    "schema_version": "1.0",
+    "source_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+    "page": 3,
+    "bindings": [
+      {
+        "evidence_id": "F01",
+        "kind": "figure",
+        "bbox_norm": [
+          0.345,
+          0.085,
+          0.655,
+          0.555
+        ],
+        "panel_bboxes_norm": [],
+        "status": "VERIFIED",
+        "complete": true,
+        "caption_match": true,
+        "confidence": 0.98,
+        "notes": "Full-page inspection: complete Transformer encoder/decoder architecture from input/output embeddings through softmax, with the Figure 1 caption immediately below; excludes surrounding body text."
+      }
+    ]
+  }
+}

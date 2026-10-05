@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0",
+  "lens": "method_study_design",
+  "lens_kind": "core",
+  "source_sha256": "a71f1294a021cebc6939ec977fc073b6d7b4f183950eba761ec55364d30b729f",
+  "base_sha256": "55607fb18f8b13e0e8b2bb7953642a6a3211b4964e4badfbbe0a2b1808d3ac88",
+  "summary": "研究设计采用渐进随机化扰动阶梯（真实标签 → 局部损坏 → 完全随机标签 → 全局打乱像素 → 独立随机像素 → 高斯噪声），辅以显式正则化完全剥离消融与有限样本插值网络构造。",
+  "findings": [
+    {
+      "id": "MSD1",
+      "statement": "随机化对照梯度的精细设计能够系统解耦特征空间几何结构与标签语义对经验风险最小化的独立影响。",
+      "evidence": [
+        "p.2",
+        "p.4",
+        "F01",
+        "T01"
+      ],
+      "epistemic": "SUPPORTED",
+      "action": "KEEP",
+      "importance": "MAJOR",
+      "reason": "严密的方法对照链条。",
+      "cross_cutting_checks": {
+        "anomaly": null,
+        "counterfactual": null
+      }
+    },
+    {
+      "id": "MSD2",
+      "statement": "定理 1 的构造性设计使用随机投影降维与下三角阈值偏置求逆，将非凸函数逼近简化为可解单调线性方程组。",
+      "evidence": [
+        "p.8",
+        "p.9"
+      ],
+      "epistemic": "SUPPORTED",
+      "action": "EXPAND",
+      "importance": "MAJOR",
+      "reason": "关键数学推导机制。",
+      "cross_cutting_checks": {
+        "anomaly": null,
+        "counterfactual": null
+      }
+    }
+  ]
+}

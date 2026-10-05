@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0",
+  "lens": "validity_boundary",
+  "lens_kind": "core",
+  "source_sha256": "a71f1294a021cebc6939ec977fc073b6d7b4f183950eba761ec55364d30b729f",
+  "base_sha256": "55607fb18f8b13e0e8b2bb7953642a6a3211b4964e4badfbbe0a2b1808d3ac88",
+  "summary": "边界与审慎校准：论文成功证伪了基于假设空间覆盖的最坏情况泛化理论，但并未解决深度学习为什么能泛化这一根本建设性问题；隐式正则化的解析度量在本文中仍属空白。",
+  "findings": [
+    {
+      "id": "VB1",
+      "statement": "证伪不等于建设：论文明确不声称找到了泛化的真正充分统计量，而是指出了现有范式的盲区。",
+      "evidence": [
+        "p.2",
+        "p.10",
+        "p.11"
+      ],
+      "epistemic": "SUPPORTED",
+      "action": "KEEP",
+      "importance": "CRITICAL",
+      "reason": "防止结论过度外推，严守科学边界。",
+      "cross_cutting_checks": {
+        "anomaly": null,
+        "counterfactual": null
+      }
+    },
+    {
+      "id": "VB2",
+      "statement": "核方法附录结果（Table 3）表明无显式正则项的最小范数插值解同样泛化良好，表明过拟合与泛化的共存并非深度神经网络的唯有特性。",
+      "evidence": [
+        "T03",
+        "p.14"
+      ],
+      "epistemic": "SUPPORTED",
+      "action": "QUALIFY",
+      "importance": "MAJOR",
+      "reason": "揭示过参数化线性插值与非线性深度的深层关联。",
+      "cross_cutting_checks": {
+        "anomaly": null,
+        "counterfactual": null
+      }
+    }
+  ]
+}

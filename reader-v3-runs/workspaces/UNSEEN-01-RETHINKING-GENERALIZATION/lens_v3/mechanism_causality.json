@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "lens": "mechanism_causality",
+  "lens_kind": "specialist",
+  "source_sha256": "a71f1294a021cebc6939ec977fc073b6d7b4f183950eba761ec55364d30b729f",
+  "base_sha256": "55607fb18f8b13e0e8b2bb7953642a6a3211b4964e4badfbbe0a2b1808d3ac88",
+  "summary": "因果机制剖析：过参数化不仅提供了巨大的容纳自由度，还改变了经验损失曲面的非凸景观；SGD的随机噪声与初始点距离共同构成了对最小范数或简单低频特征的优先选择机制。",
+  "findings": [
+    {
+      "id": "MC1",
+      "statement": "真实像素较随机像素具有更快的收敛速度，证明数据流形的几何聚集度实质性地参与了梯度的下降动力学导引。",
+      "evidence": [
+        "p.4",
+        "F01",
+        "p.5"
+      ],
+      "epistemic": "SUPPORTED",
+      "action": "KEEP",
+      "importance": "MAJOR",
+      "reason": "优化机制与几何机制的因果交互。",
+      "cross_cutting_checks": {
+        "anomaly": null,
+        "counterfactual": null
+      }
+    }
+  ]
+}

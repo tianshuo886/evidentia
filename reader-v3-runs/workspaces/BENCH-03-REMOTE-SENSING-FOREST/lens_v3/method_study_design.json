@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "lens": "method_study_design",
+  "lens_kind": "core",
+  "source_sha256": "b4d103e6ab0664d96c31a00a0ee4d99e9fbc54a9f1a8eeea500716843d4eabce",
+  "base_sha256": "a9940ed7b26fa355fcd47a2bdde791798ac177b95ab9b521b68abb7345b1c46d",
+  "summary": "研究设计采用无下采样残差卷积以保持10m单像元物理空间对应；输出高斯均值与方差并以负对数似然优化；5模型集成与多时相方差倒数融合有效控制偶然与认知误差。",
+  "findings": [
+    {
+      "id": "MSD1",
+      "statement": "保持10m分辨率无步长卷积避免了特征图空间降采样带来的边界模糊，是高分辨率冠层制图的关键设计抉择。",
+      "evidence": [
+        "p.2",
+        "p.3",
+        "F01"
+      ],
+      "epistemic": "SUPPORTED",
+      "action": "KEEP",
+      "importance": "MAJOR",
+      "reason": "核心架构设计。",
+      "cross_cutting_checks": {
+        "anomaly": null,
+        "counterfactual": null
+      }
+    }
+  ]
+}

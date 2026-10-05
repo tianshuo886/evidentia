@@ -1,0 +1,8 @@
+{
+  "run_class": "PRE_ANTITEMPLATE_SMOKE",
+  "execution_mode": "parent_direct_sequential_contexts",
+  "requested_mode": "six independent context-isolated strong-model executions",
+  "context_isolation_verified": false,
+  "reason": "The configured worker profile rejected the requested openai-codex/gpt-6.1-sol model and repeated delegated workflows failed with connection/timeouts. To complete the diagnostic artifact chain without fabricating provenance, each Lens was authored as a separate bounded role pass by the active parent model, with no Lens output used as input to another Lens.",
+  "scientific_status": "valid_outputs_with_execution_mode_limitation"
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "source_sha256": "6f3030abb7d9d4f0624a5cbe5ca2ff673df63afc85c97fadd0bf7db780c8dbaf",
+  "page": 2,
+  "bindings": [
+    {
+      "evidence_id": "F01",
+      "kind": "figure",
+      "bbox_norm": [
+        0.517,
+        0.3173,
+        0.939,
+        0.5213
+      ],
+      "panel_bboxes_norm": [
+        [
+          0.517,
+          0.3173,
+          0.939,
+          0.392
+        ],
+        [
+          0.517,
+          0.396,
+          0.939,
+          0.5213
+        ]
+      ],
+      "status": "VERIFIED",
+      "complete": true,
+      "caption_match": true,
+      "confidence": 0.97,
+      "notes": "Fig.1 spans the right column: panel a is the 54-qubit/coupler rectangular layout, panel b is the Sycamore chip photograph with a 10 mm scale bar; caption 'The Sycamore processor' matches."
+    }
+  ]
+}

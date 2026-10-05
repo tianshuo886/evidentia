@@ -1,0 +1,75 @@
+{
+  "schema_version": "1.0",
+  "lens": "reproducibility_implementation",
+  "lens_kind": "specialist",
+  "source_sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+  "base_sha256": "7f5377fff58ba5872ff805196eba449fa044edc91bbfec485f954b1fa212b0a9",
+  "summary": "论文给出可落地的模块形式、初始化、缩放、适配矩阵选择和许多数据集协议，并发布实现/检查点；但 GPT-3 等实验成本高，若干比较和超参细节仍需按附录复核。",
+  "findings": [
+    {
+      "id": "RI1",
+      "statement": "复现核心模块需要冻结基础模型、在指定 dense/attention 矩阵旁路注入 BA、B 零初始化、A 高斯初始化，并按 α/r 缩放。",
+      "evidence": [
+        "F01",
+        "p.4"
+      ],
+      "epistemic": "VERIFIED",
+      "action": "KEEP",
+      "importance": "MINOR",
+      "reason": "Independent source-grounded pass; finding records what the Lead Reader should preserve or qualify.",
+      "cross_cutting_checks": {
+        "anomaly": null,
+        "counterfactual": null
+      }
+    },
+    {
+      "id": "RI2",
+      "statement": "论文明确主要实验冻结 MLP，适配 attention 的 Wq/Wv；实现若默认对所有线性层注入将不再复现实验条件。",
+      "evidence": [
+        "p.5"
+      ],
+      "epistemic": "VERIFIED",
+      "action": "CORRECT",
+      "importance": "MAJOR",
+      "reason": "Independent source-grounded pass; finding records what the Lead Reader should preserve or qualify.",
+      "cross_cutting_checks": {
+        "anomaly": null,
+        "counterfactual": null
+      }
+    },
+    {
+      "id": "RI3",
+      "statement": "GPT-3 表 4 的比较依赖特定 batch、epoch、warmup、AdamW、linear schedule 和调好的 learning rate，表 12 是关键复现锚点。",
+      "evidence": [
+        "T12",
+        "T04",
+        "p.8",
+        "p.26"
+      ],
+      "epistemic": "VERIFIED",
+      "action": "EXPAND",
+      "importance": "MAJOR",
+      "reason": "Independent source-grounded pass; finding records what the Lead Reader should preserve or qualify.",
+      "cross_cutting_checks": {
+        "anomaly": null,
+        "counterfactual": null
+      }
+    },
+    {
+      "id": "RI4",
+      "statement": "不同 rank 的绝对最优值不能脱离任务和调参预算复用；表 18 明确部分超参在 r=4 上调过。",
+      "evidence": [
+        "T18",
+        "p.26"
+      ],
+      "epistemic": "VERIFIED",
+      "action": "QUALIFY",
+      "importance": "MAJOR",
+      "reason": "Independent source-grounded pass; finding records what the Lead Reader should preserve or qualify.",
+      "cross_cutting_checks": {
+        "anomaly": null,
+        "counterfactual": null
+      }
+    }
+  ]
+}

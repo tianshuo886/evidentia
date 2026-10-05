@@ -1,0 +1,233 @@
+{
+  "task_id": "TASK-V3-NARRATIVE-PLAN",
+  "execution_kind": "HOST_AGENT",
+  "executor": {
+    "kind": "HOST_AGENT",
+    "host": "pi",
+    "host_version": "UNKNOWN",
+    "provider": "openai-codex",
+    "model": "gpt-6-sol",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "high",
+    "tool_profile": "paper-only",
+    "started_at": "2026-10-04T03:30:00+00:00",
+    "completed_at": "2026-10-04T03:30:00+00:00"
+  },
+  "started_at": "2026-10-04T03:30:00+00:00",
+  "completed_at": "2026-10-04T03:30:00+00:00",
+  "input_hashes": {
+    "source/paper.pdf": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+    "model/paper_understanding_draft.json": "7f5377fff58ba5872ff805196eba449fa044edc91bbfec485f954b1fa212b0a9",
+    "model/revision_memo.json": "4ba4ff4ef39b6736f3d3373b06e9be4da27d12cf6e6a451dd0b473d54a516683"
+  },
+  "contract_version": "3.0",
+  "prompt_version": "3.1",
+  "result": {
+    "schema_version": "1.0",
+    "paper_id": "BENCH-02-LORA-ADAPTATION",
+    "source_sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+    "paper_characterization": "一篇以部署成本为问题入口、以低秩更新为方法核心、以跨规模实验和子空间分析构成证据闭环的机器学习方法论文。",
+    "rationale": "章节顺序跟随论文从 operational bottleneck 到 reparameterization、Transformer placement、scale-up evidence、rank/subspace interpretation、boundary 的自然推进；没有套用问题/方法/结果/局限固定槽位。",
+    "sections": [
+      {
+        "id": "s1",
+        "title": "为什么“适配”首先是部署问题",
+        "purpose": "先把每任务复制完整大模型的存储/显存/在线延迟压力说清楚，再解释论文为何不把问题缩减为单一精度指标。",
+        "proposition": "",
+        "question": "",
+        "evidence_refs": [
+          "p.1",
+          "p.2",
+          "p.3",
+          "T01"
+        ],
+        "source_anchors": [
+          "p.1",
+          "p.2",
+          "p.3",
+          "T01"
+        ],
+        "bindings": [
+          "T01"
+        ],
+        "argument_refs": [
+          "N1",
+          "N2"
+        ]
+      },
+      {
+        "id": "s2",
+        "title": "从任务增量到低秩重参数化",
+        "purpose": "按问题形式化→W0冻结→ΔW=BA→初始化与α/r缩放的顺序，解释 LoRA 真正优化的对象。",
+        "proposition": "",
+        "question": "",
+        "evidence_refs": [
+          "p.2",
+          "p.4",
+          "F01"
+        ],
+        "source_anchors": [
+          "p.2",
+          "p.4",
+          "F01"
+        ],
+        "bindings": [
+          "F01"
+        ],
+        "argument_refs": [
+          "N3"
+        ]
+      },
+      {
+        "id": "s3",
+        "title": "把低秩更新放进 Transformer，并折叠回部署图",
+        "purpose": "说明 attention-only、Wq/Wv 选择、MLP 冻结，以及合并权重带来的零额外层延迟和混合任务 batch 权衡。",
+        "proposition": "",
+        "question": "",
+        "evidence_refs": [
+          "p.4",
+          "p.5"
+        ],
+        "source_anchors": [
+          "p.4",
+          "p.5"
+        ],
+        "bindings": [],
+        "argument_refs": [
+          "N4",
+          "N7"
+        ]
+      },
+      {
+        "id": "s4",
+        "title": "跨模型实证：少量参数能否保住任务质量",
+        "purpose": "依论文逐级的 RoBERTa/DeBERTa、GPT-2、GPT-3 实验组织证据；局部放置表格并明确指标只支撑特定协议。",
+        "proposition": "",
+        "question": "",
+        "evidence_refs": [
+          "T02",
+          "T03",
+          "T04",
+          "F02",
+          "p.6",
+          "p.8"
+        ],
+        "source_anchors": [
+          "T02",
+          "T03",
+          "T04",
+          "F02",
+          "p.6",
+          "p.8"
+        ],
+        "bindings": [
+          "T02",
+          "T03",
+          "T04",
+          "F02"
+        ],
+        "argument_refs": [
+          "N5"
+        ]
+      },
+      {
+        "id": "s5",
+        "title": "rank 与矩阵位置：效率来自哪里",
+        "purpose": "读者先看到 Wq/Wv 组合及 rank 消融，再看 GPT-2/GPT-3 的非单调/平台现象，保留调参和波动边界。",
+        "proposition": "",
+        "question": "",
+        "evidence_refs": [
+          "T05",
+          "T06",
+          "T08",
+          "T18",
+          "p.10",
+          "p.17",
+          "p.26"
+        ],
+        "source_anchors": [
+          "T05",
+          "T06",
+          "T08",
+          "T18",
+          "p.10",
+          "p.17",
+          "p.26"
+        ],
+        "bindings": [
+          "T06",
+          "T08",
+          "T18"
+        ],
+        "argument_refs": [
+          "N6"
+        ]
+      },
+      {
+        "id": "s6",
+        "title": "子空间证据提供的机制线索",
+        "purpose": "把 seed 相似度、ΔW 与 Wq 的投影/放大联系起来，解释为何作者认为更新强调预训练中已有但未被强调的方向；不将相关性升格为因果。",
+        "proposition": "",
+        "question": "",
+        "evidence_refs": [
+          "F05",
+          "F06",
+          "F07",
+          "F08",
+          "T07",
+          "p.12",
+          "p.17",
+          "p.25",
+          "p.26"
+        ],
+        "source_anchors": [
+          "F05",
+          "F06",
+          "F07",
+          "F08",
+          "T07",
+          "p.12",
+          "p.17",
+          "p.25",
+          "p.26"
+        ],
+        "bindings": [
+          "F05",
+          "F06",
+          "F07",
+          "F08",
+          "T07"
+        ],
+        "argument_refs": [
+          "N6"
+        ]
+      },
+      {
+        "id": "s7",
+        "title": "结论的有效范围与尚未回答的问题",
+        "purpose": "回到 attention-only、任务/架构范围、统计与协议边界、跨任务切换限制和机制未识别，给出论文自己的贡献上限。",
+        "proposition": "",
+        "question": "",
+        "evidence_refs": [
+          "p.4",
+          "p.5",
+          "p.26"
+        ],
+        "source_anchors": [
+          "p.4",
+          "p.5",
+          "p.26"
+        ],
+        "bindings": [],
+        "argument_refs": [
+          "N7"
+        ]
+      }
+    ],
+    "uncertainties": [
+      "rank 的跨任务充分性未被普遍验证。",
+      "子空间结果是机制线索而非唯一因果证明。",
+      "某些 GPT-3 比较依赖特定协议和调参。"
+    ]
+  }
+}

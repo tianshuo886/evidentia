@@ -1,0 +1,1576 @@
+{
+  "schema_version": "3.0",
+  "paper_id": "BENCH-04-ALPHAFOLD2-STRUCTURE",
+  "source_sha256": "6eae057a9faf4f671c3101e0745ed704460c6d3dec77243dfd3a9f2d2ab68970",
+  "items": [
+    {
+      "id": "F01",
+      "kind": "figure",
+      "page": 2,
+      "label": "Fig. 1",
+      "caption": "Fig. 1 AlphaFold produces highly accurate structures. a, The performance",
+      "asset": "assets/figures/v3_F01_p2_1647x1331.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.99,
+      "used_in": [
+        {
+          "chapter_id": "s1",
+          "chapter_title": "先看作者究竟证明了什么",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "s1",
+          "chapter_title": "先看作者究竟证明了什么",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "s2",
+          "chapter_title": "从MSA到三维结构：一个耦合的表示系统",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s3",
+          "chapter_title": "网络如何被训练，又如何被观察",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s6",
+          "chapter_title": "讨论：高精度预测的边界与用途",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s6",
+          "chapter_title": "讨论：高精度预测的边界与用途",
+          "block_type": "callout"
+        }
+      ]
+    },
+    {
+      "id": "F02",
+      "kind": "figure",
+      "page": 3,
+      "label": "Fig. 2",
+      "caption": "Fig. 2 Accuracy of AlphaFold on recent PDB structures. The analysed",
+      "asset": "assets/figures/v3_F02_p3_829x1282.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.99,
+      "used_in": [
+        {
+          "chapter_id": "s1",
+          "chapter_title": "先看作者究竟证明了什么",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s1",
+          "chapter_title": "先看作者究竟证明了什么",
+          "block_type": "callout"
+        },
+        {
+          "chapter_id": "s6",
+          "chapter_title": "讨论：高精度预测的边界与用途",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "F03",
+      "kind": "figure",
+      "page": 4,
+      "label": "Fig. 3",
+      "caption": "Fig. 3 Architectural details. a, Evoformer block. Arrows show the information",
+      "asset": "assets/figures/v3_F03_p4_1610x1354.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.99,
+      "used_in": [
+        {
+          "chapter_id": "s2",
+          "chapter_title": "从MSA到三维结构：一个耦合的表示系统",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s2",
+          "chapter_title": "从MSA到三维结构：一个耦合的表示系统",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "s2",
+          "chapter_title": "从MSA到三维结构：一个耦合的表示系统",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "s2",
+          "chapter_title": "从MSA到三维结构：一个耦合的表示系统",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "F04",
+      "kind": "figure",
+      "page": 5,
+      "label": "Fig. 4",
+      "caption": "Fig. 4 Interpreting the neural network. a, Ablation results on two target sets:",
+      "asset": "assets/figures/v3_F04_p5_819x1052.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.99,
+      "used_in": [
+        {
+          "chapter_id": "s3",
+          "chapter_title": "网络如何被训练，又如何被观察",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s3",
+          "chapter_title": "网络如何被训练，又如何被观察",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "s3",
+          "chapter_title": "网络如何被训练，又如何被观察",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "s4",
+          "chapter_title": "消融把架构主张变成可检验的比较",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s4",
+          "chapter_title": "消融把架构主张变成可检验的比较",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s4",
+          "chapter_title": "消融把架构主张变成可检验的比较",
+          "block_type": "takeaway"
+        },
+        {
+          "chapter_id": "s6",
+          "chapter_title": "讨论：高精度预测的边界与用途",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "F05",
+      "kind": "figure",
+      "page": 6,
+      "label": "Fig. 5",
+      "caption": "Fig. 5 Effect of MSA depth and cross-chain contacts. a, Backbone accuracy",
+      "asset": "assets/figures/v3_F05_p6_1619x642.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.99,
+      "used_in": [
+        {
+          "chapter_id": "s5",
+          "chapter_title": "成功依赖什么：MSA深度与跨链接触",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s5",
+          "chapter_title": "成功依赖什么：MSA深度与跨链接触",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "s5",
+          "chapter_title": "成功依赖什么：MSA深度与跨链接触",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "s5",
+          "chapter_title": "成功依赖什么：MSA深度与跨链接触",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s6",
+          "chapter_title": "讨论：高精度预测的边界与用途",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s6",
+          "chapter_title": "讨论：高精度预测的边界与用途",
+          "block_type": "callout"
+        }
+      ]
+    },
+    {
+      "id": "p.1",
+      "kind": "page",
+      "page": 1,
+      "label": "p.1",
+      "caption": null,
+      "asset": "source_pages/page-001.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "p.2",
+      "kind": "page",
+      "page": 2,
+      "label": "p.2",
+      "caption": null,
+      "asset": "source_pages/page-002.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "s1",
+          "chapter_title": "先看作者究竟证明了什么",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s1",
+          "chapter_title": "先看作者究竟证明了什么",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "s2",
+          "chapter_title": "从MSA到三维结构：一个耦合的表示系统",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s3",
+          "chapter_title": "网络如何被训练，又如何被观察",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s6",
+          "chapter_title": "讨论：高精度预测的边界与用途",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s6",
+          "chapter_title": "讨论：高精度预测的边界与用途",
+          "block_type": "callout"
+        }
+      ]
+    },
+    {
+      "id": "EQ-01",
+      "kind": "equation",
+      "page": 2,
+      "label": "EQ-01",
+      "caption": "r.m.s.d.95 = 0.8 Å; TM-score = 0.93",
+      "asset": "assets/equations/EQ-01.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-02",
+      "kind": "equation",
+      "page": 2,
+      "label": "EQ-02",
+      "caption": "of AlphaFold on the CASP14 dataset (n = 87 protein domains) relative to the top-",
+      "asset": null,
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-03",
+      "kind": "equation",
+      "page": 2,
+      "label": "EQ-03",
+      "caption": "residue coverage) (95% confidence interval = 0.85–1.16 Å) whereas",
+      "asset": "assets/equations/EQ-03.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-04",
+      "kind": "equation",
+      "page": 2,
+      "label": "EQ-04",
+      "caption": "of 2.8 Å r.m.s.d.95 (95% confidence interval = 2.7–4.0 Å) (measured on",
+      "asset": "assets/equations/EQ-04.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-05",
+      "kind": "equation",
+      "page": 2,
+      "label": "EQ-05",
+      "caption": "Fold was 1.5 Å r.m.s.d.95 (95% confidence interval = 1.2–1.6 Å) compared",
+      "asset": "assets/equations/EQ-05.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-06",
+      "kind": "equation",
+      "page": 2,
+      "label": "EQ-06",
+      "caption": "with the 3.5 Å r.m.s.d.95 (95% confidence interval = 3.1–4.2 Å) of the best",
+      "asset": "assets/equations/EQ-06.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-07",
+      "kind": "equation",
+      "page": 2,
+      "label": "EQ-07",
+      "caption": "r.m.s.d.95 = 2.2 Å; TM-score = 0.96",
+      "asset": "assets/equations/EQ-07.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-08",
+      "kind": "equation",
+      "page": 2,
+      "label": "EQ-08",
+      "caption": "r.m.s.d. = 0.59 Å within 8 Å of Zn",
+      "asset": "assets/equations/EQ-08.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.3",
+      "kind": "page",
+      "page": 3,
+      "label": "p.3",
+      "caption": null,
+      "asset": "source_pages/page-003.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "s1",
+          "chapter_title": "先看作者究竟证明了什么",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s1",
+          "chapter_title": "先看作者究竟证明了什么",
+          "block_type": "callout"
+        },
+        {
+          "chapter_id": "s6",
+          "chapter_title": "讨论：高精度预测的边界与用途",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "EQ-09",
+      "kind": "equation",
+      "page": 3,
+      "label": "EQ-09",
+      "caption": "identity covering more than 1% of the chain (n = 3,144 protein chains). The",
+      "asset": "assets/equations/EQ-09.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-10",
+      "kind": "equation",
+      "page": 3,
+      "label": "EQ-10",
+      "caption": "overall median is 1.46 Å (95% confidence interval = 1.40–1.56 Å). Note that this",
+      "asset": "assets/equations/EQ-10.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-11",
+      "kind": "equation",
+      "page": 3,
+      "label": "EQ-11",
+      "caption": "2.5 Å (n = 5,317 protein chains); side chains were further filtered to",
+      "asset": "assets/equations/EQ-11.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-12",
+      "kind": "equation",
+      "page": 3,
+      "label": "EQ-12",
+      "caption": "chains. Least-squares linear fit lDDT-Cα = 0.997 × pLDDT − 1.17 (Pearson’s",
+      "asset": "assets/equations/EQ-12.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-13",
+      "kind": "equation",
+      "page": 3,
+      "label": "EQ-13",
+      "caption": "r = 0.76). n = 10,795 protein chains. The shaded region of the linear fit",
+      "asset": "assets/equations/EQ-13.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-14",
+      "kind": "equation",
+      "page": 3,
+      "label": "EQ-14",
+      "caption": "and full chain TM-score. Least-squares linear fit TM-score = 0.98 × pTM + 0.07",
+      "asset": "assets/equations/EQ-14.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-15",
+      "kind": "equation",
+      "page": 3,
+      "label": "EQ-15",
+      "caption": "(Pearson’s r = 0.85). n = 10,795 protein chains. The shaded region of the linear fit",
+      "asset": "assets/equations/EQ-15.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.4",
+      "kind": "page",
+      "page": 4,
+      "label": "p.4",
+      "caption": null,
+      "asset": "source_pages/page-004.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "s2",
+          "chapter_title": "从MSA到三维结构：一个耦合的表示系统",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s2",
+          "chapter_title": "从MSA到三维结构：一个耦合的表示系统",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "s2",
+          "chapter_title": "从MSA到三维结构：一个耦合的表示系统",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "p.5",
+      "kind": "page",
+      "page": 5,
+      "label": "p.5",
+      "caption": null,
+      "asset": "source_pages/page-005.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "s3",
+          "chapter_title": "网络如何被训练，又如何被观察",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s3",
+          "chapter_title": "网络如何被训练，又如何被观察",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "s4",
+          "chapter_title": "消融把架构主张变成可检验的比较",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s4",
+          "chapter_title": "消融把架构主张变成可检验的比较",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s4",
+          "chapter_title": "消融把架构主张变成可检验的比较",
+          "block_type": "takeaway"
+        },
+        {
+          "chapter_id": "s6",
+          "chapter_title": "讨论：高精度预测的边界与用途",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "EQ-16",
+      "kind": "equation",
+      "page": 5,
+      "label": "EQ-16",
+      "caption": "the CASP14 set of domains (n = 87 protein domains) and the PDB test set of",
+      "asset": "assets/equations/EQ-16.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-17",
+      "kind": "equation",
+      "page": 5,
+      "label": "EQ-17",
+      "caption": "chains with template coverage of ≤30% at 30% identity (n = 2,261 protein",
+      "asset": "assets/equations/EQ-17.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.6",
+      "kind": "page",
+      "page": 6,
+      "label": "p.6",
+      "caption": null,
+      "asset": "source_pages/page-006.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "s1",
+          "chapter_title": "先看作者究竟证明了什么",
+          "block_type": "callout"
+        },
+        {
+          "chapter_id": "s5",
+          "chapter_title": "成功依赖什么：MSA深度与跨链接触",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s5",
+          "chapter_title": "成功依赖什么：MSA深度与跨链接触",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "s5",
+          "chapter_title": "成功依赖什么：MSA深度与跨链接触",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s6",
+          "chapter_title": "讨论：高精度预测的边界与用途",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s6",
+          "chapter_title": "讨论：高精度预测的边界与用途",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s6",
+          "chapter_title": "讨论：高精度预测的边界与用途",
+          "block_type": "callout"
+        }
+      ]
+    },
+    {
+      "id": "EQ-18",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-18",
+      "caption": "than 60% of the chain (n = 6,743 protein chains) and covering less than 30% of",
+      "asset": "assets/equations/EQ-18.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-19",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-19",
+      "caption": "the chain (n = 1,596 protein chains). MSA depth is computed by counting the",
+      "asset": "assets/equations/EQ-19.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.7",
+      "kind": "page",
+      "page": 7,
+      "label": "p.7",
+      "caption": null,
+      "asset": "source_pages/page-007.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "EQ-20",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-20",
+      "caption": "resolution macromolecular structure determination. F1000Res. 9, 667 (2020).",
+      "asset": "assets/equations/EQ-20.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-21",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-21",
+      "caption": "biology. Trends Biochem. Sci. 40, 49–57 (2015).",
+      "asset": "assets/equations/EQ-21.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-22",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-22",
+      "caption": "illustrated by a family tree and its Nobel fruits. FEBS J. 281, 3985–4009 (2014).",
+      "asset": "assets/equations/EQ-22.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-23",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-23",
+      "caption": "Wüthrich, K. The way to NMR structures of proteins. Nat. Struct. Biol. 8, 923–925 (2001).",
+      "asset": "assets/equations/EQ-23.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-24",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-24",
+      "caption": "structure data. Nucleic Acids Res. 47, D520–D528 (2018).",
+      "asset": "assets/equations/EQ-24.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-25",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-25",
+      "caption": "48, D570–D578 (2020).",
+      "asset": "assets/equations/EQ-25.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-26",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-26",
+      "caption": "recovery from metagenomic samples manyfold. Nat. Methods 16, 603–606 (2019).",
+      "asset": "assets/equations/EQ-26.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-27",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-27",
+      "caption": "Biophys. 37, 289–316 (2008).",
+      "asset": "assets/equations/EQ-27.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-28",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-28",
+      "caption": "(1973).",
+      "asset": "assets/equations/EQ-28.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-29",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-29",
+      "caption": "learning. Nature 577, 706–710 (2020).",
+      "asset": "assets/equations/EQ-29.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-30",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-30",
+      "caption": "map by ultra-deep learning model. PLOS Comput. Biol. 13, e1005324 (2017).",
+      "asset": "assets/equations/EQ-30.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-31",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-31",
+      "caption": "CASP13. Proteins 87, 1149–1164 (2019).",
+      "asset": "assets/equations/EQ-31.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-32",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-32",
+      "caption": "1100–1112 (2019).",
+      "asset": "assets/equations/EQ-32.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-33",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-33",
+      "caption": "structure prediction and protein design. Curr. Opin. Struct. Biol. 68, 194–207 (2021).",
+      "asset": "assets/equations/EQ-33.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-34",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-34",
+      "caption": "https://www.predictioncenter.org/casp14/doc/CASP14_Abstracts.pdf (2020).",
+      "asset": "assets/equations/EQ-34.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-35",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-35",
+      "caption": "eaaz3041 (2020).",
+      "asset": "assets/equations/EQ-35.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-36",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-36",
+      "caption": "J. Mol. Biol. 213, 859–883 (1990).",
+      "asset": "assets/equations/EQ-36.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-37",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-37",
+      "caption": "restraints. J. Mol. Biol. 234, 779–815 (1993).",
+      "asset": "assets/equations/EQ-37.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-38",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-38",
+      "caption": "structure and function prediction. Nat. Protocols 5, 725–738 (2010).",
+      "asset": "assets/equations/EQ-38.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-39",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-39",
+      "caption": "693–707 (1987).",
+      "asset": "assets/equations/EQ-39.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-40",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-40",
+      "caption": "structures be predicted by analysis of correlated mutations? Protein Eng. 7, 349–358 (1994).",
+      "asset": "assets/equations/EQ-40.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-41",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-41",
+      "caption": "106, 67–72 (2009).",
+      "asset": "assets/equations/EQ-41.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-42",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-42",
+      "caption": "PLoS ONE 6, e28766 (2011).",
+      "asset": "assets/equations/EQ-42.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-43",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-43",
+      "caption": "alignments. Bioinformatics 28, 184–190 (2012).",
+      "asset": "assets/equations/EQ-43.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-44",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-44",
+      "caption": "structure prediction methods. Proteins 23, ii–iv (1995).",
+      "asset": "assets/equations/EQ-44.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-45",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-45",
+      "caption": "methods of protein structure prediction (CASP)-round XIII. Proteins 87, 1011–1020 (2019).",
+      "asset": "assets/equations/EQ-45.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-46",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-46",
+      "caption": "template quality. Proteins 57, 702–710 (2004).",
+      "asset": "assets/equations/EQ-46.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-47",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-47",
+      "caption": "image segmentation. IEEE Trans. Pattern Anal. Mach. Intell. 32, 1744–1757 (2010).",
+      "asset": "assets/equations/EQ-47.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-48",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-48",
+      "caption": "4733–4742 (2016).",
+      "asset": "assets/equations/EQ-48.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-49",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-49",
+      "caption": "sequence alignments. PLoS ONE 14, e0220182 (2019).",
+      "asset": "assets/equations/EQ-49.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-50",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-50",
+      "caption": "International Conference on Computer Vision 603–612 (2019).",
+      "asset": "assets/equations/EQ-50.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-51",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-51",
+      "caption": "improved protein backbone parameters. Proteins 65, 712–725 (2006).",
+      "asset": "assets/equations/EQ-51.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-52",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-52",
+      "caption": "Res. 31, 3370–3374 (2003).",
+      "asset": "assets/equations/EQ-52.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-53",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-53",
+      "caption": "29, 2722–2728 (2013).",
+      "asset": "assets/equations/EQ-53.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-54",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-54",
+      "caption": "Recognition 10687–10698 (2020).",
+      "asset": "assets/equations/EQ-54.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-55",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-55",
+      "caption": "sequences and alignments. Nucleic Acids Res. 45, D170–D176 (2017).",
+      "asset": "assets/equations/EQ-55.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-56",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-56",
+      "caption": "Technologies 1, 4171–4186 (2019).",
+      "asset": "assets/equations/EQ-56.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-57",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-57",
+      "caption": "Learning PMLR 139, 8844–8856 (2021).",
+      "asset": "assets/equations/EQ-57.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-58",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-58",
+      "caption": "proteome. Nature https://doi.org/10.1038/s41586-021-03828-1 (2021).",
+      "asset": "assets/equations/EQ-58.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-59",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-59",
+      "caption": "Mol. Cell Biol. 20, 681–697 (2019).",
+      "asset": "assets/equations/EQ-59.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-60",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-60",
+      "caption": "Nat. Biotechnol. 30, 1072–1080 (2012).",
+      "asset": "assets/equations/EQ-60.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-61",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-61",
+      "caption": "neural network models. J. Mol. Biol. 202, 865–884 (1988).",
+      "asset": "assets/equations/EQ-61.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-62",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-62",
+      "caption": "networks and correlated mutations. Protein Eng. 14, 835–843 (2001).",
+      "asset": "assets/equations/EQ-62.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-63",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-63",
+      "caption": "orientations. Proc. Natl Acad. Sci. USA 117, 1496–1503 (2020).",
+      "asset": "assets/equations/EQ-63.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-64",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-64",
+      "caption": "e1008865 (2021).",
+      "asset": "assets/equations/EQ-64.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-65",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-65",
+      "caption": "Proc. IEEE Conference on Computer Vision and Pattern Recognition 770–778 (2016).",
+      "asset": "assets/equations/EQ-65.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-66",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-66",
+      "caption": "292–301 (2019).",
+      "asset": "assets/equations/EQ-66.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-67",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-67",
+      "caption": "(2019).",
+      "asset": "assets/equations/EQ-67.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-68",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-68",
+      "caption": "(2019).",
+      "asset": "assets/equations/EQ-68.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-69",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-69",
+      "caption": "abs/1908.00723 (2019).",
+      "asset": "assets/equations/EQ-69.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-70",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-70",
+      "caption": "irrespective of co-evolution information. Nat. Mach. Intell. 3, 601–609 (2021).",
+      "asset": "assets/equations/EQ-70.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-71",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-71",
+      "caption": "Systems 5998–6008 (2017).",
+      "asset": "assets/equations/EQ-71.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-72",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-72",
+      "caption": "1315–1322 (2019).",
+      "asset": "assets/equations/EQ-72.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-73",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-73",
+      "caption": "protein sequences. BMC Bioinformatics 20, 723 (2019).",
+      "asset": "assets/equations/EQ-73.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-74",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-74",
+      "caption": "(2021).",
+      "asset": "assets/equations/EQ-74.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-75",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-75",
+      "caption": "org/10.1002/prot.26171 (2021).",
+      "asset": "assets/equations/EQ-75.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-76",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-76",
+      "caption": "443524 (2021).",
+      "asset": "assets/equations/EQ-76.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.8",
+      "kind": "page",
+      "page": 8,
+      "label": "p.8",
+      "caption": null,
+      "asset": "source_pages/page-008.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "s3",
+          "chapter_title": "网络如何被训练，又如何被观察",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "p.9",
+      "kind": "page",
+      "page": 9,
+      "label": "p.9",
+      "caption": null,
+      "asset": "source_pages/page-009.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "EQ-77",
+      "kind": "equation",
+      "page": 9,
+      "label": "EQ-77",
+      "caption": "erage). We perform five iterations of (1) a least-squares alignment of the",
+      "asset": "assets/equations/EQ-77.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-78",
+      "kind": "equation",
+      "page": 9,
+      "label": "EQ-78",
+      "caption": "atoms (using all Cα atoms in the first iteration); (2) selecting the 95%",
+      "asset": "assets/equations/EQ-78.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.10",
+      "kind": "page",
+      "page": 10,
+      "label": "p.10",
+      "caption": null,
+      "asset": "source_pages/page-010.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "EQ-79",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-79",
+      "caption": "(2019).",
+      "asset": "assets/equations/EQ-79.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-80",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-80",
+      "caption": "iterative HMM search procedure. BMC Bioinformatics 11, 431 (2010).",
+      "asset": "assets/equations/EQ-80.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-81",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-81",
+      "caption": "sequence searching by HMM-HMM alignment. Nat. Methods 9, 173–175 (2012).",
+      "asset": "assets/equations/EQ-81.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-82",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-82",
+      "caption": "Acids Res. 49, D480–D489 (2020).",
+      "asset": "assets/equations/EQ-82.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-83",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-83",
+      "caption": "Commun. 9, 2542 (2018).",
+      "asset": "assets/equations/EQ-83.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-84",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-84",
+      "caption": "the analysis of massive data sets. Nat. Biotechnol. 35, 1026–1028 (2017).",
+      "asset": "assets/equations/EQ-84.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-85",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-85",
+      "caption": "sequence alignment of huge protein families. Sci. Rep. 6, 33964 (2016).",
+      "asset": "assets/equations/EQ-85.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-86",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-86",
+      "caption": "annotation. BMC Bioinformatics 20, 473 (2019).",
+      "asset": "assets/equations/EQ-86.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-87",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-87",
+      "caption": "Bioinformatics 31, 926–932 (2015).",
+      "asset": "assets/equations/EQ-87.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-88",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-88",
+      "caption": "68.\t Eddy, S. R. Accelerated profile HMM searches. PLOS Comput. Biol. 7, e1002195 (2011).",
+      "asset": "assets/equations/EQ-88.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-89",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-89",
+      "caption": "molecular dynamics. PLOS Comput. Biol. 13, e1005659 (2017).",
+      "asset": "assets/equations/EQ-89.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-90",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-90",
+      "caption": "systems. Preprint at https://arxiv.org/abs/1603.04467 (2015).",
+      "asset": "assets/equations/EQ-90.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-91",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-91",
+      "caption": "72.\t Harris, C. R. et al. Array programming with NumPy. Nature 585, 357–362 (2020).",
+      "asset": "assets/equations/EQ-91.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-92",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-92",
+      "caption": "(2018).",
+      "asset": "assets/equations/EQ-92.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-93",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-93",
+      "caption": "learning-based inter-residue contact prediction. Bioinformatics 36, 1091–1098 (2020).",
+      "asset": "assets/equations/EQ-93.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-94",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-94",
+      "caption": "biofilm formation. PLoS Pathog. 16, e1008707 (2020).",
+      "asset": "assets/equations/EQ-94.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-95",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-95",
+      "caption": "pdb6YJ1/pdb (2020).",
+      "asset": "assets/equations/EQ-95.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-96",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-96",
+      "caption": "phage. Nature 589, 306–309 (2021).",
+      "asset": "assets/equations/EQ-96.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-97",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-97",
+      "caption": "phospholipase effector by the VgrG spike. EMBO J. 39, e104129 (2020).",
+      "asset": "assets/equations/EQ-97.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-98",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-98",
+      "caption": "architecture. ACS Synth. Biol. 7, 2226–2235 (2018).",
+      "asset": "assets/equations/EQ-98.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-99",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-99",
+      "caption": "telomeric DNA. Science 368, 1081–1085 (2020).",
+      "asset": "assets/equations/EQ-99.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-100",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-100",
+      "caption": "mechanism for polyspecificity. Nat. Struct. Mol. Biol. 27, 829–835 (2020).",
+      "asset": "assets/equations/EQ-100.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-101",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-101",
+      "caption": "protein. Proc. Natl Acad. Sci. USA 118, e2021785118 (2021).",
+      "asset": "assets/equations/EQ-101.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.11",
+      "kind": "page",
+      "page": 11,
+      "label": "p.11",
+      "caption": null,
+      "asset": "source_pages/page-011.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "p.12",
+      "kind": "page",
+      "page": 12,
+      "label": "p.12",
+      "caption": null,
+      "asset": "source_pages/page-012.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    }
+  ]
+}

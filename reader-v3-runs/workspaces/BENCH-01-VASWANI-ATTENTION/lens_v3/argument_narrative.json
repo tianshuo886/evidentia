@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0",
+  "lens": "argument_narrative",
+  "lens_kind": "core",
+  "source_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+  "base_sha256": "1a76e5ae80d0141406b073ef77877f092e742b764bbe44f9e86f041878ab3fd7",
+  "summary": "The draft reconstructs a coherent problem-gap-design-evidence arc: sequential recurrence motivates the substitution, the attention-only architecture is the central move, Tables 1-4 provide computational and empirical tests, and the appendix visualizations extend rather than prove the claim.",
+  "findings": [
+    {
+      "id": "AN-1",
+      "statement": "The central argument is strongest when it distinguishes the computational rationale in Table 1 from the empirical translation result in Table 2.",
+      "evidence": [
+        "T01"
+      ],
+      "epistemic": "SUPPORTED",
+      "action": "EXPAND",
+      "importance": "MAJOR",
+      "reason": "Role-specific review finding grounded in source evidence."
+    },
+    {
+      "id": "AN-2",
+      "statement": "The narrative should retain the caveat that the parsing result is strong but does not beat every listed recurrent baseline; the conclusion currently supports a scoped rather than universal replacement claim.",
+      "evidence": [
+        "T04"
+      ],
+      "epistemic": "VERIFIED",
+      "action": "QUALIFY",
+      "importance": "MAJOR",
+      "reason": "Role-specific review finding grounded in source evidence."
+    },
+    {
+      "id": "AN-3",
+      "statement": "The attention visualizations function as qualitative illustrations after the main performance evidence, not as primary causal proof.",
+      "evidence": [
+        "F03",
+        "F04",
+        "F05"
+      ],
+      "epistemic": "SUPPORTED",
+      "action": "KEEP",
+      "importance": "MINOR",
+      "reason": "Role-specific review finding grounded in source evidence."
+    }
+  ]
+}

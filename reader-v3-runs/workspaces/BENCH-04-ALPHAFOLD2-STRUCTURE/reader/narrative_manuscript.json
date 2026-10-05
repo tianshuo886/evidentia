@@ -1,0 +1,64 @@
+{
+  "schema_version":"3.0",
+  "paper_id":"BENCH-04-ALPHAFOLD2-STRUCTURE",
+  "source_sha256":"6eae057a9faf4f671c3101e0745ed704460c6d3dec77243dfd3a9f2d2ab68970",
+  "created_at":"2026-10-03T20:30:00Z",
+  "narrative_plan_ref":"model/narrative_plan.json",
+  "document":{
+    "title":"Highly accurate protein structure prediction with AlphaFold：一篇论文如何把结构预测变成可检验的系统",
+    "subtitle":"从CASP14精度、表示交换与几何精化，到消融证据和适用边界",
+    "paper_meta":{"authors":["Jumper et al."],"venue":"Nature","year":2021,"pdf_sha256":"6eae057a9faf4f671c3101e0745ed704460c6d3dec77243dfd3a9f2d2ab68970"},
+    "executive_summary":{"lead":"这篇论文的说服力不只来自一个漂亮的精度数字，而来自一条层层收紧的证据链：先证明预测在盲测和近期结构上足够准确，再解释进化信息、残基关系和三维几何如何在网络中循环交换，最后用消融、轨迹和边界分析说明这项成功依赖哪些条件。","takeaways":["CASP14上的中位骨架Cα rmsd95为0.96 Å，明显优于下一名方法，但这是有明确测试集和指标定义的结果。","Evoformer把MSA与pair表示反复耦合，结构模块用局部frame中的几何注意力进行坐标精化。","IPA、recycling、triangle更新等组件的消融支持其贡献；困难目标的中间轨迹显示深度确实被用于持续重排。","MSA较浅、异源接触占主导及非PDB条件是重要边界，高pLDDT也不等于功能机制证明。"],"key_question":"AlphaFold2为什么能在结构预测上达到这一精度，以及这项精度究竟覆盖到哪里？","core_finding":"进化信息、pair几何关系和局部坐标精化的耦合系统，在CASP14和近期PDB评估中取得近实验级表现。","core_boundary":"结果是PDB条件、测试集、MSA深度和接触上下文相关的结构预测能力，而不是对所有复合体状态或功能的无条件保证."},
+    "sections":[
+      {
+        "id":"s1","title":"先看作者究竟证明了什么","purpose":"建立主张和证据尺度。","proposition":"AlphaFold2在CASP14及筛选后的近期PDB链上达到很高结构预测精度，但主张是有条件的。","evidence_refs":["F01","F02","p.2","p.3"],"source_anchors":["p.2","p.3"],"bindings":["F01","F02"],"argument_refs":["claim_and_benchmark","generalization_and_reliability"],
+        "blocks":[
+          {"type":"paragraph","text":"作者先把问题放在一个可量化的盲测场景中：CASP14的目标结构在评估时对参赛方法是未知的。AlphaFold在87个蛋白结构域上的中位骨架Cα rmsd95为0.96 Å（95%置信区间0.85–1.16 Å），下一名方法为2.8 Å；全原子rmsd95为1.5 Å，而最佳替代方法为3.5 Å。这个数字的意义不在于宣称‘所有蛋白都解决了’，而在于它改变了盲测中多数目标的精度量级。","evidence_refs":["p.2"],"source_anchors":["p.2"]},
+          {"type":"figure","evidence_id":"F01","caption":"图1｜AlphaFold的准确结构、代表性CASP14案例与完整模型流程。","analysis":"图中a展示盲测性能，b–d给出结构叠合和侧链/域堆积案例，e从输入序列、MSA和模板一路画到Evoformer、结构模块与recycling。它把‘达到什么’和‘怎样构成’放在同一视觉单元中，正是本文后续解释顺序的起点。","question":"高精度结果是否对应一个可解释的计算路径？","supports":["claim_and_benchmark","network_architecture"],"limits":["代表性叠合不是所有蛋白和所有构象的保证。"],"presentation_role":"narrative_core","asset":"assets/figures/v3_F01_p2_1647x1331.png","page":2,"evidence_refs":["F01","p.2"],"source_anchors":["p.2"]},
+          {"type":"paragraph","text":"作者随后把盲测结果放到近期PDB结构上检验：在去除高同源模板等条件后，3,144条链的整体中位骨架rmsd95为1.46 Å。pLDDT与真实lDDT-Cα近似线性（r=0.76），pTM与全链TM-score也相关（r=0.85）。这些相关性让置信度成为有用的可靠性提示，但它们仍是筛选测试集上的统计关系，不是对单个未知目标的无条件承诺。","evidence_refs":["F02","p.3"],"source_anchors":["p.3"]},
+          {"type":"callout","text":"阅读上限：高pLDDT说明局部结构更可能可靠；它不自动说明配体状态、跨链装配或功能机制正确。","evidence_refs":["F02","p.3","p.6"],"source_anchors":["p.3","p.6"]}
+        ]
+      },
+      {
+        "id":"s2","title":"从MSA到三维结构：一个耦合的表示系统","purpose":"按信息流解释模型如何把进化和几何约束送入坐标预测。","proposition":"模型反复耦合MSA、残基pair关系和局部几何，而不是先输出一个静态距离图再单独拼装结构。","evidence_refs":["F03","F01","p.2","p.4"],"source_anchors":["p.2","p.4"],"bindings":["F03"],"argument_refs":["network_architecture","geometric_structure_module"],
+        "blocks":[
+          {"type":"paragraph","text":"输入由目标序列、同源序列形成的多序列比对（MSA）以及可用模板构成。Evoformer重复48个block，同时维护Nseq×Nres的MSA表征和Nres×Nres的pair表征。MSA的outer-product mean把进化关系写入pair表征，pair bias又回到MSA attention；triangle multiplicative update和triangle self-attention则围绕三角关系传播几何一致性。这里的关键不是组件名称，而是信息在进化证据与残基图之间往返流动。","evidence_refs":["F01","F03","p.2","p.4"],"source_anchors":["p.2","p.4"]},
+          {"type":"figure","evidence_id":"F03","caption":"图3｜Evoformer、pair图、triangle更新与结构模块的架构细节。","analysis":"图3a–c把pair表征画成有向边，并展示出边更新和triangle attention；图3d–f再把这些表示接到IPA、残基frame和FAPE。完整图形支持一个具体判断：几何信息不是末端后处理，而是贯穿表示更新和坐标精化。","question":"模型怎样从关系表示走到坐标？","supports":["network_architecture","geometric_structure_module"],"limits":["架构图显示信息流与设计意图，不等同于对每个学习到的内部因果路径的完全识别。"],"presentation_role":"narrative_core","asset":"assets/figures/v3_F03_p4_1610x1354.png","page":4,"evidence_refs":["F03","p.4"],"source_anchors":["p.4"]},
+          {"type":"paragraph","text":"随后结构模块为每个残基维护旋转和平移frame，并用invariant point attention（IPA）在局部坐标中处理三维点。网络由这些frame迭代更新主链和侧链位置；FAPE在许多局部frame下比较预测与真实原子位置，使局部相对几何成为主要训练信号。作者还明确指出，结构模块并未硬约束肽键几何，立体化学违规主要在后续Amber relaxation中处理。","evidence_refs":["F03","p.4"],"source_anchors":["p.4"]}
+        ]
+      },
+      {
+        "id":"s3","title":"网络如何被训练，又如何被观察","purpose":"解释训练目标、recycling和中间轨迹为何是论证的一部分。","proposition":"训练目标与重复精化共同构成模型工作方式；中间结构使网络深度的作用可以被观察。","evidence_refs":["F04","p.5","p.8"],"source_anchors":["p.5","p.8"],"bindings":["F04"],"argument_refs":["training_and_interpretation","ablation_and_trajectory"],
+        "blocks":[
+          {"type":"paragraph","text":"AlphaFold不是一次前向传播就结束：最终结构会反馈给相同模块，进行三次recycling。训练中以FAPE为主，同时使用中间结构损失、distogram、masked-MSA、侧链和结构违规等辅助目标；self-distillation又把大量无标签序列的高置信预测纳入训练。这样的设计把‘预测一个坐标’改造成‘在表示和几何之间持续精化’。","evidence_refs":["F01","F04","p.2","p.5"],"source_anchors":["p.2","p.5"]},
+          {"type":"figure","evidence_id":"F04","caption":"图4｜组件消融与Evoformer中间结构轨迹。","analysis":"图4a比较去掉不同组件后的性能变化；图4b沿48个block和recycling展示目标结构如何形成。LmPR等较易目标早早稳定，而SARS-CoV-2 ORF8需要近乎全深度的持续重排。图形因此同时承担‘哪些设计有效’和‘深度如何被使用’两种解释任务。","question":"性能提升来自哪些设计，深度又在做什么？","supports":["training_and_interpretation","ablation_and_trajectory"],"limits":["消融支持组件贡献，但不能单独给出网络内部唯一因果解释。"],"presentation_role":"narrative_core","asset":"assets/figures/v3_F04_p5_819x1052.png","page":5,"evidence_refs":["F04","p.5"],"source_anchors":["p.5"]},
+          {"type":"paragraph","text":"主文把完整算法细节、伪代码、输入特征和训练细节指向Supplementary Methods。因而从正文可以准确理解设计逻辑和评价协议，却不应把六页主文误读成独立可执行的完整复现配方。","evidence_refs":["p.8"],"source_anchors":["p.8"]}
+        ]
+      },
+      {
+        "id":"s4","title":"消融把架构主张变成可检验的比较","purpose":"解释组件消融的证据价值及其因果上限。","proposition":"IPA、recycling、triangle更新、辅助头和端到端结构梯度都对表现有贡献，但消融不是完整机制识别。","evidence_refs":["F04","p.5"],"source_anchors":["p.5"],"bindings":["F04"],"argument_refs":["ablation_and_trajectory"],
+        "blocks":[
+          {"type":"paragraph","text":"图4a不是把模型当作一个不可拆的黑箱：在CASP14域和PDB链两种测试集上，去掉self-distillation、raw MSA、distogram head、IPA、recycling、triangle更新/门控或端到端结构梯度都会带来不同程度的下降。这样的比较支持‘多种设计共同贡献’这一结论，也帮助读者把图3中的结构选择与真实性能联系起来。","evidence_refs":["F04","p.5"],"source_anchors":["p.5"]},
+          {"type":"paragraph","text":"但消融的结论应保持在证据允许的高度：它说明在这个训练和评估设置中，删除组件会损害表现，却不证明每个组件对应一个彼此独立、唯一的生物物理机制。不同组件可能存在补偿或交互，图4的轨迹也显示计算需求随目标而变。","evidence_refs":["F04","p.5"],"source_anchors":["p.5"]},
+          {"type":"takeaway","text":"消融提升的是可检验性，不是把学习系统变成完全透明的因果程序。","evidence_refs":["F04","p.5"]}
+        ]
+      },
+      {
+        "id":"s5","title":"成功依赖什么：MSA深度与跨链接触","purpose":"将高精度读成有条件的经验规律。","proposition":"MSA较浅时准确度下降；异源跨链接触主导的bridging domains仍是明显弱点。","evidence_refs":["F05","p.6"],"source_anchors":["p.6"],"bindings":["F05"],"argument_refs":["boundary_conditions"],
+        "blocks":[
+          {"type":"paragraph","text":"作者专门把‘模型在哪里变差’作为一段结果，而不是把它藏在限制清单里。图5a显示，当MSA深度低于大约30条序列时，骨架准确度明显下降；超过约100条后，继续增加的收益变小。论文的解释是：早期结构假设需要足够的进化信息，而后续高精度精化不再同样依赖MSA深度。","evidence_refs":["F05","p.6"],"source_anchors":["p.6"]},
+          {"type":"figure","evidence_id":"F05","caption":"图5｜MSA深度与跨链接触对预测的影响。","analysis":"图5a把不同覆盖条件下的lDDT-Cα与有效MSA深度联系起来；图5b展示一个交织同源二聚体在只有弱模板且没有化学计量输入时仍可被预测。二者合在一起说明：MSA深度是一个阈值条件，而接触上下文决定哪些结构关系难以从单链输入恢复。","question":"这项能力依赖哪些输入和物理上下文？","supports":["boundary_conditions"],"limits":["该图不穷尽所有失败模式，也不代表完整异源复合体都能从单链条件恢复。"],"presentation_role":"narrative_core","asset":"assets/figures/v3_F05_p6_1619x642.png","page":6,"evidence_refs":["F05","p.6"],"source_anchors":["p.6"]},
+          {"type":"paragraph","text":"因此，‘AlphaFold很准’需要补上条件：对于主要由异源跨链接触塑造形状的bridging domains，模型明显较弱；对于一个结构在PDB中呈现的特定条件，模型输出更接近‘最可能出现的结构’，而不是所有配体、离子和构象状态的完整集合。","evidence_refs":["F05","p.6"],"source_anchors":["p.6"]}
+        ]
+      },
+      {
+        "id":"s6","title":"讨论：高精度预测的边界与用途","purpose":"收束准确度、置信度和功能解释之间的差别。","proposition":"AlphaFold2给出强大的PDB条件结构预测，但不自动解决完整复合体、构象状态或功能机制。","evidence_refs":["F05","F02","p.6"],"source_anchors":["p.6"],"bindings":["F05"],"argument_refs":["scope_and_discussion","boundary_conditions"],
+        "blocks":[
+          {"type":"paragraph","text":"全文的论证闭环由这个边界完成。作者把方法描述成生物信息学与物理/几何归纳偏置的结合：它从PDB数据中学习，同时尽量让网络处理结构约束。在实验应用上，这使分子置换、冷冻电镜图解释和大规模结构预测成为可能；但这些用途仍建立在输入信息和PDB条件可代表目标状态的前提上。","evidence_refs":["p.6"],"source_anchors":["p.6"]},
+          {"type":"paragraph","text":"读者因此应区分三层结论。第一层是有强统计支持的结构精度：CASP14和近期PDB链上的数字很有说服力。第二层是有干预和轨迹支持的计算解释：架构组件确实影响结果，但内部机制仍非完全可识别。第三层是尚未被这些实验解决的生物学问题：配体、离子、构象变化、完整复合体和功能机制不能由高置信度结构自动推出。","evidence_refs":["F01","F02","F04","F05","p.2","p.3","p.5","p.6"],"source_anchors":["p.2","p.3","p.5","p.6"]},
+          {"type":"callout","text":"本文真正建立的是：在合适的序列信息与PDB式结构条件下，端到端模型可以把蛋白质结构预测推进到近实验级；它没有宣称从序列直接读出所有生物学状态。","evidence_refs":["F01","F05","p.2","p.6"],"source_anchors":["p.2","p.6"]}
+        ]
+      }
+    ]
+  }
+}

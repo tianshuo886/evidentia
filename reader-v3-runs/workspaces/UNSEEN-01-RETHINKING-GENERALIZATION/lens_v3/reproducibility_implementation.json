@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "lens": "reproducibility_implementation",
+  "lens_kind": "specialist",
+  "source_sha256": "a71f1294a021cebc6939ec977fc073b6d7b4f183950eba761ec55364d30b729f",
+  "base_sha256": "55607fb18f8b13e0e8b2bb7953642a6a3211b4964e4badfbbe0a2b1808d3ac88",
+  "summary": "复现性与工程细节：详尽披露了CIFAR-10与ImageNet上的模型微观超参配置（动量SGD、学习率退火日程、权重衰减系数、小Inception分支连接），具备高度确定性的可复现闭环。",
+  "findings": [
+    {
+      "id": "RI1",
+      "statement": "附录 C、D 与 Figure 3 完整公开了简化版 Inception 的 1x1 与 3x3 卷积结构及训练超参，使得完全随机标签基准实验具备跨框架复现性。",
+      "evidence": [
+        "F03",
+        "p.12",
+        "p.13"
+      ],
+      "epistemic": "SUPPORTED",
+      "action": "KEEP",
+      "importance": "MINOR",
+      "reason": "工程透明度与基准审计可用性。",
+      "cross_cutting_checks": {
+        "anomaly": null,
+        "counterfactual": null
+      }
+    }
+  ]
+}

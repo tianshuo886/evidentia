@@ -1,0 +1,20 @@
+{
+  "run_class": "PRE_ANTITEMPLATE_SMOKE",
+  "status": "DIAGNOSTIC_COMPLETE_WITH_EXECUTION_LIMITATIONS",
+  "continuation_code_sha": "22dcbcb5c9d935f7518a61c9457aa68a25801ae5",
+  "repo": "/Users/shentianshuo/.agents/skills/evidentia",
+  "branch": "reader-reset-v3",
+  "failed_workflows": ["ca5a37f4-af31-4697-8267-e7d6288f5328", "5bdb57d1-0081-4ea9-8f86-a7b0cca0074c"],
+  "observed_worker_errors": ["Connection error.", "Request timed out."],
+  "file_only_report_failure_was_secondary": true,
+  "worker_artifacts_produced": false,
+  "bounded_same_protocol_probe": {
+    "task_id": "TASK-V3-VISUAL-P003",
+    "requested_model": "openai-codex/gpt-6-sol",
+    "launched": false,
+    "error": "Model 'openai-codex/gpt-6-sol' is outside the configured subagent model scope (modelScope). Allowed patterns: stepfun/*, stepfun2/*, antigravity/*, chatgptpay/*, commandcode/*."
+  },
+  "provenance_correction": "Historical Lead Reader and Direct-AI artifacts are unavailable, not preserved. BENCH-01 was reconstructed locally from a full arXiv PDF. Historical PDF byte identity is unproven.",
+  "next_input_needed": "For release evidence only: configure an allowed worker provider/model and rerun the six Lens passes in independently context-isolated executions, then complete human visual QA. No silent execution-mode fallback.",
+  "release_evidence": false
+}

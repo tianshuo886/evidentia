@@ -58,12 +58,12 @@
   "executor_template": {
     "host": "generic-host",
     "host_version": "UNKNOWN",
-    "provider": "openai-codex",
-    "model": "gpt-6.1-sol",
+    "provider": "magpie",
+    "model": "antigravity/gemini-3.8-flash",
     "model_version": "UNKNOWN",
     "reasoning_profile": "standard",
     "tool_profile": "paper-only",
-    "started_at": "2026-10-04T01:46:49.615717+00:00",
-    "completed_at": "2026-10-04T01:46:49.615717+00:00"
+    "started_at": "2026-10-05T14:04:18.402815+00:00",
+    "completed_at": "2026-10-05T14:04:18.402815+00:00"
   }
 }

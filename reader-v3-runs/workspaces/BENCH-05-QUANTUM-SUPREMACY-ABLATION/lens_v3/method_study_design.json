@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0",
+  "lens": "method_study_design",
+  "lens_kind": "core",
+  "source_sha256": "6f3030abb7d9d4f0624a5cbe5ca2ff673df63afc85c97fadd0bf7db780c8dbaf",
+  "base_sha256": "0330cd973b54a50e9fadfb5f71bcee4864182624ddc6444663496531f1dca124",
+  "findings": [
+    {
+      "id": "MS-1",
+      "statement": "作者按理解本篇所需顺序依次：定义 RCS+F_XEB(EQ-01)；在 Sycamore 上建高保真门；以 XEB 分项测 e1、e2、e2c、e_r(Fig.2, 孤立 vs 同时)；建乘法保真度模型；构造 patch/elided/verification 简化(Fig.4a 验证)；以 elided 读最难 tiling(EQ-07)；Schrödinger/Schrödinger–Feynman 外推经典代价；检验数字化误差模型。",
+      "evidence": [
+        "EQ-01",
+        "F02",
+        "EQ-07",
+        "p.2",
+        "p.3",
+        "p.4",
+        "p.5"
+      ],
+      "epistemic": "VERIFIED",
+      "action": "KEEP",
+      "importance": "CRITICAL",
+      "reason": "这是读懂本篇所必需的最小方法序列。"
+    },
+    {
+      "id": "MS-2",
+      "statement": "关键受控变量有三：孤立 vs 同时操作以隔离串扰(Fig.2)；patch/elided/full 三版对照以约束估计偏差(Fig.4a)；门序列 tiling(ABCDCDAB 不可简化 vs EFGHEFGH 可简化)是调节经典硬度的设计旋钮。",
+      "evidence": [
+        "F02",
+        "p.3",
+        "p.4"
+      ],
+      "epistemic": "VERIFIED",
+      "action": "KEEP",
+      "importance": "MAJOR"
+    },
+    {
+      "id": "MS-3",
+      "statement": "若干必要设计选择：单比特基准把 XEB 降到 n=1 以获得逐项误差；双比特误差 e2 由扣掉两个单比特误差得到；最难线路刻意不重排门以最大化硬度。",
+      "evidence": [
+        "p.3",
+        "p.4"
+      ],
+      "epistemic": "VERIFIED",
+      "action": "KEEP",
+      "importance": "MAJOR"
+    },
+    {
+      "id": "MS-4",
+      "statement": "承载性假设：乘法模型的'规模放大不引入新误差源'，以及经典代价估计中按 F_XEB 缩放验证成本的规则；二者分别决定硬件侧与经典侧结论的可信度边界。",
+      "evidence": [
+        "p.3",
+        "p.4"
+      ],
+      "epistemic": "MODEL_UNCERTAIN",
+      "action": "QUALIFY",
+      "importance": "CRITICAL",
+      "reason": "它们是两侧结论的共同前提，写作时应显式标注为假设。"
+    }
+  ],
+  "summary": "方法链条清晰且必要：以 RCS 与 F_XEB(EQ-01) 定义任务与标尺；用 XEB 在单比特(n=1)与双比特周期级分别测 e1、e2、e2c 与 e_r；用'各门无误差概率之积'建乘法模型；设计 patch/elided/verification 三类简化以推进到不可模拟域。每一步都服务于对前一环的验证或替换。"
+}

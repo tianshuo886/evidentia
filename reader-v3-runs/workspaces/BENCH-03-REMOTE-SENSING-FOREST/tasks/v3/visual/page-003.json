@@ -15,14 +15,14 @@
         "paper_label": "Fig. 1",
         "caption_original": "Fig. 1 Model overview and global model evaluation on held-out GEDI",
         "candidate_bbox_pdf": [
-          124.85399627685547,
-          395.3070068359375,
-          289.4219970703125,
-          522.6110229492188
+          132.33399963378906,
+          397.5790100097656,
+          257.41412353515625,
+          520.3380126953125
         ],
-        "candidate_asset": "assets/figures/crop_F01_p3_458x354.png",
+        "candidate_asset": "assets/figures/crop_F01_p3_349x342.png",
         "candidate_method": "MULTIMODAL_PAGE_LOCALIZATION",
-        "candidate_confidence": 0.89
+        "candidate_confidence": 0.81
       }
     ]
   },
@@ -58,12 +58,12 @@
   "executor_template": {
     "host": "generic-host",
     "host_version": "UNKNOWN",
-    "provider": "openai-codex",
-    "model": "gpt-6.1-sol",
+    "provider": "magpie",
+    "model": "antigravity/gemini-3.8-flash",
     "model_version": "UNKNOWN",
     "reasoning_profile": "standard",
     "tool_profile": "paper-only",
-    "started_at": "2026-10-04T01:46:49.595484+00:00",
-    "completed_at": "2026-10-04T01:46:49.595484+00:00"
+    "started_at": "2026-10-05T14:04:18.383823+00:00",
+    "completed_at": "2026-10-05T14:04:18.383823+00:00"
   }
 }

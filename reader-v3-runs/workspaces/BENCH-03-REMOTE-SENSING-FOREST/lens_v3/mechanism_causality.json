@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "lens": "mechanism_causality",
+  "lens_kind": "specialist",
+  "source_sha256": "b4d103e6ab0664d96c31a00a0ee4d99e9fbc54a9f1a8eeea500716843d4eabce",
+  "base_sha256": "a9940ed7b26fa355fcd47a2bdde791798ac177b95ab9b521b68abb7345b1c46d",
+  "summary": "机制解析：CNN并非测量树高，而是捕捉树冠阴影、纹理粗糙度、多光谱冠层含水量吸收与空间自相关的复合先验；方差倒数加权动态惩罚了受云雾或物候异常干扰的时相。",
+  "findings": [
+    {
+      "id": "MC1",
+      "statement": "多时相方差倒数加权在机制上等价于一种自适应软注意力，能够自发抑制云阴影与冬季落叶时相的预测权重。",
+      "evidence": [
+        "p.2",
+        "p.3",
+        "p.5"
+      ],
+      "epistemic": "SUPPORTED",
+      "action": "KEEP",
+      "importance": "MAJOR",
+      "reason": "时相融合核心物理机制。",
+      "cross_cutting_checks": {
+        "anomaly": null,
+        "counterfactual": null
+      }
+    }
+  ]
+}

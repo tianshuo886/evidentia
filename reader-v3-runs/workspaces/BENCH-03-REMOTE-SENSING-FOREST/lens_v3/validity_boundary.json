@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "lens": "validity_boundary",
+  "lens_kind": "core",
+  "source_sha256": "b4d103e6ab0664d96c31a00a0ee4d99e9fbc54a9f1a8eeea500716843d4eabce",
+  "base_sha256": "a9940ed7b26fa355fcd47a2bdde791798ac177b95ab9b521b68abb7345b1c46d",
+  "summary": "边界严密：10m产品像元网格不等于独立10m物理真值；光学多光谱无法穿透浓密冠层，存在物理不可辨识性；云雪覆盖、高纬度与低矮植被存在明确的误差升高。",
+  "findings": [
+    {
+      "id": "VB1",
+      "statement": "产品所标称的10m指空间采样间距（GSD），其实际推断严重依赖空间邻域纹理与GEDI统计分布，不能视作独立激光雷达测量。",
+      "evidence": [
+        "p.2",
+        "p.6",
+        "p.7"
+      ],
+      "epistemic": "SUPPORTED",
+      "action": "KEEP",
+      "importance": "CRITICAL",
+      "reason": "防止下游生态学者误用。",
+      "cross_cutting_checks": {
+        "anomaly": null,
+        "counterfactual": null
+      }
+    }
+  ]
+}

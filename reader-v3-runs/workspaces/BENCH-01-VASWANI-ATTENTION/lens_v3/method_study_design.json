@@ -1,0 +1,46 @@
+{
+  "schema_version": "1.0",
+  "lens": "method_study_design",
+  "lens_kind": "core",
+  "source_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+  "base_sha256": "1a76e5ae80d0141406b073ef77877f092e742b764bbe44f9e86f041878ab3fd7",
+  "summary": "The method is specified unusually concretely for an architecture paper: six-layer stacks, d_model=512 base settings, eight heads with d_k=d_v=64, masked decoder attention, sinusoidal position encodings, Adam schedule, dropout and label smoothing. The study combines translation, ablation, and parsing.",
+  "findings": [
+    {
+      "id": "MS-1",
+      "statement": "Figure 1 and the method text jointly establish the encoder/decoder asymmetry: decoder cross-attention and future-token masking are essential details, not optional decorations.",
+      "evidence": [
+        "F01",
+        "p.3"
+      ],
+      "epistemic": "SUPPORTED",
+      "action": "EXPAND",
+      "importance": "CRITICAL",
+      "reason": "Role-specific review finding grounded in source evidence."
+    },
+    {
+      "id": "MS-2",
+      "statement": "The ablation design varies heads, key/value dimensions, model size, dropout, and positional embeddings, but it is not a full factorial or matched-budget causal decomposition.",
+      "evidence": [
+        "T03",
+        "p.9"
+      ],
+      "epistemic": "VERIFIED",
+      "action": "QUALIFY",
+      "importance": "MAJOR",
+      "reason": "Role-specific review finding grounded in source evidence."
+    },
+    {
+      "id": "MS-3",
+      "statement": "The training protocol includes WMT datasets, batching, eight P100 GPUs, Adam, warmup, checkpoint averaging and beam decoding; these details constrain reproducibility and comparison.",
+      "evidence": [
+        "p.7",
+        "p.8"
+      ],
+      "epistemic": "VERIFIED",
+      "action": "KEEP",
+      "importance": "MAJOR",
+      "reason": "Role-specific review finding grounded in source evidence."
+    }
+  ]
+}

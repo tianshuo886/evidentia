@@ -14,7 +14,7 @@
       "source_pages": 28,
       "visual_tasks": 18,
       "equations": 79,
-      "lead_reader_task": null,
+      "lead_reader_task": "tasks/v3/lead_reading.json",
       "direct_task": "tasks/v3/benchmark/BENCH-03-REMOTE-SENSING-FOREST/direct_ai.json"
     }
   ]

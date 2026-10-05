@@ -1,0 +1,58 @@
+{
+  "task_id": "TASK-V3-LEAD-READING",
+  "task_type": "LEAD_READING",
+  "required_capability": "DEEP_SCIENTIFIC_READING",
+  "scientific_contract": "Read the complete paper as a strong scientific reader before specialist critique. Produce a coherent Paper Understanding Draft, not a schema-shaped summary.",
+  "description": "Reader v3 Lead Reader full-paper understanding pass.",
+  "input_artifacts": {
+    "source_pdf": "source/paper.pdf",
+    "source_map": "model/source_map.json",
+    "figure_inventory": "model/figure_inventory.json",
+    "visual_verification_dir": "visual/"
+  },
+  "target_output": "model/paper_understanding_draft.json",
+  "output_schema": "paper_understanding_draft",
+  "source_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+  "base_sha256": null,
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "allowed_inputs": [
+    "source/",
+    "source_pages/",
+    "assets/",
+    "model/source_map.json",
+    "model/figure_inventory.json",
+    "visual/"
+  ],
+  "forbidden_inputs": [
+    "lens/",
+    "lens_v3/",
+    "apply/",
+    "project/",
+    "memory/project/"
+  ],
+  "prohibited_context": [
+    "PROJECT_APPLY",
+    "RESEARCH_MEMORY",
+    "prior Lens conclusions"
+  ],
+  "constraints": [
+    "STRONG_MODEL_FIRST",
+    "COMPLETE_PAPER_STORY",
+    "SOURCE_GROUNDED",
+    "NO_PROJECT_TRANSFER",
+    "EXPLICIT_UNCERTAINTY"
+  ],
+  "instructions": "Read the paper as a whole. Your primary job is comprehension, not auditing. Explain in natural scientific prose: why the paper exists; the prior limitation/gap; the central design move; how the method/study actually works; which experiments are decisive; what the results directly establish; what remains uncertain; and the scope of the conclusion. Use figures/tables/equations when they are necessary to understand the argument. Do not expose internal Evidentia terminology. Do not discuss the user's project. Classify paper_type using a concise scientific category such as method, experimental, theory, clinical, observational, review, measurement, machine_learning, or remote_sensing.",
+  "executor_template": {
+    "host": "generic-host",
+    "host_version": "UNKNOWN",
+    "provider": "openai-codex",
+    "model": "gpt-6-sol",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "standard",
+    "tool_profile": "paper-only",
+    "started_at": "2026-10-03T17:23:08.397715+00:00",
+    "completed_at": "2026-10-03T17:23:08.397715+00:00"
+  }
+}

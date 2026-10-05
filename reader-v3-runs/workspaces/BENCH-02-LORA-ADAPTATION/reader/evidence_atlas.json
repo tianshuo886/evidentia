@@ -1,0 +1,2598 @@
+{
+  "schema_version": "3.0",
+  "paper_id": "BENCH-02-LORA-ADAPTATION",
+  "source_sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+  "items": [
+    {
+      "id": "F01",
+      "kind": "figure",
+      "page": 1,
+      "label": "Figure 1",
+      "caption": "Figure 1 Our reparametriza-",
+      "asset": "assets/figures/crop_F01_p1_151x153.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.8,
+      "used_in": [
+        {
+          "chapter_id": "s2",
+          "chapter_title": "从任务增量到低秩重参数化",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s2",
+          "chapter_title": "从任务增量到低秩重参数化",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "s2",
+          "chapter_title": "从任务增量到低秩重参数化",
+          "block_type": "figure"
+        }
+      ]
+    },
+    {
+      "id": "T01",
+      "kind": "table",
+      "page": 4,
+      "label": "Table 1",
+      "caption": "Table 1 Infernece latency of a single forward pass in GPT-2 medium measured in milliseconds, av-",
+      "asset": "assets/figures/crop_T01_p4_801x849.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.88,
+      "used_in": [
+        {
+          "chapter_id": "s1",
+          "chapter_title": "为什么“适配”首先是部署问题",
+          "block_type": "table"
+        },
+        {
+          "chapter_id": "s1",
+          "chapter_title": "为什么“适配”首先是部署问题",
+          "block_type": "table"
+        }
+      ]
+    },
+    {
+      "id": "T02",
+      "kind": "table",
+      "page": 6,
+      "label": "Table 2",
+      "caption": "Table 2 RoBERTabase, RoBERTalarge, and DeBERTaXXL with different adaptation methods on the",
+      "asset": "assets/figures/crop_T02_p6_846x796.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.88,
+      "used_in": [
+        {
+          "chapter_id": "s4",
+          "chapter_title": "跨模型实证：少量参数能否保住任务质量",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "T03",
+      "kind": "table",
+      "page": 7,
+      "label": "Table 3",
+      "caption": "Table 3 GPT-2 medium (M) and large (L) with different adaptation methods on the E2E NLG",
+      "asset": "assets/figures/crop_T03_p7_844x799.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.88,
+      "used_in": [
+        {
+          "chapter_id": "s4",
+          "chapter_title": "跨模型实证：少量参数能否保住任务质量",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "T04",
+      "kind": "table",
+      "page": 8,
+      "label": "Table 4",
+      "caption": "Table 4 Performance of different adaptation methods on GPT-3 175B. We report the logical form",
+      "asset": "assets/figures/crop_T04_p8_1068x338.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.8,
+      "used_in": [
+        {
+          "chapter_id": "s4",
+          "chapter_title": "跨模型实证：少量参数能否保住任务质量",
+          "block_type": "table"
+        },
+        {
+          "chapter_id": "s4",
+          "chapter_title": "跨模型实证：少量参数能否保住任务质量",
+          "block_type": "table"
+        }
+      ]
+    },
+    {
+      "id": "F02",
+      "kind": "figure",
+      "page": 8,
+      "label": "Figure 2",
+      "caption": "Figure 2 GPT-3 175B validation accuracy vs. number of trainable parameters of several adaptation",
+      "asset": "assets/figures/crop_F02_p8_1068x338.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.99,
+      "used_in": [
+        {
+          "chapter_id": "s4",
+          "chapter_title": "跨模型实证：少量参数能否保住任务质量",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "s4",
+          "chapter_title": "跨模型实证：少量参数能否保住任务质量",
+          "block_type": "figure"
+        }
+      ]
+    },
+    {
+      "id": "T05",
+      "kind": "table",
+      "page": 10,
+      "label": "Table 5",
+      "caption": "Table 5 Validation accuracy on WikiSQL and MultiNLI after applying LoRA to different types of",
+      "asset": "assets/figures/crop_T05_p10_852x899.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.88,
+      "used_in": [
+        {
+          "chapter_id": "s5",
+          "chapter_title": "rank 与矩阵位置：效率来自哪里",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "T06",
+      "kind": "table",
+      "page": 10,
+      "label": "Table 6",
+      "caption": "Table 6 Validation accuracy on WikiSQL and MultiNLI with different rank r. To our surprise, a",
+      "asset": "assets/figures/crop_T06_p10_828x370.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.88,
+      "used_in": [
+        {
+          "chapter_id": "s5",
+          "chapter_title": "rank 与矩阵位置：效率来自哪里",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "F03",
+      "kind": "figure",
+      "page": 11,
+      "label": "Figure 3",
+      "caption": "Figure 3 Subspace similarity between column vectors of Ar=8 and Ar=64 for both ∆Wq and ∆Wv.",
+      "asset": "assets/figures/crop_F03_p11_1068x338.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.99,
+      "used_in": []
+    },
+    {
+      "id": "F04",
+      "kind": "figure",
+      "page": 12,
+      "label": "Figure 4",
+      "caption": "Figure 4 Left and Middle: Normalized subspace similarity between the column vectors of Ar=64",
+      "asset": "assets/figures/crop_F04_p12_1012x356.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.99,
+      "used_in": []
+    },
+    {
+      "id": "T07",
+      "kind": "table",
+      "page": 12,
+      "label": "Table 7",
+      "caption": "Table 7 The Frobenius norm of U ⊤WqV ⊤where U and V are the left/right top r singular vector",
+      "asset": "assets/figures/crop_T07_p12_1012x356.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.76,
+      "used_in": [
+        {
+          "chapter_id": "s6",
+          "chapter_title": "子空间证据提供的机制线索",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s7",
+          "chapter_title": "结论的有效范围与尚未回答的问题",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "T08",
+      "kind": "table",
+      "page": 17,
+      "label": "Table 8",
+      "caption": "Table 8 Fine-tuning signiﬁcantly outperforms few-shot learning on GPT-3 (Brown et al., 2020).",
+      "asset": "assets/figures/crop_T08_p17_990x546.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.75,
+      "used_in": [
+        {
+          "chapter_id": "s5",
+          "chapter_title": "rank 与矩阵位置：效率来自哪里",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s5",
+          "chapter_title": "rank 与矩阵位置：效率来自哪里",
+          "block_type": "table"
+        },
+        {
+          "chapter_id": "s5",
+          "chapter_title": "rank 与矩阵位置：效率来自哪里",
+          "block_type": "table"
+        }
+      ]
+    },
+    {
+      "id": "F05",
+      "kind": "figure",
+      "page": 17,
+      "label": "Figure 5",
+      "caption": "Figure 5 Percentage slow-down of inference latency compared to the no-adapter (r = 0) baseline.",
+      "asset": "assets/figures/crop_F05_p17_990x546.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.99,
+      "used_in": [
+        {
+          "chapter_id": "s6",
+          "chapter_title": "子空间证据提供的机制线索",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "T09",
+      "kind": "table",
+      "page": 19,
+      "label": "Table 9",
+      "caption": "Table 9 The hyperparameters we used for RoBERTa on the GLUE benchmark.",
+      "asset": "assets/figures/crop_T09_p19_932x506.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.88,
+      "used_in": []
+    },
+    {
+      "id": "T10",
+      "kind": "table",
+      "page": 20,
+      "label": "Table 10",
+      "caption": "Table 10 The hyperparameters for DeBERTa XXL on tasks included in the GLUE benchmark.",
+      "asset": "assets/figures/crop_T10_p20_834x884.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.88,
+      "used_in": []
+    },
+    {
+      "id": "T11",
+      "kind": "table",
+      "page": 20,
+      "label": "Table 11",
+      "caption": "Table 11 The hyperparameters for GPT-2 LoRA on E2E, WebNLG and DART.",
+      "asset": "assets/figures/crop_T11_p20_892x725.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.88,
+      "used_in": []
+    },
+    {
+      "id": "T12",
+      "kind": "table",
+      "page": 21,
+      "label": "Table 12",
+      "caption": "Table 12 The training hyperparameters used for different GPT-3 adaption methods. We use the",
+      "asset": "assets/figures/crop_T12_p21_829x827.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.88,
+      "used_in": []
+    },
+    {
+      "id": "T13",
+      "kind": "table",
+      "page": 21,
+      "label": "Table 13",
+      "caption": "Table 13 GPT-2 with different adaptation methods on DART. The variances of MET and TER are",
+      "asset": null,
+      "verification_status": "NEEDS_REVIEW",
+      "confidence": 0.4,
+      "used_in": []
+    },
+    {
+      "id": "T14",
+      "kind": "table",
+      "page": 22,
+      "label": "Table 14",
+      "caption": "Table 14 GPT-2 with different adaptation methods on WebNLG. The variances of MET and TER",
+      "asset": "assets/figures/crop_T14_p22_848x853.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.88,
+      "used_in": []
+    },
+    {
+      "id": "T15",
+      "kind": "table",
+      "page": 23,
+      "label": "Table 15",
+      "caption": "Table 15 Hyperparameter analysis of different adaptation approaches on WikiSQL and MNLI. Both",
+      "asset": "assets/figures/crop_T15_p23_878x656.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.88,
+      "used_in": []
+    },
+    {
+      "id": "T16",
+      "kind": "table",
+      "page": 23,
+      "label": "Table 16",
+      "caption": "Table 16 Validation accuracy of different methods on subsets of MNLI using GPT-3 175B. MNLI-",
+      "asset": "assets/figures/crop_T16_p23_749x301.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.88,
+      "used_in": []
+    },
+    {
+      "id": "T17",
+      "kind": "table",
+      "page": 24,
+      "label": "Table 17",
+      "caption": "Table 17 The hyperparameters used for different GPT-3 adaptation methods on MNLI(m)-n.",
+      "asset": "assets/figures/crop_T17_p24_868x862.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.88,
+      "used_in": []
+    },
+    {
+      "id": "F06",
+      "kind": "figure",
+      "page": 25,
+      "label": "Figure 6",
+      "caption": "Figure 6 Normalized subspace similarity between the column vectors of Ar=8 and Ar=64 for both",
+      "asset": "assets/figures/crop_F06_p25_1090x1005.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.99,
+      "used_in": [
+        {
+          "chapter_id": "s6",
+          "chapter_title": "子空间证据提供的机制线索",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "F07",
+      "kind": "figure",
+      "page": 26,
+      "label": "Figure 7",
+      "caption": "Figure 7 Normalized subspace similarity between the column vectors of Ar=64 from two randomly",
+      "asset": "assets/figures/crop_F07_p26_1090x489.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.99,
+      "used_in": [
+        {
+          "chapter_id": "s6",
+          "chapter_title": "子空间证据提供的机制线索",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s6",
+          "chapter_title": "子空间证据提供的机制线索",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "s6",
+          "chapter_title": "子空间证据提供的机制线索",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "s7",
+          "chapter_title": "结论的有效范围与尚未回答的问题",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "T18",
+      "kind": "table",
+      "page": 26,
+      "label": "Table 18",
+      "caption": "Table 18 Validation loss and test set metrics on E2E NLG Challenge achieved by LoRA with",
+      "asset": "assets/figures/crop_T18_p26_1090x489.png",
+      "verification_status": "VERIFIED",
+      "confidence": 0.77,
+      "used_in": [
+        {
+          "chapter_id": "s5",
+          "chapter_title": "rank 与矩阵位置：效率来自哪里",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s5",
+          "chapter_title": "rank 与矩阵位置：效率来自哪里",
+          "block_type": "table"
+        },
+        {
+          "chapter_id": "s5",
+          "chapter_title": "rank 与矩阵位置：效率来自哪里",
+          "block_type": "table"
+        }
+      ]
+    },
+    {
+      "id": "F08",
+      "kind": "figure",
+      "page": 26,
+      "label": "Figure 8",
+      "caption": "Figure 8 Normalized subspace similarity between the singular directions of Wq and those of ∆Wq",
+      "asset": null,
+      "verification_status": "NEEDS_REVIEW",
+      "confidence": 0.4,
+      "used_in": [
+        {
+          "chapter_id": "s6",
+          "chapter_title": "子空间证据提供的机制线索",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s6",
+          "chapter_title": "子空间证据提供的机制线索",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "s6",
+          "chapter_title": "子空间证据提供的机制线索",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "s7",
+          "chapter_title": "结论的有效范围与尚未回答的问题",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "p.1",
+      "kind": "page",
+      "page": 1,
+      "label": "p.1",
+      "caption": null,
+      "asset": "source_pages/page-001.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "s1",
+          "chapter_title": "为什么“适配”首先是部署问题",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "EQ-01",
+      "kind": "equation",
+      "page": 1,
+      "label": "EQ-01",
+      "caption": "𝐴= 𝒩(0, 𝜎2)",
+      "asset": "assets/equations/EQ-01.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.2",
+      "kind": "page",
+      "page": 2,
+      "label": "p.2",
+      "caption": null,
+      "asset": "source_pages/page-002.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "s1",
+          "chapter_title": "为什么“适配”首先是部署问题",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s2",
+          "chapter_title": "从任务增量到低秩重参数化",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "EQ-02",
+      "kind": "equation",
+      "page": 2,
+      "label": "EQ-02",
+      "caption": "We take inspiration from Li et al. (2018a); Aghajanyan et al. (2020) which show that the learned",
+      "asset": "assets/equations/EQ-02.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-03",
+      "kind": "equation",
+      "page": 2,
+      "label": "EQ-03",
+      "caption": "optimization and use a Transformer MLP feedforward dimension dffn = 4 × dmodel.",
+      "asset": "assets/equations/EQ-03.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-04",
+      "kind": "equation",
+      "page": 2,
+      "label": "EQ-04",
+      "caption": "represented by a training dataset of context-target pairs: Z = {(xi, yi)}i=1,..,N, where both xi and",
+      "asset": "assets/equations/EQ-04.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.3",
+      "kind": "page",
+      "page": 3,
+      "label": "p.3",
+      "caption": null,
+      "asset": "source_pages/page-003.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "s1",
+          "chapter_title": "为什么“适配”首先是部署问题",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s1",
+          "chapter_title": "为什么“适配”首先是部署问题",
+          "block_type": "table"
+        }
+      ]
+    },
+    {
+      "id": "EQ-05",
+      "kind": "equation",
+      "page": 3,
+      "label": "EQ-05",
+      "caption": "increment ∆Φ = ∆Φ(Θ) is further encoded by a much smaller-sized set of parameters Θ with",
+      "asset": "assets/equations/EQ-05.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-06",
+      "kind": "equation",
+      "page": 3,
+      "label": "EQ-06",
+      "caption": "on the original design by Houlsby et al. (2019) which has two adapter layers per Transformer block",
+      "asset": "assets/equations/EQ-06.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-07",
+      "kind": "equation",
+      "page": 3,
+      "label": "EQ-07",
+      "caption": "and a more recent one by Lin et al. (2020) which has only one per block but with an additional",
+      "asset": "assets/equations/EQ-07.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-08",
+      "kind": "equation",
+      "page": 3,
+      "label": "EQ-08",
+      "caption": "This problem gets worse when we need to shard the model as done in Shoeybi et al. (2020); Lep-",
+      "asset": null,
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-09",
+      "kind": "equation",
+      "page": 3,
+      "label": "EQ-09",
+      "caption": "ikhin et al. (2020), because the additional depth requires more synchronous GPU operations such as",
+      "asset": "assets/equations/EQ-09.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.4",
+      "kind": "page",
+      "page": 4,
+      "label": "p.4",
+      "caption": null,
+      "asset": "source_pages/page-004.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "s2",
+          "chapter_title": "从任务增量到低秩重参数化",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s2",
+          "chapter_title": "从任务增量到低秩重参数化",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "s3",
+          "chapter_title": "把低秩更新放进 Transformer，并折叠回部署图",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s3",
+          "chapter_title": "把低秩更新放进 Transformer，并折叠回部署图",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s3",
+          "chapter_title": "把低秩更新放进 Transformer，并折叠回部署图",
+          "block_type": "takeaway"
+        },
+        {
+          "chapter_id": "s7",
+          "chapter_title": "结论的有效范围与尚未回答的问题",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s7",
+          "chapter_title": "结论的有效范围与尚未回答的问题",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s7",
+          "chapter_title": "结论的有效范围与尚未回答的问题",
+          "block_type": "takeaway"
+        }
+      ]
+    },
+    {
+      "id": "EQ-10",
+      "kind": "equation",
+      "page": 4,
+      "label": "EQ-10",
+      "caption": "zero for B, so ∆W = BA is zero at the beginning of training. We then scale ∆Wx by α",
+      "asset": "assets/equations/EQ-10.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-11",
+      "kind": "equation",
+      "page": 4,
+      "label": "EQ-11",
+      "caption": "(2020) shows that the pre-trained language models have a low “instrisic dimension” and can still",
+      "asset": "assets/equations/EQ-11.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-12",
+      "kind": "equation",
+      "page": 4,
+      "label": "EQ-12",
+      "caption": "composition W0 + ∆W = W0 + BA, where B ∈Rd×r, A ∈Rr×k, and the rank r ≪min(d, k).",
+      "asset": "assets/equations/EQ-12.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-13",
+      "kind": "equation",
+      "page": 4,
+      "label": "EQ-13",
+      "caption": "parameters. Note both W0 and ∆W = BA are multiplied with the same input, and their respective",
+      "asset": "assets/equations/EQ-13.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-14",
+      "kind": "equation",
+      "page": 4,
+      "label": "EQ-14",
+      "caption": "output vectors are summed coordinate-wise. For h = W0x, our modiﬁed forward pass yields:",
+      "asset": "assets/equations/EQ-14.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-15",
+      "kind": "equation",
+      "page": 4,
+      "label": "EQ-15",
+      "caption": "h = W0x + ∆Wx = W0x + BAx",
+      "asset": "assets/equations/EQ-15.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-16",
+      "kind": "equation",
+      "page": 4,
+      "label": "EQ-16",
+      "caption": "store W = W0 + BA and perform inference as usual. Note that both W0 and BA are in Rd×k.",
+      "asset": "assets/equations/EQ-16.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.5",
+      "kind": "page",
+      "page": 5,
+      "label": "p.5",
+      "caption": null,
+      "asset": "source_pages/page-005.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "s3",
+          "chapter_title": "把低秩更新放进 Transformer，并折叠回部署图",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s3",
+          "chapter_title": "把低秩更新放进 Transformer，并折叠回部署图",
+          "block_type": "takeaway"
+        },
+        {
+          "chapter_id": "s7",
+          "chapter_title": "结论的有效范围与尚未回答的问题",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s7",
+          "chapter_title": "结论的有效范围与尚未回答的问题",
+          "block_type": "takeaway"
+        }
+      ]
+    },
+    {
+      "id": "EQ-17",
+      "kind": "equation",
+      "page": 5,
+      "label": "EQ-17",
+      "caption": "350GB. With r = 4 and only the query and value projection matrices being adapted, the checkpoint",
+      "asset": "assets/equations/EQ-17.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-18",
+      "kind": "equation",
+      "page": 5,
+      "label": "EQ-18",
+      "caption": "for RoBERTa and DeBERTa. We follow the setup of Li & Liang (2021) on GPT-2 for a direct com-",
+      "asset": null,
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.6",
+      "kind": "page",
+      "page": 6,
+      "label": "p.6",
+      "caption": null,
+      "asset": "source_pages/page-006.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "s4",
+          "chapter_title": "跨模型实证：少量参数能否保住任务质量",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "EQ-19",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-19",
+      "caption": "similar to Houlsby et al. (2019) for a fair comparison.",
+      "asset": "assets/equations/EQ-19.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-20",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-20",
+      "caption": "Liang (2021). We use lp (resp. li) denote the number of preﬁx (resp. inﬁx) tokens. The number of",
+      "asset": "assets/equations/EQ-20.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-21",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-21",
+      "caption": "trainable parameters is |Θ| = dmodel × (lp + li).",
+      "asset": "assets/equations/EQ-21.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-22",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-22",
+      "caption": "|Θ| = L × dmodel × (lp + li), where L is the number of Transformer layers.",
+      "asset": "assets/equations/EQ-22.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-23",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-23",
+      "caption": "Adapter tuning as proposed in Houlsby et al. (2019) inserts adapter layers between the self-",
+      "asset": null,
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-24",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-24",
+      "caption": "original design AdapterH. Recently, Lin et al. (2020) proposed a more efﬁcient design with the",
+      "asset": "assets/equations/EQ-24.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-25",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-25",
+      "caption": "is very similar to another deign proposed in Pfeiffer et al. (2021), which we call AdapterP. We also",
+      "asset": "assets/equations/EQ-25.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-26",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-26",
+      "caption": "In all cases, we have |Θ| = ˆLAdpt ×(2×dmodel ×r+r+dmodel)+2× ˆLLN ×dmodel where ˆLAdpt",
+      "asset": "assets/equations/EQ-26.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-27",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-27",
+      "caption": "|Θ| = 2 × ˆLLoRA × dmodel × r, where ˆLLoRA is the number of weight matrices we apply LoRA to.",
+      "asset": "assets/equations/EQ-27.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.7",
+      "kind": "page",
+      "page": 7,
+      "label": "p.7",
+      "caption": null,
+      "asset": "source_pages/page-007.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "EQ-28",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-28",
+      "caption": "benchmark. We also replicate Houlsby et al. (2019) and Pfeiffer et al. (2021) according to their",
+      "asset": "assets/equations/EQ-28.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-29",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-29",
+      "caption": "following this more restricted setup from Houlsby et al. (2019) are labeled with †. The result is",
+      "asset": "assets/equations/EQ-29.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-30",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-30",
+      "caption": "b). We keep our setup as close as possible to Li & Liang (2021) for a direct comparison. Due",
+      "asset": "assets/equations/EQ-30.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.8",
+      "kind": "page",
+      "page": 8,
+      "label": "p.8",
+      "caption": null,
+      "asset": "source_pages/page-008.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "s4",
+          "chapter_title": "跨模型实证：少量参数能否保住任务质量",
+          "block_type": "table"
+        },
+        {
+          "chapter_id": "s4",
+          "chapter_title": "跨模型实证：少量参数能否保住任务质量",
+          "block_type": "figure"
+        }
+      ]
+    },
+    {
+      "id": "EQ-31",
+      "kind": "equation",
+      "page": 8,
+      "label": "EQ-31",
+      "caption": "similar observations in Li & Liang (2021). While a thorough investigation into this phenomenon",
+      "asset": "assets/equations/EQ-31.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.9",
+      "kind": "page",
+      "page": 9,
+      "label": "p.9",
+      "caption": null,
+      "asset": "source_pages/page-009.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "EQ-32",
+      "kind": "equation",
+      "page": 9,
+      "label": "EQ-32",
+      "caption": "Collobert & Weston (2008), yet practitioners often retrain all of them to maximize the downstream",
+      "asset": "assets/equations/EQ-32.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-33",
+      "kind": "equation",
+      "page": 9,
+      "label": "EQ-33",
+      "caption": "2020; Liu et al., 2021). We include comparisons with Li & Liang (2021) in our experiment section.",
+      "asset": "assets/equations/EQ-33.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.10",
+      "kind": "page",
+      "page": 10,
+      "label": "p.10",
+      "caption": null,
+      "asset": "source_pages/page-010.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "s5",
+          "chapter_title": "rank 与矩阵位置：效率来自哪里",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "EQ-34",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-34",
+      "caption": "We believe that our answers to question (2) and (3) shed light on the fundamental principles of using",
+      "asset": "assets/equations/EQ-34.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-35",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-35",
+      "caption": "in FP16) on GPT-3 175B, which corresponds to r = 8 if we adapt one type of attention weights or",
+      "asset": "assets/equations/EQ-35.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-36",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-36",
+      "caption": "r = 4 if we adapt two types, for all 96 layers. The result is presented in Table 5.",
+      "asset": "assets/equations/EQ-36.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-37",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-37",
+      "caption": "# of Trainable Parameters = 18M",
+      "asset": "assets/equations/EQ-37.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-38",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-38",
+      "caption": "r = 64",
+      "asset": "assets/equations/EQ-38.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-39",
+      "kind": "equation",
+      "page": 10,
+      "label": "EQ-39",
+      "caption": "the entire model (similar to LoRA with r = dmodel) could certainly outperform LoRA with a small r.",
+      "asset": "assets/equations/EQ-39.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.11",
+      "kind": "page",
+      "page": 11,
+      "label": "p.11",
+      "caption": null,
+      "asset": "source_pages/page-011.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "EQ-40",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-40",
+      "caption": "Ar=8 represents the columns of UAr=8 corresponding to the top-i singular vectors.",
+      "asset": "assets/equations/EQ-40.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-41",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-41",
+      "caption": "Given Ar=8 and Ar=64 which are the learned adapta-",
+      "asset": null,
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-42",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-42",
+      "caption": "tion matrices with rank r = 8 and 64 using the same pre-trained model, we perform singular value",
+      "asset": "assets/equations/EQ-42.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-43",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-43",
+      "caption": "decomposition and obtain the right-singular unitary matrices UAr=8 and UAr=64.7 We hope to an-",
+      "asset": null,
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-44",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-44",
+      "caption": "swer: how much of the subspace spanned by the top i singular vectors in UAr=8 (for 1 ≤i ≤8) is",
+      "asset": "assets/equations/EQ-44.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-45",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-45",
+      "caption": "contained in the subspace spanned by top j singular vectors of UAr=64 (for 1 ≤j ≤64)? We mea-",
+      "asset": null,
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-46",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-46",
+      "caption": "φ(Ar=8, Ar=64, i, j) = ||U i⊤",
+      "asset": "assets/equations/EQ-46.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-47",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-47",
+      "caption": "Ar=8U j",
+      "asset": "assets/equations/EQ-47.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-48",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-48",
+      "caption": "Ar=64||2",
+      "asset": "assets/equations/EQ-48.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-49",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-49",
+      "caption": "(Ar = 64, Ar = 8, i, j)",
+      "asset": "assets/equations/EQ-49.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-50",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-50",
+      "caption": "Figure 3: Subspace similarity between column vectors of Ar=8 and Ar=64 for both ∆Wq and ∆Wv.",
+      "asset": "assets/equations/EQ-50.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-51",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-51",
+      "caption": "directions in r = 8 are included in r = 64, and vice versa.",
+      "asset": "assets/equations/EQ-51.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-52",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-52",
+      "caption": "Ar=8 and Ar=64, while others do not. Speciﬁcally, ∆Wv (resp. ∆Wq) of Ar=8",
+      "asset": "assets/equations/EQ-52.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-53",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-53",
+      "caption": "and ∆Wv (resp. ∆Wq) of Ar=64 share a subspace of dimension 1 with normalized",
+      "asset": "assets/equations/EQ-53.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-54",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-54",
+      "caption": "similarity > 0.5, providing an explanation of why r = 1 performs quite well in our",
+      "asset": "assets/equations/EQ-54.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-55",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-55",
+      "caption": "Since both Ar=8 and Ar=64 are learned using the same pre-trained model, Figure 3 indicates that",
+      "asset": "assets/equations/EQ-55.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-56",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-56",
+      "caption": "the top singular-vector directions of Ar=8 and Ar=64 are the most useful, while other directions",
+      "asset": "assets/equations/EQ-56.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-57",
+      "kind": "equation",
+      "page": 11,
+      "label": "EQ-57",
+      "caption": "normalized subspace similarity between two randomly seeded runs with r = 64, shown in Figure 4.",
+      "asset": "assets/equations/EQ-57.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.12",
+      "kind": "page",
+      "page": 12,
+      "label": "p.12",
+      "caption": null,
+      "asset": "source_pages/page-012.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "s6",
+          "chapter_title": "子空间证据提供的机制线索",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "EQ-58",
+      "kind": "equation",
+      "page": 12,
+      "label": "EQ-58",
+      "caption": "(Ar = 64, A′r = 64, i, j)",
+      "asset": "assets/equations/EQ-58.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-59",
+      "kind": "equation",
+      "page": 12,
+      "label": "EQ-59",
+      "caption": "||U ⊤WqV ⊤||F =",
+      "asset": "assets/equations/EQ-59.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-60",
+      "kind": "equation",
+      "page": 12,
+      "label": "EQ-60",
+      "caption": "||Wq||F = 61.95",
+      "asset": "assets/equations/EQ-60.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-61",
+      "kind": "equation",
+      "page": 12,
+      "label": "EQ-61",
+      "caption": "||∆Wq||F = 6.91",
+      "asset": "assets/equations/EQ-61.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-62",
+      "kind": "equation",
+      "page": 12,
+      "label": "EQ-62",
+      "caption": "||∆Wq||F = 3.57",
+      "asset": "assets/equations/EQ-62.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-63",
+      "kind": "equation",
+      "page": 12,
+      "label": "EQ-63",
+      "caption": "directions of either (1) ∆Wq, (2) Wq, or (3) a random matrix. The weight matrices are taken from",
+      "asset": "assets/equations/EQ-63.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-64",
+      "kind": "equation",
+      "page": 12,
+      "label": "EQ-64",
+      "caption": "Figure 4: Left and Middle: Normalized subspace similarity between the column vectors of Ar=64",
+      "asset": "assets/equations/EQ-64.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-65",
+      "kind": "equation",
+      "page": 12,
+      "label": "EQ-65",
+      "caption": "r = 64",
+      "asset": "assets/equations/EQ-65.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-66",
+      "kind": "equation",
+      "page": 12,
+      "label": "EQ-66",
+      "caption": "emphasized in W. Third, the ampliﬁcation factor is rather huge: 21.5 ≈6.91/0.32 for r = 4.",
+      "asset": "assets/equations/EQ-66.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-67",
+      "kind": "equation",
+      "page": 12,
+      "label": "EQ-67",
+      "caption": "See Section H.4 for why r = 64 has a smaller ampliﬁcation factor. We also provide a visualization",
+      "asset": "assets/equations/EQ-67.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.13",
+      "kind": "page",
+      "page": 13,
+      "label": "p.13",
+      "caption": null,
+      "asset": "source_pages/page-013.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "EQ-68",
+      "kind": "equation",
+      "page": 13,
+      "label": "EQ-68",
+      "caption": "matrix completion. SIAM Journal on optimization, 20(4):1956–1982, 2010.",
+      "asset": "assets/equations/EQ-68.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.14",
+      "kind": "page",
+      "page": 14,
+      "label": "p.14",
+      "caption": null,
+      "asset": "source_pages/page-014.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "EQ-69",
+      "kind": "equation",
+      "page": 14,
+      "label": "EQ-69",
+      "caption": "approximation techniques. GAMM-Mitteilungen, 36(1):53–78, 2013.",
+      "asset": "assets/equations/EQ-69.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.15",
+      "kind": "page",
+      "page": 15,
+      "label": "p.15",
+      "caption": null,
+      "asset": "source_pages/page-015.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "p.16",
+      "kind": "page",
+      "page": 16,
+      "label": "p.16",
+      "caption": null,
+      "asset": "source_pages/page-016.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "p.17",
+      "kind": "page",
+      "page": 17,
+      "label": "p.17",
+      "caption": null,
+      "asset": "source_pages/page-017.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "s5",
+          "chapter_title": "rank 与矩阵位置：效率来自哪里",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s5",
+          "chapter_title": "rank 与矩阵位置：效率来自哪里",
+          "block_type": "table"
+        },
+        {
+          "chapter_id": "s6",
+          "chapter_title": "子空间证据提供的机制线索",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "EQ-70",
+      "kind": "equation",
+      "page": 17,
+      "label": "EQ-70",
+      "caption": "Seq Len = 128",
+      "asset": "assets/equations/EQ-70.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-71",
+      "kind": "equation",
+      "page": 17,
+      "label": "EQ-71",
+      "caption": "Seq Len = 256",
+      "asset": "assets/equations/EQ-71.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-72",
+      "kind": "equation",
+      "page": 17,
+      "label": "EQ-72",
+      "caption": "Seq Len = 512",
+      "asset": "assets/equations/EQ-72.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-73",
+      "kind": "equation",
+      "page": 17,
+      "label": "EQ-73",
+      "caption": "latency. While as pointed out in R¨uckl´e et al. (2020), the latency introduced by adapter layers can",
+      "asset": "assets/equations/EQ-73.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-74",
+      "kind": "equation",
+      "page": 17,
+      "label": "EQ-74",
+      "caption": "r. We test two adapter designs: the original one by Houlsby et al. (2019), which we call AdapterH,",
+      "asset": "assets/equations/EQ-74.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-75",
+      "kind": "equation",
+      "page": 17,
+      "label": "EQ-75",
+      "caption": "and a recent, more efﬁcient variant by Lin et al. (2020), which we call AdapterL. See Section 5.1",
+      "asset": "assets/equations/EQ-75.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-76",
+      "kind": "equation",
+      "page": 17,
+      "label": "EQ-76",
+      "caption": "Figure 5: Percentage slow-down of inference latency compared to the no-adapter (r = 0) baseline.",
+      "asset": "assets/equations/EQ-76.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-77",
+      "kind": "equation",
+      "page": 17,
+      "label": "EQ-77",
+      "caption": "MNLI (inference, Williams et al. (2018)), SST-2 (sentiment analysis, Socher et al. (2013)), MRPC",
+      "asset": "assets/equations/EQ-77.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-78",
+      "kind": "equation",
+      "page": 17,
+      "label": "EQ-78",
+      "caption": "(paraphrase detection, Dolan & Brockett (2005)), CoLA (linguistic acceptability, Warstadt et al.",
+      "asset": "assets/equations/EQ-78.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-79",
+      "kind": "equation",
+      "page": 17,
+      "label": "EQ-79",
+      "caption": "(2018)), QNLI (inference, Rajpurkar et al. (2018)), QQP8 (question-answering), RTE (inference),",
+      "asset": "assets/equations/EQ-79.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.18",
+      "kind": "page",
+      "page": 18,
+      "label": "p.18",
+      "caption": null,
+      "asset": "source_pages/page-018.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "EQ-80",
+      "kind": "equation",
+      "page": 18,
+      "label": "EQ-80",
+      "caption": "and STS-B (textual similarity, Cer et al. (2017)). The broad coverage makes GLUE benchmark a",
+      "asset": "assets/equations/EQ-80.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-81",
+      "kind": "equation",
+      "page": 18,
+      "label": "EQ-81",
+      "caption": "WikiSQL is introduced in Zhong et al. (2017) and contains 56, 355/8, 421 training/validation ex-",
+      "asset": null,
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-82",
+      "kind": "equation",
+      "page": 18,
+      "label": "EQ-82",
+      "caption": "We encode context as x = {table schema, query} and target as y = {SQL}. The dataset is release",
+      "asset": "assets/equations/EQ-82.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-83",
+      "kind": "equation",
+      "page": 18,
+      "label": "EQ-83",
+      "caption": "SAMSum is introduced in Gliwa et al. (2019) and contains 14, 732/819 training/test examples. It",
+      "asset": "assets/equations/EQ-83.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-84",
+      "kind": "equation",
+      "page": 18,
+      "label": "EQ-84",
+      "caption": "and target as y = {summary}. The dataset is released under the non-commercial licence: Creative",
+      "asset": "assets/equations/EQ-84.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-85",
+      "kind": "equation",
+      "page": 18,
+      "label": "EQ-85",
+      "caption": "E2E NLG Challenge was ﬁrst introduced in Novikova et al. (2017) as a dataset for training end-to-",
+      "asset": null,
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-86",
+      "kind": "equation",
+      "page": 18,
+      "label": "EQ-86",
+      "caption": "DART is an open-domain data-to-text dataset described in Nan et al. (2020). DART inputs are",
+      "asset": "assets/equations/EQ-86.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-87",
+      "kind": "equation",
+      "page": 18,
+      "label": "EQ-87",
+      "caption": "of training epochs, and batch size for LoRA. Following Liu et al. (2019), we initialize the LoRA",
+      "asset": "assets/equations/EQ-87.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-88",
+      "kind": "equation",
+      "page": 18,
+      "label": "EQ-88",
+      "caption": "setup in Houlsby et al. (2019) and Pfeiffer et al. (2021), we restrict the model sequence length to 128",
+      "asset": "assets/equations/EQ-88.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-89",
+      "kind": "equation",
+      "page": 18,
+      "label": "EQ-89",
+      "caption": "We again train using AdamW with a linear learning rate decay schedule. Following He et al. (2021),",
+      "asset": "assets/equations/EQ-89.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-90",
+      "kind": "equation",
+      "page": 18,
+      "label": "EQ-90",
+      "caption": "sequence length used by (He et al., 2021) to keep our comparison fair. Following He et al. (2021),",
+      "asset": "assets/equations/EQ-90.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.19",
+      "kind": "page",
+      "page": 19,
+      "label": "p.19",
+      "caption": null,
+      "asset": "source_pages/page-019.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "EQ-91",
+      "kind": "equation",
+      "page": 19,
+      "label": "EQ-91",
+      "caption": "rq = rv = 8",
+      "asset": "assets/equations/EQ-91.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-92",
+      "kind": "equation",
+      "page": 19,
+      "label": "EQ-92",
+      "caption": "rq = rv = 8",
+      "asset": "assets/equations/EQ-92.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-93",
+      "kind": "equation",
+      "page": 19,
+      "label": "EQ-93",
+      "caption": "rq = rv = 8",
+      "asset": "assets/equations/EQ-93.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-94",
+      "kind": "equation",
+      "page": 19,
+      "label": "EQ-94",
+      "caption": "in Li & Liang (2021). Accordingly, we also tune the above hyperparameters for LoRA. We report the",
+      "asset": "assets/equations/EQ-94.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-95",
+      "kind": "equation",
+      "page": 19,
+      "label": "EQ-95",
+      "caption": "(2021).",
+      "asset": "assets/equations/EQ-95.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.20",
+      "kind": "page",
+      "page": 20,
+      "label": "p.20",
+      "caption": null,
+      "asset": "source_pages/page-020.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "EQ-96",
+      "kind": "equation",
+      "page": 20,
+      "label": "EQ-96",
+      "caption": "rq = rv = 4",
+      "asset": "assets/equations/EQ-96.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-97",
+      "kind": "equation",
+      "page": 20,
+      "label": "EQ-97",
+      "caption": "rq = rv = 8",
+      "asset": "assets/equations/EQ-97.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-98",
+      "kind": "equation",
+      "page": 20,
+      "label": "EQ-98",
+      "caption": "to be 256 and 8, respectively, totalling 3.2M trainable parameters. We use lp = 8 and li = 8 for",
+      "asset": "assets/equations/EQ-98.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-99",
+      "kind": "equation",
+      "page": 20,
+      "label": "EQ-99",
+      "caption": "present two parameter budgets for LoRA: 4.7M (rq = rv = 1 or rv = 2) and 37.7M (rq = rv = 8",
+      "asset": "assets/equations/EQ-99.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-100",
+      "kind": "equation",
+      "page": 20,
+      "label": "EQ-100",
+      "caption": "or rq = rk = rv = ro = 2). We report the best validation performance from each run. The training",
+      "asset": "assets/equations/EQ-100.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.21",
+      "kind": "page",
+      "page": 21,
+      "label": "p.21",
+      "caption": null,
+      "asset": "source_pages/page-021.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "EQ-101",
+      "kind": "equation",
+      "page": 21,
+      "label": "EQ-101",
+      "caption": "following the setup of Li & Liang (2021). The result is shown in Table 13. Similar to our result",
+      "asset": "assets/equations/EQ-101.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.22",
+      "kind": "page",
+      "page": 22,
+      "label": "p.22",
+      "caption": null,
+      "asset": "source_pages/page-022.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "EQ-102",
+      "kind": "equation",
+      "page": 22,
+      "label": "EQ-102",
+      "caption": "In this paper we use the measure φ(A, B, i, j) = ψ(U i",
+      "asset": "assets/equations/EQ-102.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-103",
+      "kind": "equation",
+      "page": 22,
+      "label": "EQ-103",
+      "caption": "B) = ∥U i⊤",
+      "asset": "assets/equations/EQ-103.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-104",
+      "kind": "equation",
+      "page": 22,
+      "label": "EQ-104",
+      "caption": "(2008).",
+      "asset": "assets/equations/EQ-104.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.23",
+      "kind": "page",
+      "page": 23,
+      "label": "p.23",
+      "caption": null,
+      "asset": "source_pages/page-023.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "EQ-105",
+      "kind": "equation",
+      "page": 23,
+      "label": "EQ-105",
+      "caption": "rq = rv = 8, lp = 8, li = 4",
+      "asset": "assets/equations/EQ-105.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-106",
+      "kind": "equation",
+      "page": 23,
+      "label": "EQ-106",
+      "caption": "B to be σ1, σ2, · · · , σp where p = min{i, j}. We",
+      "asset": "assets/equations/EQ-106.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-107",
+      "kind": "equation",
+      "page": 23,
+      "label": "EQ-107",
+      "caption": "know that the Projection Metric Ham & Lee (2008) is deﬁned as:",
+      "asset": "assets/equations/EQ-107.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-108",
+      "kind": "equation",
+      "page": 23,
+      "label": "EQ-108",
+      "caption": "lp = 32, li = 8",
+      "asset": "assets/equations/EQ-108.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-109",
+      "kind": "equation",
+      "page": 23,
+      "label": "EQ-109",
+      "caption": "lp = 64, li = 8",
+      "asset": "assets/equations/EQ-109.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-110",
+      "kind": "equation",
+      "page": 23,
+      "label": "EQ-110",
+      "caption": "lp = 128, li = 8",
+      "asset": "assets/equations/EQ-110.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-111",
+      "kind": "equation",
+      "page": 23,
+      "label": "EQ-111",
+      "caption": "lp = 256, li = 8",
+      "asset": "assets/equations/EQ-111.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-112",
+      "kind": "equation",
+      "page": 23,
+      "label": "EQ-112",
+      "caption": "lp = 512, li = 8",
+      "asset": "assets/equations/EQ-112.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-113",
+      "kind": "equation",
+      "page": 23,
+      "label": "EQ-113",
+      "caption": "lp = 2, li = 2",
+      "asset": "assets/equations/EQ-113.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-114",
+      "kind": "equation",
+      "page": 23,
+      "label": "EQ-114",
+      "caption": "lp = 8, li = 0",
+      "asset": "assets/equations/EQ-114.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-115",
+      "kind": "equation",
+      "page": 23,
+      "label": "EQ-115",
+      "caption": "lp = 8, li = 8",
+      "asset": "assets/equations/EQ-115.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-116",
+      "kind": "equation",
+      "page": 23,
+      "label": "EQ-116",
+      "caption": "lp = 32, li = 4",
+      "asset": "assets/equations/EQ-116.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-117",
+      "kind": "equation",
+      "page": 23,
+      "label": "EQ-117",
+      "caption": "lp = 64, li = 0",
+      "asset": "assets/equations/EQ-117.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-118",
+      "kind": "equation",
+      "page": 23,
+      "label": "EQ-118",
+      "caption": "r = 16",
+      "asset": "assets/equations/EQ-118.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-119",
+      "kind": "equation",
+      "page": 23,
+      "label": "EQ-119",
+      "caption": "r = 64",
+      "asset": "assets/equations/EQ-119.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-120",
+      "kind": "equation",
+      "page": 23,
+      "label": "EQ-120",
+      "caption": "rv = 2",
+      "asset": "assets/equations/EQ-120.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-121",
+      "kind": "equation",
+      "page": 23,
+      "label": "EQ-121",
+      "caption": "rq = rv = 1",
+      "asset": "assets/equations/EQ-121.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-122",
+      "kind": "equation",
+      "page": 23,
+      "label": "EQ-122",
+      "caption": "rq = rv = 2",
+      "asset": "assets/equations/EQ-122.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-123",
+      "kind": "equation",
+      "page": 23,
+      "label": "EQ-123",
+      "caption": "rq = rk = rv = ro = 1",
+      "asset": "assets/equations/EQ-123.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-124",
+      "kind": "equation",
+      "page": 23,
+      "label": "EQ-124",
+      "caption": "rq = rv = 4",
+      "asset": "assets/equations/EQ-124.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-125",
+      "kind": "equation",
+      "page": 23,
+      "label": "EQ-125",
+      "caption": "rq = rk = rv = ro = 2",
+      "asset": "assets/equations/EQ-125.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-126",
+      "kind": "equation",
+      "page": 23,
+      "label": "EQ-126",
+      "caption": "rq = rv = 8",
+      "asset": "assets/equations/EQ-126.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-127",
+      "kind": "equation",
+      "page": 23,
+      "label": "EQ-127",
+      "caption": "rq = rk = rv = ro = 4",
+      "asset": "assets/equations/EQ-127.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-128",
+      "kind": "equation",
+      "page": 23,
+      "label": "EQ-128",
+      "caption": "rq = rv = 64",
+      "asset": "assets/equations/EQ-128.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-129",
+      "kind": "equation",
+      "page": 23,
+      "label": "EQ-129",
+      "caption": "rq = rk = rv = ro = 64",
+      "asset": "assets/equations/EQ-129.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-130",
+      "kind": "equation",
+      "page": 23,
+      "label": "EQ-130",
+      "caption": "rq = rv = 8, lp = 8, li = 4",
+      "asset": "assets/equations/EQ-130.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-131",
+      "kind": "equation",
+      "page": 23,
+      "label": "EQ-131",
+      "caption": "rq = rv = 32, lp = 8, li = 4",
+      "asset": "assets/equations/EQ-131.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-132",
+      "kind": "equation",
+      "page": 23,
+      "label": "EQ-132",
+      "caption": "rq = rv = 64, lp = 8, li = 4",
+      "asset": "assets/equations/EQ-132.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.24",
+      "kind": "page",
+      "page": 24,
+      "label": "p.24",
+      "caption": null,
+      "asset": "source_pages/page-024.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "EQ-133",
+      "kind": "equation",
+      "page": 24,
+      "label": "EQ-133",
+      "caption": "lp = li = 8",
+      "asset": "assets/equations/EQ-133.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-134",
+      "kind": "equation",
+      "page": 24,
+      "label": "EQ-134",
+      "caption": "rq = rv = 8",
+      "asset": "assets/equations/EQ-134.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-135",
+      "kind": "equation",
+      "page": 24,
+      "label": "EQ-135",
+      "caption": "φ(A, B, i, j) = ψ(U i",
+      "asset": "assets/equations/EQ-135.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-136",
+      "kind": "equation",
+      "page": 24,
+      "label": "EQ-136",
+      "caption": "i=1 σ2",
+      "asset": "assets/equations/EQ-136.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-137",
+      "kind": "equation",
+      "page": 24,
+      "label": "EQ-137",
+      "caption": "B share the same column span, then φ(A, B, i, j) = 1. If",
+      "asset": "assets/equations/EQ-137.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-138",
+      "kind": "equation",
+      "page": 24,
+      "label": "EQ-138",
+      "caption": "they are completely orthogonal, then φ(A, B, i, j) = 0. Otherwise, φ(A, B, i, j) ∈(0, 1).",
+      "asset": "assets/equations/EQ-138.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.25",
+      "kind": "page",
+      "page": 25,
+      "label": "p.25",
+      "caption": null,
+      "asset": "source_pages/page-025.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "s6",
+          "chapter_title": "子空间证据提供的机制线索",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "EQ-139",
+      "kind": "equation",
+      "page": 25,
+      "label": "EQ-139",
+      "caption": "(Ar = 8, Ar = 64, i, j)",
+      "asset": "assets/equations/EQ-139.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-140",
+      "kind": "equation",
+      "page": 25,
+      "label": "EQ-140",
+      "caption": "Figure 6: Normalized subspace similarity between the column vectors of Ar=8 and Ar=64 for both",
+      "asset": "assets/equations/EQ-140.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-141",
+      "kind": "equation",
+      "page": 25,
+      "label": "EQ-141",
+      "caption": "them are ampliﬁed by ∆W. As shown in Section 7.3, for r = 4, this ampliﬁcation factor is as large",
+      "asset": "assets/equations/EQ-141.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-142",
+      "kind": "equation",
+      "page": 25,
+      "label": "EQ-142",
+      "caption": "One may notice, however, for r = 64, this ampliﬁcation factor is only around 2, meaning that",
+      "asset": "assets/equations/EQ-142.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-143",
+      "kind": "equation",
+      "page": 25,
+      "label": "EQ-143",
+      "caption": "most directions learned in ∆W with r = 64 are not being ampliﬁed by much. This should not",
+      "asset": "assets/equations/EQ-143.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-144",
+      "kind": "equation",
+      "page": 25,
+      "label": "EQ-144",
+      "caption": "rank-4 version of ∆W (corresponding to r = 4) are ampliﬁed by a much larger factor 20.",
+      "asset": "assets/equations/EQ-144.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.26",
+      "kind": "page",
+      "page": 26,
+      "label": "p.26",
+      "caption": null,
+      "asset": "source_pages/page-026.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "s5",
+          "chapter_title": "rank 与矩阵位置：效率来自哪里",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s5",
+          "chapter_title": "rank 与矩阵位置：效率来自哪里",
+          "block_type": "table"
+        },
+        {
+          "chapter_id": "s6",
+          "chapter_title": "子空间证据提供的机制线索",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s6",
+          "chapter_title": "子空间证据提供的机制线索",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "s6",
+          "chapter_title": "子空间证据提供的机制线索",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "s7",
+          "chapter_title": "结论的有效范围与尚未回答的问题",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "s7",
+          "chapter_title": "结论的有效范围与尚未回答的问题",
+          "block_type": "takeaway"
+        }
+      ]
+    },
+    {
+      "id": "EQ-145",
+      "kind": "equation",
+      "page": 26,
+      "label": "EQ-145",
+      "caption": "(Wq, Ar = 8, i, j)",
+      "asset": "assets/equations/EQ-145.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-146",
+      "kind": "equation",
+      "page": 26,
+      "label": "EQ-146",
+      "caption": "(Wq, Ar = 4, i, j)",
+      "asset": "assets/equations/EQ-146.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-147",
+      "kind": "equation",
+      "page": 26,
+      "label": "EQ-147",
+      "caption": "(Ar = 64, A′r = 64, i, j)",
+      "asset": "assets/equations/EQ-147.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-148",
+      "kind": "equation",
+      "page": 26,
+      "label": "EQ-148",
+      "caption": "Figure 7: Normalized subspace similarity between the column vectors of Ar=64 from two randomly",
+      "asset": "assets/equations/EQ-148.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-149",
+      "kind": "equation",
+      "page": 26,
+      "label": "EQ-149",
+      "caption": "different rank r using GPT-2 Medium. Unlike on GPT-3 where r = 1 sufﬁces for many tasks, here",
+      "asset": "assets/equations/EQ-149.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-150",
+      "kind": "equation",
+      "page": 26,
+      "label": "EQ-150",
+      "caption": "the performance peaks at r = 16 for validation loss and r = 4 for BLEU, suggesting the GPT-2",
+      "asset": "assets/equations/EQ-150.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-151",
+      "kind": "equation",
+      "page": 26,
+      "label": "EQ-151",
+      "caption": "hyperparameters are tuned on r = 4, which matches the parameter count of another baseline, and",
+      "asset": "assets/equations/EQ-151.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-152",
+      "kind": "equation",
+      "page": 26,
+      "label": "EQ-152",
+      "caption": "(Wq, Ar = 64, i, j)",
+      "asset": "assets/equations/EQ-152.png",
+      "verification_status": "UNCERTAIN",
+      "confidence": null,
+      "used_in": []
+    }
+  ]
+}

@@ -1,0 +1,254 @@
+{
+  "blinding_and_label_swap_protocol": {
+    "anonymization": "Both Condition A and Condition B outputs are stripped of pipeline metadata, model names, internal task tokens, and presented neutrally as REPORT X and REPORT Y.",
+    "mirrored_evaluations": {
+      "adjudication_rule": "If Eval 1 and Eval 2 disagree on a RELEASE-GATE core dimension (Win vs Loss), a 3rd independent adjudication session is triggered.",
+      "eval_1": "REPORT X = Condition A (or B according to deterministic hash assignment), REPORT Y = opposite.",
+      "eval_2": "REPORT X = opposite of eval_1, REPORT Y = opposite of eval_1 (Full Label & Position Swap)."
+    }
+  },
+  "canonical_scientific_model": {
+    "host": "pi",
+    "model": "antigravity/gemini-3.8-flash",
+    "provider": "magpie",
+    "reasoning_profile": "high",
+    "substitution_policy": "NO_SUBSTITUTION_ALLOWED"
+  },
+  "condition_a": {
+    "allowed_inputs": [
+      "Original canonical full PDF"
+    ],
+    "description": "Strong standalone direct-AI reading without intermediate Evidentia scaffolding or guidance.",
+    "direct_reading_prompt": "你是一位顶尖的资深跨学科科学家与同行评审专家。请直接阅读附带的原始研究论文完整 PDF，针对学术研究同行撰写一份达到发表级标准的深度精读报告（以流畅、严谨、深度的中文阐述）。\n\n【核心阅读要求】\n1. 遵循论文原生论证结构：首先准确判断并刻画本篇论文独特的论证结构与推进逻辑（例如：是理论推导与经验证伪、系统构建与工程实证、测量协议与外推边界、还是观测建模与不确定性反演？）。切忌套用千篇一律的模板。\n2. 核心主张与问题重构：明确论文试图确立的核心命题（Thesis），作者针对的核心科学/技术问题是什么，该问题在领域内的实质痛点何在。\n3. 理论框架、研究设计与方法机制：详细阐释其方法构造、数学理论基础或实验设计逻辑。对关键数学定义、核心方程、算法机制或物理测量流程进行严密剖析。\n4. 决定性实证或证明链条：剖析论文中支撑核心主张的最关键证据链（实验基准、对照实验、消融分析、反事实扰动或定理证明构造）。必须明确指涉并准确解读论文中的关键图表（Figures）、表格（Tables）和公式（Equations），指出其在论证链条中所承担的具体证明作用。\n5. 结论校准与事实边界：区分作者的主观声称（Author claims）与受证据真正支持的客观边界（Justified assessment）。明确指出方法的先决假设、脆弱性、未完全解决的张力（Unresolved tensions）与适用边界。\n\n【格式与风格要求】\n- 请勿使用生硬的机械八股格式，按本论文内在的逻辑自然展开各章节。\n- 在涉及数据、实验结果、图表与定理处，务必尽量标注具体出处（例如引用 Fig. 2、Table 1、Eq. 3、Section 4 或对应页码）。\n- 保持批判性视角与极高的科学诚实度。",
+    "envelope_schema": "schemas/agent_result_envelope.schema.json",
+    "forbidden_inputs": [
+      "Evidentia source reconstruction",
+      "source map",
+      "Evidence Atlas",
+      "visual inventory",
+      "Lead Reader artifact",
+      "Lens outputs",
+      "Revision Memo",
+      "Narrative Plan",
+      "Research Memory",
+      "Project Apply context",
+      "benchmark ground truth",
+      "Condition B output"
+    ],
+    "name": "Condition A — Direct Gemini Baseline",
+    "output_schema": "schemas/direct_reading_baseline.schema.json"
+  },
+  "condition_b": {
+    "architecture_pipeline": [
+      "Deterministic Source Reconstruction (source_map, figure_inventory, visual assets)",
+      "Multimodal Evidence Localization (visual/drawing crops)",
+      "Lead Reader (Gemini) -> paper_characterization, argument_topology, lens_dispatch_plan",
+      "4 Core + 2 Adaptive Lenses (Gemini, context-isolated execution)",
+      "Revision Memo (Gemini) -> findings, tensions, revisions, visual_evidence_bindings",
+      "Dynamic Narrative Plan (Gemini) -> custom section topology, anti-template structure",
+      "Lead Writer (Gemini) -> rich Chinese narrative manuscript (narrative_manuscript.schema.json)",
+      "Integrity & Anti-Template Validation (fail-closed check)",
+      "Rendering (Kami presentation backend -> paper_reader.html / paper_reader.pdf / Evidence Atlas)"
+    ],
+    "forbidden_context": [
+      "PROJECT_APPLY",
+      "RESEARCH_MEMORY"
+    ],
+    "name": "Condition B — Frozen Evidentia Reader v3",
+    "reader_freeze_sha": "4139ca7b0b1ae72c0930801df5e50653b59a7e92"
+  },
+  "corpus": [
+    {
+      "corpus_role": "Primary Benchmark (ML foundational architecture)",
+      "doi": "10.48550/arXiv.1706.03762",
+      "id": "BENCH-01",
+      "paper_id": "BENCH-01-VASWANI-ATTENTION",
+      "source_pdf_path": "reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/source/paper.pdf",
+      "source_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+      "title": "Attention Is All You Need"
+    },
+    {
+      "corpus_role": "Primary Benchmark (Parameter-efficient tuning & serving)",
+      "doi": "10.48550/arXiv.2106.09685",
+      "id": "BENCH-02",
+      "paper_id": "BENCH-02-LORA-ADAPTATION",
+      "source_pdf_path": "reader-v3-runs/workspaces/BENCH-02-LORA-ADAPTATION/source/paper.pdf",
+      "source_sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+      "title": "LoRA: Low-Rank Adaptation of Large Language Models"
+    },
+    {
+      "corpus_role": "Primary Benchmark (Remote sensing & probabilistic geospatial inference)",
+      "doi": "10.1038/s41559-023-02206-6",
+      "id": "BENCH-03",
+      "paper_id": "BENCH-03-REMOTE-SENSING-FOREST",
+      "source_pdf_path": "reader-v3-runs/workspaces/BENCH-03-REMOTE-SENSING-FOREST/source/paper.pdf",
+      "source_sha256": "b4d103e6ab0664d96c31a00a0ee4d99e9fbc54a9f1a8eeea500716843d4eabce",
+      "title": "A high-resolution canopy height model of the Earth"
+    },
+    {
+      "corpus_role": "Primary Benchmark (Computational biophysics & spatial transformers)",
+      "doi": "10.1038/s41586-021-03819-2",
+      "id": "BENCH-04",
+      "paper_id": "BENCH-04-ALPHAFOLD2-STRUCTURE",
+      "source_pdf_path": "reader-v3-runs/workspaces/BENCH-04-ALPHAFOLD2-STRUCTURE/source/paper.pdf",
+      "source_sha256": "6eae057a9faf4f671c3101e0745ed704460c6d3dec77243dfd3a9f2d2ab68970",
+      "title": "Highly accurate protein structure prediction with AlphaFold"
+    },
+    {
+      "corpus_role": "Primary Benchmark (Experimental quantum physics & metrology)",
+      "doi": "10.1038/s41586-019-1666-5",
+      "id": "BENCH-05",
+      "paper_id": "BENCH-05-QUANTUM-SUPREMACY-ABLATION",
+      "source_pdf_path": "reader-v3-runs/workspaces/BENCH-05-QUANTUM-SUPREMACY-ABLATION/source/paper.pdf",
+      "source_sha256": "6f3030abb7d9d4f0624a5cbe5ca2ff673df63afc85c97fadd0bf7db780c8dbaf",
+      "title": "Quantum supremacy using a programmable superconducting processor"
+    },
+    {
+      "corpus_role": "Primary Benchmark (Mandatory Post-Freeze Unseen Paper: Theorem/Proof & Empirical Falsification)",
+      "doi": "10.48550/arXiv.1611.03530",
+      "id": "UNSEEN-01",
+      "paper_id": "UNSEEN-01-RETHINKING-GENERALIZATION",
+      "source_pdf_path": "evals/unseen/source/paper.pdf",
+      "source_sha256": "a71f1294a021cebc6939ec977fc073b6d7b4f183950eba761ec55364d30b729f",
+      "title": "Understanding deep learning requires rethinking generalization"
+    }
+  ],
+  "evaluation_dimensions": [
+    {
+      "description": "叙述的连贯性、逻辑推进的自然度、宏观论证与微观机制的融合深度。",
+      "id": "DIM-01",
+      "label": "Narrative clarity",
+      "name": "narrative_clarity",
+      "release_gate_core": true
+    },
+    {
+      "description": "科学内容的完备性，是否涵盖论文的所有核心命题、机制分支与关键实证环节。",
+      "id": "DIM-02",
+      "label": "Scientific completeness",
+      "name": "scientific_completeness",
+      "release_gate_core": true
+    },
+    {
+      "description": "对算法、数学推导、测量方案或实验设计的剖析深度与准确度。",
+      "id": "DIM-03",
+      "label": "Method / study-design / proof explanation",
+      "name": "method_explanation",
+      "release_gate_core": true
+    },
+    {
+      "description": "对实验数据、关键指标、比较基线及消融结果的理解精确性与细致度。",
+      "id": "DIM-04",
+      "label": "Experiment / result understanding",
+      "name": "experiment_result_understanding",
+      "release_gate_core": false
+    },
+    {
+      "description": "对论文具体图、表、公式的指引、解读与引用准确性，图文绑定的精确度。",
+      "id": "DIM-05",
+      "label": "Figure / table / equation correctness",
+      "name": "figure_table_correctness",
+      "release_gate_core": false
+    },
+    {
+      "description": "结论的审慎度与校准程度，是否严格区分证据支持的事实与作者过度声称。",
+      "id": "DIM-06",
+      "label": "Conclusion calibration",
+      "name": "conclusion_calibration",
+      "release_gate_core": false
+    },
+    {
+      "description": "对方法适用范围、理论假设、计算瓶颈或数据局限性的挖掘深度。",
+      "id": "DIM-07",
+      "label": "Limitations / boundary coverage",
+      "name": "boundary_coverage",
+      "release_gate_core": false
+    },
+    {
+      "description": "展现出的学术批判眼光，能否指出论文潜在的张力、未解之谜与深层涵义。",
+      "id": "DIM-08",
+      "label": "Critical insight",
+      "name": "critical_insight",
+      "release_gate_core": false
+    },
+    {
+      "description": "是否存在脱离原文事实的虚构、无根据脑补或歪曲（得分越低代表幻觉越多，5分代表完全无幻觉）。",
+      "id": "DIM-09",
+      "label": "Unsupported / hallucinated prose (Safety)",
+      "name": "unsupported_prose",
+      "release_gate_core": false
+    },
+    {
+      "description": "对论文推断不确定性、置信区间、测量噪声或未覆盖变量的处理明确程度。",
+      "id": "DIM-10",
+      "label": "Explicit uncertainty handling",
+      "name": "explicit_uncertainty_handling",
+      "release_gate_core": false
+    },
+    {
+      "description": "证据追溯性与可审计性：读者能否轻松将正文论述核验回原始页码、图表与引文。",
+      "id": "DIM-11",
+      "label": "Provenance / auditability usefulness",
+      "name": "provenance_usefulness",
+      "release_gate_core": false
+    },
+    {
+      "description": "整体精读综合体验：读者读完后能否透彻、系统、全面地掌握该篇研究。",
+      "id": "DIM-12",
+      "label": "Overall paper comprehension",
+      "name": "overall_understandability",
+      "release_gate_core": false
+    },
+    {
+      "description": "是否贴合该论文独有的学术叙事形态，而非粗暴套用通用的研究套路。",
+      "id": "DIM-13",
+      "label": "Paper-specific narrative completeness (Anti-template)",
+      "name": "paper_specific_narrative_completeness",
+      "release_gate_core": false
+    },
+    {
+      "description": "是否存在预置模板或机械架构痕迹（5分代表完全无模板偏见泄露，1分代表严重模板套用）。",
+      "id": "DIM-14",
+      "label": "Template-bias leakage (Anti-template Safety)",
+      "name": "template_bias_leakage",
+      "release_gate_core": false
+    }
+  ],
+  "immutable_architecture_freeze": {
+    "architecture_frozen": true,
+    "reader_v3_freeze_sha": "4139ca7b0b1ae72c0930801df5e50653b59a7e92",
+    "unseen_selection_receipt_sha256": "3e739e909ce16f68857a417af6cebba861c89079c2fdb05260025bcaac5f5fb9"
+  },
+  "issue": "https://github.com/tianshuo886/evidentia/issues/19",
+  "operational_policies": {
+    "missing_run_policy": "No paper may be declared complete until both Condition A and Condition B outputs are fully produced and validated.",
+    "quota_interruption_policy": "If quota is reached, checkpoint completed artifacts and durable receipts cleanly, pause, and resume later using the identical canonical Gemini model. Never substitute alternative models."
+  },
+  "protocol_name": "ISSUE19_FORMAL_DIRECT_AI_VS_EVIDENTIA_EVALUATION_PROTOCOL",
+  "protocol_sha256": "416140feaca5ceff97ed31b00d2c7eb0cea885bfcb580bc90d20f41daffe6ab0",
+  "release_gate_criteria": {
+    "gate_name": "ISSUE19_RELEASE_GATE",
+    "rules": [
+      {
+        "category": "A. NO-REGRESSION CORE",
+        "description": "Condition B must not materially regress versus Condition A on Narrative Clarity, Scientific Completeness, and Method/Proof Explanation across the corpus. No final adjudicated LOSS on these 3 dimensions for UNSEEN-01."
+      },
+      {
+        "category": "B. REQUIRED ADDED VALUE",
+        "description": "Condition B must demonstrate clear corpus-level added value in Figure/Table/Equation Correctness, Limitations/Boundary Coverage, Explicit Uncertainty, and Provenance/Auditability."
+      },
+      {
+        "category": "C. HALLUCINATION SAFETY",
+        "description": "Condition B must not increase unsupported scientific claims relative to Condition A. Any severe source-inconsistent hallucination in Condition B is release-blocking."
+      },
+      {
+        "category": "D. TEMPLATE-BIAS SAFETY",
+        "description": "Condition B must retain paper-specific narrative diversity validated in Issue #22. UNSEEN-01 must not be forced into an engineering-paper pipeline template."
+      },
+      {
+        "category": "E. UNSEEN MANDATORY INCLUSION",
+        "description": "UNSEEN-01 must be evaluated and reported in the primary release gate unconditionally."
+      }
+    ]
+  },
+  "schema_version": "1.0"
+}

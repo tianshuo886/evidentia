@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang='zh-CN'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'><title>Highly accurate protein structure prediction with AlphaFold：一篇论文如何把结构预测变成可检验的系统</title><style>
+/* Keep release rendering offline and deterministic.  The prior remote font
+   fetch could block a release on a CDN/network timeout; installed CJK fonts
+   remain the presentation fallback. */
+
+@page {
+  size: A4;
+  margin: 20mm 22mm 22mm 22mm;
+  background: #f5f4ed;
+
+  @top-right {
+    content: string(section-title);
+    font-family: "TsangerJinKai02", "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", Georgia, serif;
+    font-size: 8pt;
+    color: #6b6a64;
+  }
+
+  @bottom-center {
+    content: counter(page);
+    font-family: "TsangerJinKai02", "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", Georgia, serif;
+    font-size: 9pt;
+    color: #6b6a64;
+  }
+}
+
+@page:first {
+  @top-right { content: ""; }
+  @bottom-center { content: ""; }
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --parchment: #f5f4ed;
+  --ivory:     #faf9f5;
+  --near-black:#141413;
+  --dark-warm: #3d3d3a;
+  --olive:     #504e49;
+  --stone:     #6b6a64;
+  --brand:     #1B365D;
+  --border:    #e8e6dc;
+  --border-soft:#e5e3d8;
+  --tag-bg:    #E4ECF5;
+  --serif: "TsangerJinKai02", "Source Han Serif SC", "Source Han Serif CN", "Noto Serif CJK SC", "Noto Serif SC", "Songti SC", "STSong", "SimSun", Georgia, serif;
+  --sans: var(--serif);
+  --rhythm-module: 14pt;
+  --rhythm-section: 18pt;
+}
+
+html, body {
+  background: var(--parchment);
+  color: var(--near-black);
+  font-family: var(--serif);
+  font-size: 10.5pt;
+  line-height: 1.55;
+  letter-spacing: 0.2pt;
+  widows: 3;
+  orphans: 3;
+}
+
+@media screen {
+  body {
+    max-width: 210mm;
+    margin: 0 auto;
+    padding: 20mm 22mm;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+}
+
+/* ========== COVER ========== */
+.cover {
+  min-height: 240mm;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 36mm 0 0 0;
+  break-after: page;
+}
+.cover-eyebrow {
+  font-family: var(--sans);
+  font-size: 9.5pt;
+  color: var(--brand);
+  letter-spacing: 1.5pt;
+  text-transform: uppercase;
+  font-weight: 500;
+  margin-bottom: 18pt;
+}
+.cover-title {
+  font-size: 30pt;
+  font-weight: 500;
+  color: var(--near-black);
+  line-height: 1.25;
+  letter-spacing: 0.3pt;
+  margin-bottom: 16pt;
+}
+.cover-sub {
+  font-size: 13pt;
+  color: var(--olive);
+  line-height: 1.5;
+  max-width: 90%;
+  margin-bottom: 24pt;
+}
+.cover-meta {
+  font-size: 9.5pt;
+  color: var(--stone);
+  line-height: 1.55;
+  border-top: 0.5pt solid var(--border);
+  padding-top: 14pt;
+}
+.cover-meta strong {
+  color: var(--dark-warm);
+  font-weight: 500;
+}
+
+/* ========== TOC ========== */
+.toc {
+  break-after: page;
+  padding-top: 16pt;
+}
+.toc h2 {
+  font-size: 20pt;
+  font-weight: 500;
+  margin-bottom: var(--rhythm-module);
+  color: var(--near-black);
+}
+.toc-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 7pt 0;
+  border-bottom: 0.3pt dotted var(--border);
+  font-size: 10.5pt;
+}
+.toc-num {
+  color: var(--brand);
+  font-weight: 500;
+  min-width: 28pt;
+}
+.toc-title {
+  flex: 1;
+  color: var(--near-black);
+  text-decoration: none;
+  display: block;
+}
+.toc-title[href]::after {
+  content: target-counter(attr(href), page);
+  color: var(--stone);
+  font-variant-numeric: tabular-nums;
+  float: right;
+}
+
+/* ========== CHAPTERS ========== */
+.chapter {
+  break-before: page;
+  padding-top: 10pt;
+}
+.chapter-num {
+  font-family: var(--sans);
+  font-size: 9.5pt;
+  color: var(--brand);
+  letter-spacing: 1pt;
+  text-transform: uppercase;
+  margin-bottom: 6pt;
+  font-weight: 500;
+}
+h1 {
+  font-size: 20pt;
+  font-weight: 500;
+  line-height: 1.25;
+  margin: 0 0 10pt 0;
+  color: var(--near-black);
+  break-after: avoid;
+  string-set: section-title content();
+}
+h2 {
+  font-size: 14pt;
+  font-weight: 500;
+  line-height: 1.3;
+  margin: 20pt 0 8pt 0;
+  color: var(--near-black);
+  break-after: avoid;
+}
+.lead {
+  font-size: 11.5pt;
+  line-height: 1.55;
+  color: var(--dark-warm);
+  margin-bottom: var(--rhythm-module);
+  font-style: normal;
+  border-left: 2pt solid var(--brand);
+  padding-left: 10pt;
+}
+
+p {
+  margin: 0 0 10pt 0;
+  line-height: 1.55;
+  color: var(--near-black);
+  break-inside: avoid;
+}
+
+/* ========== CALLOUTS & TAKEAWAYS ========== */
+.callout {
+  background: var(--ivory);
+  border-left: 2.5pt solid var(--brand);
+  padding: 10pt 14pt;
+  border-radius: 0 3pt 3pt 0;
+  margin: 12pt 0;
+  line-height: 1.55;
+  break-inside: avoid;
+}
+.takeaway {
+  background: var(--ivory);
+  border: 1pt solid var(--border);
+  border-radius: 4pt;
+  padding: 10pt 14pt;
+  margin: 14pt 0;
+  break-inside: avoid;
+}
+.takeaway-label {
+  font-family: var(--sans);
+  font-size: 8.5pt;
+  color: var(--brand);
+  letter-spacing: 0.8pt;
+  text-transform: uppercase;
+  font-weight: 500;
+  margin-bottom: 4pt;
+}
+
+/* ========== FIGURES & TABLES ========== */
+figure.kami-figure {
+  margin: 16pt 0;
+  break-inside: avoid;
+  background: var(--ivory);
+  border: 1pt solid var(--border);
+  border-radius: 4pt;
+  padding: 12pt;
+}
+figure.kami-figure img {
+  max-width: 100%;
+  max-height: 380px;
+  display: block;
+  margin: 0 auto 8pt auto;
+  border-radius: 2pt;
+}
+figcaption {
+  font-family: var(--sans);
+  font-size: 9pt;
+  color: var(--stone);
+  text-align: center;
+  margin-bottom: 8pt;
+  font-weight: 500;
+}
+.figure-analysis {
+  font-size: 9.5pt;
+  color: var(--dark-warm);
+  line-height: 1.55;
+  border-top: 0.3pt solid var(--border);
+  padding-top: 8pt;
+}
+
+.equation-block {
+  background: var(--ivory);
+  border-radius: 4pt;
+  padding: 10pt 14pt;
+  margin: 12pt 0;
+  break-inside: avoid;
+  text-align: center;
+}
+.math-display {
+  font-size: 11pt;
+  margin: 6pt 0;
+}
+.math-source { display: inline-block; max-width: 100%; overflow-wrap: anywhere; }
+.equation-fallback, .table-asset { max-width: 100%; height: auto; display: block; margin: 6pt auto; }
+.equation-uncertain { color: var(--stone); font-style: italic; }
+.eq-explanation {
+  font-size: 9pt;
+  color: var(--stone);
+  margin-top: 4pt;
+  text-align: left;
+}
+
+/* Quiet evidence anchors */
+.evidence-cite {
+  display: inline-block;
+  white-space: nowrap;
+  font-family: var(--sans);
+  font-size: 8pt;
+  color: var(--brand);
+  background: var(--tag-bg);
+  padding: 1pt 5pt;
+  border-radius: 2pt;
+  margin-left: 4pt;
+  vertical-align: 1pt;
+  text-decoration: none;
+}
+.evidence-cite:hover {
+  text-decoration: underline;
+}
+@media print {
+  .evidence-cite { display: none; }
+}
+.evidence-binding { font-family: var(--sans); font-size: 8pt; color: var(--brand); margin-right: 5pt; }
+
+/* ========== APPENDIX ========== */
+.appendix {
+  border-top: 0.5pt solid var(--border);
+  padding-top: 14pt;
+  margin-top: 20pt;
+}
+.appendix details {
+  background: var(--ivory);
+  border: 1pt solid var(--border);
+  border-radius: 4pt;
+  padding: 10pt 14pt;
+  margin: 12pt 0;
+}
+.appendix summary {
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--brand);
+}
+</style></head>
+<body>
+<section class='cover'><div><div class='cover-title'>Highly accurate protein structure prediction with AlphaFold：一篇论文如何把结构预测变成可检验的系统</div><div class='cover-sub'>从CASP14精度、表示交换与几何精化，到消融证据和适用边界</div></div><div class='cover-meta'>Jumper et al. · Nature · 2021</div><div class="cover-orientation">这篇论文的说服力不只来自一个漂亮的精度数字，而来自一条层层收紧的证据链：先证明预测在盲测和近期结构上足够准确，再解释进化信息、残基关系和三维几何如何在网络中循环交换，最后用消融、轨迹和边界分析说明这项成功依赖哪些条件。</div></section>
+<section class='toc'><h2>目录</h2><div class='toc-item'><a class='toc-title' href='#ch-s1'><span class='toc-num'>01</span> · 先看作者究竟证明了什么</a></div><div class='toc-item'><a class='toc-title' href='#ch-s2'><span class='toc-num'>02</span> · 从MSA到三维结构：一个耦合的表示系统</a></div><div class='toc-item'><a class='toc-title' href='#ch-s3'><span class='toc-num'>03</span> · 网络如何被训练，又如何被观察</a></div><div class='toc-item'><a class='toc-title' href='#ch-s4'><span class='toc-num'>04</span> · 消融把架构主张变成可检验的比较</a></div><div class='toc-item'><a class='toc-title' href='#ch-s5'><span class='toc-num'>05</span> · 成功依赖什么：MSA深度与跨链接触</a></div><div class='toc-item'><a class='toc-title' href='#ch-s6'><span class='toc-num'>06</span> · 讨论：高精度预测的边界与用途</a></div><div class='toc-item'><a class='toc-title' href='#ch-sources'><span class='toc-num'>07</span> · 证据来源与页面锚点</a></div></section>
+<section class='chapter' id='ch-s1'><h1>先看作者究竟证明了什么</h1><div class='lead'></div><div class='chapter-body'><p>作者先把问题放在一个可量化的盲测场景中：CASP14的目标结构在评估时对参赛方法是未知的。AlphaFold在87个蛋白结构域上的中位骨架Cα rmsd95为0.96 Å（95%置信区间0.85–1.16 Å），下一名方法为2.8 Å；全原子rmsd95为1.5 Å，而最佳替代方法为3.5 Å。这个数字的意义不在于宣称‘所有蛋白都解决了’，而在于它改变了盲测中多数目标的精度量级。 <span class="evidence-cites"><a href="#p.2" class="evidence-cite" aria-label="证据 p.2">[p.2]</a></span></p>
+
+        <figure class="kami-figure" id="evidence-F01">
+          <img src='../assets/figures/v3_F01_p2_1647x1331.png' alt='图1｜AlphaFold的准确结构、代表性CASP14案例与完整模型流程。' />
+          <figcaption>图1｜AlphaFold的准确结构、代表性CASP14案例与完整模型流程。 <span class="evidence-binding">〔F01〕</span></figcaption>
+          <div class="figure-analysis">图中a展示盲测性能，b–d给出结构叠合和侧链/域堆积案例，e从输入序列、MSA和模板一路画到Evoformer、结构模块与recycling。它把‘达到什么’和‘怎样构成’放在同一视觉单元中，正是本文后续解释顺序的起点。 <span class="evidence-cites"><a href="#evidence-F01" class="evidence-cite" aria-label="证据 F01">[F01]</a> <a href="#p.2" class="evidence-cite" aria-label="证据 p.2">[p.2]</a></span></div>
+        </figure>
+        
+<p>作者随后把盲测结果放到近期PDB结构上检验：在去除高同源模板等条件后，3,144条链的整体中位骨架rmsd95为1.46 Å。pLDDT与真实lDDT-Cα近似线性（r=0.76），pTM与全链TM-score也相关（r=0.85）。这些相关性让置信度成为有用的可靠性提示，但它们仍是筛选测试集上的统计关系，不是对单个未知目标的无条件承诺。 <span class="evidence-cites"><a href="#evidence-F02" class="evidence-cite" aria-label="证据 F02">[F02]</a> <a href="#p.3" class="evidence-cite" aria-label="证据 p.3">[p.3]</a></span></p>
+<div class='callout'><p>阅读上限：高pLDDT说明局部结构更可能可靠；它不自动说明配体状态、跨链装配或功能机制正确。 <span class="evidence-cites"><a href="#evidence-F02" class="evidence-cite" aria-label="证据 F02">[F02]</a> <a href="#p.3" class="evidence-cite" aria-label="证据 p.3">[p.3]</a> <a href="#p.6" class="evidence-cite" aria-label="证据 p.6">[p.6]</a></span></p></div></div></section><section class='chapter' id='ch-s2'><h1>从MSA到三维结构：一个耦合的表示系统</h1><div class='lead'></div><div class='chapter-body'><p>输入由目标序列、同源序列形成的多序列比对（MSA）以及可用模板构成。Evoformer重复48个block，同时维护Nseq×Nres的MSA表征和Nres×Nres的pair表征。MSA的outer-product mean把进化关系写入pair表征，pair bias又回到MSA attention；triangle multiplicative update和triangle self-attention则围绕三角关系传播几何一致性。这里的关键不是组件名称，而是信息在进化证据与残基图之间往返流动。 <span class="evidence-cites"><a href="#evidence-F01" class="evidence-cite" aria-label="证据 F01">[F01]</a> <a href="#evidence-F03" class="evidence-cite" aria-label="证据 F03">[F03]</a> <a href="#p.2" class="evidence-cite" aria-label="证据 p.2">[p.2]</a> <a href="#p.4" class="evidence-cite" aria-label="证据 p.4">[p.4]</a></span></p>
+
+        <figure class="kami-figure" id="evidence-F03">
+          <img src='../assets/figures/v3_F03_p4_1610x1354.png' alt='图3｜Evoformer、pair图、triangle更新与结构模块的架构细节。' />
+          <figcaption>图3｜Evoformer、pair图、triangle更新与结构模块的架构细节。 <span class="evidence-binding">〔F03〕</span></figcaption>
+          <div class="figure-analysis">图3a–c把pair表征画成有向边，并展示出边更新和triangle attention；图3d–f再把这些表示接到IPA、残基frame和FAPE。完整图形支持一个具体判断：几何信息不是末端后处理，而是贯穿表示更新和坐标精化。 <span class="evidence-cites"><a href="#evidence-F03" class="evidence-cite" aria-label="证据 F03">[F03]</a> <a href="#p.4" class="evidence-cite" aria-label="证据 p.4">[p.4]</a></span></div>
+        </figure>
+        
+<p>随后结构模块为每个残基维护旋转和平移frame，并用invariant point attention（IPA）在局部坐标中处理三维点。网络由这些frame迭代更新主链和侧链位置；FAPE在许多局部frame下比较预测与真实原子位置，使局部相对几何成为主要训练信号。作者还明确指出，结构模块并未硬约束肽键几何，立体化学违规主要在后续Amber relaxation中处理。 <span class="evidence-cites"><a href="#evidence-F03" class="evidence-cite" aria-label="证据 F03">[F03]</a> <a href="#p.4" class="evidence-cite" aria-label="证据 p.4">[p.4]</a></span></p></div></section><section class='chapter' id='ch-s3'><h1>网络如何被训练，又如何被观察</h1><div class='lead'></div><div class='chapter-body'><p>AlphaFold不是一次前向传播就结束：最终结构会反馈给相同模块，进行三次recycling。训练中以FAPE为主，同时使用中间结构损失、distogram、masked-MSA、侧链和结构违规等辅助目标；self-distillation又把大量无标签序列的高置信预测纳入训练。这样的设计把‘预测一个坐标’改造成‘在表示和几何之间持续精化’。 <span class="evidence-cites"><a href="#evidence-F01" class="evidence-cite" aria-label="证据 F01">[F01]</a> <a href="#evidence-F04" class="evidence-cite" aria-label="证据 F04">[F04]</a> <a href="#p.2" class="evidence-cite" aria-label="证据 p.2">[p.2]</a> <a href="#p.5" class="evidence-cite" aria-label="证据 p.5">[p.5]</a></span></p>
+
+        <figure class="kami-figure" id="evidence-F04">
+          <img src='../assets/figures/v3_F04_p5_819x1052.png' alt='图4｜组件消融与Evoformer中间结构轨迹。' />
+          <figcaption>图4｜组件消融与Evoformer中间结构轨迹。 <span class="evidence-binding">〔F04〕</span></figcaption>
+          <div class="figure-analysis">图4a比较去掉不同组件后的性能变化；图4b沿48个block和recycling展示目标结构如何形成。LmPR等较易目标早早稳定，而SARS-CoV-2 ORF8需要近乎全深度的持续重排。图形因此同时承担‘哪些设计有效’和‘深度如何被使用’两种解释任务。 <span class="evidence-cites"><a href="#evidence-F04" class="evidence-cite" aria-label="证据 F04">[F04]</a> <a href="#p.5" class="evidence-cite" aria-label="证据 p.5">[p.5]</a></span></div>
+        </figure>
+        
+<p>主文把完整算法细节、伪代码、输入特征和训练细节指向Supplementary Methods。因而从正文可以准确理解设计逻辑和评价协议，却不应把六页主文误读成独立可执行的完整复现配方。 <span class="evidence-cites"><a href="#p.8" class="evidence-cite" aria-label="证据 p.8">[p.8]</a></span></p></div></section><section class='chapter' id='ch-s4'><h1>消融把架构主张变成可检验的比较</h1><div class='lead'></div><div class='chapter-body'><p>图4a不是把模型当作一个不可拆的黑箱：在CASP14域和PDB链两种测试集上，去掉self-distillation、raw MSA、distogram head、IPA、recycling、triangle更新/门控或端到端结构梯度都会带来不同程度的下降。这样的比较支持‘多种设计共同贡献’这一结论，也帮助读者把图3中的结构选择与真实性能联系起来。 <span class="evidence-cites"><a href="#evidence-F04" class="evidence-cite" aria-label="证据 F04">[F04]</a> <a href="#p.5" class="evidence-cite" aria-label="证据 p.5">[p.5]</a></span></p>
+<p>但消融的结论应保持在证据允许的高度：它说明在这个训练和评估设置中，删除组件会损害表现，却不证明每个组件对应一个彼此独立、唯一的生物物理机制。不同组件可能存在补偿或交互，图4的轨迹也显示计算需求随目标而变。 <span class="evidence-cites"><a href="#evidence-F04" class="evidence-cite" aria-label="证据 F04">[F04]</a> <a href="#p.5" class="evidence-cite" aria-label="证据 p.5">[p.5]</a></span></p>
+<div class='takeaway'><div class='takeaway-label'>核心关注</div><p>消融提升的是可检验性，不是把学习系统变成完全透明的因果程序。 <span class="evidence-cites"><a href="#evidence-F04" class="evidence-cite" aria-label="证据 F04">[F04]</a> <a href="#p.5" class="evidence-cite" aria-label="证据 p.5">[p.5]</a></span></p></div></div></section><section class='chapter' id='ch-s5'><h1>成功依赖什么：MSA深度与跨链接触</h1><div class='lead'></div><div class='chapter-body'><p>作者专门把‘模型在哪里变差’作为一段结果，而不是把它藏在限制清单里。图5a显示，当MSA深度低于大约30条序列时，骨架准确度明显下降；超过约100条后，继续增加的收益变小。论文的解释是：早期结构假设需要足够的进化信息，而后续高精度精化不再同样依赖MSA深度。 <span class="evidence-cites"><a href="#evidence-F05" class="evidence-cite" aria-label="证据 F05">[F05]</a> <a href="#p.6" class="evidence-cite" aria-label="证据 p.6">[p.6]</a></span></p>
+
+        <figure class="kami-figure" id="evidence-F05">
+          <img src='../assets/figures/v3_F05_p6_1619x642.png' alt='图5｜MSA深度与跨链接触对预测的影响。' />
+          <figcaption>图5｜MSA深度与跨链接触对预测的影响。 <span class="evidence-binding">〔F05〕</span></figcaption>
+          <div class="figure-analysis">图5a把不同覆盖条件下的lDDT-Cα与有效MSA深度联系起来；图5b展示一个交织同源二聚体在只有弱模板且没有化学计量输入时仍可被预测。二者合在一起说明：MSA深度是一个阈值条件，而接触上下文决定哪些结构关系难以从单链输入恢复。 <span class="evidence-cites"><a href="#evidence-F05" class="evidence-cite" aria-label="证据 F05">[F05]</a> <a href="#p.6" class="evidence-cite" aria-label="证据 p.6">[p.6]</a></span></div>
+        </figure>
+        
+<p>因此，‘AlphaFold很准’需要补上条件：对于主要由异源跨链接触塑造形状的bridging domains，模型明显较弱；对于一个结构在PDB中呈现的特定条件，模型输出更接近‘最可能出现的结构’，而不是所有配体、离子和构象状态的完整集合。 <span class="evidence-cites"><a href="#evidence-F05" class="evidence-cite" aria-label="证据 F05">[F05]</a> <a href="#p.6" class="evidence-cite" aria-label="证据 p.6">[p.6]</a></span></p></div></section><section class='chapter' id='ch-s6'><h1>讨论：高精度预测的边界与用途</h1><div class='lead'></div><div class='chapter-body'><p>全文的论证闭环由这个边界完成。作者把方法描述成生物信息学与物理/几何归纳偏置的结合：它从PDB数据中学习，同时尽量让网络处理结构约束。在实验应用上，这使分子置换、冷冻电镜图解释和大规模结构预测成为可能；但这些用途仍建立在输入信息和PDB条件可代表目标状态的前提上。 <span class="evidence-cites"><a href="#p.6" class="evidence-cite" aria-label="证据 p.6">[p.6]</a></span></p>
+<p>读者因此应区分三层结论。第一层是有强统计支持的结构精度：CASP14和近期PDB链上的数字很有说服力。第二层是有干预和轨迹支持的计算解释：架构组件确实影响结果，但内部机制仍非完全可识别。第三层是尚未被这些实验解决的生物学问题：配体、离子、构象变化、完整复合体和功能机制不能由高置信度结构自动推出。 <span class="evidence-cites"><a href="#evidence-F01" class="evidence-cite" aria-label="证据 F01">[F01]</a> <a href="#evidence-F02" class="evidence-cite" aria-label="证据 F02">[F02]</a> <a href="#evidence-F04" class="evidence-cite" aria-label="证据 F04">[F04]</a> <a href="#evidence-F05" class="evidence-cite" aria-label="证据 F05">[F05]</a> <a href="#p.2" class="evidence-cite" aria-label="证据 p.2">[p.2]</a> <a href="#p.3" class="evidence-cite" aria-label="证据 p.3">[p.3]</a> <a href="#p.5" class="evidence-cite" aria-label="证据 p.5">[p.5]</a> <a href="#p.6" class="evidence-cite" aria-label="证据 p.6">[p.6]</a></span></p>
+<div class='callout'><p>本文真正建立的是：在合适的序列信息与PDB式结构条件下，端到端模型可以把蛋白质结构预测推进到近实验级；它没有宣称从序列直接读出所有生物学状态。 <span class="evidence-cites"><a href="#evidence-F01" class="evidence-cite" aria-label="证据 F01">[F01]</a> <a href="#evidence-F05" class="evidence-cite" aria-label="证据 F05">[F05]</a> <a href="#p.2" class="evidence-cite" aria-label="证据 p.2">[p.2]</a> <a href="#p.6" class="evidence-cite" aria-label="证据 p.6">[p.6]</a></span></p></div></div></section>
+
+    <section class='chapter appendix' id='ch-sources'>
+      <h1>证据来源与页面锚点</h1>
+      <div class='lead'>正文中的图表、公式和引文都保留了返回源材料的线索；需要逐项核对时可打开独立的审计视图。</div>
+      <p>当前稿件引用了 0 条主张、0 组图表和 0 张数据表。</p>
+      <p>页面锚点：<a id='p.1' href='#p.1'>p.1</a></p>
+      <p><a href='evidence_atlas.html'>查看逐项来源与核验记录</a></p>
+    </section>
+    
+</body></html>

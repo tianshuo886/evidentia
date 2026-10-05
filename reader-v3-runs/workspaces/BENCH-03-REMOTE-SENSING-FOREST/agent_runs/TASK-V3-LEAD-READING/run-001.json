@@ -1,0 +1,177 @@
+{
+  "task_id": "TASK-V3-LEAD-READING",
+  "execution_kind": "HOST_AGENT",
+  "executor": {
+    "kind": "HOST_AGENT",
+    "host": "pi",
+    "host_version": "frozen-v3",
+    "provider": "magpie",
+    "model": "antigravity/gemini-3.8-flash",
+    "model_version": "canonical-high",
+    "reasoning_profile": "high",
+    "tool_profile": "paper-only",
+    "started_at": "2026-10-05T15:58:46.574599+00:00",
+    "completed_at": "2026-10-05T15:58:46.574599+00:00"
+  },
+  "started_at": "2026-10-05T15:58:46.574599+00:00",
+  "completed_at": "2026-10-05T15:58:46.574599+00:00",
+  "input_hashes": {
+    "source/paper.pdf": "b4d103e6ab0664d96c31a00a0ee4d99e9fbc54a9f1a8eeea500716843d4eabce",
+    "model/source_map.json": "16c967f61755c940f9a2f8ef03d479a60704bcfe08b2c225c458c4f1eb5326a3",
+    "model/figure_inventory.json": "3d11f67345d30c6d43636f822b02f8f7f1a0c41df7de1bcf27279fe7129dfbb1"
+  },
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "result": {
+    "schema_version": "1.0",
+    "paper_id": "BENCH-03-REMOTE-SENSING-FOREST",
+    "source_sha256": "b4d103e6ab0664d96c31a00a0ee4d99e9fbc54a9f1a8eeea500716843d4eabce",
+    "paper_type": "remote_sensing_and_geospatial_probabilistic_inference",
+    "paper_characterization": "一篇以稀疏太空激光雷达（GEDI）为弱监督、以稠密光学多光谱（Sentinel-2）为推理基底，构建全球首个10米分辨率、带逐像素预测不确定性估计的全球冠层高度深度集成模型的遥感工程与地球系统科学论文。",
+    "argument_topology": {
+      "nodes": [
+        {
+          "id": "N01",
+          "role": "observation_and_problem",
+          "label": "全球高分辨率冠层高度与不确定性表达的观测矛盾",
+          "statement": "GEDI垂直测量精度高但空间覆盖极度稀疏，Sentinel-2空间连续但无法直接观测三维结构；已有全球图（如UMD）存在系统性负偏差与缺乏不确定性表达。",
+          "grounding": [
+            "p.1",
+            "p.2"
+          ]
+        },
+        {
+          "id": "N02",
+          "role": "probabilistic_architecture",
+          "label": "无下采样残差CNN与高斯异方差似然设计",
+          "statement": "采用8残差块、256通道的全卷积网络保持10m原生分辨率；输出高度均值与偶然不确定性方差，采用高斯负对数似然直接联合优化。",
+          "grounding": [
+            "p.2",
+            "p.3",
+            "F01"
+          ]
+        },
+        {
+          "id": "N03",
+          "role": "deep_ensemble_inference",
+          "label": "深度集成与多时相方差倒数加权",
+          "statement": "训练5个独立初始化的CNN估计认知不确定性，并在1年内最多10个获取时相间采用预测方差倒数加权融合生成2020年复合产品。",
+          "grounding": [
+            "p.2",
+            "p.3",
+            "p.5",
+            "fig02_p5_1731x845.png"
+          ]
+        },
+        {
+          "id": "N04",
+          "role": "independent_validation",
+          "label": "留出GEDI与机载LiDAR（LVIS/ALS）双轨验证",
+          "statement": "留出GEDI验证表明balanced RMSE为7.3m（偏差从-7.1m降至-1.7m）；24个跨各大洲Sentinel-2图幅的独立机载LiDAR验证显示GEDI覆盖内RMSE为7.9m，覆盖外为5.3m。",
+          "grounding": [
+            "p.3",
+            "p.4",
+            "F01",
+            "p.22"
+          ]
+        },
+        {
+          "id": "N05",
+          "role": "uncertainty_calibration",
+          "label": "预测不确定性的质量筛选效用与生物群系异质性",
+          "statement": "不确定性与实际经验误差强正相关，剔除20%最高不确定性像素可使RMSE降低13%，但校准曲线在极端高度与不同生物群系下存在变化。",
+          "grounding": [
+            "p.4",
+            "p.5",
+            "fig02_p5_1731x845.png"
+          ]
+        },
+        {
+          "id": "N06",
+          "role": "global_synthesis_and_boundary",
+          "label": "全球生态统计推断与物理不可辨识性边界",
+          "statement": "全球部署处理1.3万亿像素，发现全球41%陆地覆盖>5m树木，但光学影像的同谱异质与云雪干扰决定了10m并非逐像素物理真值。",
+          "grounding": [
+            "p.5",
+            "p.6",
+            "crop_F03_p6_397x390.png",
+            "p.7"
+          ]
+        }
+      ],
+      "relations": [
+        {
+          "from": "N01",
+          "to": "N02",
+          "kind": "addressed_by",
+          "evidence": [
+            "p.2",
+            "F01"
+          ]
+        },
+        {
+          "from": "N02",
+          "to": "N03",
+          "kind": "scaled_by",
+          "evidence": [
+            "p.3",
+            "p.5"
+          ]
+        },
+        {
+          "from": "N03",
+          "to": "N04",
+          "kind": "empirically_evaluated_by",
+          "evidence": [
+            "p.3",
+            "p.4"
+          ]
+        },
+        {
+          "from": "N04",
+          "to": "N05",
+          "kind": "calibrated_by",
+          "evidence": [
+            "p.4",
+            "p.5"
+          ]
+        },
+        {
+          "from": "N05",
+          "to": "N06",
+          "kind": "bounds_global_application",
+          "evidence": [
+            "p.5",
+            "p.6"
+          ]
+        }
+      ]
+    },
+    "narrative_draft": "本研究解决了全球森林遥感中‘空间连续性’与‘三维几何保真度’的核心矛盾。GEDI空间激光雷达仅在南北纬51.6度之间提供离散点阵，而Sentinel-2覆盖全球但仅为二维多光谱反射。作者通过构建保留10米空间分辨率的无下采样残差卷积网络，采用高斯负对数似然同时输出冠层高度均值与方差（F01）。通过5模型深度集成与多时相方差倒数加权，系统融合了偶然与认知不确定性。\n\n在留出GEDI测试与24个跨洲机载激光雷达（LVIS/ALS）独立验证中，模型显著修正了既有全球地图（UMD）在高冠层森林中严重的系统性低估偏差（平均偏差从-7.1m降至-1.7m）。不确定性分析表明，预测标准差与真实误差强正相关，提供了极其可贵的质量过滤信号。然而，作者严谨指明：10米网格是产品的像元间距而非独立地面真值观测，光学多光谱固有的物理不可辨识性与高纬度云雪噪声依然是全球图谱的使用边界。",
+    "decisive_evidence": [
+      {
+        "evidence_id": "F01",
+        "statement": "Fig. 1 确立了模型架构与留出 GEDI 验证矩阵，展示了在 GEDI 上的 balanced RMSE 为 7.3m，并对比了 UMD 偏差显著收敛。",
+        "grounding": [
+          "p.3",
+          "F01"
+        ]
+      },
+      {
+        "evidence_id": "p.5",
+        "statement": "Fig. 2 展示了全球 10m 冠层高度图与对应的预测标准差分布图，揭示了全球森林高度与不确定性的空间自相关性。",
+        "grounding": [
+          "p.5",
+          "fig02_p5_1731x845.png"
+        ]
+      }
+    ],
+    "uncertainties_and_open_issues": [
+      {
+        "issue": "低矮植被（<5m）过估计与高纬度不确定性偏高",
+        "description": "在阿拉斯加、育空与西藏等区域，受积雪、冻原与物候期限制，预测不确定性显著偏高，且低矮灌木存在系统性偏高倾向。",
+        "epistemic_status": "OBSERVED_LIMITATION"
+      }
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "source_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+  "page": 3,
+  "bindings": [
+    {
+      "evidence_id": "F01",
+      "kind": "figure",
+      "bbox_norm": [0.345, 0.085, 0.655, 0.555],
+      "panel_bboxes_norm": [],
+      "status": "VERIFIED",
+      "complete": true,
+      "caption_match": true,
+      "confidence": 0.98,
+      "notes": "Full-page inspection: complete Transformer encoder/decoder architecture from input/output embeddings through softmax, with the Figure 1 caption immediately below; excludes surrounding body text."
+    }
+  ]
+}

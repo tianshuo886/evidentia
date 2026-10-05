@@ -1,0 +1,60 @@
+{
+  "task_id": "TASK-V3-REVISION-MEMO",
+  "task_type": "REVISION_MEMO",
+  "required_capability": "SCIENTIFIC_EDITORIAL_RECONCILIATION",
+  "scientific_contract": "Act as a scientific editor. Reconcile independent specialist rereads into a Revision Memo only. Do not write the final Reader and do not decide disagreements by voting.",
+  "description": "Reader v3 Council/Editor revision memo.",
+  "input_artifacts": {
+    "source_pdf": "source/paper.pdf",
+    "lead_reader_draft": "model/paper_understanding_draft.json",
+    "lens_manifest": "model/lens_v3_manifest.json",
+    "lens_outputs": [
+      "lens_v3/argument_narrative.json",
+      "lens_v3/method_study_design.json",
+      "lens_v3/evidence_results.json",
+      "lens_v3/validity_boundary.json",
+      "lens_v3/mechanism_causality.json",
+      "lens_v3/reproducibility_implementation.json"
+    ]
+  },
+  "target_output": "model/revision_memo.json",
+  "output_schema": "revision_memo",
+  "source_sha256": "a71f1294a021cebc6939ec977fc073b6d7b4f183950eba761ec55364d30b729f",
+  "base_sha256": "55607fb18f8b13e0e8b2bb7953642a6a3211b4964e4badfbbe0a2b1808d3ac88",
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "allowed_inputs": [
+    "source/",
+    "source_pages/",
+    "assets/",
+    "model/paper_understanding_draft.json",
+    "model/lens_v3_manifest.json",
+    "lens_v3/"
+  ],
+  "forbidden_inputs": [
+    "apply/",
+    "project/",
+    "memory/project/"
+  ],
+  "prohibited_context": [
+    "PROJECT_APPLY",
+    "RESEARCH_MEMORY"
+  ],
+  "constraints": [
+    "REVISION_MEMO_ONLY",
+    "NO_MAJORITY_VOTING",
+    "PRESERVE_UNRESOLVED"
+  ],
+  "instructions": "Read the Lead Reader draft and all six independent Lens reports. Produce a concise editorial Revision Memo. Each revision must say exactly what the Lead Writer should add, rewrite, correct, qualify, remove or verify; why; which evidence supports the change; and which Lens(es) raised it. Merge duplicates, preserve real conflicts, and leave genuinely unresolved points unresolved. Do not produce a new paper summary.",
+  "executor_template": {
+    "host": "generic-host",
+    "host_version": "UNKNOWN",
+    "provider": "magpie",
+    "model": "antigravity/gemini-3.8-flash",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "standard",
+    "tool_profile": "paper-only",
+    "started_at": "2026-10-05T14:34:47.819441+00:00",
+    "completed_at": "2026-10-05T14:34:47.819441+00:00"
+  }
+}

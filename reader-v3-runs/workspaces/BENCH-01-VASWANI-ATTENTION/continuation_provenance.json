@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "run_class": "PRE_ANTITEMPLATE_SMOKE",
+  "continuation_code_sha": "22dcbcb5c9d935f7518a61c9457aa68a25801ae5",
+  "continuation_code_ref": "reader-reset-v3",
+  "historical_cloud_code_sha": "ca313e8c40ce2fe7ffea9e4fb31d31234500c5dd",
+  "historical_cloud_code_available": false,
+  "historical_cloud_commit_unavailable": true,
+  "historical_archive": "BENCH-01-VASWANI-ATTENTION-reader-reset-v3-ca313e8.tar.gz",
+  "historical_archive_available": false,
+  "note": "The prior ephemeral/cloud execution commit and archive were not recoverable from local or GitHub refs. This continuation uses the reproducible pre-Issue-#22 baseline at 22dcbcb. Historical provenance must not be conflated with continuation provenance. The historical BENCH-01 workspace, its Lead Reader scientific output, and its real Direct-AI output were not accessible in this checkout. The local workspace was newly reconstructed from the arXiv full PDF; it must not be represented as preservation of those historical artifacts.",
+  "source_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+  "source_origin": "reacquired arXiv full PDF during continuation; historical PDF byte identity unproven",
+  "historical_source_sha256_known": false,
+  "historical_lead_reader_available": false,
+  "historical_direct_ai_baseline_available": false,
+  "source_preserved_within_continuation": true
+}

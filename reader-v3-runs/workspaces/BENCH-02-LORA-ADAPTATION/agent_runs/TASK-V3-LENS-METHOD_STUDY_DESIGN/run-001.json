@@ -1,0 +1,101 @@
+{
+  "task_id": "TASK-V3-LENS-METHOD_STUDY_DESIGN",
+  "execution_kind": "HOST_AGENT",
+  "executor": {
+    "kind": "HOST_AGENT",
+    "host": "pi",
+    "host_version": "UNKNOWN",
+    "provider": "openai-codex",
+    "model": "gpt-6-sol",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "high",
+    "tool_profile": "paper-only",
+    "started_at": "2026-10-04T03:10:00+00:00",
+    "completed_at": "2026-10-04T03:10:00+00:00"
+  },
+  "started_at": "2026-10-04T03:10:00+00:00",
+  "completed_at": "2026-10-04T03:10:00+00:00",
+  "input_hashes": {
+    "source/paper.pdf": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+    "model/source_map.json": "2fcb61fcc5fe6d72f4134b0d0f02455582fbcb74f796be494afbbf6fd8d36f7b",
+    "model/figure_inventory.json": "75a2c38fb10537e2939e3f85c339309fedd862dc7781f797bffbbdaf49d69afa",
+    "model/paper_understanding_draft.json": "7f5377fff58ba5872ff805196eba449fa044edc91bbfec485f954b1fa212b0a9"
+  },
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "result": {
+    "schema_version": "1.0",
+    "lens": "method_study_design",
+    "lens_kind": "core",
+    "source_sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+    "base_sha256": "7f5377fff58ba5872ff805196eba449fa044edc91bbfec485f954b1fa212b0a9",
+    "summary": "研究设计先定义条件语言建模中的任务参数增量，再将 ΔΦ 用低秩 Θ 编码；实验冻结 W0 与 MLP，仅在 attention 权重上训练 LoRA，分别覆盖 GLUE、生成任务及 GPT-3 大模型。",
+    "findings": [
+      {
+        "id": "MD1",
+        "statement": "A∈R^{r×k} 与 B∈R^{d×r}，W0 冻结，ΔW=BA；A 高斯初始化、B 零初始化，缩放 α/r。",
+        "evidence": [
+          "p.4",
+          "F01"
+        ],
+        "epistemic": "VERIFIED",
+        "action": "KEEP",
+        "importance": "MINOR",
+        "reason": "Independent source-grounded pass; finding records what the Lead Reader should preserve or qualify.",
+        "cross_cutting_checks": {
+          "anomaly": null,
+          "counterfactual": null
+        }
+      },
+      {
+        "id": "MD2",
+        "statement": "实验主要适配 Wq/Wv，冻结 MLP，并将 MLP、LayerNorm、bias 的系统实验留到未来工作。",
+        "evidence": [
+          "p.5"
+        ],
+        "epistemic": "VERIFIED",
+        "action": "QUALIFY",
+        "importance": "MAJOR",
+        "reason": "Independent source-grounded pass; finding records what the Lead Reader should preserve or qualify.",
+        "cross_cutting_checks": {
+          "anomaly": null,
+          "counterfactual": null
+        }
+      },
+      {
+        "id": "MD3",
+        "statement": "rank 与矩阵位置消融保持相近参数预算，用于区分“更多参数”与“在哪些矩阵上适配”的影响。",
+        "evidence": [
+          "T05",
+          "T08",
+          "p.10",
+          "p.17"
+        ],
+        "epistemic": "SUPPORTED",
+        "action": "EXPAND",
+        "importance": "MAJOR",
+        "reason": "Independent source-grounded pass; finding records what the Lead Reader should preserve or qualify.",
+        "cross_cutting_checks": {
+          "anomaly": null,
+          "counterfactual": null
+        }
+      },
+      {
+        "id": "MD4",
+        "statement": "GPT-3 实验采用 tuned learning rate 后对数据集复用其余超参；读者需把表格比较理解为特定协议下的比较。",
+        "evidence": [
+          "T12",
+          "p.26"
+        ],
+        "epistemic": "VERIFIED",
+        "action": "VERIFY",
+        "importance": "MINOR",
+        "reason": "Independent source-grounded pass; finding records what the Lead Reader should preserve or qualify.",
+        "cross_cutting_checks": {
+          "anomaly": null,
+          "counterfactual": null
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "task_id": "TASK-V3-LEAD-WRITING",
+  "task_type": "LEAD_WRITING",
+  "required_capability": "SCIENTIFIC_NARRATIVE_WRITING",
+  "scientific_contract": "Write the final Chinese-first Paper Reader as a coherent scientific explanation. The Reader must be authored by the strong model, not assembled from fixed prose templates.",
+  "description": "Reader v3 Lead Writer final narrative pass.",
+  "input_artifacts": {
+    "source_pdf": "source/paper.pdf",
+    "source_map": "model/source_map.json",
+    "figure_inventory": "model/figure_inventory.json",
+    "lead_reader_draft": "model/paper_understanding_draft.json",
+    "revision_memo": "model/revision_memo.json",
+    "lens_outputs": [
+      "lens_v3/argument_narrative.json",
+      "lens_v3/method_study_design.json",
+      "lens_v3/evidence_results.json",
+      "lens_v3/validity_boundary.json",
+      "lens_v3/proof_integrity.json",
+      "lens_v3/assumption_sensitivity.json"
+    ]
+  },
+  "target_output": "reader/narrative_manuscript.json",
+  "output_schema": "narrative_manuscript",
+  "source_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+  "base_sha256": "1a76e5ae80d0141406b073ef77877f092e742b764bbe44f9e86f041878ab3fd7",
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "allowed_inputs": [
+    "source/",
+    "source_pages/",
+    "assets/",
+    "model/source_map.json",
+    "model/figure_inventory.json",
+    "model/paper_understanding_draft.json",
+    "model/revision_memo.json",
+    "model/lens_v3_manifest.json",
+    "lens_v3/"
+  ],
+  "forbidden_inputs": [
+    "apply/",
+    "project/",
+    "memory/project/"
+  ],
+  "prohibited_context": [
+    "PROJECT_APPLY",
+    "RESEARCH_MEMORY"
+  ],
+  "constraints": [
+    "CHINESE_FIRST",
+    "PAPER_SPECIFIC_STRUCTURE",
+    "CONTINUOUS_NARRATIVE",
+    "INLINE_EVIDENCE",
+    "NO_INTERNAL_PIPELINE_VOCABULARY",
+    "NO_PROJECT_TRANSFER"
+  ],
+  "instructions": "Return a narrative_manuscript v2 object. Re-read source evidence whenever the draft or Revision Memo requires it. Write for a researcher who has not read the paper: explain why the paper exists, what it does, how it works, which experiments/results are decisive, what those results establish, and what remains uncertain. Use a paper-specific section structure rather than fixed slots. Place verified figures/tables/equations locally where they advance the scientific argument; each visual block must explain what question it addresses, what it shows, what it supports, and what it does not prove. The primary prose must never mention Lens names, Council, O/I/A, schemas, hashes, task IDs, pipeline phases or audit machinery. Do not create project-transfer or reusable-component advice. Preserve uncertainty instead of filling gaps with generic prose.",
+  "executor_template": {
+    "host": "generic-host",
+    "host_version": "UNKNOWN",
+    "provider": "openai-codex",
+    "model": "gpt-6.1-sol",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "standard",
+    "tool_profile": "paper-only",
+    "started_at": "2026-10-03T20:12:57.534445+00:00",
+    "completed_at": "2026-10-03T20:12:57.534445+00:00"
+  }
+}

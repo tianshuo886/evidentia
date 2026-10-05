@@ -1,0 +1,80 @@
+{
+  "task_id": "TASK-V3-LENS-MECHANISM_CAUSALITY",
+  "execution_kind": "HOST_AGENT",
+  "executor": {
+    "kind": "HOST_AGENT",
+    "host": "claude-code",
+    "host_version": "env",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4",
+    "model_version": "2025",
+    "reasoning_profile": "deep",
+    "tool_profile": "paper-only",
+    "started_at": "2026-10-04T02:00:44.494668+00:00",
+    "completed_at": "2026-10-04T02:00:44.494668+00:00"
+  },
+  "started_at": "2026-10-04T02:00:44.494668+00:00",
+  "completed_at": "2026-10-04T02:00:44.494668+00:00",
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "result": {
+    "schema_version": "1.0",
+    "lens": "mechanism_causality",
+    "lens_kind": "specialist",
+    "source_sha256": "6f3030abb7d9d4f0624a5cbe5ca2ff673df63afc85c97fadd0bf7db780c8dbaf",
+    "base_sha256": "0330cd973b54a50e9fadfb5f71bcee4864182624ddc6444663496531f1dca124",
+    "findings": [
+      {
+        "id": "MC-1",
+        "statement": "作者声称产生结果的机制是'量子干涉+斑纹分布+高保真保留+计算体量'：足够大的纠缠态产生远离均匀的输出，处理器错误率够低故采样仍携带高于均匀的概率，而计算体量使经典复现指数昂贵。",
+        "evidence": [
+          "p.2",
+          "p.4",
+          "p.5"
+        ],
+        "epistemic": "SUPPORTED",
+        "action": "KEEP",
+        "importance": "MAJOR"
+      },
+      {
+        "id": "MC-2",
+        "statement": "把机制与相关性区分开的证据：F_XEB 随线路深度与比特数的衰减与门乘法模型的预测吻合(Fig.4)，说明保真度由逐门误差机制性决定；误差被论证为局域 Pauli(数字误差模型)故可乘性预测成立；门远快于 1/f 磁通噪声以抑制相关误差建立因果控制。",
+        "evidence": [
+          "F04",
+          "F02",
+          "p.5"
+        ],
+        "epistemic": "SUPPORTED",
+        "action": "KEEP",
+        "importance": "CRITICAL"
+      },
+      {
+        "id": "MC-3",
+        "statement": "什么观察会证伪机制：若 F_XEB 比门乘法预测衰减更快(指示相关性/集体误差)，或若经典算法能以匹配成本采样，机制与主张均告失败。",
+        "evidence": [
+          "p.4",
+          "p.5"
+        ],
+        "epistemic": "SUPPORTED",
+        "action": "VERIFY",
+        "importance": "MAJOR",
+        "cross_cutting_checks": {
+          "anomaly": null,
+          "counterfactual": "相关性噪声(TLS 缺陷、1/f 磁通噪声、微波串扰)原则上可集体抹平斑纹分布；论文靠设计与去相关来防御，但仅检验 Pauli 模型而非一般情形。"
+        }
+      },
+      {
+        "id": "MC-4",
+        "statement": "仍具竞争性的机制：未被 Pauli 乘积模型覆盖的相关性误差可同时抬高真实保真或压低估计保真，是改写定性结论的主要竞因。",
+        "evidence": [
+          "p.3",
+          "p.5"
+        ],
+        "epistemic": "UNRESOLVED",
+        "action": "QUALIFY",
+        "importance": "MAJOR"
+      }
+    ],
+    "summary": "因果机制：量子干涉在巨大的纠缠希尔伯特空间中产生远离均匀的斑纹(speckle)输出分布；高保真处理器保留足够结构，使采样比特串的概率高于均匀基线(F_XEB>0)，同时计算体量使经典复现指数级昂贵。乘法保真度模型与 F_XEB 随深度/比特数的衰减(Fig.4)机制性地显示保真度跟踪门误差；数字化误差模型一节论证误差为局域 Pauli，从而可乘性预测。"
+  }
+}

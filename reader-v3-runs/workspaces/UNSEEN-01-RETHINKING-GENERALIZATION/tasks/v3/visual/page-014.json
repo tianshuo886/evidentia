@@ -1,0 +1,84 @@
+{
+  "task_id": "TASK-V3-VISUAL-P014",
+  "task_type": "VISUAL_LOCALIZATION",
+  "required_capability": "VISUAL_EVIDENCE_LOCALIZATION",
+  "scientific_contract": "Inspect the full rendered PDF page and semantically bind each requested Figure/Table to its complete visual region.",
+  "description": "Reader v3 semantic visual localization for source page 14.",
+  "input_artifacts": {
+    "source_page": "source_pages/page-014.png",
+    "source_pdf": "source/paper.pdf",
+    "page": 14,
+    "candidates": [
+      {
+        "evidence_id": "T03",
+        "kind": "table",
+        "paper_label": "Table 3",
+        "caption_original": "Table 3 Generalizing with kernels. The test error associated with solving the kernel equation (3) on",
+        "candidate_bbox_pdf": [
+          102.90676879882812,
+          426.68914794921875,
+          447.7742004394531,
+          750.0242919921875
+        ],
+        "candidate_asset": "assets/figures/crop_T03_p14_959x899.png",
+        "candidate_method": "MULTIMODAL_PAGE_LOCALIZATION",
+        "candidate_confidence": 0.92
+      },
+      {
+        "evidence_id": "T04",
+        "kind": "table",
+        "paper_label": "Table 4",
+        "caption_original": "Table 4 Results on ﬁtting random labels on the CIFAR10 dataset with weight decay and data aug-",
+        "candidate_bbox_pdf": [
+          102.90676879882812,
+          290.2402648925781,
+          447.7742004394531,
+          612.94287109375
+        ],
+        "candidate_asset": "assets/figures/crop_T04_p14_959x897.png",
+        "candidate_method": "MULTIMODAL_PAGE_LOCALIZATION",
+        "candidate_confidence": 0.92
+      }
+    ]
+  },
+  "target_output": "visual/page-014.json",
+  "output_schema": "visual_page_verification",
+  "source_sha256": "a71f1294a021cebc6939ec977fc073b6d7b4f183950eba761ec55364d30b729f",
+  "base_sha256": null,
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "allowed_inputs": [
+    "source/paper.pdf",
+    "source_pages/page-014.png",
+    "model/figure_inventory.json"
+  ],
+  "forbidden_inputs": [
+    "apply/",
+    "project/",
+    "memory/project/",
+    "lens/",
+    "lens_v3/"
+  ],
+  "prohibited_context": [
+    "PROJECT_APPLY",
+    "RESEARCH_MEMORY"
+  ],
+  "constraints": [
+    "FULL_PAGE_SEMANTIC_LOCALIZATION",
+    "NO_WHOLE_PAGE_FALLBACK",
+    "CAPTION_SEMANTIC_MATCH",
+    "MULTI_PANEL_AWARE"
+  ],
+  "instructions": "Inspect the complete page image, not only PDF object geometry. For every candidate evidence_id, identify the complete visual region corresponding to its caption. Return bbox_norm=[x0,y0,x1,y1] in normalized page coordinates 0..1. A multi-panel figure should use one bbox covering the complete figure and panel_bboxes_norm for meaningful panels when identifiable. Mark VERIFIED only when the crop is complete and the caption semantically matches. Reject caption-only, body-text-heavy, partial panel, unrelated image, and whole-page regions. If uncertain, return NEEDS_REVIEW rather than guessing.",
+  "executor_template": {
+    "host": "generic-host",
+    "host_version": "UNKNOWN",
+    "provider": "magpie",
+    "model": "antigravity/gemini-3.8-flash",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "standard",
+    "tool_profile": "paper-only",
+    "started_at": "2026-10-05T14:04:29.560573+00:00",
+    "completed_at": "2026-10-05T14:04:29.560573+00:00"
+  }
+}

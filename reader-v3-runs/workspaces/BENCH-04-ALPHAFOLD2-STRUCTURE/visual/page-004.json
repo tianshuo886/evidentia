@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "source_sha256": "6eae057a9faf4f671c3101e0745ed704460c6d3dec77243dfd3a9f2d2ab68970",
+  "page": 4,
+  "bindings": [{
+    "evidence_id": "F03", "kind": "figure", "bbox_norm": [0.065, 0.035, 0.950, 0.595],
+    "panel_bboxes_norm": [[0.070,0.045,0.945,0.250],[0.070,0.245,0.270,0.385],[0.360,0.245,0.945,0.390],[0.070,0.390,0.500,0.570],[0.500,0.390,0.945,0.570]],
+    "status": "VERIFIED", "complete": true, "caption_match": true, "confidence": 0.99,
+    "notes": "Full six-panel Fig. 3 architectural details, including Evoformer, pair graph, triangle updates, IPA, residue gas and FAPE."
+  }]
+}

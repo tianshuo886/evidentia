@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "source_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+  "page": 9,
+  "bindings": [
+    {
+      "evidence_id": "T03",
+      "kind": "table",
+      "bbox_norm": [0.17, 0.08, 0.835, 0.515],
+      "panel_bboxes_norm": [],
+      "status": "VERIFIED",
+      "complete": true,
+      "caption_match": true,
+      "confidence": 0.99,
+      "notes": "Full-page inspection confirms complete Table 3 caption and the full architecture-variation table through the big-model row; surrounding explanatory prose is excluded."
+    }
+  ]
+}

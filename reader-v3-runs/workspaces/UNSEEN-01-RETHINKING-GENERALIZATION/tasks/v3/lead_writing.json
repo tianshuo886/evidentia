@@ -1,0 +1,71 @@
+{
+  "task_id": "TASK-V3-LEAD-WRITING",
+  "task_type": "LEAD_WRITING",
+  "required_capability": "SCIENTIFIC_NARRATIVE_WRITING",
+  "scientific_contract": "Write the final Chinese-first Paper Reader as a coherent open-form scientific explanation. The Reader must be authored by the strong model, not assembled from fixed prose templates.",
+  "description": "Reader v3 Lead Writer final narrative pass.",
+  "input_artifacts": {
+    "source_pdf": "source/paper.pdf",
+    "source_map": "model/source_map.json",
+    "figure_inventory": "model/figure_inventory.json",
+    "lead_reader_draft": "model/paper_understanding_draft.json",
+    "revision_memo": "model/revision_memo.json",
+    "narrative_plan": "model/narrative_plan.json",
+    "lens_outputs": [
+      "lens_v3/argument_narrative.json",
+      "lens_v3/method_study_design.json",
+      "lens_v3/evidence_results.json",
+      "lens_v3/validity_boundary.json",
+      "lens_v3/mechanism_causality.json",
+      "lens_v3/reproducibility_implementation.json"
+    ]
+  },
+  "target_output": "reader/narrative_manuscript.json",
+  "output_schema": "narrative_manuscript",
+  "source_sha256": "a71f1294a021cebc6939ec977fc073b6d7b4f183950eba761ec55364d30b729f",
+  "base_sha256": "55607fb18f8b13e0e8b2bb7953642a6a3211b4964e4badfbbe0a2b1808d3ac88",
+  "contract_version": "3.0",
+  "prompt_version": "3.1",
+  "allowed_inputs": [
+    "source/",
+    "source_pages/",
+    "assets/",
+    "model/source_map.json",
+    "model/figure_inventory.json",
+    "model/paper_understanding_draft.json",
+    "model/revision_memo.json",
+    "model/narrative_plan.json",
+    "model/lens_v3_manifest.json",
+    "lens_v3/"
+  ],
+  "forbidden_inputs": [
+    "apply/",
+    "project/",
+    "memory/project/"
+  ],
+  "prohibited_context": [
+    "PROJECT_APPLY",
+    "RESEARCH_MEMORY"
+  ],
+  "constraints": [
+    "CHINESE_FIRST",
+    "PAPER_SPECIFIC_STRUCTURE",
+    "OPEN_ORDER",
+    "CONTINUOUS_NARRATIVE",
+    "INLINE_EVIDENCE",
+    "NO_INTERNAL_PIPELINE_VOCABULARY",
+    "NO_PROJECT_TRANSFER"
+  ],
+  "instructions": "Return a narrative_manuscript v3 object. Re-read source evidence whenever the draft, plan or Revision Memo requires it. Write for a researcher who has not read the paper: first explain how this particular paper constructs its case, then follow the supplied paper-specific plan without turning it into pipeline jargon. Use the plan's dynamic section structure rather than fixed slots; do not add universal problem, gap, method, experiment, result or limitation sections merely because they are conventional. Place verified figures/tables/equations locally where they advance the scientific argument; each visual block must explain what question it addresses, what it shows, what it supports, and what it does not prove. The primary prose must never mention Lens names, Council, O/I/A, schemas, hashes, task IDs, pipeline phases or audit machinery. Do not create project-transfer or reusable-component advice. Preserve uncertainty instead of filling gaps with generic prose.",
+  "executor_template": {
+    "host": "generic-host",
+    "host_version": "UNKNOWN",
+    "provider": "magpie",
+    "model": "antigravity/gemini-3.8-flash",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "standard",
+    "tool_profile": "paper-only",
+    "started_at": "2026-10-05T14:35:07.285674+00:00",
+    "completed_at": "2026-10-05T14:35:07.285674+00:00"
+  }
+}

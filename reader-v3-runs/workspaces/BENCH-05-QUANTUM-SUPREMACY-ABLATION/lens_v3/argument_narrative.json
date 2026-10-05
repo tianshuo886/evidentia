@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0",
+  "lens": "argument_narrative",
+  "lens_kind": "core",
+  "source_sha256": "6f3030abb7d9d4f0624a5cbe5ca2ff673df63afc85c97fadd0bf7db780c8dbaf",
+  "base_sha256": "0330cd973b54a50e9fadfb5f71bcee4864182624ddc6444663496531f1dca124",
+  "findings": [
+    {
+      "id": "AN-1",
+      "statement": "论文的核心组织动作是一条替换链：把无法验证的霸权线路 F_XEB，替换为由 patch/elided 等简化线路给出的受控估计。",
+      "evidence": [
+        "p.4",
+        "p.5"
+      ],
+      "epistemic": "SUPPORTED",
+      "action": "KEEP",
+      "importance": "CRITICAL",
+      "reason": "这是理解全文的钥匙：主张建立在'估计≈真实'之上，而这一步被刻意构造为可辩护。"
+    },
+    {
+      "id": "AN-2",
+      "statement": "本篇 论证顺序是 设备与误差刻画→乘法模型→简化估计器→估计器有效性验证→霸权读数→经典代价→误差模型检验→边界；这不是问题/方法/结果顺序。",
+      "evidence": [
+        "p.2",
+        "p.3",
+        "p.4",
+        "p.5"
+      ],
+      "epistemic": "SUPPORTED",
+      "action": "KEEP",
+      "importance": "MAJOR",
+      "reason": "顺序本身承载论证：估计器验证必须在报霸权读数之前。"
+    },
+    {
+      "id": "AN-3",
+      "statement": "若采用通用 problem-gap-method-results 提纲，最应保留而最易丢失的三点是：(1) Fig.4a 对估计器本身的受控验证；(2) 实测误差与经典代价外推之间的分层；(3) 开篇两问把'量子霸权'限定为里程碑式的范围声明。",
+      "evidence": [
+        "p.1",
+        "p.4"
+      ],
+      "epistemic": "SUPPORTED",
+      "action": "QUALIFY",
+      "importance": "CRITICAL",
+      "reason": "这三点使最终读者不把外推误读为既成事实。"
+    },
+    {
+      "id": "AN-4",
+      "statement": "哪些关系是作者自述、哪些需读者评估：'设备服务于任务''误差刻画支撑乘法模型''简化估计使能读数'为作者自述；'Fig.4a 许可由 elided 读数外推到最难线路'以及'量子读数与经典外推共同构成霸权主张'为需评估的推断关系。",
+      "evidence": [
+        "p.4",
+        "p.5"
+      ],
+      "epistemic": "SUPPORTED",
+      "action": "KEEP",
+      "importance": "MAJOR"
+    }
+  ],
+  "summary": "该论文以一条替换链构造论证：不可直接计算的最难线路保真度，被替换为一个在可模拟域内经受控验证的简化估计量。全篇论证是'先在可验证处证明估计器可靠，再外推到霸权区间'的辩护式结构；若套用问题—差距—方法—结果—局限的通用提纲，最关键的'估计器有效性验证（Fig.4a）'与'事实/模型/外推三层分离'会被抹平。"
+}

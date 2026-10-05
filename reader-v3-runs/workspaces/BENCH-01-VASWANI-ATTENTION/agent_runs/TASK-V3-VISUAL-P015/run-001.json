@@ -1,0 +1,56 @@
+{
+  "task_id": "TASK-V3-VISUAL-P015",
+  "execution_kind": "HOST_AGENT",
+  "executor": {
+    "kind": "HOST_AGENT",
+    "host": "pi-parent-direct",
+    "host_version": "UNKNOWN",
+    "provider": "openai-codex",
+    "model": "gpt-6.1-sol",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "high",
+    "tool_profile": "paper-only"
+  },
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "input_hashes": {
+    "source/paper.pdf": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+    "task": "c51bc7787e5a5bd47beb89f387f24b6148f7d124d9d036c947c6584c037ea57a"
+  },
+  "result": {
+    "schema_version": "1.0",
+    "source_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+    "page": 15,
+    "bindings": [
+      {
+        "evidence_id": "F05",
+        "kind": "figure",
+        "bbox_norm": [
+          0.17,
+          0.2,
+          0.84,
+          0.81
+        ],
+        "panel_bboxes_norm": [
+          [
+            0.18,
+            0.22,
+            0.84,
+            0.48
+          ],
+          [
+            0.18,
+            0.5,
+            0.84,
+            0.78
+          ]
+        ],
+        "status": "VERIFIED",
+        "complete": true,
+        "caption_match": true,
+        "confidence": 0.99,
+        "notes": "Full-page inspection confirms the complete two-panel Figure 5 attention-head visualization and caption; no unrelated body text is included."
+      }
+    ]
+  }
+}

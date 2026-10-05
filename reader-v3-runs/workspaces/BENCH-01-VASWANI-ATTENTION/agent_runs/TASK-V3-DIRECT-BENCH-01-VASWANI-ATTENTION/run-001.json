@@ -1,0 +1,27 @@
+{
+  "task_id": "TASK-V3-DIRECT-BENCH-01-VASWANI-ATTENTION",
+  "execution_kind": "HOST_AGENT",
+  "executor": {
+    "kind": "HOST_AGENT",
+    "host": "pi-parent-direct",
+    "host_version": "UNKNOWN",
+    "provider": "openai-codex",
+    "model": "gpt-6.1-sol",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "high",
+    "tool_profile": "paper-only"
+  },
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "input_hashes": {
+    "source/paper.pdf": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+    "task": "8a00af04d8aaa1621ba5687e93a291a219e2fef693c4e2ab7e135e88ba90acf6"
+  },
+  "result": {
+    "schema_version": "1.0",
+    "paper_id": "BENCH-01-VASWANI-ATTENTION",
+    "source_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+    "narrative_markdown": "# Attention Is All You Need — Direct strong-model reading\n\n## Problem and proposal\nThe paper asks whether sequence transduction can dispense with recurrent and convolutional layers. RNNs process positions sequentially, which limits parallelism and makes long-range dependencies difficult; convolutional alternatives improve parallelism but require depth-dependent paths. The Transformer replaces both with an encoder-decoder built from self-attention, encoder-decoder attention, position-wise feed-forward networks, residual connections, layer normalization, and positional encodings.\n\n## How it works\nScaled dot-product attention computes softmax(QK^T/sqrt(d_k))V. Multi-head attention makes several learned lower-dimensional projections of queries, keys, and values, runs attention in parallel, and concatenates the results. The encoder has six layers, each with self-attention and a feed-forward sublayer. The decoder adds attention over encoder outputs and masks future positions to preserve autoregressive generation. Sinusoidal positional encodings supply order information.\n\n## Evidence\nThe paper compares layer types asymptotically: unrestricted self-attention has O(1) sequential operations and O(1) maximum path length but O(n^2 d) per-layer computation; recurrence has O(n) sequential operations. On WMT 2014 English-German, Transformer big reaches 28.4 BLEU and base reaches 27.3; on English-French, big reaches 41.8 BLEU. The paper reports 3.5 days on eight P100 GPUs for the big configuration and estimates training FLOPs. Ablations show sensitivity to head count, key dimension, model size and regularization. A WSJ constituency parsing experiment gives 91.3 F1 for the supervised Transformer and 92.7 for the semi-supervised setting, while the strongest listed generative comparator remains 93.3.\n\n## Interpretation and limits\nThe evidence supports a strong quality/parallelization tradeoff for the tested translation and parsing protocols. It does not show that attention is universally cheaper: quadratic token interactions remain, and restricted attention is left as future work for very long sequences. FLOP comparisons are estimates, and the paper does not report repeated-seed uncertainty. Attention visualizations show examples of heads following long-distance or structure-related patterns, but they are qualitative and do not establish systematic interpretability. The paper is therefore best read as a successful architectural demonstration with important computational and evaluation boundaries, not as a universal proof that recurrence is obsolete.\n\n## Provenance\nThis is a continuation direct-reading baseline produced from the locally reconstructed full arXiv PDF using the active openai-codex/gpt-6.1-sol execution. The unavailable historical cloud baseline is not being represented as recovered.",
+    "notes": "Real-paper direct baseline; no Evidentia intermediate artifacts were used as scientific input. Historical cloud direct baseline unavailable."
+  }
+}
