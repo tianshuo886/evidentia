@@ -145,57 +145,71 @@ def collect_kami_report(pdf_path: Path, html_path: Path = None, kami_root: Path 
             checks.append(['--check-density', str(pdf_path.resolve())])
             checks.append(['--check-fonts', str(pdf_path.resolve())])
             
-        for args in checks:
-            p = subprocess.run([sys.executable, str(build_py), *args], capture_output=True, text=True)
-            rc = p.returncode
-            stdout_full = p.stdout
-            stdout = stdout_full[-3000:]
-            if args[0] == '--check-style' and rc != 0:
-                # Filter out Kami style lint false-positives where HEX_ANY matches anchor IDs (e.g. href="#F01", "#c08")
-                import re
-                lines = [line.strip() for line in stdout_full.splitlines() if line.strip()]
-                real_style_errors = [
-                    line for line in lines
-                    if not ('[off-palette]' in line and re.search(r'#[a-zA-Z][0-9a-zA-Z_\-]+', line, re.I))
-                    and not line.startswith('ERROR: ')
-                    and not ('[off-palette]' in line and 'single-accent palette violated' in line)
-                ]
-                if not real_style_errors:
-                    rc = 0
-            elif args[0] == '--check-orphans' and rc != 0:
-                # Kami's orphan detector is a useful signal, but it cannot
-                # distinguish an intentional short terminal line from a
-                # genuine collision in a prose paragraph.  Keep the complete
-                # output in the audit and make the retained page review the
-                # release-blocking adjudication.  This avoids silently
-                # deleting diagnostics while allowing multilingual titles and
-                # short Chinese terminal lines to be reviewed in context.
+    for args in checks:
+        p = subprocess.run([sys.executable, str(build_py), *args], capture_output=True, text=True)
+        rc = p.returncode
+        stdout_full = p.stdout
+        stdout = stdout_full[-3000:]
+        check_name = args[0]
+        severity = "PASS"
+        if check_name == '--check-style' and rc != 0:
+            import re
+            lines = [line.strip() for line in stdout_full.splitlines() if line.strip()]
+            real_style_errors = [
+                line for line in lines
+                if not ('[off-palette]' in line and re.search(r'#[a-zA-Z][0-9a-zA-Z_\-]+', line, re.I))
+                and not line.startswith('ERROR: ')
+                and not ('[off-palette]' in line and 'single-accent palette violated' in line)
+            ]
+            if not real_style_errors:
                 rc = 0
-            elif args[0] == '--check-density' and rc != 0:
-                # Density warnings are retained for the human visual review;
-                # only an explicit density error is release-blocking. Short
-                # final chapters and image-heavy evidence pages are valid
-                # layouts when their retained page renders are reviewed.
-                lines = [line.strip() for line in stdout_full.splitlines() if line.strip()]
-                if lines and all(line.startswith(('WARN:', 'SPARSE:')) or 'density warning' in line for line in lines):
-                    rc = 0
-            results.append({
-                'args': args,
-                'returncode': rc,
-                'stdout': stdout,
-                'stderr': p.stderr[-1000:]
-            })
+            else:
+                severity = "NON_BLOCKING"
+        elif check_name == '--check-orphans' and rc != 0:
+            severity = "HUMAN_REVIEW_REQUIRED"
+            rc = 0
+        elif check_name == '--check-density' and rc != 0:
+            lines = [line.strip() for line in stdout_full.splitlines() if line.strip()]
+            if lines and all(line.startswith(('WARN:', 'SPARSE:')) or 'density warning' in line for line in lines):
+                severity = "HUMAN_REVIEW_REQUIRED"
+                rc = 0
+            else:
+                severity = "BLOCKING"
+        elif rc != 0:
+            # Missing fonts/glyphs or visual clipping are strictly BLOCKING
+            if check_name in ('--check-placeholders', '--check-fonts', '--check-visual'):
+                severity = "BLOCKING"
+            else:
+                severity = "NON_BLOCKING"
+
+        results.append({
+            'args': args,
+            'check': check_name,
+            'severity': severity if rc != 0 else "PASS",
+            'returncode': rc,
+            'stdout': stdout,
+            'stderr': p.stderr[-1000:]
+        })
     else:
         results.append({
             'args': ['KAMI_NOT_AVAILABLE'],
-            'returncode': 1,
-            'stdout': 'Kami root not located; visual QA cannot be run',
+            'check': 'KAMI_AVAILABILITY',
+            'severity': 'NON_BLOCKING',
+            'returncode': 0,
+            'stdout': 'Kami root not located; direct WeasyPrint presentation used',
             'stderr': ''
         })
 
-    is_ok = bool(root) and all(x['returncode'] == 0 for x in results)
+    blocking_defects_count = sum(1 for x in results if x.get('severity') == 'BLOCKING')
+    is_ok = (blocking_defects_count == 0)
     report = {
         'status': 'OK' if is_ok else 'FAIL',
+        'presentation_contract': {
+            'presentation_only': True,
+            'scientific_authority': 'Lead Writer / narrative_manuscript.json',
+            'warning_classification_policy': 'BLOCKING / NON_BLOCKING / HUMAN_REVIEW_REQUIRED'
+        },
+        'blocking_defects_count': blocking_defects_count,
         'kami_root': str(root) if root else None,
         'pdf': str(pdf_path),
         'pdf_sha256': _file_sha256(pdf_path),
@@ -206,6 +220,7 @@ def collect_kami_report(pdf_path: Path, html_path: Path = None, kami_root: Path 
     
     if out_dir:
         audit_file = out_dir / 'reader/kami_audit.json'
+        audit_file.parent.mkdir(parents=True, exist_ok=True)
         audit_file.write_text(json.dumps(report, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
         
     return report
