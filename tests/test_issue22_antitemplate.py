@@ -111,18 +111,21 @@ def test_visual_binding_fails_closed_on_uncertain_or_colliding_assets(tmp_path):
     root = tmp_path / "workspace"
     (root / "model").mkdir(parents=True)
     (root / "assets/figures").mkdir(parents=True)
-    (root / "assets/figures/v3_F02.png").write_bytes(b"png")
     (root / "assets/figures/v3_F01.png").write_bytes(b"png")
+    (root / "assets/figures/v3_F02.png").write_bytes(b"png")
+    (root / "assets/figures/v3_F03.png").write_bytes(b"png")
 
     # F01 is flagged as needing visual review (uncertain crop)
-    # T04 accidentally collides with F02's asset
+    # T04 accidentally collides with F02's asset (both fail closed as ambiguous)
     # T05 has kind 'figure' in inventory while block is 'table'
+    # F03 is valid and unambiguous (should rebind)
     (root / "model/figure_inventory.json").write_text(json.dumps({
         "items": [
             {"id": "F01", "kind": "figure", "file": "assets/figures/v3_F01.png", "needs_visual_review": True, "inspection_status": "NEEDS_REVIEW"},
             {"id": "F02", "kind": "figure", "file": "assets/figures/v3_F02.png", "needs_visual_review": False, "inspection_status": "VERIFIED"},
             {"id": "T04", "kind": "table", "file": "assets/figures/v3_F02.png", "needs_visual_review": False, "inspection_status": "VERIFIED"},
             {"id": "T05", "kind": "figure", "file": "assets/figures/v3_F01.png", "needs_visual_review": False, "inspection_status": "VERIFIED"},
+            {"id": "F03", "kind": "figure", "file": "assets/figures/v3_F03.png", "needs_visual_review": False, "inspection_status": "VERIFIED"},
         ]
     }))
 
@@ -136,6 +139,7 @@ def test_visual_binding_fails_closed_on_uncertain_or_colliding_assets(tmp_path):
                         {"type": "figure", "evidence_id": "F02", "asset": "assets/figures/old_F02.png"},
                         {"type": "table", "evidence_id": "T04", "asset": "assets/figures/old_T04.png"},
                         {"type": "table", "evidence_id": "T05", "asset": "assets/figures/old_T05.png"},
+                        {"type": "figure", "evidence_id": "F03", "asset": "assets/figures/old_F03.png"},
                     ]
                 }
             ]
@@ -143,13 +147,68 @@ def test_visual_binding_fails_closed_on_uncertain_or_colliding_assets(tmp_path):
     }
 
     changes = rebind_visual_assets(manuscript, root)
-    # Only F02 should successfully rebind; F01 is uncertain, T04 collides with F02, T05 is cross-kind
-    assert changes == [{"evidence_id": "F02", "old_asset": "assets/figures/old_F02.png", "new_asset": "assets/figures/v3_F02.png"}]
+    # Only F03 should successfully rebind; F01 is uncertain, F02/T04 collide on same asset, T05 is cross-kind
+    assert changes == [{"evidence_id": "F03", "old_asset": "assets/figures/old_F03.png", "new_asset": "assets/figures/v3_F03.png"}]
     blocks = manuscript["document"]["sections"][0]["blocks"]
     assert blocks[0]["asset"] == "assets/figures/old_F01.png"
-    assert blocks[1]["asset"] == "assets/figures/v3_F02.png"
+    assert blocks[1]["asset"] == "assets/figures/old_F02.png"
     assert blocks[2]["asset"] == "assets/figures/old_T04.png"
     assert blocks[3]["asset"] == "assets/figures/old_T05.png"
+    assert blocks[4]["asset"] == "assets/figures/v3_F03.png"
+
+
+def test_visual_binding_collision_fails_closed_in_both_orders(tmp_path):
+    root = tmp_path / "workspace"
+    (root / "model").mkdir(parents=True)
+    (root / "assets/figures").mkdir(parents=True)
+    (root / "assets/figures/v3_shared.png").write_bytes(b"png")
+
+    (root / "model/figure_inventory.json").write_text(json.dumps({
+        "items": [
+            {"id": "F02", "kind": "figure", "file": "assets/figures/v3_shared.png", "needs_visual_review": False, "inspection_status": "VERIFIED"},
+            {"id": "T04", "kind": "table", "file": "assets/figures/v3_shared.png", "needs_visual_review": False, "inspection_status": "VERIFIED"},
+        ]
+    }))
+
+    # Order 1: F02 before T04
+    manuscript_f02_first = {
+        "document": {
+            "sections": [
+                {
+                    "id": "s1",
+                    "blocks": [
+                        {"type": "figure", "evidence_id": "F02", "asset": "assets/figures/old_F02.png"},
+                        {"type": "table", "evidence_id": "T04", "asset": "assets/figures/old_T04.png"},
+                    ]
+                }
+            ]
+        }
+    }
+    changes_1 = rebind_visual_assets(manuscript_f02_first, root)
+    assert changes_1 == []
+    blocks_1 = manuscript_f02_first["document"]["sections"][0]["blocks"]
+    assert blocks_1[0]["asset"] == "assets/figures/old_F02.png"
+    assert blocks_1[1]["asset"] == "assets/figures/old_T04.png"
+
+    # Order 2: T04 before F02
+    manuscript_t04_first = {
+        "document": {
+            "sections": [
+                {
+                    "id": "s1",
+                    "blocks": [
+                        {"type": "table", "evidence_id": "T04", "asset": "assets/figures/old_T04.png"},
+                        {"type": "figure", "evidence_id": "F02", "asset": "assets/figures/old_F02.png"},
+                    ]
+                }
+            ]
+        }
+    }
+    changes_2 = rebind_visual_assets(manuscript_t04_first, root)
+    assert changes_2 == []
+    blocks_2 = manuscript_t04_first["document"]["sections"][0]["blocks"]
+    assert blocks_2[0]["asset"] == "assets/figures/old_T04.png"
+    assert blocks_2[1]["asset"] == "assets/figures/old_F02.png"
 
 
 def test_legacy_reader_ir_is_explicitly_downstream_projection():
