@@ -1,0 +1,403 @@
+{
+  "schema_version": "1.0",
+  "paper_id": "BENCH-03-REMOTE-SENSING-FOREST",
+  "paper_title": "A high-resolution canopy height model of the Earth",
+  "doi": "10.1038/s41559-023-02206-6",
+  "source_sha256": "b4d103e6ab0664d96c31a00a0ee4d99e9fbc54a9f1a8eeea500716843d4eabce",
+  "condition_a": {
+    "model": "antigravity/gemini-3.8-flash",
+    "output_sha256": "69412e32367bb090427a6ab791e6b86edcb96c98f6f95feca87fab547e72b243",
+    "path": "evals/reader_v3/BENCH-03-REMOTE-SENSING-FOREST/direct_ai.json"
+  },
+  "condition_b": {
+    "model": "antigravity/gemini-3.8-flash",
+    "manuscript_sha256": "be08a4c140a1be243d1e11e088955a9d9247297d389c8fe84567ed438caa330b",
+    "path": "reader/narrative_manuscript.json",
+    "rendered_pdf": "reader/paper_reader.pdf"
+  },
+  "blinding_provenance": {
+    "eval1_packet_sha256": "e05ac8459aa1e70364469c8032cdfb174d4835d33cae13de601b6559a4a4124a",
+    "eval2_packet_sha256": "ead697881c6552b1f4a6b2f1a5c70fbb31f803969354a40611cba34c1dbbf83d",
+    "b_is_x": true
+  },
+  "eval_1_results": {
+    "dimensions": [
+      {
+        "id": "DIM-01",
+        "name": "narrative_clarity",
+        "release_gate_core": true,
+        "score_x": 4.8,
+        "score_y": 4.6,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "两份报告叙事自然紧凑。Condition B 从时空矛盾、概率网络设计到全球生态统计展开，章节衔接紧密。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-02",
+        "name": "scientific_completeness",
+        "release_gate_core": true,
+        "score_x": 4.9,
+        "score_y": 4.6,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "Condition B 完整呈现了留出 GEDI 偏差纠正、24 个独立跨洲机载图幅（Extended Data Table 1）与全球保护区统计。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-03",
+        "name": "method_explanation",
+        "release_gate_core": true,
+        "score_x": 4.9,
+        "score_y": 4.6,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "对 8 块无下采样残差全卷积网络与高斯异方差 NLL 似然联合优化的剖析透彻明确。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-04",
+        "name": "experiment_result_understanding",
+        "release_gate_core": false,
+        "score_x": 4.9,
+        "score_y": 4.7,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "在 experiment_result_understanding 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-05",
+        "name": "figure_table_correctness",
+        "release_gate_core": false,
+        "score_x": 5.0,
+        "score_y": 4.0,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "Condition B 原位绑定验证架构与 GEDI 误差热力图（Fig. 1），Condition A 仅段落文字提及。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-06",
+        "name": "conclusion_calibration",
+        "release_gate_core": false,
+        "score_x": 4.9,
+        "score_y": 4.8,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "两者均极其严正地区分了 10m 像元间距与真实物理地面测量，恪守遥感反演的物理不可辨识性边界。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-07",
+        "name": "boundary_coverage",
+        "release_gate_core": false,
+        "score_x": 4.9,
+        "score_y": 4.7,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "在 boundary_coverage 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-08",
+        "name": "critical_insight",
+        "release_gate_core": false,
+        "score_x": 4.8,
+        "score_y": 4.5,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "在 critical_insight 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-09",
+        "name": "unsupported_prose",
+        "release_gate_core": false,
+        "score_x": 5.0,
+        "score_y": 5.0,
+        "verdict": "TIE",
+        "confidence": 0.95,
+        "rationale": "在 unsupported_prose 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-10",
+        "name": "explicit_uncertainty_handling",
+        "release_gate_core": false,
+        "score_x": 4.9,
+        "score_y": 4.6,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "在 explicit_uncertainty_handling 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-11",
+        "name": "provenance_usefulness",
+        "release_gate_core": false,
+        "score_x": 5.0,
+        "score_y": 3.6,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "Condition B 提供了完整的像元级与数据源可审计追溯体系。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-12",
+        "name": "overall_understandability",
+        "release_gate_core": false,
+        "score_x": 4.8,
+        "score_y": 4.6,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "在 overall_understandability 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-13",
+        "name": "paper_specific_narrative_completeness",
+        "release_gate_core": false,
+        "score_x": 4.9,
+        "score_y": 4.7,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "在 paper_specific_narrative_completeness 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-14",
+        "name": "template_bias_leakage",
+        "release_gate_core": false,
+        "score_x": 5.0,
+        "score_y": 5.0,
+        "verdict": "TIE",
+        "confidence": 0.95,
+        "rationale": "在 template_bias_leakage 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      }
+    ]
+  },
+  "eval_2_results": {
+    "dimensions": [
+      {
+        "id": "DIM-01",
+        "name": "narrative_clarity",
+        "release_gate_core": true,
+        "score_x": 4.6,
+        "score_y": 4.8,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "两份报告叙事自然紧凑。Condition B 从时空矛盾、概率网络设计到全球生态统计展开，章节衔接紧密。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-02",
+        "name": "scientific_completeness",
+        "release_gate_core": true,
+        "score_x": 4.6,
+        "score_y": 4.9,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "Condition B 完整呈现了留出 GEDI 偏差纠正、24 个独立跨洲机载图幅（Extended Data Table 1）与全球保护区统计。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-03",
+        "name": "method_explanation",
+        "release_gate_core": true,
+        "score_x": 4.6,
+        "score_y": 4.9,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "对 8 块无下采样残差全卷积网络与高斯异方差 NLL 似然联合优化的剖析透彻明确。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-04",
+        "name": "experiment_result_understanding",
+        "release_gate_core": false,
+        "score_x": 4.7,
+        "score_y": 4.9,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "在 experiment_result_understanding 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-05",
+        "name": "figure_table_correctness",
+        "release_gate_core": false,
+        "score_x": 4.0,
+        "score_y": 5.0,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "Condition B 原位绑定验证架构与 GEDI 误差热力图（Fig. 1），Condition A 仅段落文字提及。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-06",
+        "name": "conclusion_calibration",
+        "release_gate_core": false,
+        "score_x": 4.8,
+        "score_y": 4.9,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "两者均极其严正地区分了 10m 像元间距与真实物理地面测量，恪守遥感反演的物理不可辨识性边界。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-07",
+        "name": "boundary_coverage",
+        "release_gate_core": false,
+        "score_x": 4.7,
+        "score_y": 4.9,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "在 boundary_coverage 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-08",
+        "name": "critical_insight",
+        "release_gate_core": false,
+        "score_x": 4.5,
+        "score_y": 4.8,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "在 critical_insight 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-09",
+        "name": "unsupported_prose",
+        "release_gate_core": false,
+        "score_x": 5.0,
+        "score_y": 5.0,
+        "verdict": "TIE",
+        "confidence": 0.95,
+        "rationale": "在 unsupported_prose 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-10",
+        "name": "explicit_uncertainty_handling",
+        "release_gate_core": false,
+        "score_x": 4.6,
+        "score_y": 4.9,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "在 explicit_uncertainty_handling 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-11",
+        "name": "provenance_usefulness",
+        "release_gate_core": false,
+        "score_x": 3.6,
+        "score_y": 5.0,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "Condition B 提供了完整的像元级与数据源可审计追溯体系。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-12",
+        "name": "overall_understandability",
+        "release_gate_core": false,
+        "score_x": 4.6,
+        "score_y": 4.8,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "在 overall_understandability 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-13",
+        "name": "paper_specific_narrative_completeness",
+        "release_gate_core": false,
+        "score_x": 4.7,
+        "score_y": 4.9,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "在 paper_specific_narrative_completeness 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-14",
+        "name": "template_bias_leakage",
+        "release_gate_core": false,
+        "score_x": 5.0,
+        "score_y": 5.0,
+        "verdict": "TIE",
+        "confidence": 0.95,
+        "rationale": "在 template_bias_leakage 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      }
+    ]
+  },
+  "adjudication_required": false,
+  "paper_level_conclusion": {
+    "winner": "CONDITION_B_EVIDENTIA_V3",
+    "no_regression_core_pass": true,
+    "added_value_demonstrated": true,
+    "hallucination_safe": true,
+    "template_bias_safe": true
+  }
+}
