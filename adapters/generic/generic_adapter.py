@@ -6,6 +6,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'scripts'))
 from executor_meta import build_executor_metadata
+from lens_execution_manifest import issue_dispatch_record
 
 class GenericAdapter:
     def __init__(self, host=None, model=None):
@@ -20,6 +21,7 @@ class GenericAdapter:
         task = json.loads(tp.read_text(encoding='utf-8'))
         task_id = task.get('task_id', 'TASK-UNKNOWN')
         target_model = model or self.model
+        core_dispatch = issue_dispatch_record(tp) if task.get('isolation_proof_required') else None
 
         dispatch_packet = {
             "task_id": task_id,
@@ -27,6 +29,7 @@ class GenericAdapter:
             "host_adapter": self.host,
             "bridge_mode": "EXTERNAL_HOST_AGENT",
             "executor_metadata": build_executor_metadata(host=self.host, model=target_model),
+            "core_dispatch": core_dispatch,
             "payload": task
         }
 

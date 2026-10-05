@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Compose the human Paper Reader from the paper's reconstructed argument.
+"""DEPRECATED: Legacy v1/v2 deterministic narrative composer.
 
-The composer is paper-centric. It consumes frozen paper truth, the reconstructed
-argument, Council synthesis, and promoted evidence, then writes a semantic
-manuscript whose section titles and order follow that paper rather than a
-pipeline dashboard. Audit roles remain in the Evidence Atlas.
+Retained for downstream compatibility and historical replays only.
+In canonical Reader v3, narrative manuscripts are strictly authored by the
+strong-model Lead Writer (schemas/narrative_manuscript.schema.json).
+Prohibited in canonical Reader v3 scientific execution.
 """
 import argparse
 import json
@@ -315,7 +315,11 @@ def compose_narrative_manuscript(root: Path, intent=None) -> dict:
     question = _first_text([arg_recon.get("central_question"), *[q.get("text") for q in _items(pm.get("questions")) if isinstance(q, dict)]])
     spine = story_spine_from(arg_recon, question=question, motivation=arg_recon.get("motivation"), gap=arg_recon.get("prior_assumptions_or_gap"), method_logic=method_logic, claims=claims, limitations=limitations, unresolved=unresolved, experimental_questions=questions)
     roles = _evidence_roles(arg_recon); default_refs = _default_refs(claims, figs, tables)
-    sections = _custom_sections(spine) or _derived_sections(pm, arg_recon, spine, claims, figs, tables, source_map, roles, default_refs)
+    plan = load_json(root / "model/narrative_plan.json") if (root / "model/narrative_plan.json").exists() else {}
+    planned_sections = _custom_sections({"sections": plan.get("sections", [])}) if isinstance(plan, dict) else []
+    # A persisted Dynamic Narrative Plan is authoritative for compatibility
+    # composition. Legacy story_spine is only a fallback for pre-v3 workspaces.
+    sections = planned_sections or _custom_sections(spine) or _derived_sections(pm, arg_recon, spine, claims, figs, tables, source_map, roles, default_refs)
 
     # A custom paper spine may omit evidence blocks. Add a local evidence
     # section for every promoted figure/table that is otherwise absent.
@@ -356,15 +360,10 @@ def compose_narrative_manuscript(root: Path, intent=None) -> dict:
         for section in sections for block in _items(section.get("blocks"))
         if block.get("type") in ("figure", "table") and block.get("evidence_id")
     }
+    # Audit-only visuals remain in the downstream Evidence Atlas/compatibility
+    # appendix. They must not be promoted into the primary Reader merely to
+    # make every extracted item look like narrative evidence.
     audit_visual_blocks = []
-    for item in figs:
-        if str(item.get("id")) not in present_visual_ids:
-            audit_visual_blocks.append(_figure_block(item, claims, roles, question="论文在此处提供了什么可核查的图像证据？", section_refs=[str(item.get("id"))]))
-    for item in tables:
-        if str(item.get("id")) not in present_visual_ids:
-            audit_visual_blocks.append(_table_block(item, claims, roles, question="论文在此处提供了什么可核查的表格证据？", section_refs=[str(item.get("id"))]))
-    if audit_visual_blocks:
-        sections.append({"id": f"spine-{len(sections)+1:02d}", "title": "证据目录与审计锚点", "lead": "未进入主叙事的图表仍保留为可定位的审计证据。", "blocks": audit_visual_blocks})
 
     council_uncertain = []
     for item in _items(council.get("unresolved")) + _items(council.get("items")):
@@ -392,9 +391,23 @@ def compose_narrative_manuscript(root: Path, intent=None) -> dict:
         details = "；".join(_clean(m.get("name")) + "：" + _clean(m.get("description")) for m in methods) or UNCERTAIN
         sections.append({"id": "technical_extraction", "title": "论文中可复核的技术细节", "lead": "仅整理源论文明确给出的实现信息。", "blocks": [{"type": "paragraph", "text": details, "evidence_refs": default_refs}]})
     for idx, section in enumerate(sections, 1):
-        section["chapter_num"] = f"{idx:02d}"; section.setdefault("blocks", [{"type": "paragraph", "text": _clean(section.get("lead")), "evidence_refs": default_refs}]); section.setdefault("lead", _clean(section.get("title")))
+        section["chapter_num"] = f"{idx:02d}"
+        section.setdefault("lead", _clean(section.get("title")))
+        if not section.get("blocks"):
+            section["blocks"] = [{"type": "paragraph", "text": _clean(section.get("purpose") or section.get("proposition") or section.get("lead")), "evidence_refs": section.get("evidence_refs") or default_refs, "argument_refs": section.get("argument_refs", [])}]
     conflicts = _items(council.get("items")) or _items(pm.get("lens_conflicts")); meta_authors = paper.get("authors", []); meta_authors = meta_authors if isinstance(meta_authors, list) else [str(meta_authors)]
-    manuscript = {"schema_version": "2.0", "paper_id": pm.get("paper_id", root.name), "source_sha256": pm.get("source_sha256", ""), "created_at": datetime.now(timezone.utc).isoformat(), "document": {"title": title, "subtitle": "中文科学精读稿", "paper_meta": {"authors": meta_authors, "venue": paper.get("venue", ""), "year": paper.get("year"), "doi": paper.get("doi", ""), "pdf_sha256": pm.get("source_sha256", "")}, "executive_summary": {"lead": f"{_clause(spine.get('central_question'))}。{_clause(spine.get('justified_conclusion'))}。", "takeaways": [_clean(spine.get("central_question")), _clean(spine.get("central_move")), _clean(spine.get("justified_conclusion")), f"边界：{boundary_text}"], "key_question": _clean(spine.get("central_question")), "core_finding": _clean(spine.get("justified_conclusion")), "core_boundary": boundary_text}, "story_spine": spine, "chapters": sections, "appendix_summary": {"claims_count": len(claims), "figures_count": len(figs), "tables_count": len(tables), "conflicts_count": len(conflicts), "unresolved_count": len(unresolved), "evidence_atlas_ref": "evidence_atlas.html"}}}
+    if isinstance(plan, dict) and plan.get("sections"):
+        plan_payload = plan
+    else:
+        plan_payload = {"schema_version": "1.0", "paper_id": pm.get("paper_id", root.name), "source_sha256": pm.get("source_sha256", ""), "sections": []}
+        for section in sections:
+            plan_payload["sections"].append({
+                "id": section.get("id"), "title": section.get("title"), "purpose": section.get("purpose") or section.get("lead", ""),
+                "proposition": section.get("proposition", ""), "question": section.get("question", ""),
+                "evidence_refs": section.get("evidence_refs") or default_refs, "source_anchors": section.get("source_anchors") or default_refs,
+                "bindings": section.get("bindings", []), "argument_refs": section.get("argument_refs", [])
+            })
+    manuscript = {"schema_version": "3.0", "paper_id": pm.get("paper_id", root.name), "source_sha256": pm.get("source_sha256", ""), "created_at": datetime.now(timezone.utc).isoformat(), "narrative_plan_ref": "model/narrative_plan.json" if plan else "", "document": {"title": title, "subtitle": "中文科学精读稿", "paper_meta": {"authors": meta_authors, "venue": paper.get("venue", ""), "year": paper.get("year"), "doi": paper.get("doi", ""), "pdf_sha256": pm.get("source_sha256", "")}, "orientation": {"lead": f"{_clause(spine.get('central_question'))}。{_clause(spine.get('justified_conclusion'))}。", "takeaways": [_clean(spine.get("central_question")), _clean(spine.get("justified_conclusion"))]}, "executive_summary": {"lead": f"{_clause(spine.get('central_question'))}。{_clause(spine.get('justified_conclusion'))}。", "takeaways": [_clean(spine.get("central_question")), _clean(spine.get("central_move")), _clean(spine.get("justified_conclusion")), f"边界：{boundary_text}"], "key_question": _clean(spine.get("central_question")), "core_finding": _clean(spine.get("justified_conclusion")), "core_boundary": boundary_text}, "narrative_plan": plan_payload, "story_spine": spine, "sections": sections, "chapters": sections, "appendix_summary": {"claims_count": len(claims), "figures_count": len(figs), "tables_count": len(tables), "conflicts_count": len(conflicts), "unresolved_count": len(unresolved), "evidence_atlas_ref": "evidence_atlas.html"}}}
     errs = schema_validate(manuscript, "narrative_manuscript")
     if errs: raise ValueError(f"narrative_manuscript schema validation failed: {errs}")
     return manuscript

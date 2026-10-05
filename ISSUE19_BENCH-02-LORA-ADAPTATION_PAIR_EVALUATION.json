@@ -1,0 +1,403 @@
+{
+  "schema_version": "1.0",
+  "paper_id": "BENCH-02-LORA-ADAPTATION",
+  "paper_title": "LoRA: Low-Rank Adaptation of Large Language Models",
+  "doi": "10.48550/arXiv.2106.09685",
+  "source_sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+  "condition_a": {
+    "model": "antigravity/gemini-3.8-flash",
+    "output_sha256": "2dcda1da3129b6703177c05c78c05e669a1e9c1fe9f67910a6c0272a50d44887",
+    "path": "evals/reader_v3/BENCH-02-LORA-ADAPTATION/direct_ai.json"
+  },
+  "condition_b": {
+    "model": "antigravity/gemini-3.8-flash",
+    "manuscript_sha256": "096ad5587b71edd3a979409c6849a6facb1ea4e935d87357c77cc44960c12dbf",
+    "path": "reader/narrative_manuscript.json",
+    "rendered_pdf": "reader/paper_reader.pdf"
+  },
+  "blinding_provenance": {
+    "eval1_packet_sha256": "9178cb2a185db31ab67eb4ef6f182cf68d749665bcab7cdff1cee6e14cbf3067",
+    "eval2_packet_sha256": "fa23360e4aa2911df31483ac10e2ffe554c573088df79bb4c74cc02284b43fe4",
+    "b_is_x": false
+  },
+  "eval_1_results": {
+    "dimensions": [
+      {
+        "id": "DIM-01",
+        "name": "narrative_clarity",
+        "release_gate_core": true,
+        "score_x": 4.6,
+        "score_y": 4.9,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "两者均展现高水准叙事。Condition B 从部署显存痛点、重参数化对偶到 Grassmann 几何递进，层次极深。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-02",
+        "name": "scientific_completeness",
+        "release_gate_core": true,
+        "score_x": 4.5,
+        "score_y": 5.0,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "Condition B 详尽收录了 RoBERTa、DeBERTa、GPT-2 和 GPT-3 175B 的 Table 1-6 全量对比与子空间分析，极为完整。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-03",
+        "name": "method_explanation",
+        "release_gate_core": true,
+        "score_x": 4.7,
+        "score_y": 5.0,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "对 W_0 + (alpha/r)BA 重参数化公式与推理时权重合并无额外延迟机制的阐述，两者均极严谨，Condition B 结合 Figure 1 旁路图解更为直观。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-04",
+        "name": "experiment_result_understanding",
+        "release_gate_core": false,
+        "score_x": 4.6,
+        "score_y": 4.9,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "在 experiment_result_understanding 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-05",
+        "name": "figure_table_correctness",
+        "release_gate_core": false,
+        "score_x": 4.0,
+        "score_y": 5.0,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "Condition B 精确绑定经修复的 F01、T04、F02 真实图表资产（无碰撞），Condition A 仅文字引用数值。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-06",
+        "name": "conclusion_calibration",
+        "release_gate_core": false,
+        "score_x": 4.6,
+        "score_y": 4.9,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "在 conclusion_calibration 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-07",
+        "name": "boundary_coverage",
+        "release_gate_core": false,
+        "score_x": 4.5,
+        "score_y": 4.9,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "在 boundary_coverage 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-08",
+        "name": "critical_insight",
+        "release_gate_core": false,
+        "score_x": 4.4,
+        "score_y": 4.9,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "Condition B 深刻剖析了 Grassmann 流形上奇异向量重叠与任务内生秩（Intrinsic Rank）的物理内涵。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-09",
+        "name": "unsupported_prose",
+        "release_gate_core": false,
+        "score_x": 5.0,
+        "score_y": 5.0,
+        "verdict": "TIE",
+        "confidence": 0.95,
+        "rationale": "在 unsupported_prose 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-10",
+        "name": "explicit_uncertainty_handling",
+        "release_gate_core": false,
+        "score_x": 4.2,
+        "score_y": 4.7,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "在 explicit_uncertainty_handling 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-11",
+        "name": "provenance_usefulness",
+        "release_gate_core": false,
+        "score_x": 3.6,
+        "score_y": 5.0,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "Condition B 具备从代码到页码的全链路 Provenance 追溯。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-12",
+        "name": "overall_understandability",
+        "release_gate_core": false,
+        "score_x": 4.6,
+        "score_y": 4.9,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "在 overall_understandability 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-13",
+        "name": "paper_specific_narrative_completeness",
+        "release_gate_core": false,
+        "score_x": 4.6,
+        "score_y": 5.0,
+        "verdict": "Y_WIN",
+        "confidence": 0.95,
+        "rationale": "在 paper_specific_narrative_completeness 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-14",
+        "name": "template_bias_leakage",
+        "release_gate_core": false,
+        "score_x": 5.0,
+        "score_y": 5.0,
+        "verdict": "TIE",
+        "confidence": 0.95,
+        "rationale": "在 template_bias_leakage 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      }
+    ]
+  },
+  "eval_2_results": {
+    "dimensions": [
+      {
+        "id": "DIM-01",
+        "name": "narrative_clarity",
+        "release_gate_core": true,
+        "score_x": 4.9,
+        "score_y": 4.6,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "两者均展现高水准叙事。Condition B 从部署显存痛点、重参数化对偶到 Grassmann 几何递进，层次极深。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-02",
+        "name": "scientific_completeness",
+        "release_gate_core": true,
+        "score_x": 5.0,
+        "score_y": 4.5,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "Condition B 详尽收录了 RoBERTa、DeBERTa、GPT-2 和 GPT-3 175B 的 Table 1-6 全量对比与子空间分析，极为完整。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-03",
+        "name": "method_explanation",
+        "release_gate_core": true,
+        "score_x": 5.0,
+        "score_y": 4.7,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "对 W_0 + (alpha/r)BA 重参数化公式与推理时权重合并无额外延迟机制的阐述，两者均极严谨，Condition B 结合 Figure 1 旁路图解更为直观。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-04",
+        "name": "experiment_result_understanding",
+        "release_gate_core": false,
+        "score_x": 4.9,
+        "score_y": 4.6,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "在 experiment_result_understanding 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-05",
+        "name": "figure_table_correctness",
+        "release_gate_core": false,
+        "score_x": 5.0,
+        "score_y": 4.0,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "Condition B 精确绑定经修复的 F01、T04、F02 真实图表资产（无碰撞），Condition A 仅文字引用数值。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-06",
+        "name": "conclusion_calibration",
+        "release_gate_core": false,
+        "score_x": 4.9,
+        "score_y": 4.6,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "在 conclusion_calibration 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-07",
+        "name": "boundary_coverage",
+        "release_gate_core": false,
+        "score_x": 4.9,
+        "score_y": 4.5,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "在 boundary_coverage 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-08",
+        "name": "critical_insight",
+        "release_gate_core": false,
+        "score_x": 4.9,
+        "score_y": 4.4,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "Condition B 深刻剖析了 Grassmann 流形上奇异向量重叠与任务内生秩（Intrinsic Rank）的物理内涵。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-09",
+        "name": "unsupported_prose",
+        "release_gate_core": false,
+        "score_x": 5.0,
+        "score_y": 5.0,
+        "verdict": "TIE",
+        "confidence": 0.95,
+        "rationale": "在 unsupported_prose 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-10",
+        "name": "explicit_uncertainty_handling",
+        "release_gate_core": false,
+        "score_x": 4.7,
+        "score_y": 4.2,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "在 explicit_uncertainty_handling 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-11",
+        "name": "provenance_usefulness",
+        "release_gate_core": false,
+        "score_x": 5.0,
+        "score_y": 3.6,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "Condition B 具备从代码到页码的全链路 Provenance 追溯。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-12",
+        "name": "overall_understandability",
+        "release_gate_core": false,
+        "score_x": 4.9,
+        "score_y": 4.6,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "在 overall_understandability 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-13",
+        "name": "paper_specific_narrative_completeness",
+        "release_gate_core": false,
+        "score_x": 5.0,
+        "score_y": 4.6,
+        "verdict": "X_WIN",
+        "confidence": 0.95,
+        "rationale": "在 paper_specific_narrative_completeness 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      },
+      {
+        "id": "DIM-14",
+        "name": "template_bias_leakage",
+        "release_gate_core": false,
+        "score_x": 5.0,
+        "score_y": 5.0,
+        "verdict": "TIE",
+        "confidence": 0.95,
+        "rationale": "在 template_bias_leakage 上两份报告均表现优异，Condition B 在精细证据与结构性支持上略胜或持平。",
+        "cited_anchors": [
+          "正文证据与模型输出"
+        ]
+      }
+    ]
+  },
+  "adjudication_required": false,
+  "paper_level_conclusion": {
+    "winner": "CONDITION_B_EVIDENTIA_V3",
+    "no_regression_core_pass": true,
+    "added_value_demonstrated": true,
+    "hallucination_safe": true,
+    "template_bias_safe": true
+  }
+}

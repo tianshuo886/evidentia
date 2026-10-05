@@ -1,0 +1,1117 @@
+{
+  "schema_version": "1.0",
+  "benchmark_name": "Evidentia Reader v3 Issue #19 Formal Real-Paper A/B Benchmark",
+  "timestamp": "2026-10-05T16:49:27.214513+00:00",
+  "immutable_governance": {
+    "reader_v3_freeze_sha": "4139ca7b0b1ae72c0930801df5e50653b59a7e92",
+    "evaluation_protocol_sha256": "3f68d0b34d27c21914c113a901bf22c4377bb967ed0c51a1f4178948f984507c",
+    "unseen_selection_receipt_sha256": "3e739e909ce16f68857a417af6cebba861c89079c2fdb05260025bcaac5f5fb9",
+    "canonical_model": "antigravity/gemini-3.8-flash [magpie]"
+  },
+  "corpus_summary": {
+    "total_papers": 6,
+    "primary_corpus": [
+      "BENCH-01-VASWANI-ATTENTION",
+      "BENCH-02-LORA-ADAPTATION",
+      "BENCH-03-REMOTE-SENSING-FOREST",
+      "BENCH-04-ALPHAFOLD2-STRUCTURE",
+      "BENCH-05-QUANTUM-SUPREMACY-ABLATION",
+      "UNSEEN-01-RETHINKING-GENERALIZATION"
+    ],
+    "mandatory_unseen_paper": "UNSEEN-01-RETHINKING-GENERALIZATION",
+    "evaluator_consistency": "100% Mirrored Consistency (0 position-swap disagreements)"
+  },
+  "dimension_aggregate_statistics": {
+    "DIM-01": {
+      "name": "narrative_clarity",
+      "core": true,
+      "b_wins": 5,
+      "ties": 1,
+      "a_wins": 0,
+      "b_scores": [
+        4.8,
+        4.9,
+        4.8,
+        4.9,
+        4.9,
+        4.8
+      ],
+      "a_scores": [
+        4.5,
+        4.6,
+        4.6,
+        4.7,
+        4.7,
+        4.8
+      ]
+    },
+    "DIM-02": {
+      "name": "scientific_completeness",
+      "core": true,
+      "b_wins": 6,
+      "ties": 0,
+      "a_wins": 0,
+      "b_scores": [
+        4.8,
+        5.0,
+        4.9,
+        5.0,
+        5.0,
+        5.0
+      ],
+      "a_scores": [
+        4.2,
+        4.5,
+        4.6,
+        4.6,
+        4.6,
+        4.8
+      ]
+    },
+    "DIM-03": {
+      "name": "method_explanation",
+      "core": true,
+      "b_wins": 6,
+      "ties": 0,
+      "a_wins": 0,
+      "b_scores": [
+        4.8,
+        5.0,
+        4.9,
+        5.0,
+        5.0,
+        5.0
+      ],
+      "a_scores": [
+        4.5,
+        4.7,
+        4.6,
+        4.7,
+        4.7,
+        4.8
+      ]
+    },
+    "DIM-04": {
+      "name": "experiment_result_understanding",
+      "core": false,
+      "b_wins": 5,
+      "ties": 1,
+      "a_wins": 0,
+      "b_scores": [
+        4.8,
+        4.9,
+        4.9,
+        5.0,
+        5.0,
+        5.0
+      ],
+      "a_scores": [
+        4.5,
+        4.6,
+        4.7,
+        4.8,
+        4.8,
+        5.0
+      ]
+    },
+    "DIM-05": {
+      "name": "figure_table_correctness",
+      "core": false,
+      "b_wins": 6,
+      "ties": 0,
+      "a_wins": 0,
+      "b_scores": [
+        5.0,
+        5.0,
+        5.0,
+        5.0,
+        5.0,
+        5.0
+      ],
+      "a_scores": [
+        3.8,
+        4.0,
+        4.0,
+        4.2,
+        4.1,
+        4.2
+      ]
+    },
+    "DIM-06": {
+      "name": "conclusion_calibration",
+      "core": false,
+      "b_wins": 5,
+      "ties": 1,
+      "a_wins": 0,
+      "b_scores": [
+        4.8,
+        4.9,
+        4.9,
+        4.9,
+        5.0,
+        5.0
+      ],
+      "a_scores": [
+        4.5,
+        4.6,
+        4.8,
+        4.7,
+        4.8,
+        5.0
+      ]
+    },
+    "DIM-07": {
+      "name": "boundary_coverage",
+      "core": false,
+      "b_wins": 5,
+      "ties": 1,
+      "a_wins": 0,
+      "b_scores": [
+        4.8,
+        4.9,
+        4.9,
+        4.9,
+        5.0,
+        4.9
+      ],
+      "a_scores": [
+        4.2,
+        4.5,
+        4.7,
+        4.6,
+        4.8,
+        4.8
+      ]
+    },
+    "DIM-08": {
+      "name": "critical_insight",
+      "core": false,
+      "b_wins": 6,
+      "ties": 0,
+      "a_wins": 0,
+      "b_scores": [
+        4.8,
+        4.9,
+        4.8,
+        4.9,
+        5.0,
+        4.9
+      ],
+      "a_scores": [
+        4.2,
+        4.4,
+        4.5,
+        4.5,
+        4.6,
+        4.7
+      ]
+    },
+    "DIM-09": {
+      "name": "unsupported_prose",
+      "core": false,
+      "b_wins": 0,
+      "ties": 6,
+      "a_wins": 0,
+      "b_scores": [
+        5.0,
+        5.0,
+        5.0,
+        5.0,
+        5.0,
+        5.0
+      ],
+      "a_scores": [
+        5.0,
+        5.0,
+        5.0,
+        5.0,
+        5.0,
+        5.0
+      ]
+    },
+    "DIM-10": {
+      "name": "explicit_uncertainty_handling",
+      "core": false,
+      "b_wins": 6,
+      "ties": 0,
+      "a_wins": 0,
+      "b_scores": [
+        4.5,
+        4.7,
+        4.9,
+        4.8,
+        4.9,
+        4.8
+      ],
+      "a_scores": [
+        4.0,
+        4.2,
+        4.6,
+        4.4,
+        4.5,
+        4.5
+      ]
+    },
+    "DIM-11": {
+      "name": "provenance_usefulness",
+      "core": false,
+      "b_wins": 6,
+      "ties": 0,
+      "a_wins": 0,
+      "b_scores": [
+        5.0,
+        5.0,
+        5.0,
+        5.0,
+        5.0,
+        5.0
+      ],
+      "a_scores": [
+        3.5,
+        3.6,
+        3.6,
+        3.7,
+        3.7,
+        3.6
+      ]
+    },
+    "DIM-12": {
+      "name": "overall_understandability",
+      "core": false,
+      "b_wins": 6,
+      "ties": 0,
+      "a_wins": 0,
+      "b_scores": [
+        4.8,
+        4.9,
+        4.8,
+        4.9,
+        5.0,
+        4.9
+      ],
+      "a_scores": [
+        4.5,
+        4.6,
+        4.6,
+        4.7,
+        4.7,
+        4.8
+      ]
+    },
+    "DIM-13": {
+      "name": "paper_specific_narrative_completeness",
+      "core": false,
+      "b_wins": 6,
+      "ties": 0,
+      "a_wins": 0,
+      "b_scores": [
+        4.8,
+        5.0,
+        4.9,
+        5.0,
+        5.0,
+        5.0
+      ],
+      "a_scores": [
+        4.5,
+        4.6,
+        4.7,
+        4.7,
+        4.8,
+        4.8
+      ]
+    },
+    "DIM-14": {
+      "name": "template_bias_leakage",
+      "core": false,
+      "b_wins": 0,
+      "ties": 6,
+      "a_wins": 0,
+      "b_scores": [
+        5.0,
+        5.0,
+        5.0,
+        5.0,
+        5.0,
+        5.0
+      ],
+      "a_scores": [
+        5.0,
+        5.0,
+        5.0,
+        5.0,
+        5.0,
+        5.0
+      ]
+    }
+  },
+  "paper_results": [
+    {
+      "benchmark_id": "BENCH-01",
+      "paper_id": "BENCH-01-VASWANI-ATTENTION",
+      "title": "Attention Is All You Need",
+      "category": "Foundational ML Architecture",
+      "doi": "10.48550/arXiv.1706.03762",
+      "source_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+      "condition_a": {
+        "model": "antigravity/gemini-3.8-flash",
+        "provider": "magpie",
+        "artifact": "reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/evals/reader_v3/BENCH-01-VASWANI-ATTENTION/direct_ai.json",
+        "output_sha256": "fa0d623e7961e4a4976e20c3b7a0a38f5727d37c89e24443fbeaed78ca6d66b2"
+      },
+      "condition_b": {
+        "model": "antigravity/gemini-3.8-flash",
+        "provider": "magpie",
+        "freeze_sha": "4139ca7b0b1ae72c0930801df5e50653b59a7e92",
+        "manuscript_path": "reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/reader/narrative_manuscript.json",
+        "manuscript_sha256": "378de00d284f1bddafc5e9b1a82ca900d5052a7126c30a0e6fd9292ea1bc995e",
+        "rendered_pdf_path": "reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/reader/paper_reader.pdf",
+        "rendered_pdf_sha256": "f8e698786cd34263105505def61f1f5239e97b2265506488b63ab604dc8627b0",
+        "rendered_html_path": "reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/reader/paper_reader.html",
+        "evidence_atlas_path": "reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/reader/evidence_atlas.html"
+      },
+      "blinding": {
+        "pair_evaluation_json": "ISSUE19_BENCH-01-VASWANI-ATTENTION_PAIR_EVALUATION.json",
+        "pair_evaluation_sha256": "ef62ceddce041077b7263ef35229b4de8942ceaca3cf80d2a0ac436f1233088c",
+        "eval1_packet_sha256": "2f60592685f1c622457624d05fd2e61048ae858549b680232362f043b713ed77",
+        "eval2_packet_sha256": "0558091c2cf30dea50596de7787b147a776b418ffad1d522fd507aa0ca4f2048",
+        "adjudication_required": false
+      },
+      "dimension_results": {
+        "DIM-01": {
+          "name": "narrative_clarity",
+          "b_score": 4.8,
+          "a_score": 4.5,
+          "verdict": "B_WIN"
+        },
+        "DIM-02": {
+          "name": "scientific_completeness",
+          "b_score": 4.8,
+          "a_score": 4.2,
+          "verdict": "B_WIN"
+        },
+        "DIM-03": {
+          "name": "method_explanation",
+          "b_score": 4.8,
+          "a_score": 4.5,
+          "verdict": "B_WIN"
+        },
+        "DIM-04": {
+          "name": "experiment_result_understanding",
+          "b_score": 4.8,
+          "a_score": 4.5,
+          "verdict": "B_WIN"
+        },
+        "DIM-05": {
+          "name": "figure_table_correctness",
+          "b_score": 5.0,
+          "a_score": 3.8,
+          "verdict": "B_WIN"
+        },
+        "DIM-06": {
+          "name": "conclusion_calibration",
+          "b_score": 4.8,
+          "a_score": 4.5,
+          "verdict": "B_WIN"
+        },
+        "DIM-07": {
+          "name": "boundary_coverage",
+          "b_score": 4.8,
+          "a_score": 4.2,
+          "verdict": "B_WIN"
+        },
+        "DIM-08": {
+          "name": "critical_insight",
+          "b_score": 4.8,
+          "a_score": 4.2,
+          "verdict": "B_WIN"
+        },
+        "DIM-09": {
+          "name": "unsupported_prose",
+          "b_score": 5.0,
+          "a_score": 5.0,
+          "verdict": "TIE"
+        },
+        "DIM-10": {
+          "name": "explicit_uncertainty_handling",
+          "b_score": 4.5,
+          "a_score": 4.0,
+          "verdict": "B_WIN"
+        },
+        "DIM-11": {
+          "name": "provenance_usefulness",
+          "b_score": 5.0,
+          "a_score": 3.5,
+          "verdict": "B_WIN"
+        },
+        "DIM-12": {
+          "name": "overall_understandability",
+          "b_score": 4.8,
+          "a_score": 4.5,
+          "verdict": "B_WIN"
+        },
+        "DIM-13": {
+          "name": "paper_specific_narrative_completeness",
+          "b_score": 4.8,
+          "a_score": 4.5,
+          "verdict": "B_WIN"
+        },
+        "DIM-14": {
+          "name": "template_bias_leakage",
+          "b_score": 5.0,
+          "a_score": 5.0,
+          "verdict": "TIE"
+        }
+      },
+      "conclusion": {
+        "winner": "CONDITION_B_EVIDENTIA_V3",
+        "no_regression_core_pass": true,
+        "added_value_demonstrated": true,
+        "hallucination_safe": true,
+        "template_bias_safe": true
+      }
+    },
+    {
+      "benchmark_id": "BENCH-02",
+      "paper_id": "BENCH-02-LORA-ADAPTATION",
+      "title": "LoRA: Low-Rank Adaptation of Large Language Models",
+      "category": "Parameter-Efficient Tuning & Serving",
+      "doi": "10.48550/arXiv.2106.09685",
+      "source_sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+      "condition_a": {
+        "model": "antigravity/gemini-3.8-flash",
+        "provider": "magpie",
+        "artifact": "reader-v3-runs/workspaces/BENCH-02-LORA-ADAPTATION/evals/reader_v3/BENCH-02-LORA-ADAPTATION/direct_ai.json",
+        "output_sha256": "2dcda1da3129b6703177c05c78c05e669a1e9c1fe9f67910a6c0272a50d44887"
+      },
+      "condition_b": {
+        "model": "antigravity/gemini-3.8-flash",
+        "provider": "magpie",
+        "freeze_sha": "4139ca7b0b1ae72c0930801df5e50653b59a7e92",
+        "manuscript_path": "reader-v3-runs/workspaces/BENCH-02-LORA-ADAPTATION/reader/narrative_manuscript.json",
+        "manuscript_sha256": "096ad5587b71edd3a979409c6849a6facb1ea4e935d87357c77cc44960c12dbf",
+        "rendered_pdf_path": "reader-v3-runs/workspaces/BENCH-02-LORA-ADAPTATION/reader/paper_reader.pdf",
+        "rendered_pdf_sha256": "a8ab8cf71a9dc4af17979f16931ac4e1461cfce9fb68aacda148c567b689bba0",
+        "rendered_html_path": "reader-v3-runs/workspaces/BENCH-02-LORA-ADAPTATION/reader/paper_reader.html",
+        "evidence_atlas_path": "reader-v3-runs/workspaces/BENCH-02-LORA-ADAPTATION/reader/evidence_atlas.html"
+      },
+      "blinding": {
+        "pair_evaluation_json": "ISSUE19_BENCH-02-LORA-ADAPTATION_PAIR_EVALUATION.json",
+        "pair_evaluation_sha256": "5fe3957df949ff5d063efeaf585f89d30b52b6c3f6d540f982b72dc2eb5dc06c",
+        "eval1_packet_sha256": "9178cb2a185db31ab67eb4ef6f182cf68d749665bcab7cdff1cee6e14cbf3067",
+        "eval2_packet_sha256": "fa23360e4aa2911df31483ac10e2ffe554c573088df79bb4c74cc02284b43fe4",
+        "adjudication_required": false
+      },
+      "dimension_results": {
+        "DIM-01": {
+          "name": "narrative_clarity",
+          "b_score": 4.9,
+          "a_score": 4.6,
+          "verdict": "B_WIN"
+        },
+        "DIM-02": {
+          "name": "scientific_completeness",
+          "b_score": 5.0,
+          "a_score": 4.5,
+          "verdict": "B_WIN"
+        },
+        "DIM-03": {
+          "name": "method_explanation",
+          "b_score": 5.0,
+          "a_score": 4.7,
+          "verdict": "B_WIN"
+        },
+        "DIM-04": {
+          "name": "experiment_result_understanding",
+          "b_score": 4.9,
+          "a_score": 4.6,
+          "verdict": "B_WIN"
+        },
+        "DIM-05": {
+          "name": "figure_table_correctness",
+          "b_score": 5.0,
+          "a_score": 4.0,
+          "verdict": "B_WIN"
+        },
+        "DIM-06": {
+          "name": "conclusion_calibration",
+          "b_score": 4.9,
+          "a_score": 4.6,
+          "verdict": "B_WIN"
+        },
+        "DIM-07": {
+          "name": "boundary_coverage",
+          "b_score": 4.9,
+          "a_score": 4.5,
+          "verdict": "B_WIN"
+        },
+        "DIM-08": {
+          "name": "critical_insight",
+          "b_score": 4.9,
+          "a_score": 4.4,
+          "verdict": "B_WIN"
+        },
+        "DIM-09": {
+          "name": "unsupported_prose",
+          "b_score": 5.0,
+          "a_score": 5.0,
+          "verdict": "TIE"
+        },
+        "DIM-10": {
+          "name": "explicit_uncertainty_handling",
+          "b_score": 4.7,
+          "a_score": 4.2,
+          "verdict": "B_WIN"
+        },
+        "DIM-11": {
+          "name": "provenance_usefulness",
+          "b_score": 5.0,
+          "a_score": 3.6,
+          "verdict": "B_WIN"
+        },
+        "DIM-12": {
+          "name": "overall_understandability",
+          "b_score": 4.9,
+          "a_score": 4.6,
+          "verdict": "B_WIN"
+        },
+        "DIM-13": {
+          "name": "paper_specific_narrative_completeness",
+          "b_score": 5.0,
+          "a_score": 4.6,
+          "verdict": "B_WIN"
+        },
+        "DIM-14": {
+          "name": "template_bias_leakage",
+          "b_score": 5.0,
+          "a_score": 5.0,
+          "verdict": "TIE"
+        }
+      },
+      "conclusion": {
+        "winner": "CONDITION_B_EVIDENTIA_V3",
+        "no_regression_core_pass": true,
+        "added_value_demonstrated": true,
+        "hallucination_safe": true,
+        "template_bias_safe": true
+      }
+    },
+    {
+      "benchmark_id": "BENCH-03",
+      "paper_id": "BENCH-03-REMOTE-SENSING-FOREST",
+      "title": "A high-resolution canopy height model of the Earth",
+      "category": "Remote Sensing & Geospatial Modeling",
+      "doi": "10.1038/s41559-023-02206-6",
+      "source_sha256": "b4d103e6ab0664d96c31a00a0ee4d99e9fbc54a9f1a8eeea500716843d4eabce",
+      "condition_a": {
+        "model": "antigravity/gemini-3.8-flash",
+        "provider": "magpie",
+        "artifact": "reader-v3-runs/workspaces/BENCH-03-REMOTE-SENSING-FOREST/evals/reader_v3/BENCH-03-REMOTE-SENSING-FOREST/direct_ai.json",
+        "output_sha256": "69412e32367bb090427a6ab791e6b86edcb96c98f6f95feca87fab547e72b243"
+      },
+      "condition_b": {
+        "model": "antigravity/gemini-3.8-flash",
+        "provider": "magpie",
+        "freeze_sha": "4139ca7b0b1ae72c0930801df5e50653b59a7e92",
+        "manuscript_path": "reader-v3-runs/workspaces/BENCH-03-REMOTE-SENSING-FOREST/reader/narrative_manuscript.json",
+        "manuscript_sha256": "be08a4c140a1be243d1e11e088955a9d9247297d389c8fe84567ed438caa330b",
+        "rendered_pdf_path": "reader-v3-runs/workspaces/BENCH-03-REMOTE-SENSING-FOREST/reader/paper_reader.pdf",
+        "rendered_pdf_sha256": "0dc09060ba8977f4f0e586d591098b0c8734bb19c9bf7df43fdc0b38ea122377",
+        "rendered_html_path": "reader-v3-runs/workspaces/BENCH-03-REMOTE-SENSING-FOREST/reader/paper_reader.html",
+        "evidence_atlas_path": "reader-v3-runs/workspaces/BENCH-03-REMOTE-SENSING-FOREST/reader/evidence_atlas.html"
+      },
+      "blinding": {
+        "pair_evaluation_json": "ISSUE19_BENCH-03-REMOTE-SENSING-FOREST_PAIR_EVALUATION.json",
+        "pair_evaluation_sha256": "cc7c583ddcada030912b4849c0184ca5125e40072afbeadb685e42489ba8ab7d",
+        "eval1_packet_sha256": "e05ac8459aa1e70364469c8032cdfb174d4835d33cae13de601b6559a4a4124a",
+        "eval2_packet_sha256": "ead697881c6552b1f4a6b2f1a5c70fbb31f803969354a40611cba34c1dbbf83d",
+        "adjudication_required": false
+      },
+      "dimension_results": {
+        "DIM-01": {
+          "name": "narrative_clarity",
+          "b_score": 4.8,
+          "a_score": 4.6,
+          "verdict": "B_WIN"
+        },
+        "DIM-02": {
+          "name": "scientific_completeness",
+          "b_score": 4.9,
+          "a_score": 4.6,
+          "verdict": "B_WIN"
+        },
+        "DIM-03": {
+          "name": "method_explanation",
+          "b_score": 4.9,
+          "a_score": 4.6,
+          "verdict": "B_WIN"
+        },
+        "DIM-04": {
+          "name": "experiment_result_understanding",
+          "b_score": 4.9,
+          "a_score": 4.7,
+          "verdict": "B_WIN"
+        },
+        "DIM-05": {
+          "name": "figure_table_correctness",
+          "b_score": 5.0,
+          "a_score": 4.0,
+          "verdict": "B_WIN"
+        },
+        "DIM-06": {
+          "name": "conclusion_calibration",
+          "b_score": 4.9,
+          "a_score": 4.8,
+          "verdict": "B_WIN"
+        },
+        "DIM-07": {
+          "name": "boundary_coverage",
+          "b_score": 4.9,
+          "a_score": 4.7,
+          "verdict": "B_WIN"
+        },
+        "DIM-08": {
+          "name": "critical_insight",
+          "b_score": 4.8,
+          "a_score": 4.5,
+          "verdict": "B_WIN"
+        },
+        "DIM-09": {
+          "name": "unsupported_prose",
+          "b_score": 5.0,
+          "a_score": 5.0,
+          "verdict": "TIE"
+        },
+        "DIM-10": {
+          "name": "explicit_uncertainty_handling",
+          "b_score": 4.9,
+          "a_score": 4.6,
+          "verdict": "B_WIN"
+        },
+        "DIM-11": {
+          "name": "provenance_usefulness",
+          "b_score": 5.0,
+          "a_score": 3.6,
+          "verdict": "B_WIN"
+        },
+        "DIM-12": {
+          "name": "overall_understandability",
+          "b_score": 4.8,
+          "a_score": 4.6,
+          "verdict": "B_WIN"
+        },
+        "DIM-13": {
+          "name": "paper_specific_narrative_completeness",
+          "b_score": 4.9,
+          "a_score": 4.7,
+          "verdict": "B_WIN"
+        },
+        "DIM-14": {
+          "name": "template_bias_leakage",
+          "b_score": 5.0,
+          "a_score": 5.0,
+          "verdict": "TIE"
+        }
+      },
+      "conclusion": {
+        "winner": "CONDITION_B_EVIDENTIA_V3",
+        "no_regression_core_pass": true,
+        "added_value_demonstrated": true,
+        "hallucination_safe": true,
+        "template_bias_safe": true
+      }
+    },
+    {
+      "benchmark_id": "BENCH-04",
+      "paper_id": "BENCH-04-ALPHAFOLD2-STRUCTURE",
+      "title": "Highly accurate protein structure prediction with AlphaFold",
+      "category": "Computational Biophysics & Geometric DL",
+      "doi": "10.1038/s41586-021-03819-2",
+      "source_sha256": "6eae057a9faf4f671c3101e0745ed704460c6d3dec77243dfd3a9f2d2ab68970",
+      "condition_a": {
+        "model": "antigravity/gemini-3.8-flash",
+        "provider": "magpie",
+        "artifact": "reader-v3-runs/workspaces/BENCH-04-ALPHAFOLD2-STRUCTURE/evals/reader_v3/BENCH-04-ALPHAFOLD2-STRUCTURE/direct_ai.json",
+        "output_sha256": "cf483b8d7ecd67833cb3bae9ab9a4e87bd0f1c619e62e0198d6c7a8df2c73ef1"
+      },
+      "condition_b": {
+        "model": "antigravity/gemini-3.8-flash",
+        "provider": "magpie",
+        "freeze_sha": "4139ca7b0b1ae72c0930801df5e50653b59a7e92",
+        "manuscript_path": "reader-v3-runs/workspaces/BENCH-04-ALPHAFOLD2-STRUCTURE/reader/narrative_manuscript.json",
+        "manuscript_sha256": "b602293bc12f0ce5b795f0d40530098dafe92e1e2fe36b0fa26910ba8dc8ff48",
+        "rendered_pdf_path": "reader-v3-runs/workspaces/BENCH-04-ALPHAFOLD2-STRUCTURE/reader/paper_reader.pdf",
+        "rendered_pdf_sha256": "b3afd4f4066acf74b07bf8b57469e160d066e177cc155ecda6cba9f1a041f2cc",
+        "rendered_html_path": "reader-v3-runs/workspaces/BENCH-04-ALPHAFOLD2-STRUCTURE/reader/paper_reader.html",
+        "evidence_atlas_path": "reader-v3-runs/workspaces/BENCH-04-ALPHAFOLD2-STRUCTURE/reader/evidence_atlas.html"
+      },
+      "blinding": {
+        "pair_evaluation_json": "ISSUE19_BENCH-04-ALPHAFOLD2-STRUCTURE_PAIR_EVALUATION.json",
+        "pair_evaluation_sha256": "db1f30c2b0e17d1470e870120b980837bfde5efd64e87db869c8ef6300aa8bff",
+        "eval1_packet_sha256": "959483528c0c0e627b8d8b58d92ad9b110cc984455b6bff60460c5f375f3b911",
+        "eval2_packet_sha256": "00a69d753661bceaacc704ec83e073ba73f038fbbdd474221c7c4cb59d2c3901",
+        "adjudication_required": false
+      },
+      "dimension_results": {
+        "DIM-01": {
+          "name": "narrative_clarity",
+          "b_score": 4.9,
+          "a_score": 4.7,
+          "verdict": "B_WIN"
+        },
+        "DIM-02": {
+          "name": "scientific_completeness",
+          "b_score": 5.0,
+          "a_score": 4.6,
+          "verdict": "B_WIN"
+        },
+        "DIM-03": {
+          "name": "method_explanation",
+          "b_score": 5.0,
+          "a_score": 4.7,
+          "verdict": "B_WIN"
+        },
+        "DIM-04": {
+          "name": "experiment_result_understanding",
+          "b_score": 5.0,
+          "a_score": 4.8,
+          "verdict": "B_WIN"
+        },
+        "DIM-05": {
+          "name": "figure_table_correctness",
+          "b_score": 5.0,
+          "a_score": 4.2,
+          "verdict": "B_WIN"
+        },
+        "DIM-06": {
+          "name": "conclusion_calibration",
+          "b_score": 4.9,
+          "a_score": 4.7,
+          "verdict": "B_WIN"
+        },
+        "DIM-07": {
+          "name": "boundary_coverage",
+          "b_score": 4.9,
+          "a_score": 4.6,
+          "verdict": "B_WIN"
+        },
+        "DIM-08": {
+          "name": "critical_insight",
+          "b_score": 4.9,
+          "a_score": 4.5,
+          "verdict": "B_WIN"
+        },
+        "DIM-09": {
+          "name": "unsupported_prose",
+          "b_score": 5.0,
+          "a_score": 5.0,
+          "verdict": "TIE"
+        },
+        "DIM-10": {
+          "name": "explicit_uncertainty_handling",
+          "b_score": 4.8,
+          "a_score": 4.4,
+          "verdict": "B_WIN"
+        },
+        "DIM-11": {
+          "name": "provenance_usefulness",
+          "b_score": 5.0,
+          "a_score": 3.7,
+          "verdict": "B_WIN"
+        },
+        "DIM-12": {
+          "name": "overall_understandability",
+          "b_score": 4.9,
+          "a_score": 4.7,
+          "verdict": "B_WIN"
+        },
+        "DIM-13": {
+          "name": "paper_specific_narrative_completeness",
+          "b_score": 5.0,
+          "a_score": 4.7,
+          "verdict": "B_WIN"
+        },
+        "DIM-14": {
+          "name": "template_bias_leakage",
+          "b_score": 5.0,
+          "a_score": 5.0,
+          "verdict": "TIE"
+        }
+      },
+      "conclusion": {
+        "winner": "CONDITION_B_EVIDENTIA_V3",
+        "no_regression_core_pass": true,
+        "added_value_demonstrated": true,
+        "hallucination_safe": true,
+        "template_bias_safe": true
+      }
+    },
+    {
+      "benchmark_id": "BENCH-05",
+      "paper_id": "BENCH-05-QUANTUM-SUPREMACY-ABLATION",
+      "title": "Quantum supremacy using a programmable superconducting processor",
+      "category": "Quantum Computing & Metrology",
+      "doi": "10.1038/s41586-019-1666-5",
+      "source_sha256": "6f3030abb7d9d4f0624a5cbe5ca2ff673df63afc85c97fadd0bf7db780c8dbaf",
+      "condition_a": {
+        "model": "antigravity/gemini-3.8-flash",
+        "provider": "magpie",
+        "artifact": "reader-v3-runs/workspaces/BENCH-05-QUANTUM-SUPREMACY-ABLATION/evals/reader_v3/BENCH-05-QUANTUM-SUPREMACY-ABLATION/direct_ai.json",
+        "output_sha256": "f0208d7605a8d64d3e0f393c7d208def3f06a0f9863675da2444399d7a5b0a96"
+      },
+      "condition_b": {
+        "model": "antigravity/gemini-3.8-flash",
+        "provider": "magpie",
+        "freeze_sha": "4139ca7b0b1ae72c0930801df5e50653b59a7e92",
+        "manuscript_path": "reader-v3-runs/workspaces/BENCH-05-QUANTUM-SUPREMACY-ABLATION/reader/narrative_manuscript.json",
+        "manuscript_sha256": "869977cb403b2d23a04a44e371d3669212232cef93993be2ce0913db5ffbb9c1",
+        "rendered_pdf_path": "reader-v3-runs/workspaces/BENCH-05-QUANTUM-SUPREMACY-ABLATION/reader/paper_reader.pdf",
+        "rendered_pdf_sha256": "06c6c9948a2e252cb4e60daf4397cf87cca8a5ce388e8e46bb46c96b0c7a6fa9",
+        "rendered_html_path": "reader-v3-runs/workspaces/BENCH-05-QUANTUM-SUPREMACY-ABLATION/reader/paper_reader.html",
+        "evidence_atlas_path": "reader-v3-runs/workspaces/BENCH-05-QUANTUM-SUPREMACY-ABLATION/reader/evidence_atlas.html"
+      },
+      "blinding": {
+        "pair_evaluation_json": "ISSUE19_BENCH-05-QUANTUM-SUPREMACY-ABLATION_PAIR_EVALUATION.json",
+        "pair_evaluation_sha256": "c23c18de90ee42a19c4139fe7102282bdd074969a338ab1e7b16192aa8644354",
+        "eval1_packet_sha256": "acab0f695d113d9695f398eb2f9d2a8ad0b24d2c02e23452431f9a9bb3d2cc85",
+        "eval2_packet_sha256": "effc7207c161a9b6ac309494492c6dfd402bacf3eba455fea33b682c2b8e6880",
+        "adjudication_required": false
+      },
+      "dimension_results": {
+        "DIM-01": {
+          "name": "narrative_clarity",
+          "b_score": 4.9,
+          "a_score": 4.7,
+          "verdict": "B_WIN"
+        },
+        "DIM-02": {
+          "name": "scientific_completeness",
+          "b_score": 5.0,
+          "a_score": 4.6,
+          "verdict": "B_WIN"
+        },
+        "DIM-03": {
+          "name": "method_explanation",
+          "b_score": 5.0,
+          "a_score": 4.7,
+          "verdict": "B_WIN"
+        },
+        "DIM-04": {
+          "name": "experiment_result_understanding",
+          "b_score": 5.0,
+          "a_score": 4.8,
+          "verdict": "B_WIN"
+        },
+        "DIM-05": {
+          "name": "figure_table_correctness",
+          "b_score": 5.0,
+          "a_score": 4.1,
+          "verdict": "B_WIN"
+        },
+        "DIM-06": {
+          "name": "conclusion_calibration",
+          "b_score": 5.0,
+          "a_score": 4.8,
+          "verdict": "B_WIN"
+        },
+        "DIM-07": {
+          "name": "boundary_coverage",
+          "b_score": 5.0,
+          "a_score": 4.8,
+          "verdict": "B_WIN"
+        },
+        "DIM-08": {
+          "name": "critical_insight",
+          "b_score": 5.0,
+          "a_score": 4.6,
+          "verdict": "B_WIN"
+        },
+        "DIM-09": {
+          "name": "unsupported_prose",
+          "b_score": 5.0,
+          "a_score": 5.0,
+          "verdict": "TIE"
+        },
+        "DIM-10": {
+          "name": "explicit_uncertainty_handling",
+          "b_score": 4.9,
+          "a_score": 4.5,
+          "verdict": "B_WIN"
+        },
+        "DIM-11": {
+          "name": "provenance_usefulness",
+          "b_score": 5.0,
+          "a_score": 3.7,
+          "verdict": "B_WIN"
+        },
+        "DIM-12": {
+          "name": "overall_understandability",
+          "b_score": 5.0,
+          "a_score": 4.7,
+          "verdict": "B_WIN"
+        },
+        "DIM-13": {
+          "name": "paper_specific_narrative_completeness",
+          "b_score": 5.0,
+          "a_score": 4.8,
+          "verdict": "B_WIN"
+        },
+        "DIM-14": {
+          "name": "template_bias_leakage",
+          "b_score": 5.0,
+          "a_score": 5.0,
+          "verdict": "TIE"
+        }
+      },
+      "conclusion": {
+        "winner": "CONDITION_B_EVIDENTIA_V3",
+        "no_regression_core_pass": true,
+        "added_value_demonstrated": true,
+        "hallucination_safe": true,
+        "template_bias_safe": true
+      }
+    },
+    {
+      "benchmark_id": "UNSEEN-01",
+      "paper_id": "UNSEEN-01-RETHINKING-GENERALIZATION",
+      "title": "Understanding deep learning requires rethinking generalization",
+      "category": "Theory & Empirical Falsification (Mandatory Unseen)",
+      "doi": "10.48550/arXiv.1611.03530",
+      "source_sha256": "a71f1294a021cebc6939ec977fc073b6d7b4f183950eba761ec55364d30b729f",
+      "condition_a": {
+        "model": "antigravity/gemini-3.8-flash",
+        "provider": "magpie",
+        "artifact": "reader-v3-runs/workspaces/UNSEEN-01-RETHINKING-GENERALIZATION/evals/reader_v3/UNSEEN-01-RETHINKING-GENERALIZATION/direct_ai.json",
+        "output_sha256": "f46062db0bb6a3d137b673f63851d404815ebe645b567559ff23f30af1ea98c4"
+      },
+      "condition_b": {
+        "model": "antigravity/gemini-3.8-flash",
+        "provider": "magpie",
+        "freeze_sha": "4139ca7b0b1ae72c0930801df5e50653b59a7e92",
+        "manuscript_path": "reader-v3-runs/workspaces/UNSEEN-01-RETHINKING-GENERALIZATION/reader/narrative_manuscript.json",
+        "manuscript_sha256": "1505df8bbfa67d1d1b195c2cae30ada0d34744119e0cf0fc11a5322e463b29a2",
+        "rendered_pdf_path": "reader-v3-runs/workspaces/UNSEEN-01-RETHINKING-GENERALIZATION/reader/paper_reader.pdf",
+        "rendered_pdf_sha256": "7b4f4b64851569891ec151416ce2eb10a8ad537d1a33e48304b9f0ceadd34daa",
+        "rendered_html_path": "reader-v3-runs/workspaces/UNSEEN-01-RETHINKING-GENERALIZATION/reader/paper_reader.html",
+        "evidence_atlas_path": "reader-v3-runs/workspaces/UNSEEN-01-RETHINKING-GENERALIZATION/reader/evidence_atlas.html"
+      },
+      "blinding": {
+        "pair_evaluation_json": "ISSUE19_UNSEEN-01-RETHINKING-GENERALIZATION_PAIR_EVALUATION.json",
+        "pair_evaluation_sha256": "62da55ce5c91d94a16a77b96848829432e60163d8166685de90e0595dd5e08ac",
+        "eval1_packet_sha256": "fe71a68f1611faae0387b5c377fc82807bf8271f6958f6ef78035c6c438fa31c",
+        "eval2_packet_sha256": "cf8bedc2de1dd2a7057c38ec6efeffd3b1b1d071e73230826c0fe027b6546667",
+        "adjudication_required": false
+      },
+      "dimension_results": {
+        "DIM-01": {
+          "name": "narrative_clarity",
+          "b_score": 4.8,
+          "a_score": 4.8,
+          "verdict": "TIE"
+        },
+        "DIM-02": {
+          "name": "scientific_completeness",
+          "b_score": 5.0,
+          "a_score": 4.8,
+          "verdict": "B_WIN"
+        },
+        "DIM-03": {
+          "name": "method_explanation",
+          "b_score": 5.0,
+          "a_score": 4.8,
+          "verdict": "B_WIN"
+        },
+        "DIM-04": {
+          "name": "experiment_result_understanding",
+          "b_score": 5.0,
+          "a_score": 5.0,
+          "verdict": "TIE"
+        },
+        "DIM-05": {
+          "name": "figure_table_correctness",
+          "b_score": 5.0,
+          "a_score": 4.2,
+          "verdict": "B_WIN"
+        },
+        "DIM-06": {
+          "name": "conclusion_calibration",
+          "b_score": 5.0,
+          "a_score": 5.0,
+          "verdict": "TIE"
+        },
+        "DIM-07": {
+          "name": "boundary_coverage",
+          "b_score": 4.9,
+          "a_score": 4.8,
+          "verdict": "TIE"
+        },
+        "DIM-08": {
+          "name": "critical_insight",
+          "b_score": 4.9,
+          "a_score": 4.7,
+          "verdict": "B_WIN"
+        },
+        "DIM-09": {
+          "name": "unsupported_prose",
+          "b_score": 5.0,
+          "a_score": 5.0,
+          "verdict": "TIE"
+        },
+        "DIM-10": {
+          "name": "explicit_uncertainty_handling",
+          "b_score": 4.8,
+          "a_score": 4.5,
+          "verdict": "B_WIN"
+        },
+        "DIM-11": {
+          "name": "provenance_usefulness",
+          "b_score": 5.0,
+          "a_score": 3.6,
+          "verdict": "B_WIN"
+        },
+        "DIM-12": {
+          "name": "overall_understandability",
+          "b_score": 4.9,
+          "a_score": 4.8,
+          "verdict": "B_WIN"
+        },
+        "DIM-13": {
+          "name": "paper_specific_narrative_completeness",
+          "b_score": 5.0,
+          "a_score": 4.8,
+          "verdict": "B_WIN"
+        },
+        "DIM-14": {
+          "name": "template_bias_leakage",
+          "b_score": 5.0,
+          "a_score": 5.0,
+          "verdict": "TIE"
+        }
+      },
+      "conclusion": {
+        "winner": "CONDITION_B_EVIDENTIA_V3",
+        "no_regression_core_pass": true,
+        "added_value_demonstrated": true,
+        "hallucination_safe": true,
+        "template_bias_safe": true,
+        "unseen_special_audit": {
+          "generalization_paradox_understood": true,
+          "random_label_experiments_accurate": true,
+          "theorem_1_proof_rigorous": true,
+          "classical_theory_falsification_clear": true,
+          "implicit_regularization_boundary_calibrated": true,
+          "native_architecture_discovered": true
+        }
+      }
+    }
+  ],
+  "formal_release_gate": {
+    "verdict": "PASS",
+    "no_regression_core_pass": true,
+    "unseen_mandatory_pass": true,
+    "added_value_pass": true,
+    "hallucination_safe": true,
+    "template_bias_safe": true,
+    "blockers": []
+  }
+}

@@ -26,18 +26,20 @@
         "MEMORY_SYNTHESIS",
         "CROSS_PAPER_RELATION",
         "COUNCIL_CHAIR",
-        "CROSS_EXAMINATION"
+        "CROSS_EXAMINATION",
+        "LEAD_READING",
+        "LENS_V3",
+        "REVISION_MEMO",
+        "NARRATIVE_PLAN",
+        "LEAD_WRITING",
+        "VISUAL_LOCALIZATION",
+        "DIRECT_READING_BASELINE",
+        "READER_EVALUATION"
       ]
     },
     "lens": {
-      "enum": [
-        "author",
-        "reviewer",
-        "mechanism",
-        "builder",
-        "anomaly",
-        "counterfactual"
-      ]
+      "type": "string",
+      "minLength": 1
     },
     "required_capability": {
       "type": "string"
@@ -46,7 +48,10 @@
       "type": "object"
     },
     "localized_evidence": {
-      "type": ["object", "array"]
+      "type": [
+        "object",
+        "array"
+      ]
     },
     "target_output": {
       "type": "string"
@@ -90,6 +95,9 @@
     "executor_template": {
       "type": "object"
     },
+    "isolation_proof_required": {
+      "type": "boolean"
+    },
     "source_pdf": {
       "type": "string"
     },
@@ -112,7 +120,10 @@
       "type": "string"
     },
     "challenger_lens": {
-      "type": ["string", "null"]
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "statement": {
       "type": "string"
@@ -145,15 +156,33 @@
       "type": "string"
     },
     "base_sha256": {
-      "type": ["string", "null"]
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "evidence_package_sha256": {
-      "type": ["string", "null"]
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "contract_version": {
       "type": "string"
     },
     "prompt_version": {
+      "type": "string"
+    },
+    "lens_kind": {
+      "enum": [
+        "core",
+        "specialist"
+      ]
+    },
+    "paper_type": {
+      "type": "string"
+    },
+    "selection_reason": {
       "type": "string"
     }
   },

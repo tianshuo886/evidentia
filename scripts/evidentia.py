@@ -128,6 +128,236 @@ def run_workflow(args):
     out_dir = resolve_paper_workspace(raw_input, explicit_out=getattr(args, 'out', None))
     args.out = str(out_dir)
 
+    legacy_workspace = (out_dir / 'model/open_reading_model.json').exists() and not (out_dir / 'model/lens_v3_manifest.json').exists() and not (out_dir / 'tasks/v3').exists()
+
+    # Check if legacy compatibility mode was requested explicitly
+    legacy_replay = False
+    if getattr(args, 'replay', None):
+        rp = Path(args.replay)
+        if not rp.is_absolute():
+            rp = (Path.cwd() / rp).resolve()
+        if (rp / 'TASK-OPEN-READING.json').exists() or ((HERE.parent / args.replay) / 'TASK-OPEN-READING.json').exists():
+            legacy_replay = True
+
+    if getattr(args, 'legacy', False) or getattr(args, 'mode', None) in ('legacy', 'ensemble', 'standard') or legacy_replay or legacy_workspace:
+        if getattr(args, 'mode', None) != 'v3' or getattr(args, 'legacy', False) or legacy_replay or legacy_workspace:
+            print("[COMPATIBILITY_ONLY] Warning: Executing deprecated v1/v2 deterministic pipeline.")
+            print("                      Reader v3 is the canonical Evidentia architecture.")
+            return run_legacy_workflow(args)
+    return run_canonical_v3_workflow(args)
+
+def run_canonical_v3_workflow(args):
+    # Auto-acquire paper if DOI, ArXiv ID, or URL is passed
+    raw_input = getattr(args, 'doi', None) or getattr(args, 'pdf', None)
+    out_dir = resolve_paper_workspace(raw_input, explicit_out=getattr(args, 'out', None))
+    args.out = str(out_dir)
+
+    if raw_input and (getattr(args, 'doi', None) or not Path(raw_input).exists()):
+        from paper_acquire_bridge import is_doi, is_arxiv, is_url, acquire_paper
+        if is_doi(raw_input) or is_arxiv(raw_input) or is_url(raw_input):
+            target_pdf = out_dir / 'source/paper.pdf'
+            pdf_path, meta = acquire_paper(raw_input, out_dir=out_dir, target_pdf_path=target_pdf)
+            args.pdf = str(pdf_path)
+
+    pdf_path = out_dir / 'source/paper.pdf'
+    if not pdf_path.exists():
+        if not getattr(args, 'pdf', None):
+            sys.exit("Error: --pdf or DOI required to run Evidentia")
+        supp_args = []
+        for s in (getattr(args, 'supplement', []) or []):
+            supp_args.extend(['--supplement', s])
+            
+        from intent_router import route_intent
+        target_intent = route_intent(prompt=getattr(args, 'prompt', None), explicit=getattr(args, 'intent', None))
+        if target_intent == "PROJECT_APPLY":
+            sys.exit("Error: PROJECT_APPLY must be invoked via 'evidentia-apply' or 'pipeline.py apply' on a frozen paper workspace.")
+        if target_intent == "MEMORY_OPERATION":
+            sys.exit("Error: MEMORY_OPERATION must be invoked via 'evidentia.py memory ...'.")
+
+        print(f"[1/8] Initializing source workspace (intent: {target_intent})...")
+        sh(str(HERE / 'init_run.py'), '--pdf', args.pdf, '--out', str(out_dir), '--intent', target_intent, *supp_args)
+
+    # 2. Source reconstruction
+    source_map = out_dir / 'model/source_map.json'
+    fig_inv = out_dir / 'model/figure_inventory.json'
+    if not source_map.exists() or not fig_inv.exists():
+        print("[2/8] Reconstructing paper source evidence (text + visual track)...")
+        sh(str(HERE / 'extract_structure.py'), '--pdf', str(pdf_path), '--out', str(source_map))
+        sh(str(HERE / 'extract_figs.py'), '--pdf', str(pdf_path), '--out', str(out_dir / 'assets/figures'), '--inventory', str(fig_inv))
+        sh(str(HERE / 'link_mentions.py'), '--source-map', str(source_map), '--inventory', str(fig_inv))
+        from render_source_pages import render_pages
+        render_pages(pdf_path, out_dir / 'source_pages')
+
+    eq_inv = out_dir / 'model/equation_inventory.json'
+    if not eq_inv.exists():
+        from validate_common import load_json, sha256
+        s_data = load_json(source_map)
+        eq_data = {
+            "schema_version": "1.0",
+            "source_sha256": sha256(pdf_path),
+            "equations": [eq for pg in s_data.get("pages", []) for eq in pg.get("equations", []) if isinstance(eq, dict)]
+        }
+        eq_inv.write_text(json.dumps(eq_data, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
+
+    vis_manifest = out_dir / 'model/visual_v3_manifest.json'
+    if not vis_manifest.exists():
+        from visual_localization_protocol import create_visual_tasks
+        create_visual_tasks(out_dir)
+
+    # 3. Canonical Reader v3 pipeline
+    import reader_v3
+    from reader_v3_protocol import (
+        create_lead_reader_task, create_lens_tasks,
+        create_revision_memo_task, create_narrative_plan_task, create_lead_writer_task
+    )
+    from prepare_lens_isolation import prepare as prepare_lens_isolation
+
+    extra_flags = []
+    fixture_mode = getattr(args, 'fixture', False)
+    if fixture_mode:
+        extra_flags.append('--fixture')
+    if getattr(args, 'replay', None):
+        extra_flags.extend(['--replay', args.replay])
+    if getattr(args, 'adapter', None):
+        extra_flags.extend(['--adapter', args.adapter])
+
+    st = reader_v3._status(out_dir)
+    if not st['lead_reader']:
+        task_p = create_lead_reader_task(out_dir)
+        print(f"[3/8] Generated Lead Reader task at {task_p}")
+        if fixture_mode or getattr(args, 'replay', None) or getattr(args, 'adapter', None):
+            sh(str(HERE / 'reader_v3_agent.py'), '--task', str(task_p), *extra_flags)
+        else:
+            print(f">>> Paused in WAITING_FOR_AGENT. Complete {task_p} and submit via 'evidentia submit'.")
+            return 0
+        st = reader_v3._status(out_dir)
+
+    if not st['lens_manifest']:
+        print("[4/8] Generating 4 Core + 2 Adaptive Lens tasks...")
+        create_lens_tasks(out_dir)
+        prepare_lens_isolation(out_dir)
+        st = reader_v3._status(out_dir)
+
+    if not st['all_lenses']:
+        missing = [x for x, ok in st.get('lenses', {}).items() if not ok]
+        print(f"[5/8] Awaiting Lens executions for: {', '.join(missing)}")
+        if fixture_mode or getattr(args, 'replay', None) or getattr(args, 'adapter', None):
+            for l in missing:
+                task_p = out_dir / f'tasks/v3/lens/{l}.json'
+                sh(str(HERE / 'reader_v3_agent.py'), '--task', str(task_p), *extra_flags)
+        else:
+            print(f">>> Paused in WAITING_FOR_LENSES. Missing {len(missing)} lenses.")
+            return 0
+        st = reader_v3._status(out_dir)
+
+    if not st['revision_memo']:
+        task_p = create_revision_memo_task(out_dir)
+        print(f"[6/8] Generated Revision Memo task at {task_p}")
+        if fixture_mode or getattr(args, 'replay', None) or getattr(args, 'adapter', None):
+            sh(str(HERE / 'reader_v3_agent.py'), '--task', str(task_p), *extra_flags)
+        else:
+            print(f">>> Paused in WAITING_FOR_AGENT. Complete {task_p}.")
+            return 0
+        st = reader_v3._status(out_dir)
+
+    if not st['narrative_plan']:
+        task_p = create_narrative_plan_task(out_dir)
+        print(f"[6.5/8] Generated Dynamic Narrative Plan task at {task_p}")
+        if fixture_mode or getattr(args, 'replay', None) or getattr(args, 'adapter', None):
+            sh(str(HERE / 'reader_v3_agent.py'), '--task', str(task_p), *extra_flags)
+        else:
+            print(f">>> Paused in WAITING_FOR_AGENT. Complete {task_p}.")
+            return 0
+        st = reader_v3._status(out_dir)
+
+    if not st['lead_writer']:
+        task_p = create_lead_writer_task(out_dir)
+        print(f"[7/8] Generated Lead Writer task at {task_p}")
+        if fixture_mode or getattr(args, 'replay', None) or getattr(args, 'adapter', None):
+            sh(str(HERE / 'reader_v3_agent.py'), '--task', str(task_p), *extra_flags)
+        else:
+            print(f">>> Paused in WAITING_FOR_AGENT. Complete {task_p}.")
+            return 0
+        st = reader_v3._status(out_dir)
+
+    print("[8/8] Rendering Canonical Reader v3 (HTML, MD, PDF) & Evidence Atlas...")
+    reader_v3.render(out_dir)
+    sync_top_level_readers(out_dir)
+
+    # Manifest and Paper Model completion
+    from validate_common import sha256
+    pm_path = out_dir / 'model/paper_model.json'
+    if not pm_path.exists():
+        draft_p = out_dir / 'model/paper_understanding_draft.json'
+        p_id = out_dir.name
+        if draft_p.exists():
+            p_id = json.loads(draft_p.read_text()).get('paper_id') or out_dir.name
+        compat_pm = {
+            "schema_version": "1.0",
+            "paper_id": p_id,
+            "title": p_id,
+            "source_sha256": sha256(pdf_path),
+            "claims": []
+        }
+        pm_path.write_text(json.dumps(compat_pm, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
+
+    manifest = {
+        "schema_version": "1.0",
+        "status": "FROZEN",
+        "paper_id": out_dir.name,
+        "source_sha256": sha256(pdf_path),
+        "reader_v3_freeze_sha": "4139ca7b0b1ae72c0930801df5e50653b59a7e92",
+        "hashes": {
+            "source/paper.pdf": sha256(pdf_path),
+            "model/source_map.json": sha256(source_map),
+            "model/figure_inventory.json": sha256(fig_inv),
+            "model/paper_model.json": sha256(pm_path),
+            "reader/narrative_manuscript.json": sha256(out_dir / "reader/narrative_manuscript.json")
+        },
+        "lens_hashes": {}
+    }
+    (out_dir / "model/manifest.json").write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
+
+    target_intent = getattr(args, 'intent', None)
+    if not target_intent:
+        rs_p = out_dir / 'run_state.json'
+        if rs_p.exists():
+            target_intent = json.loads(rs_p.read_text(encoding='utf-8')).get('intent')
+
+    if target_intent == 'PAPER_TECHNICAL_EXTRACTION':
+        from render_reader import render_reader
+        render_reader(out_dir, intent=target_intent)
+
+    rs_p = out_dir / 'run_state.json'
+    if rs_p.exists():
+        rs = json.loads(rs_p.read_text(encoding='utf-8'))
+        rs['phase'] = 'PAPER_COMPLETE'
+        if 'completed_phases' not in rs:
+            rs['completed_phases'] = []
+        rs['completed_phases'].append('PAPER_COMPLETE')
+        rs_p.write_text(json.dumps(rs, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
+
+    paper_html_p = (out_dir / 'paper_reader.html').resolve() if (out_dir / 'paper_reader.html').exists() else (out_dir / 'reader/paper_reader.html').resolve()
+    html_p = paper_html_p if paper_html_p.exists() else (out_dir / 'reader/reader.html').resolve()
+    atlas_p = (out_dir / 'evidence_atlas.html').resolve() if (out_dir / 'evidence_atlas.html').exists() else (out_dir / 'reader/evidence_atlas.html').resolve()
+    paper_pdf_p = (out_dir / 'paper_reader.pdf').resolve() if (out_dir / 'paper_reader.pdf').exists() else (out_dir / 'reader/paper_reader.pdf').resolve()
+    pdf_p = paper_pdf_p if paper_pdf_p.exists() else (out_dir / 'reader/reader.pdf').resolve()
+
+    print(f"\n>>> Evidentia Reader v3 COMPLETE! (Canonical Paper Reading achieved)")
+    print(f"    - Interactive Web Reader : {html_p}")
+    if pdf_p.exists():
+        print(f"    - Printable PDF Snapshot : {pdf_p}")
+    if atlas_p.exists():
+        print(f"    - Audit Evidence Atlas   : {atlas_p}")
+    print(f"    - Paper Literature Folder: {out_dir.resolve()}\n")
+    return 0
+
+def run_legacy_workflow(args):
+    # Auto-acquire paper if DOI, ArXiv ID, or URL is passed
+    raw_input = getattr(args, 'doi', None) or getattr(args, 'pdf', None)
+    out_dir = resolve_paper_workspace(raw_input, explicit_out=getattr(args, 'out', None))
+    args.out = str(out_dir)
+
     if raw_input and (getattr(args, 'doi', None) or not Path(raw_input).exists()):
         from paper_acquire_bridge import is_doi, is_arxiv, is_url, acquire_paper
         if is_doi(raw_input) or is_arxiv(raw_input) or is_url(raw_input):
@@ -372,10 +602,30 @@ def run_workflow(args):
     return 0
 
 def handle_status(args):
+    out_dir = Path(args.out)
+    if (out_dir / 'model/lens_v3_manifest.json').exists() or (out_dir / 'tasks/v3').exists() or (out_dir / 'reader/narrative_manuscript.json').exists():
+        import reader_v3
+        print(json.dumps(reader_v3._status(out_dir), indent=2, ensure_ascii=False))
+        return
     print(sh(str(HERE / 'phase.py'), '--out', args.out, '--status'))
 
 def handle_next(args):
     out_dir = Path(args.out)
+    if (out_dir / 'model/lens_v3_manifest.json').exists() or (out_dir / 'tasks/v3').exists() or (out_dir / 'reader/narrative_manuscript.json').exists():
+        import reader_v3
+        task = reader_v3.prepare_next(out_dir)
+        if task:
+            print(f"Next active task: {task}")
+        else:
+            st = reader_v3._status(out_dir)
+            if st.get("lens_manifest") and not st.get("all_lenses"):
+                missing = [x for x, ok in st.get("lenses", {}).items() if not ok]
+                print(f"Next: Awaiting Lens completions for: {', '.join(missing)}")
+            elif st.get("lead_writer"):
+                print("Next: Ready to render Reader v3 ('evidentia.py run --out <dir>')")
+            else:
+                print("Next: All Reader v3 stages complete.")
+        return
     rs_p = out_dir / 'run_state.json'
     if not rs_p.exists():
         print("Run not initialized. Next: run with --pdf <path> --out <dir>")
@@ -405,6 +655,10 @@ def handle_validate(args):
     checks = [
         ('model/source_map.json', 'source_map'),
         ('model/figure_inventory.json', 'figure_inventory'),
+        ('model/paper_understanding_draft.json', 'paper_understanding_draft'),
+        ('model/revision_memo.json', 'revision_memo'),
+        ('model/narrative_plan.json', 'narrative_plan'),
+        ('reader/narrative_manuscript.json', 'narrative_manuscript'),
         ('model/paper_model.json', 'paper_model'),
         ('model/open_reading_manifest.json', 'open_reading_manifest'),
         ('model/evidence_graph.json', 'evidence_graph'),
@@ -494,10 +748,11 @@ def main():
     p_run.add_argument("--pdf", help="Source paper PDF, DOI, arXiv ID, or URL")
     p_run.add_argument("--doi", help="DOI or paper identifier to auto-acquire (e.g. 10.1038/... or 1706.03762)")
     p_run.add_argument("--out", help="Workspace output directory (default: same-named folder beside the source paper)")
-    p_run.add_argument("--mode", choices=["standard", "ensemble"], default="standard")
+    p_run.add_argument("--mode", choices=["v3", "standard", "ensemble", "legacy"], default="v3")
     p_run.add_argument("--intent", choices=["PAPER_READING", "PAPER_TECHNICAL_EXTRACTION"], default=None)
     p_run.add_argument("--prompt", help="Natural language prompt to route intent (e.g. '帮我深读这篇论文')")
     p_run.add_argument("--models", help="Comma-separated model identifiers for ensemble mode")
+    p_run.add_argument("--legacy", action="store_true", help="Execute deprecated v1/v2 pipeline (compatibility only)")
     p_run.add_argument("--supplement", action="append", help="Supplementary PDF files")
     # ``None`` lets is_fixture_enabled() detect the pytest/replay fixture
     # environment when the flag is omitted; an explicit flag still wins.
@@ -526,6 +781,19 @@ def main():
     # resume
     p_res = subparsers.add_parser("resume")
     p_res.add_argument("--out", required=True)
+
+    # Reader v3 migration path
+    p_v3 = subparsers.add_parser("reader-v3", help="Strong-model-first Reader v3 workflow")
+    p_v3.add_argument("--out", required=True)
+    p_v3.add_argument("--action", choices=["prepare", "status", "render"], default="status")
+
+    p_vis3 = subparsers.add_parser("visual-v3", help="Semantic visual-localization workflow")
+    p_vis3.add_argument("--out", required=True)
+    p_vis3.add_argument("--action", choices=["prepare", "apply"], default="prepare")
+
+    p_bench3 = subparsers.add_parser("benchmark-v3", help="Real Direct-AI vs Reader-v3 benchmark tasks")
+    p_bench3.add_argument("--out", required=True)
+    p_bench3.add_argument("--action", choices=["direct", "evaluate"], required=True)
 
     # memory
     p_mem = subparsers.add_parser("memory")
@@ -606,6 +874,39 @@ def main():
         handle_validate(args)
     elif args.command == "resume":
         handle_resume(args)
+    elif args.command == "reader-v3":
+        import reader_v3
+        root = Path(args.out)
+        if args.action == "status":
+            print(json.dumps(reader_v3._status(root), indent=2, ensure_ascii=False))
+        elif args.action == "prepare":
+            task = reader_v3.prepare_next(root)
+            if task:
+                print(f"NEXT_TASK={task}")
+            else:
+                st = reader_v3._status(root)
+                if st.get("lens_manifest") and not st.get("all_lenses"):
+                    missing = [x for x, ok in st.get("lenses", {}).items() if not ok]
+                    print("WAITING_FOR_LENSES=" + ",".join(missing))
+                elif st.get("lead_writer"):
+                    print("READY_TO_RENDER")
+                else:
+                    print("NO_ACTION")
+        else:
+            reader_v3.render(root)
+    elif args.command == "visual-v3":
+        if args.action == "prepare":
+            from visual_localization_protocol import create_visual_tasks
+            tasks = create_visual_tasks(Path(args.out))
+            print(f"VISUAL_TASKS={len(tasks)}")
+        else:
+            from apply_visual_verification import apply
+            apply(Path(args.out))
+    elif args.command == "benchmark-v3":
+        from reader_v3_benchmark import create_direct_task, create_evaluation_task
+        root = Path(args.out)
+        task = create_direct_task(root) if args.action == "direct" else create_evaluation_task(root)
+        print(task)
     elif args.command == "memory":
         handle_memory(args)
 

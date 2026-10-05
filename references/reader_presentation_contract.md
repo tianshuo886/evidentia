@@ -1,94 +1,73 @@
-# Evidentia Reader Presentation Contract
+# Evidentia Reader Presentation Contract (Issue #23)
 
 ## Core Principle
 
-> **Evidentia owns truth. AI owns narrative. Kami owns presentation.**
+> **Paper decides the story. Evidentia enforces rigor. Kami presents the story.**
 
 The machine model must optimize for correctness and traceability.  
-The human Reader must optimize for comprehension and scientific narrative.  
-Kami must optimize for document presentation.  
-These are three separate responsibilities and must remain distinct.
+The Lead Writer must author the scientific narrative.  
+Kami must optimize exclusively for document presentation and layout typography.  
+These are separate responsibilities and must remain distinct.
 
 ---
 
-## 1. Dual-Surface Output Architecture
+## 1. Explicit Kami Ownership & Non-Ownership Boundary
 
-Evidentia outputs two distinct reading surfaces from every paper reading run:
+### Kami Owns (Presentation Only):
+- Typography (CJK font family hierarchy, line height, font sizing, font weights).
+- Spacing and vertical rhythm (`--rhythm-module`, paragraph margins, block padding).
+- Visual hierarchy (chapter title sizes, callout backgrounds, border accents).
+- Responsive layout (fluid width on screen, static print layout).
+- Figure, table, and equation placement mechanics (inline visual wrapping, LaTeX SVG formatting).
+- Captions and callout styling.
+- Page break control for print PDF.
+- PDF vector export via WeasyPrint / headless Chrome.
+- Automated visual QA and layout defect auditing.
 
-### A. Primary Human Reader (`paper_reader.html`, `paper_reader.pdf`, `paper_reader.md`)
-
-- **Target Audience**: Human researchers seeking deep scientific comprehension.
-- **Form Factor**: Editorial long-document, Chinese-first, paragraph-dominant.
-- **Presentation Backend**: Kami Chinese long-document system (`long-doc.html`), rendered via Kami's pipeline.
-- **Aesthetic**:
-  - Parchment warm background (`#f5f4ed`)
-  - Warm ivory callout containers (`#faf9f5`)
-  - Ink-black text (`#141413`) with olive/dark-warm secondary shades (`#3d3d3a`, `#504e49`)
-  - Single brand accent: Navy / Ink-blue (`#1B365D`)
-  - Typography: Chinese serif (`TsangerJinKai02` / `Source Han Serif SC` / `Songti SC`)
-  - Generous editorial whitespace and chapter rhythm
-- **Flow**:
-  - Cover with clean title, subtitle, author/venue metadata (no internal hashes or machine IDs)
-  - Kami-native Table of Contents
-  - Paper-specific Story Spine sections whose count, titles, and order are derived from the reconstructed argument (problem → method → decisive evidence → assessment → boundaries), with no fixed chapter IDs.
-  - Quiet appendix linking to the Evidence Atlas
-  - Paper-scoped technical extraction is a separate explicit intent; project transfer is explicit Apply-only and never changes the frozen Paper Reader.
-- **Evidence References**: Quiet, local citations (e.g. `[E: F01]`, `[Claim C01]`), never noisy dashboard badges.
-- **Chrome**: Zero dashboard grids, verifier badges, or hash status in the primary reading flow.
-
-### B. Secondary Inspection Surface: Evidence Atlas (`evidence_atlas.html`)
-
-- **Target Audience**: Auditors, verifiers, and researchers inspecting provenance.
-- **Form Factor**: Dense, claim-centric audit dashboard.
-- **Contents**:
-  - Claim cards with full IDs (`C01`, `C02`, ...)
-  - Observation / Author Interpretation / Reader Assessment (O/I/A) breakdown
-  - Verifier status (`VERIFIED`, `CONTRADICTION`, `TENSION`, `UNRESOLVED`)
-  - Epistemic states (`SUPPORTED`, `PARTIAL`, `AMBIGUOUS`, etc.)
-  - Lens trace and cross-lens conflicts with resolution history
-  - Source SHA256 hashes and page references
-  - Full bidirectional anchor navigation (Claim ↔ Evidence round-trips)
+### Kami Must NOT Own (Prohibited Responsibilities):
+- Which scientific sections exist or how many chapters are rendered.
+- The order of scientific sections (section order is strictly determined by the Lead Writer's `narrative_plan.json`).
+- Which experiments or figures are decisive.
+- Author interpretation vs. reader assessment calibration.
+- Formulating new limitations, caveats, or mechanisms.
+- Silently dropping or summarizing blocks to fit a visual page budget.
+- Injecting generic IMRaD headings (Background, Methods, Results, Discussion).
 
 ---
 
-## 2. Forbidden Anti-Patterns (Primary Reader)
+## 2. Dynamic Semantic Manuscript Contract
 
-The primary Paper Reader must explicitly reject:
+Renderers receive the already-decided semantic manuscript (`reader/narrative_manuscript.json`, conforming to `schemas/narrative_manuscript.schema.json`).
 
-1. **Card-per-field layout**: Mapping each IR JSON field into a separate box or card.
-2. **Badge-heavy prose**: Peppered status badges (`[SUPPORTED]`, `[VERIFIED]`) inside narrative paragraphs.
-3. **Machine IDs in headings**: E.g., `### C01: ...` or `### Figure F01 Block`.
-4. **Repeating IR keys as headings**: Turning internal dictionary keys into visual headlines.
-5. **Dashboard-style 2-column box grids**: Stacking `.grid-2` boxes across narrative sections.
-6. **Raw Lens segregation**: Exposing six separate "Lens Reports" instead of synthesizing them by topic.
-7. **Invented scientific boilerplate**: Generating domain claims from Python string fallbacks.
-8. **Font shrinking**: Shrinking text sizes artificially to force content onto page boundaries.
-9. **Visual noise**: Emoticons, decorative icons, or multi-colored status tags as structural hierarchy.
+Blocks are typed purely for visual semantics:
+- `paragraph`: Standard body prose.
+- `callout`: Highlighted commentary or key takeaway.
+- `takeaway`: Core focal point with label.
+- `figure`: Bound visual figure with caption, analysis, and asset path.
+- `table`: Formatted data table with caption and optional asset crop.
+- `equation`: Numbered formula with display LaTeX and source confidence.
+- `list`: Compact structured itemization.
+
+Block types are presentation primitives, never mandatory scientific categories.
 
 ---
 
-## 3. Strict Fallback Prose Rules
+## 3. Warning Classification Policy
 
-Renderer code is **scientifically dumb**. Production renderers may format or label content, but may never author domain-specific scientific prose.
+Kami automated visual QA (`scripts/kami_adapter.py`) classifies all layout and rendering diagnostics into three strict severity levels:
 
-### Allowed
-- Structural UI labels (e.g., "核心发现", "方法机制", "关键实验").
-- Neutral metadata labels (e.g., "作者", "发表年份", "引用依据").
-- Explicit placeholders used only in test fixtures.
-- Deterministic formatting (wrapping text in tags, date formatting, anchor links).
+| Severity Level | Definition | Impact | Examples |
+|---|---|---|---|
+| **`BLOCKING`** | Scientific corruption, illegible mathematics, missing assets, or content truncation. | **Release-Blocking** (Status fails to `FAIL` / `NEEDS_REVIEW`) | Missing fonts/glyphs (tofu), broken formula syntax, unreadable clipped figures, missing visual crops, asset ID collisions. |
+| **`HUMAN_REVIEW_REQUIRED`** | Boundary layout anomalies that require human verification in context. | **Requires Visual Sign-off** | Unusual paragraph widows/orphans, low density on final chapter page, non-standard image aspect ratios. |
+| **`NON_BLOCKING`** | Harmless styling notices. | **Advisory Only** | Benign style lint notices (e.g. anchor link color matches), minor whitespace adjustments. |
 
-### Forbidden in Production
-- Fabricated scientific mechanisms or mathematical interpretations.
-- Invented methodological limitations or caveats not present in source evidence.
-- Invented optimizer (e.g. "AdamW"), learning-rate warmup, or hyperparameter recommendations.
-- Generic figure reading guides that assume axes, error bars, or baselines without source evidence.
-- Domain assumptions (e.g. "独立同分布高斯分布", "多模态数据时存在的表征瓶颈").
-- Any claim inserted simply because a field was empty in the source JSON.
+---
 
-### Uncertainty Standard
-When source evidence is missing, ambiguous, or incomplete, the system must use explicit uncertainty:
-- `未在当前证据中确认`
-- `论文未明确说明`
-- `当前无法可靠判断`
+## 4. Immutability & Decoupling Invariant
 
-Never fill empty fields with plausible-sounding domain prose.
+The absence or execution failure of Kami **never mutates or invalidates the frozen scientific paper object**.
+If Kami vector rendering is unavailable in a local environment:
+- `narrative_manuscript.json` remains the authoritative, untampered scientific truth.
+- HTML and Markdown readers are still generated deterministically.
+- PDF generation falls back gracefully to standard headless printing without altering manuscript hashes.

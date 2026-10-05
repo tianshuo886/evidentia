@@ -1,0 +1,110 @@
+{
+  "status": "PASS",
+  "errors": [],
+  "records": [
+    {
+      "root": "reader-v3-runs/workspaces/BENCH-02-LORA-ADAPTATION",
+      "paper_id": "BENCH-02-LORA-ADAPTATION",
+      "section_ids": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7"
+      ],
+      "section_titles": [
+        "为什么“适配”首先是部署问题",
+        "从任务增量到低秩重参数化",
+        "把低秩更新放进 Transformer，并折叠回部署图",
+        "跨模型实证：少量参数能否保住任务质量",
+        "rank 与矩阵位置：效率来自哪里",
+        "子空间证据提供的机制线索",
+        "结论的有效范围与尚未回答的问题"
+      ],
+      "signature": [
+        "为什么 适配 首先是部署问题",
+        "从任务增量到低秩重参数化",
+        "把低秩更新放进 transformer 并折叠回部署图",
+        "跨模型实证 少量参数能否保住任务质量",
+        "rank 与矩阵位置 效率来自哪里",
+        "子空间证据提供的机制线索",
+        "结论的有效范围与尚未回答的问题"
+      ],
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "root": "reader-v3-runs/workspaces/BENCH-04-ALPHAFOLD2-STRUCTURE",
+      "paper_id": "BENCH-04-ALPHAFOLD2-STRUCTURE",
+      "section_ids": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6"
+      ],
+      "section_titles": [
+        "先看作者究竟证明了什么",
+        "从MSA到三维结构：一个耦合的表示系统",
+        "网络如何被训练，又如何被观察",
+        "消融把架构主张变成可检验的比较",
+        "成功依赖什么：MSA深度与跨链接触",
+        "讨论：高精度预测的边界与用途"
+      ],
+      "signature": [
+        "先看作者究竟证明了什么",
+        "从msa到三维结构 一个耦合的表示系统",
+        "网络如何被训练 又如何被观察",
+        "消融把架构主张变成可检验的比较",
+        "成功依赖什么 msa深度与跨链接触",
+        "讨论 高精度预测的边界与用途"
+      ],
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "root": "reader-v3-runs/workspaces/BENCH-05-QUANTUM-SUPREMACY-ABLATION",
+      "paper_id": "10.1038/s41586-019-1666-5",
+      "section_ids": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5",
+        "S6",
+        "S7",
+        "S8",
+        "S9"
+      ],
+      "section_titles": [
+        "起点：两个问题与一个里程碑",
+        "选定任务与度量标尺",
+        "打造仪器：Sycamore 与高保真门",
+        "读取仪器误差：从逐项误差到乘法模型",
+        "关键一跃：让不可测者变得可测",
+        "测量本身：霸权读数",
+        "对位：经典代价的外推",
+        "为何不是伪信号：数字化误差模型与可证伪性",
+        "边界与未决：它证明了什么、没证明什么"
+      ],
+      "signature": [
+        "起点 两个问题与一个里程碑",
+        "选定任务与度量标尺",
+        "打造仪器 sycamore 与高保真门",
+        "读取仪器误差 从逐项误差到乘法模型",
+        "关键一跃 让不可测者变得可测",
+        "测量本身 霸权读数",
+        "对位 经典代价的外推",
+        "为何不是伪信号 数字化误差模型与可证伪性",
+        "边界与未决 它证明了什么 没证明什么"
+      ],
+      "status": "PASS",
+      "errors": []
+    }
+  ],
+  "interpretation": "Does this Reader feel shaped by the paper, or shaped by Evidentia?",
+  "materially_different_architectures": true
+}

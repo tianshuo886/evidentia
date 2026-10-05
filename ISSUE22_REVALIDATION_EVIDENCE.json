@@ -1,0 +1,505 @@
+{
+  "schema_version": "1.0",
+  "status": "COMPLETE_PASS",
+  "candidate_code_sha": "c2039ff687aa1034706e2a42299c4ec8024d47d5",
+  "lens_model": {
+    "provider": "magpie",
+    "model": "stepfun-cn/step-5-preview"
+  },
+  "downstream_model": {
+    "provider": "magpie",
+    "model": "antigravity/gemini-3.8-flash"
+  },
+  "orchestration_run": "run_67024d229c76",
+  "generated_at": "2026-10-05T08:12:23.552962+00:00",
+  "papers": [
+    {
+      "paper": "BENCH-02-LORA-ADAPTATION",
+      "root": "/Users/shentianshuo/orca/workspaces/evidentia/issue22-reval-bench02/reader-v3-runs/revalidation/workspaces/BENCH-02-LORA-ADAPTATION",
+      "lens_receipts": [
+        {
+          "task_id": "TASK-V3-LENS-ARGUMENT_NARRATIVE",
+          "execution_id": "e209159f-97de-463e-bab4-9e3ce3df861f",
+          "receipt": "revalidation/workspaces/BENCH-02-LORA-ADAPTATION/agent_runs/TASK-V3-LENS-ARGUMENT_NARRATIVE/receipt-e209159f-97de-463e-bab4-9e3ce3df861f.json",
+          "receipt_sha256": "dc5c3aa8b27e042affd7e34f535a3138aa7a094ffbd395dcc527f48473c1ef65",
+          "output_sha256": "7312cf8291638d3fc3792c7364c9236d67f4bd52a49125c1c1e04bd0d2524bda",
+          "executor": {
+            "host": "orca-isolated-lens",
+            "host_version": "UNKNOWN",
+            "provider": "magpie",
+            "model": "antigravity/gemini-3.8-flash",
+            "model_version": "UNKNOWN",
+            "reasoning_profile": "standard",
+            "tool_profile": "paper-only-isolated-snapshot",
+            "started_at": "2026-10-05T12:52:14.573552+00:00",
+            "completed_at": "2026-10-05T12:52:14.573552+00:00",
+            "kind": "HOST_AGENT"
+          },
+          "input_hash_count": 223
+        },
+        {
+          "task_id": "TASK-V3-LENS-EVIDENCE_RESULTS",
+          "execution_id": "abdce79f-0b14-4ee8-9707-bc811724db6e",
+          "receipt": "revalidation/workspaces/BENCH-02-LORA-ADAPTATION/agent_runs/TASK-V3-LENS-EVIDENCE_RESULTS/receipt-abdce79f-0b14-4ee8-9707-bc811724db6e.json",
+          "receipt_sha256": "16e377edb6164a7ac41ee6260f57c3a0d1e33a32c7ffb222f7eee34e1f0d04c3",
+          "output_sha256": "d16d116f1d33feb2b4a84c8e278a6ef4394741c0095afd22c7a2cff716062124",
+          "executor": {
+            "host": "orca-isolated-lens",
+            "host_version": "UNKNOWN",
+            "provider": "magpie",
+            "model": "antigravity/gemini-3.8-flash",
+            "model_version": "UNKNOWN",
+            "reasoning_profile": "standard",
+            "tool_profile": "paper-only-isolated-snapshot",
+            "started_at": "2026-10-05T12:53:01.674760+00:00",
+            "completed_at": "2026-10-05T12:53:01.674760+00:00",
+            "kind": "HOST_AGENT"
+          },
+          "input_hash_count": 223
+        },
+        {
+          "task_id": "TASK-V3-LENS-MECHANISM_CAUSALITY",
+          "execution_id": "444e54ae-9f82-4156-bc4a-741512049658",
+          "receipt": "revalidation/workspaces/BENCH-02-LORA-ADAPTATION/agent_runs/TASK-V3-LENS-MECHANISM_CAUSALITY/receipt-444e54ae-9f82-4156-bc4a-741512049658.json",
+          "receipt_sha256": "574b2969b7e8f1327ae47f8f86b8f4a2c0e3fb07ae679c351346fa8ad893559d",
+          "output_sha256": "a8e6d743393b95fc57fd82c997ff96ac1befa807f97e956616189083e98afadf",
+          "executor": {
+            "host": "orca-isolated-lens",
+            "host_version": "UNKNOWN",
+            "provider": "magpie",
+            "model": "antigravity/gemini-3.8-flash",
+            "model_version": "UNKNOWN",
+            "reasoning_profile": "standard",
+            "tool_profile": "paper-only-isolated-snapshot",
+            "started_at": "2026-10-05T12:53:34.415474+00:00",
+            "completed_at": "2026-10-05T12:53:34.415474+00:00",
+            "kind": "HOST_AGENT"
+          },
+          "input_hash_count": 223
+        },
+        {
+          "task_id": "TASK-V3-LENS-METHOD_STUDY_DESIGN",
+          "execution_id": "8d74e007-86b5-40f5-87e9-8dd01aa8b56c",
+          "receipt": "revalidation/workspaces/BENCH-02-LORA-ADAPTATION/agent_runs/TASK-V3-LENS-METHOD_STUDY_DESIGN/receipt-8d74e007-86b5-40f5-87e9-8dd01aa8b56c.json",
+          "receipt_sha256": "f81255dab62f1b8400943e17349d57f10e32d566f1d13bc2f093d3cf0064fa88",
+          "output_sha256": "d66e5106796bdb6c7c4cdb70c13cd286158c7e4e3f224fae026872a94e5d997a",
+          "executor": {
+            "host": "orca-isolated-lens",
+            "host_version": "UNKNOWN",
+            "provider": "magpie",
+            "model": "antigravity/gemini-3.8-flash",
+            "model_version": "UNKNOWN",
+            "reasoning_profile": "standard",
+            "tool_profile": "paper-only-isolated-snapshot",
+            "started_at": "2026-10-05T12:54:05.025860+00:00",
+            "completed_at": "2026-10-05T12:54:05.025860+00:00",
+            "kind": "HOST_AGENT"
+          },
+          "input_hash_count": 223
+        },
+        {
+          "task_id": "TASK-V3-LENS-REPRODUCIBILITY_IMPLEMENTATION",
+          "execution_id": "3999b969-d480-45f4-b745-a2925d844820",
+          "receipt": "revalidation/workspaces/BENCH-02-LORA-ADAPTATION/agent_runs/TASK-V3-LENS-REPRODUCIBILITY_IMPLEMENTATION/receipt-3999b969-d480-45f4-b745-a2925d844820.json",
+          "receipt_sha256": "ad2f7e12a8d9a17337c49ef37618e73c35ec22a3f671493769269dea83c4126f",
+          "output_sha256": "dbc81d0bbe9bb93cb035e53eda9a2b61419746575bb2b47cd6d0aa6fd06f5c21",
+          "executor": {
+            "host": "orca-isolated-lens",
+            "host_version": "UNKNOWN",
+            "provider": "magpie",
+            "model": "antigravity/gemini-3.8-flash",
+            "model_version": "UNKNOWN",
+            "reasoning_profile": "standard",
+            "tool_profile": "paper-only-isolated-snapshot",
+            "started_at": "2026-10-05T12:54:35.196543+00:00",
+            "completed_at": "2026-10-05T12:54:35.196543+00:00",
+            "kind": "HOST_AGENT"
+          },
+          "input_hash_count": 223
+        },
+        {
+          "task_id": "TASK-V3-LENS-VALIDITY_BOUNDARY",
+          "execution_id": "38200366-c35e-44d2-971c-92e30815cad1",
+          "receipt": "revalidation/workspaces/BENCH-02-LORA-ADAPTATION/agent_runs/TASK-V3-LENS-VALIDITY_BOUNDARY/receipt-38200366-c35e-44d2-971c-92e30815cad1.json",
+          "receipt_sha256": "aa5a93cdfa78bf20e0c5ad6dcf433f0c0eff1ee209d61a729669fd33a8cddd68",
+          "output_sha256": "8883fb05c5be788118cf7e6f559099ae82cb3e64c2c65617b209fcb8695490a8",
+          "executor": {
+            "host": "orca-isolated-lens",
+            "host_version": "UNKNOWN",
+            "provider": "magpie",
+            "model": "antigravity/gemini-3.8-flash",
+            "model_version": "UNKNOWN",
+            "reasoning_profile": "standard",
+            "tool_profile": "paper-only-isolated-snapshot",
+            "started_at": "2026-10-05T12:55:08.664338+00:00",
+            "completed_at": "2026-10-05T12:55:08.664338+00:00",
+            "kind": "HOST_AGENT"
+          },
+          "input_hash_count": 223
+        }
+      ],
+      "lens_receipt_count": 6,
+      "provenance_gate": "PASS",
+      "downstream": [
+        {
+          "path": "model/revision_memo.json",
+          "sha256": "4217ee1ba529a11e595fd5e4d35dc508c163fd0eb79e882889ac2187983edf99",
+          "exists": true
+        },
+        {
+          "path": "model/narrative_plan.json",
+          "sha256": "3df64646376b743a163ff324a3d6dabdab65f1990c2b5bc2abaaf474d5818e08",
+          "exists": true
+        }
+      ],
+      "manuscript": {
+        "path": "revalidation/workspaces/BENCH-02-LORA-ADAPTATION/reader/narrative_manuscript.json",
+        "exists": true,
+        "sha256": "72032f8fb698ac23d487a751e0e82b9a4fc9eab69094a025fd908a4938e4a6fb"
+      },
+      "rendered": true,
+      "pdf": {
+        "path": "revalidation/workspaces/BENCH-02-LORA-ADAPTATION/reader/paper_reader.pdf",
+        "exists": true,
+        "sha256": "6acff1f46468822aceef3258fdb2a87b9ee1786ef0e202b98c306f6698befb8c"
+      }
+    },
+    {
+      "paper": "BENCH-04-ALPHAFOLD2-STRUCTURE",
+      "root": "/Users/shentianshuo/orca/workspaces/evidentia/issue22-reval-bench04/reader-v3-runs/revalidation/workspaces/BENCH-04-ALPHAFOLD2-STRUCTURE",
+      "lens_receipts": [
+        {
+          "task_id": "TASK-V3-LENS-ARGUMENT_NARRATIVE",
+          "execution_id": "9fc69dd8-6daa-4faa-9b03-4799ca1b0aab",
+          "receipt": "reader-v3-runs/revalidation/workspaces/BENCH-04-ALPHAFOLD2-STRUCTURE/agent_runs/TASK-V3-LENS-ARGUMENT_NARRATIVE/receipt-9fc69dd8-6daa-4faa-9b03-4799ca1b0aab.json",
+          "receipt_sha256": "20519b8859049e02d8a816f03b04d79be9eaab92b9e585a11e17ddb8105eb7f9",
+          "output_sha256": "c44e59e3095efefca69139ca3f286d1402077874faaabe2faf3ede5579300cc1",
+          "executor": {
+            "host": "orca-isolated-lens",
+            "host_version": "UNKNOWN",
+            "provider": "magpie",
+            "model": "stepfun-cn/step-5-preview",
+            "model_version": "step-5-preview",
+            "reasoning_profile": "standard",
+            "tool_profile": "paper-only-isolated-snapshot",
+            "started_at": "2026-10-05T07:27:32.565269+00:00",
+            "completed_at": "2026-10-05T07:27:32.565269+00:00",
+            "kind": "HOST_AGENT"
+          },
+          "input_hash_count": 131
+        },
+        {
+          "task_id": "TASK-V3-LENS-EVIDENCE_RESULTS",
+          "execution_id": "f2f9034d-7e8d-4666-ac10-62d9e7d70420",
+          "receipt": "reader-v3-runs/revalidation/workspaces/BENCH-04-ALPHAFOLD2-STRUCTURE/agent_runs/TASK-V3-LENS-EVIDENCE_RESULTS/receipt-f2f9034d-7e8d-4666-ac10-62d9e7d70420.json",
+          "receipt_sha256": "2ab87399798ed07401c566314e202bceabd1aa6bd59c9147bbcc7416d16d87ad",
+          "output_sha256": "46b2e92bd9e1672e024b5c1b09bca82f3c5d02683aee47834efc6ecb1dc681d4",
+          "executor": {
+            "host": "orca-isolated-lens",
+            "host_version": "UNKNOWN",
+            "provider": "magpie",
+            "model": "stepfun-cn/step-5-preview",
+            "model_version": "step-5-preview",
+            "reasoning_profile": "standard",
+            "tool_profile": "paper-only-isolated-snapshot",
+            "started_at": "2026-10-05T07:29:09.063630+00:00",
+            "completed_at": "2026-10-05T07:29:09.063630+00:00",
+            "kind": "HOST_AGENT"
+          },
+          "input_hash_count": 131
+        },
+        {
+          "task_id": "TASK-V3-LENS-MECHANISM_CAUSALITY",
+          "execution_id": "05ad21b5-c38d-4d13-90a4-c412d0b68b66",
+          "receipt": "reader-v3-runs/revalidation/workspaces/BENCH-04-ALPHAFOLD2-STRUCTURE/agent_runs/TASK-V3-LENS-MECHANISM_CAUSALITY/receipt-05ad21b5-c38d-4d13-90a4-c412d0b68b66.json",
+          "receipt_sha256": "487a8da2eae4b3d82940e24401a9f8548bb297cc2b600a9bac42b119638b3df1",
+          "output_sha256": "d07d5f7d9101df2731f728ac0ecbac718eb8d92c75cc65b755638ff0ebfa0072",
+          "executor": {
+            "host": "orca-isolated-lens",
+            "host_version": "UNKNOWN",
+            "provider": "magpie",
+            "model": "stepfun-cn/step-5-preview",
+            "model_version": "step-5-preview",
+            "reasoning_profile": "standard",
+            "tool_profile": "paper-only-isolated-snapshot",
+            "started_at": "2026-10-05T07:28:20.066627+00:00",
+            "completed_at": "2026-10-05T07:28:20.066627+00:00",
+            "kind": "HOST_AGENT"
+          },
+          "input_hash_count": 131
+        },
+        {
+          "task_id": "TASK-V3-LENS-METHOD_STUDY_DESIGN",
+          "execution_id": "ed042843-45cb-4104-bda6-b6c77a76176a",
+          "receipt": "reader-v3-runs/revalidation/workspaces/BENCH-04-ALPHAFOLD2-STRUCTURE/agent_runs/TASK-V3-LENS-METHOD_STUDY_DESIGN/receipt-ed042843-45cb-4104-bda6-b6c77a76176a.json",
+          "receipt_sha256": "d762702454537f253abd0885e560edae09e263b9b678eb0043cb84424973a89f",
+          "output_sha256": "ad8ed01ed78babdd04cc7b89ce8d73d32f7873abc35043d90fef6867c0822e5d",
+          "executor": {
+            "host": "orca-isolated-lens",
+            "host_version": "UNKNOWN",
+            "provider": "magpie",
+            "model": "stepfun-cn/step-5-preview",
+            "model_version": "step-5-preview",
+            "reasoning_profile": "standard",
+            "tool_profile": "paper-only-isolated-snapshot",
+            "started_at": "2026-10-05T07:29:36.521793+00:00",
+            "completed_at": "2026-10-05T07:29:36.521793+00:00",
+            "kind": "HOST_AGENT"
+          },
+          "input_hash_count": 131
+        },
+        {
+          "task_id": "TASK-V3-LENS-REPRODUCIBILITY_IMPLEMENTATION",
+          "execution_id": "838a4528-60df-4113-8e1d-835f1fb2c97c",
+          "receipt": "reader-v3-runs/revalidation/workspaces/BENCH-04-ALPHAFOLD2-STRUCTURE/agent_runs/TASK-V3-LENS-REPRODUCIBILITY_IMPLEMENTATION/receipt-838a4528-60df-4113-8e1d-835f1fb2c97c.json",
+          "receipt_sha256": "c8994ffe03efa2b5463ae2d5ff1a02c23a2e40065b747713f5866fb1fc5a7a2e",
+          "output_sha256": "99795546ec2c3ab3377ecc396f98da5590e0e9ceda666ac63cb81c0a07f019a6",
+          "executor": {
+            "host": "orca-isolated-lens",
+            "host_version": "UNKNOWN",
+            "provider": "magpie",
+            "model": "stepfun-cn/step-5-preview",
+            "model_version": "step-5-preview",
+            "reasoning_profile": "standard",
+            "tool_profile": "paper-only-isolated-snapshot",
+            "started_at": "2026-10-05T07:29:02.664352+00:00",
+            "completed_at": "2026-10-05T07:29:02.664352+00:00",
+            "kind": "HOST_AGENT"
+          },
+          "input_hash_count": 131
+        },
+        {
+          "task_id": "TASK-V3-LENS-VALIDITY_BOUNDARY",
+          "execution_id": "86c11d79-ba63-4ca3-82e1-124592737f05",
+          "receipt": "reader-v3-runs/revalidation/workspaces/BENCH-04-ALPHAFOLD2-STRUCTURE/agent_runs/TASK-V3-LENS-VALIDITY_BOUNDARY/receipt-86c11d79-ba63-4ca3-82e1-124592737f05.json",
+          "receipt_sha256": "d541ec172aed98a3abe6633393530a2e16edd74f072c6e48d2e1ac15a63db2b5",
+          "output_sha256": "cff2d2fd9a38153a6263b404f2508064fe1063411deb2fe793ac7aa1468df618",
+          "executor": {
+            "host": "orca-isolated-lens",
+            "host_version": "UNKNOWN",
+            "provider": "magpie",
+            "model": "stepfun-cn/step-5-preview",
+            "model_version": "step-5-preview",
+            "reasoning_profile": "standard",
+            "tool_profile": "paper-only-isolated-snapshot",
+            "started_at": "2026-10-05T07:29:06.784499+00:00",
+            "completed_at": "2026-10-05T07:29:06.784499+00:00",
+            "kind": "HOST_AGENT"
+          },
+          "input_hash_count": 131
+        }
+      ],
+      "lens_receipt_count": 6,
+      "provenance_gate": "PASS",
+      "downstream": [
+        {
+          "path": "model/revision_memo.json",
+          "sha256": "9e9765449eccd134e2ff01e42d40b5b0a34d6707335d75a5e9b1931fe07c3d93",
+          "exists": true
+        },
+        {
+          "path": "model/narrative_plan.json",
+          "sha256": "f00d696a36868f5549f90800b1ac167af4c17a54d38bb2d417934b4a5a70f160",
+          "exists": true
+        }
+      ],
+      "manuscript": {
+        "path": "revalidation/workspaces/BENCH-04-ALPHAFOLD2-STRUCTURE/reader/narrative_manuscript.json",
+        "exists": true,
+        "sha256": "974a4d475a96b3add7dea9b3f38a27a15454dac32293d9db1c8f24972c6863e1"
+      },
+      "rendered": true,
+      "pdf": {
+        "path": "revalidation/workspaces/BENCH-04-ALPHAFOLD2-STRUCTURE/reader/paper_reader.pdf",
+        "exists": true,
+        "sha256": "1945d31e0cf60a155d443c4d77a1f455ca242339155096a45d2c8c701f06d3e1"
+      }
+    },
+    {
+      "paper": "BENCH-05-QUANTUM-SUPREMACY-ABLATION",
+      "root": "/Users/shentianshuo/orca/workspaces/evidentia/issue22-reval-bench05/reader-v3-runs/revalidation/workspaces/BENCH-05-QUANTUM-SUPREMACY-ABLATION",
+      "lens_receipts": [
+        {
+          "task_id": "TASK-V3-LENS-ARGUMENT_NARRATIVE",
+          "execution_id": "e181d6f2-dc28-4739-8ff8-cebdd7783114",
+          "receipt": "reader-v3-runs/revalidation/workspaces/BENCH-05-QUANTUM-SUPREMACY-ABLATION/agent_runs/TASK-V3-LENS-ARGUMENT_NARRATIVE/receipt-e181d6f2-dc28-4739-8ff8-cebdd7783114.json",
+          "receipt_sha256": "1f536c540bd5e8f83e3b8c72e268215a18f4abe428d7319724a1c218f121de0a",
+          "output_sha256": "7a0a10cdc2a4f4016a62ed01781f74a17224c4332c36beb275b154bb23f038bb",
+          "executor": {
+            "host": "orca-isolated-lens",
+            "host_version": "UNKNOWN",
+            "provider": "magpie",
+            "model": "stepfun-cn/step-5-preview",
+            "model_version": "step-5-preview",
+            "reasoning_profile": "standard",
+            "tool_profile": "paper-only-isolated-snapshot",
+            "started_at": "2026-10-05T07:30:51.696084+00:00",
+            "completed_at": "2026-10-05T07:30:51.696084+00:00",
+            "kind": "HOST_AGENT"
+          },
+          "input_hash_count": 90
+        },
+        {
+          "task_id": "TASK-V3-LENS-EVIDENCE_RESULTS",
+          "execution_id": "d4ae63cf-a7dc-49f2-848c-6b2ce5e6a979",
+          "receipt": "reader-v3-runs/revalidation/workspaces/BENCH-05-QUANTUM-SUPREMACY-ABLATION/agent_runs/TASK-V3-LENS-EVIDENCE_RESULTS/receipt-d4ae63cf-a7dc-49f2-848c-6b2ce5e6a979.json",
+          "receipt_sha256": "258b9eea3b80ca94c4c4ff9e69153c9027f290806232be39a61410390aa34c4d",
+          "output_sha256": "45b8ed65a8edf6bccfbf910fcdfb129cc0bf835b2b6c3d01cffceb63568dafc3",
+          "executor": {
+            "host": "orca-isolated-lens",
+            "host_version": "UNKNOWN",
+            "provider": "magpie",
+            "model": "stepfun-cn/step-5-preview",
+            "model_version": "step-5-preview",
+            "reasoning_profile": "standard",
+            "tool_profile": "paper-only-isolated-snapshot",
+            "started_at": "2026-10-05T07:30:50.841235+00:00",
+            "completed_at": "2026-10-05T07:30:50.841235+00:00",
+            "kind": "HOST_AGENT"
+          },
+          "input_hash_count": 90
+        },
+        {
+          "task_id": "TASK-V3-LENS-MEASUREMENT_INTEGRITY",
+          "execution_id": "951318bc-30f0-4580-9ceb-201edff648ce",
+          "receipt": "reader-v3-runs/revalidation/workspaces/BENCH-05-QUANTUM-SUPREMACY-ABLATION/agent_runs/TASK-V3-LENS-MEASUREMENT_INTEGRITY/receipt-951318bc-30f0-4580-9ceb-201edff648ce.json",
+          "receipt_sha256": "743794fee3a8e0dd41efc932f91937ff7725a07abe90e6ce44a0bc4d9f61419a",
+          "output_sha256": "aae3c769886badcbf002540c4d8196b996c03d039516579cd17344807a1b83ef",
+          "executor": {
+            "host": "orca-isolated-lens",
+            "host_version": "UNKNOWN",
+            "provider": "magpie",
+            "model": "stepfun-cn/step-5-preview",
+            "model_version": "step-5-preview",
+            "reasoning_profile": "standard",
+            "tool_profile": "paper-only-isolated-snapshot",
+            "started_at": "2026-10-05T07:28:57.347319+00:00",
+            "completed_at": "2026-10-05T07:28:57.347319+00:00",
+            "kind": "HOST_AGENT"
+          },
+          "input_hash_count": 90
+        },
+        {
+          "task_id": "TASK-V3-LENS-MECHANISM_CAUSALITY",
+          "execution_id": "34f31ef5-3e7b-437e-9a52-506c9e54cf4e",
+          "receipt": "reader-v3-runs/revalidation/workspaces/BENCH-05-QUANTUM-SUPREMACY-ABLATION/agent_runs/TASK-V3-LENS-MECHANISM_CAUSALITY/receipt-34f31ef5-3e7b-437e-9a52-506c9e54cf4e.json",
+          "receipt_sha256": "dbfcf5d05dc00df2e8ba68704bfd2768dbaaef7ce65b654c489842760fb33eea",
+          "output_sha256": "2a872d1756ac8ff0783b87b6fe0aa2af2a673ec9b5e99de683e76ed9061a6f8f",
+          "executor": {
+            "host": "orca-isolated-lens",
+            "host_version": "UNKNOWN",
+            "provider": "magpie",
+            "model": "stepfun-cn/step-5-preview",
+            "model_version": "step-5-preview",
+            "reasoning_profile": "standard",
+            "tool_profile": "paper-only-isolated-snapshot",
+            "started_at": "2026-10-05T07:30:33.152301+00:00",
+            "completed_at": "2026-10-05T07:30:33.152301+00:00",
+            "kind": "HOST_AGENT"
+          },
+          "input_hash_count": 90
+        },
+        {
+          "task_id": "TASK-V3-LENS-METHOD_STUDY_DESIGN",
+          "execution_id": "9005208d-49f2-43f0-aa40-7109606606d9",
+          "receipt": "reader-v3-runs/revalidation/workspaces/BENCH-05-QUANTUM-SUPREMACY-ABLATION/agent_runs/TASK-V3-LENS-METHOD_STUDY_DESIGN/receipt-9005208d-49f2-43f0-aa40-7109606606d9.json",
+          "receipt_sha256": "a226c2eda4a2c9a5be30acbe30d1f4ef97fdd5c81f3cabbf43e5e659df83ddaa",
+          "output_sha256": "d696d3696c4164de43e3a8d047eac6c90abf7f7ccfd599349ba54e522f8647ee",
+          "executor": {
+            "host": "orca-isolated-lens",
+            "host_version": "UNKNOWN",
+            "provider": "magpie",
+            "model": "stepfun-cn/step-5-preview",
+            "model_version": "step-5-preview",
+            "reasoning_profile": "standard",
+            "tool_profile": "paper-only-isolated-snapshot",
+            "started_at": "2026-10-05T07:31:24.360451+00:00",
+            "completed_at": "2026-10-05T07:31:24.360451+00:00",
+            "kind": "HOST_AGENT"
+          },
+          "input_hash_count": 90
+        },
+        {
+          "task_id": "TASK-V3-LENS-VALIDITY_BOUNDARY",
+          "execution_id": "0882aa3c-af4a-4139-8bb5-02da183709c3",
+          "receipt": "reader-v3-runs/revalidation/workspaces/BENCH-05-QUANTUM-SUPREMACY-ABLATION/agent_runs/TASK-V3-LENS-VALIDITY_BOUNDARY/receipt-0882aa3c-af4a-4139-8bb5-02da183709c3.json",
+          "receipt_sha256": "e6505cfd674fff3fdf8cb48d411e324c9670a26a36e122edb84352ee6db7bf62",
+          "output_sha256": "821562b047c550dd7817ed418044285ad0e97d195b7ada5a5c6146b3a3f48581",
+          "executor": {
+            "host": "orca-isolated-lens",
+            "host_version": "UNKNOWN",
+            "provider": "magpie",
+            "model": "stepfun-cn/step-5-preview",
+            "model_version": "step-5-preview",
+            "reasoning_profile": "standard",
+            "tool_profile": "paper-only-isolated-snapshot",
+            "started_at": "2026-10-05T07:29:48.741670+00:00",
+            "completed_at": "2026-10-05T07:29:48.741670+00:00",
+            "kind": "HOST_AGENT"
+          },
+          "input_hash_count": 90
+        }
+      ],
+      "lens_receipt_count": 6,
+      "provenance_gate": "PASS",
+      "downstream": [
+        {
+          "path": "model/revision_memo.json",
+          "sha256": "d68980945dc2e193bf9e7755e90dbc5a894e9f13e59dcbc1b67cf372f862c0a3",
+          "exists": true
+        },
+        {
+          "path": "model/narrative_plan.json",
+          "sha256": "c32cdf0d0e141f47890aa29608cf06a2abcb2ca0e0d57c894a04b760a5f3c79c",
+          "exists": true
+        }
+      ],
+      "manuscript": {
+        "path": "revalidation/workspaces/BENCH-05-QUANTUM-SUPREMACY-ABLATION/reader/narrative_manuscript.json",
+        "exists": true,
+        "sha256": "5a3dc3ea17c9057ce807054dfca41b767c1b4c8770ae85a8cc41ed5aa2b408eb"
+      },
+      "rendered": true,
+      "pdf": {
+        "path": "revalidation/workspaces/BENCH-05-QUANTUM-SUPREMACY-ABLATION/reader/paper_reader.pdf",
+        "exists": true,
+        "sha256": "896cd38bda5fb815b11fe22a95dc657efeac390cd57277ab928c1ac1291290b2"
+      }
+    }
+  ],
+  "blocked_dispatches": [
+    "ctx_533f4b7461fe",
+    "ctx_549c34b6ca76",
+    "ctx_b355b7fd7a3e"
+  ],
+  "blocker": null,
+  "additional_blockers": [],
+  "visual_repair_validation": {
+    "status": "PASS",
+    "root": "/Users/shentianshuo/orca/evidence/issue22/visual-revalidation/BENCH-02-LORA-ADAPTATION",
+    "inventory_sha256": "71607d07e830545d0739e5cc4b2f52aa820664decb334cc600f099c856f6ab21",
+    "assets": {
+      "F01": {
+        "file": "assets/figures/crop_F01_p1_312x274.png",
+        "sha256": "4d48ed984efa414426f72f619d87056ca304051cb98a8277488d9f811f0f6a29",
+        "inspection_status": "inspected",
+        "needs_visual_review": false
+      },
+      "F02": {
+        "file": "assets/figures/crop_F02_p8_536x331.png",
+        "sha256": "2d526143759a02e65e601b0650ebea2e44641ee34b0411e3da11ca6fab7cf131",
+        "inspection_status": "inspected",
+        "needs_visual_review": false
+      },
+      "T04": {
+        "file": "assets/figures/crop_T04_p8_688x366.png",
+        "sha256": "fb74bae665942698f2664ee11c56c9b2a56cfd8c3f7085d976533aba2f5d2909",
+        "inspection_status": "inspected",
+        "needs_visual_review": false
+      }
+    },
+    "f02_t04_distinct": true
+  },
+  "structural_diversity_status": "PASS",
+  "final_verdict": "PASS"
+}
