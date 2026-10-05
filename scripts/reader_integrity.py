@@ -6,7 +6,8 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 from intent_router import INTENT_INPUT_BOUNDARIES, enforce_task_firewall
-from validate_common import load_json
+from validate_common import load_json, schema_validate, sha256
+from lens_execution_manifest import canonical_sha256, result_payload_sha256
 
 
 def surface(text):
@@ -72,7 +73,7 @@ def parity_errors(root, manuscript, html_text, md_text, pdf_text):
     expected = ReaderHTML(render_paper_reader_html(manuscript, root))
     if surface(" ".join(actual.text)) != surface(" ".join(expected.text)):
         errors.append("HTML semantic parity: primary prose differs from manuscript (added, missing, or changed scientific content)")
-    if surface(md_text) != surface(render_paper_reader_md(manuscript)):
+    if surface(md_text) != surface(render_paper_reader_md(manuscript, root)):
         errors.append("Markdown semantic parity: document differs from manuscript")
     pdf_surface = surface(pdf_text)
     for chapter in manuscript.get("document", {}).get("chapters", []):
@@ -97,6 +98,84 @@ def parity_errors(root, manuscript, html_text, md_text, pdf_text):
         for label, passage in passages:
             if passage and surface(passage) not in pdf_surface:
                 errors.append(f"PDF semantic parity: {chapter.get('id')} {label} missing or changed")
+    return errors
+
+
+def lens_execution_provenance_errors(root):
+    """Require core-issued, single-use receipts for every Reader-v3 Lens task."""
+    root = Path(root)
+    lens_tasks = sorted((root / "tasks/v3/lens").glob("*.json")) if (root / "tasks/v3/lens").exists() else []
+    if not lens_tasks:
+        return []
+    errors = []
+    seen_execution_ids = set()
+    for task_path in lens_tasks:
+        task = load_json(task_path)
+        if not task.get("isolation_proof_required"):
+            errors.append(f"Lens task lacks isolation_proof_required: {task_path.relative_to(root)}")
+            continue
+        task_id = task.get("task_id")
+        task_sha = sha256(task_path)
+        receipts = sorted((root / "agent_runs" / task_id).glob("receipt-*.json"))
+        if len(receipts) != 1:
+            errors.append(f"{task_id} requires exactly one core receipt, found {len(receipts)}")
+            continue
+        receipt_path = receipts[0]
+        receipt = load_json(receipt_path)
+        errors.extend(f"{task_id} receipt: {e}" for e in schema_validate(receipt, "execution_receipt"))
+        if receipt.get("task_id") != task_id or receipt.get("task_sha256") != task_sha:
+            errors.append(f"{task_id} receipt is not bound to the canonical task packet")
+        execution_id = receipt.get("execution_id")
+        if execution_id in seen_execution_ids:
+            errors.append(f"duplicate Lens execution_id: {execution_id}")
+        seen_execution_ids.add(execution_id)
+        dispatch_path = root / "agent_runs" / task_id / f"dispatch-{execution_id}.json"
+        if not dispatch_path.exists():
+            errors.append(f"{task_id} missing dispatch record for {execution_id}")
+        else:
+            dispatch = load_json(dispatch_path)
+            if dispatch.get("status") != "CONSUMED":
+                errors.append(f"{task_id} dispatch {execution_id} was not consumed")
+            if dispatch.get("dispatch_sha256") != receipt.get("dispatch_sha256"):
+                errors.append(f"{task_id} receipt/dispatch hash mismatch")
+            if dispatch.get("receipt_sha256") != receipt.get("receipt_sha256"):
+                errors.append(f"{task_id} receipt/dispatch receipt_sha256 mismatch")
+        unsigned_receipt = {k: v for k, v in receipt.items() if k != "receipt_sha256"}
+        if receipt.get("receipt_sha256") != canonical_sha256(unsigned_receipt):
+            errors.append(f"{task_id} receipt self-hash mismatch")
+        run_files = sorted((root / "agent_runs" / task_id).glob("run-*.json"))
+        matching = []
+        for run_path in run_files:
+            env = load_json(run_path)
+            if env.get("execution_binding", {}).get("execution_id") == execution_id:
+                matching.append((run_path, env))
+        if len(matching) != 1:
+            errors.append(f"{task_id} must have one envelope bound to {execution_id}, found {len(matching)}")
+            continue
+        run_path, env = matching[0]
+        if receipt.get("envelope_sha256") != canonical_sha256(env):
+            errors.append(f"{task_id} receipt envelope hash mismatch")
+        manifest = env.get("execution_manifest")
+        if not isinstance(manifest, dict) or manifest.get("sibling_lens_outputs_present") is not False:
+            errors.append(f"{task_id} envelope lacks executable sibling-Lens exclusion proof")
+        if not env.get("input_hashes"):
+            errors.append(f"{task_id} envelope has no complete input hash manifest")
+        payload = env.get("result", {})
+        expected_output = result_payload_sha256(payload)
+        if receipt.get("output_sha256") != expected_output:
+            errors.append(f"{task_id} receipt output hash mismatch")
+        target_output_rel = task.get("target_output") or task.get("output")
+        if target_output_rel:
+            target_output = root / target_output_rel
+            if not target_output.exists():
+                errors.append(f"{task_id} target output missing: {target_output_rel}")
+            else:
+                try:
+                    promoted_payload = load_json(target_output)
+                    if result_payload_sha256(promoted_payload) != receipt.get("output_sha256"):
+                        errors.append(f"{task_id} promoted output hash mismatch")
+                except Exception:
+                    errors.append(f"{task_id} target output is not valid JSON")
     return errors
 
 

@@ -8,6 +8,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 from validate_common import load_json, schema_validate
 from agent_dispatch import dispatch_agent_task
+from agent_submit import submit_agent_result
 
 
 def run(task_path, adapter=None, model=None, replay_dir=None, fixture=None):
@@ -21,15 +22,26 @@ def run(task_path, adapter=None, model=None, replay_dir=None, fixture=None):
     if errs:
         raise SystemExit("Agent envelope validation failed:\n" + "\n".join(errs))
     payload = envelope["result"]
+    tasks_ancestor = next((p for p in tp.parents if p.name == "tasks"), None)
+    if tasks_ancestor is None:
+        raise SystemExit(f"Task path is not inside a workspace tasks/ directory: {tp}")
+    root = tasks_ancestor.parent
+    if task.get("isolation_proof_required"):
+        import tempfile
+        with tempfile.NamedTemporaryFile("w", suffix=".json", encoding="utf-8", delete=False) as handle:
+            json.dump(envelope, handle, ensure_ascii=False)
+            temp_result = handle.name
+        try:
+            submit_agent_result(root, task["task_id"], temp_result)
+        finally:
+            Path(temp_result).unlink(missing_ok=True)
+        print(f"OK: {task['task_id']} accepted through the trust boundary")
+        return 0
     out_schema = task.get("output_schema")
     if out_schema:
         errs = schema_validate(payload, out_schema)
         if errs:
             raise SystemExit(f"{out_schema} validation failed:\n" + "\n".join(errs))
-    tasks_ancestor = next((p for p in tp.parents if p.name == "tasks"), None)
-    if tasks_ancestor is None:
-        raise SystemExit(f"Task path is not inside a workspace tasks/ directory: {tp}")
-    root = tasks_ancestor.parent
     target = root / task["target_output"]
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")

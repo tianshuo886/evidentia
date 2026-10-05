@@ -176,7 +176,7 @@ python scripts/reader_audit.py --out paper-output
 python scripts/reader_acceptance.py --out paper-output
 ```
 
-Reader 是一篇完整的中文论文精读稿：问题 → 方法 → 实验 → 证据判断 → 结论与边界；Evidence Atlas 只作为审计附录，不是理解正文的前置页面。HTML、Markdown 和 PDF 共享同一份语义稿件。`reader_acceptance.py` 是进入 `PAPER_COMPLETE` 前的发布门禁，检查 Story Spine、Lens/Atlas 隐身、内联证据、公式安全、意图隔离和三种输出视图的一致性。
+Reader 是一篇完整的中文论文精读稿：章节由论文自身的开放论证拓扑与 Dynamic Narrative Plan 决定，不强制问题 → 方法 → 实验 → 结论的固定顺序；Evidence Atlas 只作为审计附录，不是理解正文的前置页面。HTML、Markdown 和 PDF 共享同一份语义稿件。`reader_acceptance.py` 是进入 `PAPER_COMPLETE` 前的发布门禁，检查动态章节、来源/证据绑定、Lens/Atlas 隐身、内联证据、公式安全、意图隔离和三种输出视图的一致性。
 
 默认 `PAPER_READING` 不输出项目迁移或“可复用技术内容”章节。若明确需要论文技术细节，可使用 `--intent PAPER_TECHNICAL_EXTRACTION`（或提示词“把论文中可复现的技术细节整理出来”）；项目适配仍只通过显式 Apply 完成。
 

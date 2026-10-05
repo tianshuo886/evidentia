@@ -6,8 +6,6 @@
     "schema_version",
     "paper_id",
     "source_sha256",
-    "central_question",
-    "central_thesis",
     "argument_units",
     "argument_relations"
   ],
@@ -27,8 +25,7 @@
       "type": "string"
     },
     "central_question": {
-      "type": "string",
-      "minLength": 1
+      "type": "string"
     },
     "motivation": {
       "type": "string"
@@ -37,8 +34,18 @@
       "type": "string"
     },
     "central_thesis": {
-      "type": "string",
-      "minLength": 1
+      "type": "string"
+    },
+    "argument_topology": {
+      "type": "object",
+      "description": "Open paper-specific topology. Nodes and relations are source/evidence grounded and may use any scientifically meaningful roles.",
+      "properties": {
+        "characterization": {"type": "string"},
+        "nodes": {"type": "array"},
+        "relations": {"type": "array"},
+        "ordering": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": true
     },
     "story_spine": {
       "type": "object",
@@ -160,22 +167,12 @@
         "properties": {
           "id": {
             "type": "string",
-            "pattern": "^ARG-[0-9]{2,}$"
+            "minLength": 1
           },
           "semantic_role": {
             "type": "string",
-            "enum": [
-              "problem",
-              "premise",
-              "hypothesis",
-              "method_rationale",
-              "observation",
-              "result",
-              "interpretation",
-              "conclusion",
-              "limitation",
-              "alternative_explanation"
-            ]
+            "minLength": 1,
+            "description": "Open role chosen for this paper; common roles are suggestions, not a closed vocabulary."
           },
           "proposition": {
             "type": "string",
@@ -242,7 +239,7 @@
         "properties": {
           "id": {
             "type": "string",
-            "pattern": "^REL-[0-9]{2,}$"
+            "minLength": 1
           },
           "from_unit": {
             "type": "string"
@@ -252,19 +249,8 @@
           },
           "relation_type": {
             "type": "string",
-            "enum": [
-              "motivates",
-              "addresses",
-              "tests",
-              "supports",
-              "weakens",
-              "qualifies",
-              "contradicts",
-              "explains",
-              "depends_on",
-              "rules_out",
-              "leaves_open"
-            ]
+            "minLength": 1,
+            "description": "Open relation chosen for the paper's reasoning; it is not constrained to a universal story grammar."
           },
           "origin": {
             "type": "string",
