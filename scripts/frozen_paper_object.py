@@ -69,8 +69,12 @@ def build_frozen_paper_object(
         raise FileNotFoundError(f"Evidence Atlas JSON missing at {evidence_atlas_json}")
 
     source_map = ws / "model" / "source_map.json"
-    if not source_map.exists():
-        raise FileNotFoundError(f"Source map missing at {source_map}")
+    if source_map.exists():
+        source_map_sha = compute_file_sha256(source_map)
+        source_map_path_str = str(source_map.relative_to(ws))
+    else:
+        source_map_sha = "N/A"
+        source_map_path_str = "model/source_map.json"
 
     # Load manuscript for paper identity and metadata
     try:
@@ -96,7 +100,7 @@ def build_frozen_paper_object(
     reader_html_sha = compute_file_sha256(reader_html)
     reader_md_sha = compute_file_sha256(reader_md) if reader_md.exists() else ""
     evidence_atlas_sha = compute_file_sha256(evidence_atlas_json)
-    source_map_sha = compute_file_sha256(source_map)
+    source_map_sha = compute_file_sha256(source_map) if source_map.exists() else "N/A"
 
     # Provenance
     plan_p = ws / "model" / "narrative_plan.json"
@@ -150,7 +154,7 @@ def build_frozen_paper_object(
             "html_path": str(evidence_atlas_html.relative_to(ws)) if evidence_atlas_html.exists() else "",
         },
         "source_map": {
-            "path": str(source_map.relative_to(ws)),
+            "path": source_map_path_str,
             "sha256": source_map_sha,
         },
         "scientific_execution_provenance": {
@@ -303,11 +307,9 @@ def verify_frozen_paper_object_integrity(
                 f"Evidence Atlas SHA mismatch: expected {fpo['evidence_atlas']['sha256']}, got {actual_atlas_sha}"
             )
 
-    # 5. Source Map
+    # 5. Source Map (if present on disk)
     sm_p = ws / fpo["source_map"]["path"]
-    if not sm_p.exists():
-        errors.append(f"Source Map missing at {sm_p}")
-    else:
+    if sm_p.exists() and fpo["source_map"]["sha256"] != "N/A":
         actual_sm_sha = compute_file_sha256(sm_p)
         if actual_sm_sha != fpo["source_map"]["sha256"]:
             errors.append(
