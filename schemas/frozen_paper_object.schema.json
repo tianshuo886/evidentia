@@ -1,0 +1,145 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evidentia.dev/schemas/frozen_paper_object.schema.json",
+  "title": "Versioned Frozen Paper Object",
+  "description": "Host-neutral immutable representation of a verified Evidentia paper run.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "paper_id",
+    "version",
+    "source_sha256",
+    "reader_manuscript_sha256",
+    "rendered_artifacts",
+    "evidence_atlas",
+    "source_map",
+    "freeze_timestamp",
+    "scientific_execution_provenance",
+    "frozen"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "enum": ["1.0", "2.0"] },
+    "paper_id": { "type": "string", "minLength": 1 },
+    "version": { "type": "string", "pattern": "^v[0-9]+$" },
+    "frozen": { "type": "boolean", "const": true },
+    "freeze_timestamp": { "type": "string" },
+    "parent_version": { "type": ["string", "null"] },
+    "source": {
+      "type": "object",
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": { "type": "string" },
+        "sha256": { "type": "string" },
+        "title": { "type": "string" },
+        "doi": { "type": ["string", "null"] },
+        "venue": { "type": ["string", "null"] },
+        "year": { "type": ["integer", "string", "null"] }
+      },
+      "additionalProperties": true
+    },
+    "source_sha256": { "type": "string", "minLength": 1 },
+    "reader_manuscript_sha256": { "type": "string", "minLength": 1 },
+    "reader": {
+      "type": "object",
+      "required": ["manuscript_path", "manuscript_sha256"],
+      "properties": {
+        "manuscript_path": { "type": "string" },
+        "manuscript_sha256": { "type": "string" },
+        "html_path": { "type": "string" },
+        "html_sha256": { "type": "string" },
+        "markdown_path": { "type": "string" },
+        "markdown_sha256": { "type": "string" },
+        "pdf_path": { "type": ["string", "null"] }
+      },
+      "additionalProperties": true
+    },
+    "rendered_artifacts": {
+      "type": "object",
+      "required": ["reader_html", "evidence_atlas_html"],
+      "properties": {
+        "reader_html": { "type": "string" },
+        "reader_html_sha256": { "type": "string" },
+        "reader_md": { "type": "string" },
+        "reader_md_sha256": { "type": "string" },
+        "reader_pdf": { "type": ["string", "null"] },
+        "evidence_atlas_html": { "type": "string" },
+        "evidence_atlas_json": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "evidence_atlas": {
+      "type": "object",
+      "required": ["path", "sha256", "items_count"],
+      "properties": {
+        "path": { "type": "string" },
+        "sha256": { "type": "string" },
+        "items_count": { "type": "integer", "minimum": 0 },
+        "html_path": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "source_map": {
+      "type": "object",
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": { "type": "string" },
+        "sha256": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "figure_inventory": {
+      "type": "object",
+      "properties": {
+        "path": { "type": "string" },
+        "sha256": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "equation_inventory": {
+      "type": "object",
+      "properties": {
+        "path": { "type": "string" },
+        "sha256": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "scientific_execution_provenance": {
+      "type": "object",
+      "required": ["pipeline", "canonical_model_policy"],
+      "properties": {
+        "pipeline": { "type": "string" },
+        "canonical_model_policy": { "type": "string" },
+        "narrative_plan_sha256": { "type": "string" },
+        "revision_memo_sha256": { "type": "string" },
+        "integrity_validation": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "correction_lineage": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["proposal_id", "parent_version", "accepted_at"],
+        "properties": {
+          "proposal_id": { "type": "string" },
+          "parent_version": { "type": "string" },
+          "accepted_at": { "type": "string" },
+          "target_anchor": { "type": "string" },
+          "diff_summary": { "type": "string" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "post_freeze_annotations": {
+      "type": "object",
+      "properties": {
+        "notes_count": { "type": "integer", "minimum": 0 },
+        "notes_store": { "type": "string" },
+        "corrections_count": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": true
+    },
+    "object_sha256": { "type": "string" }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evidentia.dev/schemas/private_note.schema.json",
+  "title": "Anchored Private User Note",
+  "description": "User-originated annotation bound to paper anchor/evidence without mutating frozen scientific artifacts.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "note_id",
+    "paper_id",
+    "paper_version",
+    "created_at",
+    "updated_at",
+    "target",
+    "content",
+    "author_type"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "enum": ["1.0"] },
+    "note_id": { "type": "string", "minLength": 1 },
+    "paper_id": { "type": "string", "minLength": 1 },
+    "paper_version": { "type": "string" },
+    "created_at": { "type": "string" },
+    "updated_at": { "type": "string" },
+    "author_type": { "type": "string", "const": "USER" },
+    "target": {
+      "type": "object",
+      "properties": {
+        "anchor": { "type": ["string", "null"] },
+        "evidence_id": { "type": ["string", "null"] },
+        "page": { "type": ["integer", "null"] },
+        "region": {
+          "type": ["object", "null"],
+          "properties": {
+            "x": { "type": "number" },
+            "y": { "type": "number" },
+            "width": { "type": "number" },
+            "height": { "type": "number" }
+          }
+        },
+        "selection_text": { "type": ["string", "null"] }
+      },
+      "additionalProperties": true
+    },
+    "content": { "type": "string", "minLength": 1 },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "user_metadata": { "type": "object", "additionalProperties": true }
+  },
+  "additionalProperties": false
+}
