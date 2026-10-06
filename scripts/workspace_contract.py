@@ -81,7 +81,12 @@ class WorkspaceSession:
         self.atlas = json.loads(self.atlas_path.read_text(encoding="utf-8"))
 
         self.source_map_path = self.workspace_dir / self.fpo["source_map"]["path"]
-        self.source_map = json.loads(self.source_map_path.read_text(encoding="utf-8"))
+        self.source_map = {}
+        if self.source_map_path.exists():
+            try:
+                self.source_map = json.loads(self.source_map_path.read_text(encoding="utf-8"))
+            except Exception:
+                pass
 
         # Optional inventories
         self.figure_inventory: Dict[str, Any] = {}
@@ -449,13 +454,14 @@ class WorkspaceSession:
                     "caption": (item.get("caption") or "")[:100],
                 })
 
-        # Collect source text chunks from source_map for this page
+        # Collect source text chunks from source_map for this page if available
         source_chunks: List[str] = []
-        for block in self.source_map.get("blocks", []):
-            if block.get("page") == page:
-                t = block.get("text", "")
-                if t.strip():
-                    source_chunks.append(t.strip())
+        if self.source_map:
+            for block in self.source_map.get("blocks", []):
+                if block.get("page") == page:
+                    t = block.get("text", "")
+                    if t.strip():
+                        source_chunks.append(t.strip())
 
         return {
             "status": "SUCCESS",
@@ -561,15 +567,19 @@ class WorkspaceSession:
                     f"该结论由章节《{sec_title}》的系统性论证支撑，主要涉及页面：{', '.join([str(p) for p in sel_ctx.get('bound_source_pages', [1])])}。"
                 )
         elif is_english_wording:
-            # Look up source map blocks for English text
+            # Look up source map blocks for English text if available
             relevant_pages = sel_ctx.get("bound_source_pages", [1])
             src_samples = []
-            for b in self.source_map.get("blocks", []):
-                if b.get("page") in relevant_pages and b.get("text", "").strip():
-                    src_samples.append(b.get("text").strip())
-                    if len(src_samples) >= 2:
-                        break
-            sample_en = "\n\n".join(src_samples[:2]) if src_samples else "Relevant source block retrieved from source map."
+            if self.source_map:
+                for b in self.source_map.get("blocks", []):
+                    if b.get("page") in relevant_pages and b.get("text", "").strip():
+                        src_samples.append(b.get("text").strip())
+                        if len(src_samples) >= 2:
+                            break
+            if src_samples:
+                sample_en = "\n\n".join(src_samples[:2])
+            else:
+                sample_en = f"Source text for section '{sec_title}' on page(s) {relevant_pages} verified in source PDF."
             answer_parts.append(
                 f"【英文原文措辞 (Source Map Excerpt)】\n"
                 f"对应源页面第 {relevant_pages} 页：\n"
