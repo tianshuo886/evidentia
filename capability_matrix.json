@@ -538,6 +538,23 @@
       ],
       "status": "REAL_PAPER_VALIDATED",
       "evidence": "Validated 9 contract requirements and real-paper interaction workflows across three structurally diverse papers."
+    },
+    {
+      "id": "agentero_adapter",
+      "area": "HostAdapter",
+      "claim": "Reference implementation of Reader-first workspace contract for Agentero vault",
+      "schema": [
+        "workspace_contract"
+      ],
+      "scripts": [
+        "adapters/agentero/agentero_adapter.py",
+        "adapters/agentero/vault_layout.py"
+      ],
+      "tests": [
+        "test_agentero_adapter"
+      ],
+      "status": "REAL_PAPER_VALIDATED",
+      "evidence": "Validated 13-step interaction sequence across LoRA and UNSEEN-01 with Agentero vault layout."
     }
   ]
 }

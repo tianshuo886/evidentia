@@ -42,6 +42,7 @@ PDF Source Acquisition & Reconstruction (Full Text + Page-first Multimodal Local
 ```bash
 /evidentia <paper.pdf | DOI | arXiv-ID> [--out <directory>] [--supplement <supp.pdf>]
 /evidentia-workspace --workspace <directory> [open-reader|ask|open-evidence|open-source|note|propose-correction|apply]
+/evidentia-agentero --paper-path <directory> [status|open-reader|ask|note] (Optional reference host)
 /evidentia-apply --paper <paper-output-dir> --project <project-document> [--focus <section>]
 /evidentia-memory [commit-paper|commit-project|relation|inspect|snapshot|export|import]
 ```
