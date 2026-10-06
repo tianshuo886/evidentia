@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evidentia.dev/schemas/workspace_contract.schema.json",
+  "title": "Host-Neutral Workspace Capability Contract",
+  "description": "Standard capability actions, payloads, and response envelopes for the Reader-first Human-AI Workspace.",
+  "type": "object",
+  "required": ["schema_version", "action", "paper_id", "status"],
+  "properties": {
+    "schema_version": { "type": "string", "enum": ["1.0"] },
+    "action": {
+      "type": "string",
+      "enum": [
+        "OPEN_READER",
+        "GET_READER_SELECTION",
+        "OPEN_EVIDENCE",
+        "OPEN_SOURCE",
+        "ASK_WITH_CONTEXT",
+        "CREATE_PRIVATE_NOTE",
+        "LIST_NOTES",
+        "UPDATE_NOTE",
+        "DELETE_NOTE",
+        "PROPOSE_CORRECTION",
+        "REVIEW_CORRECTION",
+        "START_PROJECT_APPLY",
+        "QUERY_RESEARCH_MEMORY"
+      ]
+    },
+    "paper_id": { "type": "string", "minLength": 1 },
+    "status": { "type": "string", "enum": ["SUCCESS", "ERROR"] },
+    "payload": { "type": "object" },
+    "result": { "type": "object" },
+    "error_code": { "type": ["string", "null"] },
+    "error_message": { "type": ["string", "null"] }
+  },
+  "additionalProperties": false
+}

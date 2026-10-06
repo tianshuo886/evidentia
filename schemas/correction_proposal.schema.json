@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evidentia.dev/schemas/correction_proposal.schema.json",
+  "title": "Human Correction Proposal and Review Record",
+  "description": "Structured proposal and review lifecycle for proposing corrections to a frozen Reader without silent mutation.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "proposal_id",
+    "paper_id",
+    "base_version",
+    "base_reader_sha256",
+    "status",
+    "created_at",
+    "anchor",
+    "rationale",
+    "original_text",
+    "proposed_text"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "enum": ["1.0"] },
+    "proposal_id": { "type": "string", "minLength": 1 },
+    "paper_id": { "type": "string", "minLength": 1 },
+    "base_version": { "type": "string" },
+    "base_reader_sha256": { "type": "string", "minLength": 1 },
+    "status": {
+      "type": "string",
+      "enum": ["PROPOSED", "UNDER_REVIEW", "ACCEPTED", "REJECTED"]
+    },
+    "created_at": { "type": "string" },
+    "anchor": { "type": "string", "minLength": 1 },
+    "rationale": { "type": "string", "minLength": 1 },
+    "original_text": { "type": "string" },
+    "proposed_text": { "type": "string", "minLength": 1 },
+    "source_evidence": {
+      "type": "object",
+      "properties": {
+        "source_page": { "type": "integer" },
+        "source_passage_or_region": { "type": "string" },
+        "reinspection_notes": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "review_decision": {
+      "type": ["object", "null"],
+      "properties": {
+        "decision": { "type": "string", "enum": ["ACCEPT", "REJECT"] },
+        "reviewed_at": { "type": "string" },
+        "reviewer_rationale": { "type": "string" },
+        "new_version": { "type": "string" },
+        "new_reader_sha256": { "type": "string" }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}
