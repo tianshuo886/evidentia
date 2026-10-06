@@ -41,6 +41,7 @@ PDF Source Acquisition & Reconstruction (Full Text + Page-first Multimodal Local
 
 ```bash
 /evidentia <paper.pdf | DOI | arXiv-ID> [--out <directory>] [--supplement <supp.pdf>]
+/evidentia-workspace --workspace <directory> [open-reader|ask|open-evidence|open-source|note|propose-correction|apply]
 /evidentia-apply --paper <paper-output-dir> --project <project-document> [--focus <section>]
 /evidentia-memory [commit-paper|commit-project|relation|inspect|snapshot|export|import]
 ```
@@ -87,11 +88,14 @@ Supports local PDF files, DOIs (e.g. `10.1038/...`), arXiv IDs (e.g. `1706.03762
 │   └── <specialist_1,2>.json        # Adaptive: e.g. mechanism, proof, reproducibility
 ├── reader/                          # publication-grade Chinese Academic Reader
 │   ├── narrative_manuscript.json    # Lead Writer primary narrative manuscript
+│   ├── frozen_paper_object.json     # canonical Versioned Frozen Paper Object (FPO)
 │   ├── paper_reader.html            # interactive Kami editorial reader (and reader.html)
 │   ├── paper_reader.md              # complete Markdown deep-reading report (and reader.md)
 │   ├── paper_reader.pdf             # vector PDF print snapshot (and reader.pdf)
 │   ├── evidence_atlas.html          # secondary audit & provenance surface
 │   └── kami_audit.json              # presentation-only visual QA audit
+├── notes/                           # private user notes (isolated from scientific core)
+├── corrections/                     # non-mutating correction proposals & version records
 └── apply/<project>/                 # created ONLY after explicit Apply request
     ├── project_context.json
     ├── research_delta.json

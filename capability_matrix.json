@@ -501,6 +501,43 @@
       ],
       "status": "REAL_PAPER_VALIDATED",
       "evidence": "Authored 6 publication-grade manuscripts evaluated in formal Issue #19 blind A/B trials."
+    },
+    {
+      "id": "frozen_paper_object",
+      "area": "Persistence",
+      "claim": "Canonical Versioned Frozen Paper Object with cryptographic artifact bindings",
+      "schema": [
+        "frozen_paper_object"
+      ],
+      "scripts": [
+        "frozen_paper_object.py"
+      ],
+      "tests": [
+        "test_workspace_contract",
+        "test_workspace_real_papers"
+      ],
+      "status": "REAL_PAPER_VALIDATED",
+      "evidence": "Validated on LoRA, AlphaFold2, and UNSEEN-01 with cryptographic SHA-256 verification."
+    },
+    {
+      "id": "workspace_contract",
+      "area": "Workspace",
+      "claim": "Host-neutral Reader-first Human-AI Research Workspace Contract",
+      "schema": [
+        "workspace_contract",
+        "private_note",
+        "correction_proposal"
+      ],
+      "scripts": [
+        "workspace_contract.py",
+        "workspace_harness.py"
+      ],
+      "tests": [
+        "test_workspace_contract",
+        "test_workspace_real_papers"
+      ],
+      "status": "REAL_PAPER_VALIDATED",
+      "evidence": "Validated 9 contract requirements and real-paper interaction workflows across three structurally diverse papers."
     }
   ]
 }
