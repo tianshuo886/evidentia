@@ -2,6 +2,15 @@
 
 [English](README.md) · [中文](README.zh-CN.md)
 
+
+> **P0 SCIENTIFIC QUALITY HOLD — Start here before any new feature work (2026-10-10).**
+> A real-paper RingMoClaw Reader regression exposed factual metric misinterpretations, unsupported author attribution and insufficient method/visual depth. Historical v3 benchmark passes remain historical evidence; they do **not** clear these new release blockers.
+>
+> **Mandatory agent/maintainer execution order (issues are not sorted by priority in GitHub):**
+> **[#36 — START HERE: Scientific Integrity](https://github.com/tianshuo886/evidentia/issues/36)** → **[#37 — Deep Explanation & Visual Coverage](https://github.com/tianshuo886/evidentia/issues/37)** → **[#38 — Semantic Regression & Real-Paper A/B Release Gate](https://github.com/tianshuo886/evidentia/issues/38)**.
+> Work sequentially, honor blocked-by dependencies and source-provenance requirements, close only after each issue's explicit acceptance criteria pass; then resume optional open #30–#35 work. **Do not use `PAPER_COMPLETE` as approval if material P0 scientific errors remain.**
+
+
 ## Evidence-Grounded Paper Research OS
 
 Evidentia is a single-paper scientific research operating system for turning a supplied research PDF into an auditable, durable, deeply reasoned research object. It reconstructs the paper's multi-modal evidence surface, reads it through 4 Core + 2 Adaptive Specialist Lenses, reconciles findings through an Editorial Revision Memo, structures the narrative with a dynamic paper-specific plan, authors a publication-grade Chinese Academic Reader via a strong model, and renders it through Kami's presentation backend alongside an interactive Evidence Atlas.
