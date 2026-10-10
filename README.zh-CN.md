@@ -2,6 +2,15 @@
 
 [English](README.md) · [中文](README.zh-CN.md)
 
+
+> **P0 科研精读质量阻塞任务｜2026-10-10｜新功能开发前优先完成。**
+> RingMoClaw 的真实论文阅读样例发现了指标语义误读、作者观点归因失真、方法与关键图表解释不足。以往 Reader v3 测试通过是历史证据，**不能代替本轮科学内容复验**。
+>
+> **Orca / Codex / 维护者必读执行顺序（GitHub Issue 默认不会按优先级自动排序）：**
+> **[#36 第一阶段：科学准确性（START HERE）](https://github.com/tianshuo886/evidentia/issues/36)** → **[#37 第二阶段：深度讲解与图表覆盖](https://github.com/tianshuo886/evidentia/issues/37)** → **[#38 第三阶段：科学语义回归和真实论文 A/B 验收](https://github.com/tianshuo886/evidentia/issues/38)**。
+> 严格依序执行，前置依赖未完成不得关闭后续任务；每项完成须满足对应 Issue 的证据与验收要求。三项全部验收通过后再继续 #30–#35 等可选功能。若仍存在重大的 P0 科学错误，禁止将 Reader 标记为 `PAPER_COMPLETE`。
+
+
 ## 基于真实证据的论文深度研究操作系统 (Paper Research OS)
 
 Evidentia 是一个面向单篇学术论文的严密科研操作系统。它将用户提供的论文 PDF 转化为具备全链路证据锚定、高度可审计、可长期存证的研究对象：通过“多模态物理源重构”抓取图表公式与排版信息，经“Lead Reader”梳理原生论证拓扑，由“4 大通用核心 + 2 项自适应专项 Lens”展开严格语境隔离的深度重读，通过“编辑部修订备忘录（Revision Memo）”提炼学术张力与修订指令，基于论文独有的思想脉络生成“动态反模板大纲（Narrative Plan）”，由强模型“Lead Writer”撰写出版级中文学术精读手稿，并通过“Kami 排版引擎”完成现代学术阅读器（HTML/Markdown/矢量 PDF）及审计级“Evidence Atlas 证据图谱”的渲染呈现。
