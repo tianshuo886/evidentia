@@ -55,7 +55,19 @@
               "CORRECT",
               "QUALIFY",
               "REMOVE",
-              "VERIFY"
+              "VERIFY",
+              "MUST_EXPLAIN",
+              "CAN_LINK_TO_ATLAS"
+            ]
+          },
+          "deficit_category": {
+            "enum": [
+              "MECHANISM",
+              "VARIABLE",
+              "CONTROL",
+              "DISCREPANCY",
+              "BOUNDARY",
+              "GENERAL"
             ]
           },
           "instruction": {

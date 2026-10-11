@@ -63,14 +63,15 @@ def create_lead_reader_task(root: Path) -> Path:
         "instructions": (
             "Read the paper as a whole. Your primary job is complete natural scientific understanding, not auditing. "
             "Begin by asking: How does this particular paper actually construct its case? Reconstruct its own "
-            "paper/structure characterization and an open, ordered argument topology with source/evidence-grounded "
-            "nodes and relations. Choose node roles and relations that fit this paper; observation, hypothesis, "
-            "theorem, assumption, experiment, design choice, mechanism, contradiction, measurement, taxonomy branch, "
-            "boundary, result and unresolved issue are examples, never a required checklist. Preserve structurally "
-            "unusual forms such as proofs, taxonomies, reviews, measurement protocols, or multi-part empirical cases. "
-            "Then explain the paper in natural prose, identify decisive/source-critical evidence, and record uncertainty "
-            "and open issues. Do not force a problem→gap→method→experiment→result→limitation story. Do not expose "
-            "internal Evidentia terminology or discuss the user's project. Classify paper_type using a concise category."
+            "paper/structure characterization, an open ordered argument topology, and a source-grounded concept dependency "
+            "map (identifying prerequisite concepts a researcher must understand before following later contributions). "
+            "Choose node roles and relations that fit this paper; observation, hypothesis, theorem, assumption, "
+            "experiment, design choice, mechanism, contradiction, measurement, taxonomy branch, boundary, result and "
+            "unresolved issue are examples, never a required checklist. Preserve structurally unusual forms such as "
+            "proofs, taxonomies, reviews, measurement protocols, or multi-part empirical cases. Then explain the paper "
+            "in natural prose, identify decisive/source-critical evidence, and record uncertainty and open issues. "
+            "Do not force a problem→gap→method→experiment→result→limitation story. Do not expose internal Evidentia "
+            "terminology or discuss the user's project. Classify paper_type using a concise category."
         ),
         "executor_template": build_executor_metadata()
     }
@@ -181,10 +182,11 @@ def create_narrative_plan_task(root: Path) -> Path:
         "instructions": (
             "Determine the paper's own narrative architecture from the Lead Reader comprehension and Revision Memo. "
             "Return ordered dynamic sections. Each section needs a title, purpose, proposition or question when one "
-            "exists, evidence refs, source anchors, and local figure/table/equation bindings when relevant. The count, "
-            "identity and order must be chosen by the paper, not by a universal template. A section may be a proof "
-            "step, taxonomy branch, measurement protocol, design trade-off, contradiction, result cluster, or another "
-            "form. Do not read or emit any legacy Reader IR."
+            "exists, evidence refs, source anchors, and local figure/table/equation bindings when relevant. "
+            "Define visual_evidence_selection with must_show decisive assets (e.g. system architecture, decisive experimental tables) "
+            "and documented justifications for omitted figures/tables. The count, identity and order must be chosen by "
+            "the paper, not by a universal template. A section may be a proof step, taxonomy branch, measurement protocol, "
+            "design trade-off, contradiction, result cluster, or another form. Do not read or emit any legacy Reader IR."
         ),
         "executor_template": build_executor_metadata()
     }
@@ -229,8 +231,9 @@ def create_revision_memo_task(root: Path) -> Path:
         "constraints": ["REVISION_MEMO_ONLY", "NO_MAJORITY_VOTING", "PRESERVE_UNRESOLVED"],
         "instructions": (
             "Read the Lead Reader draft and all six independent Lens reports. Produce a concise editorial Revision Memo. "
-            "Each revision must say exactly what the Lead Writer should add, rewrite, correct, qualify, remove or verify; "
-            "why; which evidence supports the change; and which Lens(es) raised it. Merge duplicates, preserve real conflicts, "
+            "Identify scientific explanation deficits (missing necessary mechanism, variable, experiment control, "
+            "discrepancy, boundary). For each deficit, mark action as MUST_EXPLAIN, QUALIFY, CAN_LINK_TO_ATLAS, or UNRESOLVED "
+            "with precise source anchors. Reconcile specialist findings, merge duplicates, preserve real conflicts, "
             "and leave genuinely unresolved points unresolved. Do not produce a new paper summary."
         ),
         "executor_template": build_executor_metadata()
@@ -291,10 +294,14 @@ def create_lead_writer_task(root: Path) -> Path:
             "Write for a researcher who has not read the paper: first explain how this particular paper constructs its case, "
             "then follow the supplied paper-specific plan without turning it into pipeline jargon. Use the plan's dynamic "
             "section structure rather than fixed slots; do not add universal problem, gap, method, experiment, result or "
-            "limitation sections merely because they are conventional. Place verified figures/tables/equations locally "
-            "where they advance the scientific argument; each visual block must explain what question it addresses, what it shows, "
-            "what it supports, and what it does not prove. The primary prose must never mention Lens names, Council, O/I/A, schemas, "
-            "hashes, task IDs, pipeline phases or audit machinery. Do not create project-transfer or reusable-component advice. "
+            "limitation sections merely because they are conventional. For material mechanisms, explain: motivation -> "
+            "operation and inputs/outputs -> critical design choice -> effect/tradeoff -> supporting/limiting evidence in natural "
+            "prose, mapping mathematical symbols and units directly to the paper. For decisive experiments, explain: "
+            "question/hypothesis -> data/controls/split -> metric and unit -> observed comparison -> what the observation supports "
+            "and does not prove. Place verified figures/tables/equations locally where they advance the scientific argument "
+            "(including architecture figures and decisive experimental tables); each visual block must explain what question it addresses, "
+            "what to inspect, what it supports, and what it cannot prove. The primary prose must never mention Lens names, Council, O/I/A, "
+            "schemas, hashes, task IDs, pipeline phases or audit machinery. Do not create project-transfer or reusable-component advice. "
             "Preserve uncertainty instead of filling gaps with generic prose."
         ),
         "executor_template": build_executor_metadata()

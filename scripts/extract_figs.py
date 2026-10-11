@@ -15,16 +15,33 @@ Workstream A & Hardening:
 import argparse, json, os, re, sys
 from pathlib import Path
 
+ROMAN_NUMS = {'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100, 'D': 500, 'M': 1000}
+
+def _roman_to_int(s):
+    val, prev = 0, 0
+    for c in reversed(s.upper()):
+        curr = ROMAN_NUMS.get(c, 0)
+        if curr >= prev: val += curr
+        else: val -= curr
+        prev = curr
+    return val
+
 CAP_RE = re.compile(
-    r'^\s*((?:(?:Extended\s+Data\s+)?(?:Fig(?:ure)?\.?|Table)|Supplementary\s+(?:Fig(?:ure)?\.?|Table))\s*(?:[A-Z]\.)?[S]?\d+[A-Za-z]?)\s*(?::|\|)\s*(.*)$',
-    re.I
+    r'^\s*((?:(?:Extended\s+Data\s+)?(?:Fig(?:ure)?\.?|Table)|Supplementary\s+(?:Fig(?:ure)?\.?|Table))\s*(?:[A-Z]\.)?[S]?(?:\d+|[IVXLCDM]+)[A-Za-z]?\.?)(?:\s*(?::|\||\.|\—|\–|\-)\s*|\s*\n\s*|\s*$)(.*)$',
+    re.I | re.DOTALL
 )
 
 
 def _evidence_id(kind, label):
     """Build stable IDs while preserving appendix/supplement prefixes."""
+    rom = re.search(r'\b[IVXLCDM]+\b', label, re.I)
     number = re.search(r'(?:[A-Z]\.)?[S]?\d+[A-Za-z]?', label, re.I)
-    token = re.sub(r'[^A-Za-z0-9]', '', number.group(0)) if number else '0'
+    if number:
+        token = re.sub(r'[^A-Za-z0-9]', '', number.group(0))
+    elif rom:
+        token = str(_roman_to_int(rom.group(0)))
+    else:
+        token = '0'
     return ('T' if kind == 'table' else 'F') + token.upper().zfill(2)
 
 def compute_binding_score(caption_bbox, candidate_bbox, kind, page_rect=None):
@@ -257,178 +274,184 @@ def main():
         # 2. Collect text blocks to detect captions and table lines
         blocks = page.get_text('blocks')
         for b in blocks:
-            text = b[4]
+            text = b[4].strip()
             bbox = list(b[:4])
-            for line in text.splitlines():
-                line = line.strip()
-                m = CAP_RE.match(line)
-                if not m:
+            m = CAP_RE.match(text)
+            if not m:
+                # Also try first line if multi-line block
+                lines = text.splitlines()
+                if lines:
+                    m = CAP_RE.match(lines[0].strip())
+            if not m:
+                continue
+            label = m.group(1).strip().rstrip('.')
+            kind = 'table' if re.search(r'(?:^|\s)table\b', label, re.I) else 'figure'
+            ident = _evidence_id(kind, label)
+            if ident in seen:
+                ident += f'-p{pno+1}'
+            seen.add(ident)
+
+            cap_body = m.group(2).replace('\n', ' ').strip()
+            if not cap_body and '\n' in text:
+                cap_body = text.split('\n', 1)[1].replace('\n', ' ').strip()
+            cap = (label + ': ' + cap_body) if cap_body else label
+            subfigs = sorted(set(re.findall(r'\(([a-z])\)', cap, re.I)))
+
+            # Tables are text/rule regions in many PDFs, not image/drawing
+            # regions. Prefer a nearby dense multi-column text inference;
+            # this prevents a chart below the caption from being reused as
+            # the table asset.
+            table_text_bbox = _table_text_bbox(page, bbox, page_rect) if kind == 'table' else None
+            best_cand = (table_text_bbox, None) if table_text_bbox else None
+            best_score = 0.92 if table_text_bbox else 0.0
+            for cand_bbox, xref in ([] if table_text_bbox else candidate_rects):
+                # Tables should never bind to vector figure drawings (xref is None)
+                if kind == 'table' and xref is None:
                     continue
-                label = m.group(1).strip()
-                kind = 'table' if re.search(r'(?:^|\s)table\s', label, re.I) else 'figure'
-                ident = _evidence_id(kind, label)
-                if ident in seen:
-                    ident += f'-p{pno+1}'
-                seen.add(ident)
+                score = compute_binding_score(bbox, cand_bbox, kind, page_rect=page_rect)
+                if score > best_score:
+                    best_score = score
+                    best_cand = (cand_bbox, xref)
 
-                cap = (label + ' ' + m.group(2)).strip()
-                subfigs = sorted(set(re.findall(r'\(([a-z])\)', cap, re.I)))
+            # Multimodal visual item initialization
+            item = {
+                'id': ident,
+                'paper_label': label,
+                'kind': kind,
+                'page': pno + 1,
+                'caption_original': cap,
+                'caption_status': 'OK',
+                'source_location': f'p.{pno+1}',
+                'role': 'critical',
+                'depth': 'deep',
+                'file': None,
+                'bbox': bbox,
+                'caption_bbox': bbox,
+                'figure_bbox': best_cand[0] if (best_cand and best_score >= 0.60) else None,
+                'subfigures': subfigs,
+                'asset': None,
+                'extraction_method': 'none',
+                'confidence': 0.85,
+                'inspection': 'inspected',
+                'inspection_status': 'inspected',
+                'reviewed_by': None,
+                'review_note': None,
+                'binding_method': 'none',
+                'binding_confidence': 0.85,
+                'needs_visual_review': False,
+                'needs_review': False,
+                'row_count': None,
+                'col_count': None,
+                'structure': None,
+                'headers': None,
+                'rows': None,
+                'parsed_cells': None,
+                'raw_visual_fallback': None,
+                'structure_status': None,
+                'reconstruction_confidence': None,
+                'localization_method': 'none',
+                'localization_confidence': None
+            }
 
-                # Tables are text/rule regions in many PDFs, not image/drawing
-                # regions. Prefer a nearby dense multi-column text inference;
-                # this prevents a chart below the caption from being reused as
-                # the table asset.
-                table_text_bbox = _table_text_bbox(page, bbox, page_rect) if kind == 'table' else None
-                best_cand = (table_text_bbox, None) if table_text_bbox else None
-                best_score = 0.92 if table_text_bbox else 0.0
-                for cand_bbox, xref in ([] if table_text_bbox else candidate_rects):
-                    # Tables should never bind to vector figure drawings (xref is None)
-                    if kind == 'table' and xref is None:
-                        continue
-                    score = compute_binding_score(bbox, cand_bbox, kind, page_rect=page_rect)
-                    if score > best_score:
-                        best_score = score
-                        best_cand = (cand_bbox, xref)
+            # If table has no visual candidate box yet, infer from text layout below caption
+            if kind == 'table' and not item.get('figure_bbox'):
+                nearby_words = [
+                    w for w in page.get_text('words')
+                    if 0 <= (w[1] - bbox[3]) < 320 and abs(w[0] - bbox[0]) < 250
+                ]
+                if nearby_words:
+                    tx0 = max(0.0, min(w[0] for w in nearby_words) - 5)
+                    ty0 = max(0.0, min(w[1] for w in nearby_words) - 5)
+                    tx1 = min(page_rect.width, max(w[2] for w in nearby_words) + 5)
+                    ty1 = min(page_rect.height, max(w[3] for w in nearby_words) + 5)
+                    if (tx1 - tx0) >= 40 and (ty1 - ty0) >= 20:
+                        item['figure_bbox'] = [tx0, ty0, tx1, ty1]
+                        best_score = max(best_score, 0.88)
 
-                # Multimodal visual item initialization
-                item = {
-                    'id': ident,
-                    'paper_label': label,
-                    'kind': kind,
-                    'page': pno + 1,
-                    'caption_original': cap,
-                    'caption_status': 'OK',
-                    'source_location': f'p.{pno+1}',
-                    'role': 'critical',
-                    'depth': 'deep',
-                    'file': None,
-                    'bbox': bbox,
-                    'caption_bbox': bbox,
-                    'figure_bbox': best_cand[0] if (best_cand and best_score >= 0.60) else None,
-                    'subfigures': subfigs,
-                    'asset': None,
-                    'extraction_method': 'none',
-                    'confidence': 0.85,
-                    'inspection': 'inspected',
-                    'inspection_status': 'inspected',
-                    'reviewed_by': None,
-                    'review_note': None,
-                    'binding_method': 'none',
-                    'binding_confidence': 0.85,
-                    'needs_visual_review': False,
-                    'needs_review': False,
-                    'row_count': None,
-                    'col_count': None,
-                    'structure': None,
-                    'headers': None,
-                    'rows': None,
-                    'parsed_cells': None,
-                    'raw_visual_fallback': None,
-                    'structure_status': None,
-                    'reconstruction_confidence': None,
-                    'localization_method': 'none',
-                    'localization_confidence': None
-                }
+            # Try image extraction from matched candidate or best embedded image
+            chosen_xref = best_cand[1] if best_cand else None
+            if chosen_xref and chosen_xref not in saved:
+                try:
+                    pix = fitz.Pixmap(doc, chosen_xref)
+                    if max(pix.width, pix.height) >= a.min_size:
+                        if pix.n - pix.alpha > 3:
+                            try:
+                                pix = fitz.Pixmap(fitz.csRGB, pix)
+                            except Exception:
+                                pass
+                        n += 1
+                        fn = f'fig{n:02d}_p{pno+1}_{pix.width}x{pix.height}.png'
+                        out_p = os.path.join(a.out, fn)
+                        pix.save(out_p)
+                        saved.append(chosen_xref)
+                        item['file'] = f'assets/figures/{fn}'
+                        item['asset'] = f'assets/figures/{fn}'
+                        item['extraction_method'] = 'embedded'
+                        item['binding_method'] = 'MULTIMODAL_PAGE_LOCALIZATION'
+                        item['localization_method'] = 'MULTIMODAL_PAGE_LOCALIZATION'
+                        item['binding_confidence'] = max(0.88, best_score)
+                        item['localization_confidence'] = max(0.88, best_score)
+                        item['confidence'] = 0.90
+                        item['inspection_status'] = 'inspected'
+                except Exception:
+                    pass
 
-                # If table has no visual candidate box yet, infer from text layout below caption
-                if kind == 'table' and not item.get('figure_bbox'):
-                    nearby_words = [
-                        w for w in page.get_text('words')
-                        if 0 <= (w[1] - bbox[3]) < 320 and abs(w[0] - bbox[0]) < 250
-                    ]
-                    if nearby_words:
-                        tx0 = max(0.0, min(w[0] for w in nearby_words) - 5)
-                        ty0 = max(0.0, min(w[1] for w in nearby_words) - 5)
-                        tx1 = min(page_rect.width, max(w[2] for w in nearby_words) + 5)
-                        ty1 = min(page_rect.height, max(w[3] for w in nearby_words) + 5)
-                        if (tx1 - tx0) >= 40 and (ty1 - ty0) >= 20:
-                            item['figure_bbox'] = [tx0, ty0, tx1, ty1]
-                            best_score = max(best_score, 0.88)
-
-                # Try image extraction from matched candidate or best embedded image
-                chosen_xref = best_cand[1] if best_cand else None
-                if chosen_xref and chosen_xref not in saved:
+            # If no embedded image, try deterministic page crop if valid figure_bbox exists
+            if item['file'] is None and item.get('figure_bbox'):
+                fb = item['figure_bbox']
+                fb_area = max(0, fb[2] - fb[0]) * max(0, fb[3] - fb[1])
+                # Strict validation: NOT whole page (>80%), NOT caption-only, NOT degenerate
+                if fb_area < 0.80 * page_area and (fb[2] - fb[0]) >= 40 and (fb[3] - fb[1]) >= 30:
                     try:
-                        pix = fitz.Pixmap(doc, chosen_xref)
-                        if max(pix.width, pix.height) >= a.min_size:
-                            if pix.n - pix.alpha > 3:
-                                try:
-                                    pix = fitz.Pixmap(fitz.csRGB, pix)
-                                except Exception:
-                                    pass
-                            n += 1
-                            fn = f'fig{n:02d}_p{pno+1}_{pix.width}x{pix.height}.png'
-                            out_p = os.path.join(a.out, fn)
-                            pix.save(out_p)
-                            saved.append(chosen_xref)
-                            item['file'] = f'assets/figures/{fn}'
-                            item['asset'] = f'assets/figures/{fn}'
-                            item['extraction_method'] = 'embedded'
-                            item['binding_method'] = 'MULTIMODAL_PAGE_LOCALIZATION'
-                            item['localization_method'] = 'MULTIMODAL_PAGE_LOCALIZATION'
-                            item['binding_confidence'] = max(0.88, best_score)
-                            item['localization_confidence'] = max(0.88, best_score)
-                            item['confidence'] = 0.90
-                            item['inspection_status'] = 'inspected'
+                        clip_rect = fitz.Rect(fb)
+                        pix = page.get_pixmap(dpi=a.dpi, alpha=False, clip=clip_rect)
+                        n += 1
+                        fn = f"crop_{item['id']}_p{pno+1}_{pix.width}x{pix.height}.png"
+                        out_p = os.path.join(a.out, fn)
+                        pix.save(out_p)
+                        item['file'] = f"assets/figures/{fn}"
+                        item['asset'] = f"assets/figures/{fn}"
+                        item['extraction_method'] = 'deterministic_crop'
+                        item['binding_method'] = 'MULTIMODAL_PAGE_LOCALIZATION'
+                        item['localization_method'] = 'MULTIMODAL_PAGE_LOCALIZATION'
+                        item['binding_confidence'] = round(best_score, 2)
+                        item['localization_confidence'] = round(best_score, 2)
+                        item['confidence'] = round(best_score, 2)
+                        item['inspection_status'] = 'inspected'
                     except Exception:
                         pass
 
-                # If no embedded image, try deterministic page crop if valid figure_bbox exists
-                if item['file'] is None and item.get('figure_bbox'):
-                    fb = item['figure_bbox']
-                    fb_area = max(0, fb[2] - fb[0]) * max(0, fb[3] - fb[1])
-                    # Strict validation: NOT whole page (>80%), NOT caption-only, NOT degenerate
-                    if fb_area < 0.80 * page_area and (fb[2] - fb[0]) >= 40 and (fb[3] - fb[1]) >= 30:
-                        try:
-                            clip_rect = fitz.Rect(fb)
-                            pix = page.get_pixmap(dpi=a.dpi, alpha=False, clip=clip_rect)
-                            n += 1
-                            fn = f"crop_{item['id']}_p{pno+1}_{pix.width}x{pix.height}.png"
-                            out_p = os.path.join(a.out, fn)
-                            pix.save(out_p)
-                            item['file'] = f"assets/figures/{fn}"
-                            item['asset'] = f"assets/figures/{fn}"
-                            item['extraction_method'] = 'deterministic_crop'
-                            item['binding_method'] = 'MULTIMODAL_PAGE_LOCALIZATION'
-                            item['localization_method'] = 'MULTIMODAL_PAGE_LOCALIZATION'
-                            item['binding_confidence'] = round(best_score, 2)
-                            item['localization_confidence'] = round(best_score, 2)
-                            item['confidence'] = round(best_score, 2)
-                            item['inspection_status'] = 'inspected'
-                        except Exception:
-                            pass
+            # Table specific structural detection & real reconstruction
+            if kind == 'table':
+                table_box = item.get('figure_bbox') or bbox
+                headers, rows, cells, s_status, r_conf = extract_table_cells(page, table_box, bbox)
+                item['headers'] = headers
+                item['rows'] = rows
+                item['parsed_cells'] = cells
+                item['structure_status'] = s_status
+                item['reconstruction_confidence'] = r_conf
+                item['row_count'] = len(rows) if rows else None
+                item['col_count'] = len(headers) if headers else None
+                item['structure'] = {
+                    'header': bool(headers),
+                    'rows': len(rows) if rows else 0,
+                    'cols': len(headers) if headers else 0,
+                    'status': s_status
+                }
 
-                # Table specific structural detection & real reconstruction
-                if kind == 'table':
-                    table_box = item.get('figure_bbox') or bbox
-                    headers, rows, cells, s_status, r_conf = extract_table_cells(page, table_box, bbox)
-                    item['headers'] = headers
-                    item['rows'] = rows
-                    item['parsed_cells'] = cells
-                    item['structure_status'] = s_status
-                    item['reconstruction_confidence'] = r_conf
-                    item['row_count'] = len(rows) if rows else None
-                    item['col_count'] = len(headers) if headers else None
-                    item['structure'] = {
-                        'header': bool(headers),
-                        'rows': len(rows) if rows else 0,
-                        'cols': len(headers) if headers else 0,
-                        'status': s_status
-                    }
+            # Fail-closed check: if file is STILL None or confidence < 0.60
+            # STRICT RULE: NEVER fall back to full page screenshot!
+            if item['file'] is None:
+                item['binding_method'] = 'VISUAL_BINDING_UNCERTAIN'
+                item['localization_method'] = 'VISUAL_BINDING_UNCERTAIN'
+                item['inspection_status'] = 'NEEDS_REVIEW'
+                item['needs_visual_review'] = True
+                item['needs_review'] = True
+                item['confidence'] = 0.40
+                item['binding_confidence'] = 0.40
+                item['review_note'] = 'Visual evidence localization uncertain: no confident non-page bounding box found.'
 
-                # Fail-closed check: if file is STILL None or confidence < 0.60
-                # STRICT RULE: NEVER fall back to full page screenshot!
-                if item['file'] is None:
-                    item['binding_method'] = 'VISUAL_BINDING_UNCERTAIN'
-                    item['localization_method'] = 'VISUAL_BINDING_UNCERTAIN'
-                    item['inspection_status'] = 'NEEDS_REVIEW'
-                    item['needs_visual_review'] = True
-                    item['needs_review'] = True
-                    item['confidence'] = 0.40
-                    item['binding_confidence'] = 0.40
-                    item['review_note'] = 'Visual evidence localization uncertain: no confident non-page bounding box found.'
-
-                items.append(item)
+            items.append(item)
 
     # Review required collection
     review_req = [i['id'] for i in items if i.get('needs_visual_review') or i.get('needs_review')]

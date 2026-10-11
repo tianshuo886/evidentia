@@ -23,6 +23,21 @@
       },
       "additionalProperties": true
     },
+    "concept_dependency_map": {
+      "type": "array",
+      "description": "Source-grounded concept prerequisites: reader must understand X to understand Y.",
+      "items": {
+        "type": "object",
+        "required": ["concept", "prerequisites"],
+        "properties": {
+          "concept": { "type": "string" },
+          "prerequisites": { "type": "array", "items": { "type": "string" } },
+          "source_anchors": { "type": "array", "items": { "type": "string" } },
+          "why": { "type": "string" }
+        },
+        "additionalProperties": true
+      }
+    },
     "story_spine": {
       "type": "object",
       "description": "Optional compatibility metadata only. It is not a required comprehension schema.",
