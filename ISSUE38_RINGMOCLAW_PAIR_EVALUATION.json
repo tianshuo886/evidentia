@@ -1,0 +1,90 @@
+{
+  "schema_version": "1.0",
+  "paper_id": "RINGMOCLAW-MULTIAGENT",
+  "source_sha256": "32df5e2843de7e8ccd52d56b9dfed257c26786ef3b71fbc397a1c3a5e26fb0fa",
+  "paper_title": "RingMoClaw: An Experience-Inspired Multi-Agent Framework for Self-Evolving Research in Remote Sensing",
+  "arxiv_id": "2609.00814v2",
+  "evaluation_mode": "SOURCE_ASSISTED_BLIND_ADJUDICATION",
+  "condition_a": {
+    "system": "Direct Strong-Model Reading (Direct AI)",
+    "model": "antigravity/gemini-3.8-flash",
+    "prompt_budget": "full-paper direct reading prompt without Evidentia pipeline",
+    "output_sha256": "08b1e9768ab3373a8d3e035523799f0c31dfc845ecf5b120d06a93ef1983c789"
+  },
+  "condition_b": {
+    "system": "Evidentia Reader v3 (Scientific Integrity + Deep Coverage Remediation)",
+    "model": "antigravity/gemini-3.8-flash",
+    "manuscript_sha256": "1b9454dcf1a784627c9b97cd04f27524365b44c3b97307c100f73b49ac5d5afb",
+    "path": "reader/narrative_manuscript.json"
+  },
+  "dimensions": [
+    {
+      "name": "narrative_clarity",
+      "direct_ai": 4.1,
+      "evidentia_v3": 4.8,
+      "evidence_note": "Direct AI provides a readable summary but follows generic section ordering. Evidentia v3 builds a dynamic, paper-shaped Chinese narrative tracing paradigm shift, architecture, decision formulation, empirical evolution, and deep ablations."
+    },
+    {
+      "name": "scientific_completeness",
+      "direct_ai": 3.7,
+      "evidentia_v3": 4.9,
+      "evidence_note": "Direct AI completely omitted Figure 2 (system architecture) and did not analyze the mathematical Score formula or module mechanisms. Evidentia v3 covers all 7 core knowledge areas with zero omissions."
+    },
+    {
+      "name": "method_explanation",
+      "direct_ai": 3.6,
+      "evidentia_v3": 4.9,
+      "evidence_note": "Direct AI names the agents but fails to explain the directional dataflows, the three review checkpoints, the Score_t formulation, or the typed operator signatures. Evidentia v3 provides complete mechanistic teaching (motivation, operation, IO, design choices, tradeoffs)."
+    },
+    {
+      "name": "experiment_result_understanding",
+      "direct_ai": 2.5,
+      "evidentia_v3": 4.9,
+      "evidence_note": "Direct AI committed critical semantic errors: claiming precision=1.00 meant '无一漏过', that recall=0.83 killed 17% promising candidates, that Failed=6 meant catastrophic crashes, and collapsing GPU-hours with wall-clock hours. Evidentia v3 accurately interprets all positive-class metrics and protocol semantics."
+    },
+    {
+      "name": "figure_table_correctness",
+      "direct_ai": 2.4,
+      "evidentia_v3": 4.8,
+      "evidence_note": "Direct AI lacked Figure 2 and failed to provide grounded crops for Tables I, VI, VII, VIII, IX, X. Evidentia v3 inlines verified, localized multimodal crops with analytical captions detailing question, inspection target, supporting evidence, and limits."
+    },
+    {
+      "name": "conclusion_calibration",
+      "direct_ai": 3.4,
+      "evidentia_v3": 4.7,
+      "evidence_note": "Direct AI unreservedly repeated high-level promotional claims. Evidentia v3 calibrates claims against the best-of-3 FAIR1M selection, the short-run surrogate protocol limitations, and detector baseline contexts."
+    },
+    {
+      "name": "boundary_coverage",
+      "direct_ai": 3.2,
+      "evidentia_v3": 4.8,
+      "evidence_note": "Direct AI overlooked the 1 missed detrimental candidate in Table X and benchmark averaging conventions in Table IV. Evidentia v3 explicitly articulates both boundaries."
+    },
+    {
+      "name": "critical_insight",
+      "direct_ai": 3.6,
+      "evidentia_v3": 4.8,
+      "evidence_note": "Direct AI treats GLM-5 / Minimax purely as an engineering implementation. Evidentia v3 analyzes why heterogeneous LLM pairing is epistemically necessary to break self-evaluation collusion in automated research."
+    },
+    {
+      "name": "unsupported_prose",
+      "direct_ai": 2.0,
+      "evidentia_v3": 5.0,
+      "evidence_note": "Direct AI leaked external workspace prompt concepts (attributing PROSAIL radiative transfer and PINN physics to the authors). Evidentia v3 maintains a strict faithful-reading firewall with zero leaked project assumptions."
+    },
+    {
+      "name": "provenance_usefulness",
+      "direct_ai": 2.2,
+      "evidentia_v3": 5.0,
+      "evidence_note": "Direct AI citations were broad or unlinked. Evidentia v3 grounds assertions in exact source page numbers and multimodal evidence IDs (F01-F05, T01, T06-T10)."
+    },
+    {
+      "name": "overall_understandability",
+      "direct_ai": 3.8,
+      "evidentia_v3": 4.9,
+      "evidence_note": "Evidentia v3 enables an independent researcher to understand and mentally reconstruct the framework, decision gates, and experiments without opening the raw PDF."
+    }
+  ],
+  "qualitative_notes": "Evidentia Reader v3 demonstrates decisive value-add over direct reading: eliminating 6 critical factual/attribution hallucinations, restoring the indispensable system architecture diagram (Figure 2) and 6 crucial quantitative tables, and providing rigorous mechanistic explanations without template jargon. Non-regression is established across narrative clarity and completeness, with substantial improvements in factual calibration, visual reasoning, and provenance.",
+  "release_blockers": []
+}

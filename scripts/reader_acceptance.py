@@ -416,6 +416,9 @@ def _report(errors):
     for gate in GATES:
         passed = gate not in failed and "artifacts" not in failed
         report[gate] = ("PASS" if passed else "NEEDS_REVIEW") if gate == "visual_review" else passed
+    report["science_verified"] = "scientific_integrity" not in failed and "artifacts" not in failed
+    report["explanation_complete"] = "narrative_complete" not in failed and "inline_evidence_complete" not in failed
+    report["benchmark_pass"] = False
     return report
 
 
@@ -431,13 +434,15 @@ def evaluate(root: Path, *, artifact_only=False, regression_report=None):
             from reader_regression import validate_release_report
             corpus_errors = validate_release_report(regression_report)
             report["regression_passed"] = not corpus_errors
+            report["benchmark_pass"] = not corpus_errors
             report["errors"].extend(corpus_errors)
             report["diagnostics"].extend({"gate": "regression", "message": e} for e in corpus_errors)
-            if report["status"] == "READER_ACCEPTED" and not corpus_errors:
+            if report["status"] == "READER_ACCEPTED" and not corpus_errors and report["science_verified"] and report["explanation_complete"]:
                 report["status"] = "PAPER_COMPLETE"
                 report["release_ready"] = True
             else:
                 report["status"] = "NEEDS_REVIEW"
+                report["release_ready"] = False
         return report
     except (OSError, ValueError, TypeError, KeyError, AttributeError) as exc:
         errors = GateErrors()
