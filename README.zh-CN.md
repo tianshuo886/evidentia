@@ -3,12 +3,10 @@
 [English](README.md) · [中文](README.zh-CN.md)
 
 
-> **P0 科研精读质量阻塞任务｜2026-10-10｜新功能开发前优先完成。**
-> RingMoClaw 的真实论文阅读样例发现了指标语义误读、作者观点归因失真、方法与关键图表解释不足。以往 Reader v3 测试通过是历史证据，**不能代替本轮科学内容复验**。
->
-> **Orca / Codex / 维护者必读执行顺序（GitHub Issue 默认不会按优先级自动排序）：**
-> **[#36 第一阶段：科学准确性（START HERE）](https://github.com/tianshuo886/evidentia/issues/36)** → **[#37 第二阶段：深度讲解与图表覆盖](https://github.com/tianshuo886/evidentia/issues/37)** → **[#38 第三阶段：科学语义回归和真实论文 A/B 验收](https://github.com/tianshuo886/evidentia/issues/38)**。
-> 严格依序执行，前置依赖未完成不得关闭后续任务；每项完成须满足对应 Issue 的证据与验收要求。三项全部验收通过后再继续 #30–#35 等可选功能。若仍存在重大的 P0 科学错误，禁止将 Reader 标记为 `PAPER_COMPLETE`。
+> **P0 科研精读质量门禁：已全量修复并通过验收，正式发布（2026-10-11）**
+> P0 质量修复三连已严格按序完成并通过真实论文（RingMoClaw）回归验收与 A/B 评测：
+> **[#36 第一阶段：科学准确性](https://github.com/tianshuo886/evidentia/issues/36)** (已关闭) → **[#37 第二阶段：深度讲解与图表覆盖](https://github.com/tianshuo886/evidentia/issues/37)** (已关闭) → **[#38 第三阶段：科学语义回归和真实论文 A/B 验收](https://github.com/tianshuo886/evidentia/issues/38)** (已关闭)。
+> 遗留实质性 P0 事实/归因错误清零。详见 [READER_QUALITY_RELEASE_REPORT.md](READER_QUALITY_RELEASE_REPORT.md)。现已恢复后续 P1/P2 功能开发。
 
 
 ## 基于真实证据的论文深度研究操作系统 (Paper Research OS)
