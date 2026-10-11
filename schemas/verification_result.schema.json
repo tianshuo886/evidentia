@@ -19,6 +19,10 @@
     "status": {
       "enum": [
         "SUPPORTED",
+        "QUALIFIED",
+        "CONTRADICTED",
+        "UNSUPPORTED",
+        "UNRESOLVED",
         "PARTIAL",
         "REJECTED",
         "AMBIGUOUS",

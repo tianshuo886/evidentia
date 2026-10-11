@@ -1,0 +1,154 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evidentia.dev/schemas/claim_ledger.schema.json",
+  "title": "Atomic Claim Ledger",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "paper_id",
+    "source_sha256",
+    "claims"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "enum": ["1.0"]
+    },
+    "paper_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_sha256": {
+      "type": "string",
+      "minLength": 1
+    },
+    "venue_verification": {
+      "type": "object",
+      "properties": {
+        "venue_claimed_by_pdf": { "type": ["string", "null"] },
+        "venue_verified_externally": { "type": "boolean" },
+        "peer_reviewed_status": { "type": "string", "enum": ["PEER_REVIEWED", "UNVERIFIED", "PREPRINT_ONLY"] },
+        "preprint_status": { "type": "string", "enum": ["PREPRINT", "PUBLISHED", "UNKNOWN"] },
+        "evidence_source": { "type": "string" },
+        "formatted_header_venue": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "claim_id",
+          "statement",
+          "source_anchors",
+          "epistemic_category"
+        ],
+        "properties": {
+          "claim_id": {
+            "type": "string",
+            "pattern": "^CLM-[0-9A-Za-z_-]+$"
+          },
+          "statement": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_anchors": {
+            "type": "array",
+            "items": { "type": "string" },
+            "minItems": 1
+          },
+          "evidence_refs": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "epistemic_category": {
+            "type": "string",
+            "enum": [
+              "OBSERVATION",
+              "AUTHOR_INTERPRETATION",
+              "READER_ASSESSMENT",
+              "UNRESOLVED"
+            ]
+          },
+          "numerical_semantics": {
+            "type": ["object", "null"],
+            "properties": {
+              "metric": { "type": ["string", "null"] },
+              "positive_class": { "type": ["string", "null"] },
+              "unit": { "type": ["string", "null"] },
+              "statistic": { "type": ["string", "null"] },
+              "denominator": { "type": ["string", "null"] },
+              "baseline": { "type": ["string", "null"] },
+              "selection_protocol": { "type": ["string", "null"] },
+              "convention_note": { "type": ["string", "null"] }
+            },
+            "additionalProperties": true
+          },
+          "attribution": {
+            "type": "object",
+            "properties": {
+              "attributed_to": {
+                "type": "string",
+                "enum": [
+                  "AUTHORS",
+                  "EVIDENTIA_INDEPENDENT",
+                  "EXTERNAL_COMMUNITY",
+                  "UNRESOLVED"
+                ]
+              },
+              "source_confirmed": { "type": "boolean" },
+              "project_context_leakage": { "type": "boolean" }
+            },
+            "additionalProperties": true
+          },
+          "confidence": {
+            "type": "string",
+            "enum": ["HIGH", "MEDIUM", "LOW", "UNCERTAIN"]
+          },
+          "boundaries": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "verdict": {
+            "type": "string",
+            "enum": [
+              "SUPPORTED",
+              "QUALIFIED",
+              "CONTRADICTED",
+              "UNSUPPORTED",
+              "UNRESOLVED"
+            ]
+          },
+          "verifier_reasoning": { "type": "string" },
+          "severity": {
+            "type": "string",
+            "enum": ["P0_BLOCKER", "QUALIFIED_FLAG", "INFORMATIONAL"]
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "verification_summary": {
+      "type": "object",
+      "properties": {
+        "total_claims": { "type": "integer" },
+        "supported": { "type": "integer" },
+        "qualified": { "type": "integer" },
+        "contradicted": { "type": "integer" },
+        "unsupported": { "type": "integer" },
+        "unresolved": { "type": "integer" },
+        "critical_contradictions": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "status": {
+          "type": "string",
+          "enum": ["PASS", "NEEDS_REVIEW", "FAIL"]
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}
