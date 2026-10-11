@@ -3,12 +3,10 @@
 [English](README.md) · [中文](README.zh-CN.md)
 
 
-> **P0 SCIENTIFIC QUALITY HOLD — Start here before any new feature work (2026-10-10).**
-> A real-paper RingMoClaw Reader regression exposed factual metric misinterpretations, unsupported author attribution and insufficient method/visual depth. Historical v3 benchmark passes remain historical evidence; they do **not** clear these new release blockers.
->
-> **Mandatory agent/maintainer execution order (issues are not sorted by priority in GitHub):**
-> **[#36 — START HERE: Scientific Integrity](https://github.com/tianshuo886/evidentia/issues/36)** → **[#37 — Deep Explanation & Visual Coverage](https://github.com/tianshuo886/evidentia/issues/37)** → **[#38 — Semantic Regression & Real-Paper A/B Release Gate](https://github.com/tianshuo886/evidentia/issues/38)**.
-> Work sequentially, honor blocked-by dependencies and source-provenance requirements, close only after each issue's explicit acceptance criteria pass; then resume optional open #30–#35 work. **Do not use `PAPER_COMPLETE` as approval if material P0 scientific errors remain.**
+> **P0 SCIENTIFIC QUALITY GATE: RESOLVED & RELEASE READY (2026-10-11).**
+> The P0 remediation triad has been successfully completed, verified against the real-paper RingMoClaw benchmark, and released:
+> **[#36 — Scientific Integrity](https://github.com/tianshuo886/evidentia/issues/36)** (CLOSED) → **[#37 — Deep Explanation & Visual Coverage](https://github.com/tianshuo886/evidentia/issues/37)** (CLOSED) → **[#38 — Semantic Regression & Real-Paper A/B Release Gate](https://github.com/tianshuo886/evidentia/issues/38)** (CLOSED).
+> Zero unresolved P0 factual/attribution errors remain. See [READER_QUALITY_RELEASE_REPORT.md](READER_QUALITY_RELEASE_REPORT.md). Normal P1/P2 development may now resume.
 
 
 ## Evidence-Grounded Paper Research OS
