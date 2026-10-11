@@ -30,6 +30,25 @@
         "additionalProperties": true
       }
     },
+    "visual_evidence_selection": {
+      "type": "object",
+      "description": "Evidence-selection reasoning: must-show decisive assets and accounted omissions.",
+      "properties": {
+        "must_show": { "type": "array", "items": { "type": "string" } },
+        "can_omit_with_justification": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["evidence_id", "reason"],
+            "properties": {
+              "evidence_id": { "type": "string" },
+              "reason": { "type": "string" }
+            }
+          }
+        }
+      },
+      "additionalProperties": true
+    },
     "uncertainties": { "type": "array", "items": { "type": "string" } }
   },
   "additionalProperties": false

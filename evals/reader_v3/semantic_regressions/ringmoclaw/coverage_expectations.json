@@ -1,0 +1,213 @@
+{
+  "schema_version": "1.0",
+  "paper_id": "ringmoclaw",
+  "source_sha256": "32df5e2843de7e8ccd52d56b9dfed257c26786ef3b71fbc397a1c3a5e26fb0fa",
+  "knowledge_coverage_requirements": [
+    {
+      "id": "COV-01-ARCHITECTURE",
+      "concept": "System Architecture & Agent Roles",
+      "anchor": "PDF p.4 Fig. 2",
+      "must_explain": [
+        "Main Agent (top-level planning and hypothesis generation)",
+        "Data Agent (data engineering and augmentation)",
+        "Vision Agent (training and execution)",
+        "Experiment Executor (sandboxed environment run)",
+        "Heterogeneous Critic (independent quality control)",
+        "Dual-stream dynamic experience bus (knowledge & experimental memory)",
+        "Information flow and checkpoint reviews (Plan, Data, Result Review)"
+      ],
+      "decisive_visual": "F02"
+    },
+    {
+      "id": "COV-02-CRITIC-DECISION",
+      "concept": "Heterogeneous Critic Formulation & Thresholds",
+      "anchor": "PDF p.6-7 Fig. 4",
+      "must_explain": [
+        "Components: C_t (correctness/plausibility), B_t (bottleneck impact), H_t (historical consistency)",
+        "Scoring formula: Score_t = w1*C_t + w2*(1-B_t) + w3*H_t",
+        "Threshold logic: Score_t >= 0.75 and B_t <= 0.30 for promotion",
+        "Decisions: accept, revise, reject, escalate",
+        "Independent review rationale (preventing LLM self-evaluation collusion via GLM-5 Turbo vs Minimax 2.7)"
+      ],
+      "decisive_visual": "F04"
+    },
+    {
+      "id": "COV-03-EXPERIENCE-SEARCH-SPACE",
+      "concept": "Dual-Stream Experience Bus & Structured Search Space",
+      "anchor": "PDF p.7-8 Fig. 5 & Appendices B-D",
+      "must_explain": [
+        "Four search-space dimensions: architecture, training, data, ensemble",
+        "23 base operators with typed I/O signatures omega = {I, O, F, P}",
+        "External stream (RAG operator extraction from literature and GitHub code)",
+        "Internal stream (intra-task taboo list and cross-task negative memory)",
+        "Pruning based on task similarity and failure memory"
+      ],
+      "decisive_visual": "F05"
+    },
+    {
+      "id": "COV-04-FIVE-MINUTE-VERIFICATION",
+      "concept": "Agile Verification Protocol & Surrogate Screening",
+      "anchor": "PDF p.8 & p.14 Table X",
+      "must_explain": [
+        "f_score surrogate fitness combining early gain and loss stability",
+        "Threshold gate (>0.55, actual gain, Critic clearance, negative memory check)",
+        "2x RTX 4090 lightweight setup with stopping logic",
+        "Empirical validation: Spearman rho = 0.64 (p=0.03)",
+        "Precision = 1.00 (zero false alarms on detrimental candidates) and Recall = 0.83 (1 of 6 detrimental escaped early screening)"
+      ],
+      "decisive_visual": "T10"
+    },
+    {
+      "id": "COV-05-MODULE-INNOVATION",
+      "concept": "MSFR & CPR Microstructure Innovation",
+      "anchor": "PDF p.13 Table VI & Appendix A",
+      "must_explain": [
+        "MSFR (Multi-Scale Feature Refinement): cross-level FPN alignment, 3x3 conv, SE/CBAM attention, residual gating initialized at zero",
+        "CPR (Contrastive Prototype Refinement): RoI embeddings, class prototypes, foreground-logit correction",
+        "Separate vs joint impact: MSFR (+0.88), CPR (+0.94), Joint (+1.84 mAP in Table VI context)",
+        "Baseline context: YOLO11x-OBB detection head and backbone setup"
+      ],
+      "decisive_visual": "T06"
+    },
+    {
+      "id": "COV-06-EMPIRICAL-TRAJECTORY",
+      "concept": "Decisive Experimental Trajectory & Ablations",
+      "anchor": "PDF p.9-14 Tables I, VII, VIII, IX",
+      "must_explain": [
+        "FAIR1M 7-round evolution from 47.30% to 49.14% mAP50",
+        "Best of three repeated trajectories protocol",
+        "Cross-task generalization: NWPU-RESISC45 (94.97%), iSAID (69.9% mIoU), LEVIR-CD (89.97% IoU)",
+        "Efficiency: 12.14 GPU-hours vs 10.61 wall-clock hours compared to AutoResearch",
+        "Critic ablation: convergence rounds 7 -> 11, mAP drops 1.71 points",
+        "Experience ablation: 14 rounds with 6 non-improving iterations (Failed=6)"
+      ],
+      "decisive_visuals": ["T01", "T07", "T08", "T09"]
+    },
+    {
+      "id": "COV-07-CRITICAL-CAVEATS",
+      "concept": "Scientific Boundaries & Confounders",
+      "anchor": "PDF p.14-15",
+      "must_explain": [
+        "Separating author limitations from independent review findings",
+        "Small validation sample for short-run protocol",
+        "YOLO11x-OBB vs Oriented R-CNN setup context",
+        "LEVIR-CD F1 and IoU benchmark averaging conventions",
+        "Data-driven pattern matching scope vs physics-informed modeling"
+      ]
+    }
+  ],
+  "visual_evidence_selection": {
+    "must_show": [
+      {
+        "id": "F02",
+        "label": "Fig. 2",
+        "role": "narrative_core",
+        "reason": "Indispensable system architecture showing multi-agent decomposition, Critic checkpoints, and experience bus"
+      },
+      {
+        "id": "F04",
+        "label": "Fig. 4",
+        "role": "narrative_core",
+        "reason": "Three-stage Critic workflow (Plan, Data, Result review) illustrating quality gate thresholds"
+      },
+      {
+        "id": "F05",
+        "label": "Fig. 5",
+        "role": "narrative_core",
+        "reason": "Dual-stream experience bus architecture and RAG operator extraction"
+      },
+      {
+        "id": "T01",
+        "label": "Table I",
+        "role": "narrative_core",
+        "reason": "Central detection evolution trajectory across rounds on FAIR1M"
+      },
+      {
+        "id": "T06",
+        "label": "Table VI",
+        "role": "narrative_core",
+        "reason": "Ablation and parameter efficiency of MSFR and CPR microstructure modules"
+      },
+      {
+        "id": "T07",
+        "label": "Table VII",
+        "role": "narrative_core",
+        "reason": "Compute consumption and time comparison against AutoResearch"
+      },
+      {
+        "id": "T08",
+        "label": "Table VIII",
+        "role": "narrative_core",
+        "reason": "Ablation of Critic mechanism on convergence rounds and final mAP"
+      },
+      {
+        "id": "T09",
+        "label": "Table IX",
+        "role": "narrative_core",
+        "reason": "Ablation of experience bus showing convergence and non-improving iteration counts"
+      },
+      {
+        "id": "T10",
+        "label": "Table X",
+        "role": "narrative_core",
+        "reason": "Empirical validation of 5-minute agile verification protocol (precision, recall, Spearman)"
+      }
+    ],
+    "accounted_omissions": [
+      {
+        "id": "F06",
+        "label": "Fig. 6",
+        "location": "Evidence Atlas",
+        "reason": "Qualitative detection bounding box visualizations for weak categories; secondary to quantitative mAP in Table I"
+      },
+      {
+        "id": "F07",
+        "label": "Fig. 7",
+        "location": "Evidence Atlas",
+        "reason": "Detector training convergence loss and PR curves; audit-level training diagnostic"
+      },
+      {
+        "id": "F08",
+        "label": "Fig. 8",
+        "location": "Evidence Atlas",
+        "reason": "Class activation maps of baseline vs evolved classifier; qualitative interpretability"
+      },
+      {
+        "id": "F09",
+        "label": "Fig. 9",
+        "location": "Evidence Atlas",
+        "reason": "Per-class recall bar chart on weak categories; fine-grained breakdown complementing Table I"
+      },
+      {
+        "id": "T02",
+        "label": "Table II",
+        "location": "Evidence Atlas",
+        "reason": "Scene classification per-class accuracy table; summarized in cross-task narrative"
+      },
+      {
+        "id": "T03",
+        "label": "Table III",
+        "location": "Evidence Atlas",
+        "reason": "Semantic segmentation per-class mIoU table; summarized in cross-task narrative"
+      },
+      {
+        "id": "T04",
+        "label": "Table IV",
+        "location": "Evidence Atlas",
+        "reason": "Change detection detailed benchmark table; core numbers cited in text"
+      },
+      {
+        "id": "T05",
+        "label": "Table V",
+        "location": "Evidence Atlas",
+        "reason": "Cross-task summary table across 4 benchmarks; covered by Table VII and individual task metrics"
+      },
+      {
+        "id": "T11",
+        "label": "Table XI",
+        "location": "Evidence Atlas",
+        "reason": "Appendix search-space operator definitions list; reference dictionary for implementation"
+      }
+    ]
+  }
+}
