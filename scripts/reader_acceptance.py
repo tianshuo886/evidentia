@@ -23,7 +23,7 @@ from reader_review import semantic_review_errors, visual_review_errors, bindings
 from reader_integrity import parity_errors, firewall_errors, lens_execution_provenance_errors, ReaderHTML
 
 GATES = ("narrative_complete", "lens_invisible", "inline_evidence_complete", "equations_valid",
-         "intent_isolated", "execution_provenance", "unsupported_prose_free", "html_md_pdf_parity", "visual_review")
+         "intent_isolated", "execution_provenance", "scientific_integrity", "unsupported_prose_free", "html_md_pdf_parity", "visual_review")
 
 
 class GateErrors(list):
@@ -237,6 +237,12 @@ def _evaluate_artifact(root: Path, *, artifact_only=False):
         transfer_terms = ("迁移到你的项目", "建议用于项目", "项目适配")
         if any(term in view for view in main_views for term in transfer_terms):
             errors.append("PAPER_TECHNICAL_EXTRACTION leaked project-directed transfer prose")
+
+    # 4.5 Scientific claim semantics and attribution integrity (Issue #36)
+    errors.gate = "scientific_integrity"
+    from scientific_claim_verifier import verify_reader_scientific_integrity
+    _, verif_errors = verify_reader_scientific_integrity(root, manuscript)
+    errors.extend(verif_errors)
 
     # 5. Cross-render semantic parity
     errors.gate = "html_md_pdf_parity"

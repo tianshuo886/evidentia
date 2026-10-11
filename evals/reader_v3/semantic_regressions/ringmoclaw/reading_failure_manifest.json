@@ -1,0 +1,153 @@
+{
+  "schema_version": "1.0",
+  "paper_id": "ringmoclaw",
+  "source_sha256": "32df5e2843de7e8ccd52d56b9dfed257c26786ef3b71fbc397a1c3a5e26fb0fa",
+  "defective_reader_sha256": "08b1e9768ab3373a8d3e035523799f0c31dfc845ecf5b120d06a93ef1983c789",
+  "defects": [
+    {
+      "id": "DEFECT-01-DETRIMENTAL-PRECISION-RECALL",
+      "issue_item": 1,
+      "severity": "P0_BLOCKER",
+      "semantic_class": "METRIC_POSITIVE_CLASS_INVERSION",
+      "source_anchor": "PDF p.14 Table X",
+      "defective_spans": [
+        "对劣化候选策略的早筛拦截精度达到惊人的 1.00（无一漏过）",
+        "召回率为 0.83，意味着有约 17% 的潜质策略因早期收敛缓慢而被过早扼杀"
+      ],
+      "source_evidence": {
+        "page": 14,
+        "table": "Table X",
+        "quote": "Here, TP denotes a candidate identified as detrimental by the five-minute protocol and confirmed to be detrimental after full training... Precision = TP / (TP + FP) = 1.00... Recall = TP / (TP + FN) = 0.83... Among the six candidates that are detrimental after full training, five are successfully identified during the five-minute stage, yielding a recall of 0.83."
+      },
+      "correct_interpretation": "Positive class is 'detrimental candidates'. Precision=1.00 means zero false positives among predicted-detrimental (zero false alarms / every candidate predicted to be detrimental was truly detrimental). It does NOT mean '无一漏过' (zero missed). Recall=0.83 means 5 out of 6 truly detrimental candidates were caught and 1 detrimental candidate (17%) was missed (escaped screening). It does NOT mean 17% of promising strategies were killed.",
+      "rejection_condition": "Asserting that precision=1.00 implies no detrimental candidates were missed ('无一漏过'), or asserting that recall=0.83 means promising strategies were killed/discarded.",
+      "qualification_condition": "Clearly state positive class as detrimental candidates: precision=1.00 indicates zero false alarms among predicted detrimental candidates, while recall=0.83 indicates one of six truly detrimental candidates escaped screening."
+    },
+    {
+      "id": "DEFECT-02-FAILED-ITERATIONS-SEMANTICS",
+      "issue_item": 2,
+      "severity": "P0_BLOCKER",
+      "semantic_class": "METRIC_SEMANTIC_CONFUSION",
+      "source_anchor": "PDF p.14 Table IX",
+      "defective_spans": [
+        "发生 6 次严重训练失败"
+      ],
+      "source_evidence": {
+        "page": 14,
+        "table": "Table IX",
+        "quote": "“Failed” reports the number of non-improving iterations per caption."
+      },
+      "correct_interpretation": "Table IX column 'Failed=6' reports six non-improving exploration iterations per caption where a proposed candidate did not outperform previous validation accuracy. It does NOT denote program crashes, runtime exceptions, or catastrophic training collapses.",
+      "rejection_condition": "Describing 'Failed' count as catastrophic training crashes ('严重训练失败', '程序崩溃', '训练崩溃') rather than non-improving search iterations.",
+      "qualification_condition": "Clarify that 'Failed' signifies non-improving exploration iterations where candidate accuracy did not improve over the prior checkpoint."
+    },
+    {
+      "id": "DEFECT-03-GPU-HOURS-VS-WALL-CLOCK",
+      "issue_item": 3,
+      "severity": "P0_BLOCKER",
+      "semantic_class": "METRIC_UNIT_COLLAPSE",
+      "source_anchor": "PDF p.14 Table VII",
+      "defective_spans": [
+        "GPU 运行时间从 AutoResearch 的 26.90 小时压减至 12.14 小时"
+      ],
+      "source_evidence": {
+        "page": 14,
+        "table": "Table VII",
+        "quote": "Table VII: AutoResearch GPU-hours = 26.90, Wall-clock (h) = 13.45; RingMoClaw GPU-hours = 12.14, Wall-clock (h) = 10.61."
+      },
+      "correct_interpretation": "26.90 to 12.14 measures aggregate GPU-hours (hardware resource consumption across multiple GPUs), whereas wall-clock execution time elapsed from 13.45 to 10.61 hours. Collapsing both into generic 'GPU 运行时间' obscures resource parallelism from clock time.",
+      "rejection_condition": "Collapsing GPU-hours into elapsed wall-clock hours without distinguishing total compute resource consumption (GPU-hours) from elapsed real time (wall-clock hours).",
+      "qualification_condition": "Explicitly distinguish GPU-hours (26.90 -> 12.14) from elapsed wall-clock time (13.45 -> 10.61 hours)."
+    },
+    {
+      "id": "DEFECT-04-UNVERIFIED-VENUE-HEADER",
+      "issue_item": 4,
+      "severity": "P0_BLOCKER",
+      "semantic_class": "BIBLIOGRAPHIC_FABRICATION",
+      "source_anchor": "PDF p.1",
+      "defective_spans": [
+        "IEEE Transactions on Geoscience and Remote Sensing (TGRS) · 2026"
+      ],
+      "source_evidence": {
+        "page": 1,
+        "quote": "arXiv:2609.00814v2 [cs.CV] 12 Sep 2026"
+      },
+      "correct_interpretation": "The supplied PDF carries only an arXiv preprint stamp (arXiv:2609.00814v2). There is no official IEEE TGRS published journal record inside the paper. Header must state 'arXiv:2609.00814v2 (preprint · venue unverified)' rather than asserting IEEE TGRS as verified peer-reviewed publication.",
+      "rejection_condition": "Asserting peer-reviewed journal publication (e.g. IEEE TGRS) as a verified fact when only an arXiv preprint identifier is present in the provided paper.",
+      "qualification_condition": "Report venue as 'arXiv:2609.00814v2 (preprint · venue unverified)' unless authoritative external bibliographic metadata verifies publication."
+    },
+    {
+      "id": "DEFECT-05-UNSOLICITED-PROJECT-LEAKAGE",
+      "issue_item": 5,
+      "severity": "P0_BLOCKER",
+      "semantic_class": "PROJECT_ATTRIBUTION_CONFLATION",
+      "source_anchor": "PDF p.15 Discussion/Conclusion",
+      "defective_spans": [
+        "作者坦承…若要迁移至涉及机理先验（如大气辐射传输方程 PROSAIL、冠层多性状物理耦合 PINN）的定量遥感科学计算，必须将物理可解释性与守恒定律作为硬性边界写入 Critic 的方案与结果审查准则中"
+      ],
+      "source_evidence": {
+        "page": 15,
+        "section": "Discussion / Conclusion",
+        "quote": "Source text discusses general remote sensing domain aspects, dataset features, and large language model capabilities, without any mention of PROSAIL, canopy multi-trait physics, or PINN."
+      },
+      "correct_interpretation": "The authors never mentioned PROSAIL, canopy radiative transfer, or PINN. Conflating researcher/user background domain context with author claims breaches default paper-only firewall.",
+      "rejection_condition": "Attributing PROSAIL, PINN, or external project-domain concepts to the paper authors in default PAPER_READING mode.",
+      "qualification_condition": "Restrict author attribution strictly to claims explicitly made in the source paper. Independent project transfer proposals require explicit user intent mode and must be clearly attributed to the reader, not the authors."
+    },
+    {
+      "id": "DEFECT-06-BEST-OF-THREE-SELECTION-CAVEAT",
+      "issue_item": 6,
+      "severity": "P0_BLOCKER",
+      "semantic_class": "EXPERIMENTAL_PROTOCOL_OMISSION",
+      "source_anchor": "PDF p.9 Table I",
+      "defective_spans": [
+        "在 FAIR1M-v1.0 高分辨率遥感旋转目标检测数据集上，RingMoClaw 展现了教科书般的科研演化轨迹...提升至 48.18%..."
+      ],
+      "source_evidence": {
+        "page": 9,
+        "section": "Object Detection",
+        "quote": "The evolution process was independently repeated three times, and Table I reports the best trajectory."
+      },
+      "correct_interpretation": "Table I FAIR1M results represent the best of three independently repeated trajectories, not a mean±SD or single deterministic run. This protocol caveat is scientifically material for reproducibility.",
+      "rejection_condition": "Presenting Table I numbers as deterministic or typical mean performance without noting that the paper reports the best of three repeated runs.",
+      "qualification_condition": "State explicitly that the reported FAIR1M trajectory reflects the best of three independently repeated evolution runs."
+    },
+    {
+      "id": "DEFECT-07-BASELINE-SETUP-CONTEXT",
+      "issue_item": 7,
+      "severity": "P0_BLOCKER",
+      "semantic_class": "EXPERIMENTAL_SETUP_CONFOUND",
+      "source_anchor": "PDF p.9 & p.13 Table VI",
+      "defective_spans": [
+        "最为惊艳的是第 3 阶段的模块创新...表VI 的评估证实，两项模块联合使用以仅增加 0.73M 参数和 0.88G FLOPs 的极轻微代价，将 mAP50 进一步推升至 49.14%"
+      ],
+      "source_evidence": {
+        "page": 9,
+        "page_13": 13,
+        "table": "Table VI & Table I",
+        "quote": "Adopts a YOLO11x-OBB oriented detection head... Oriented R-CNN context in Appendix A / Table VI reports separate vs combined module impact."
+      },
+      "correct_interpretation": "Detection baseline evolution in Table I utilizes YOLO11x-OBB head, whereas MSFR/CPR instantiation comparisons in Table VI have specific detection head contexts. Conflating Table I incremental gains directly with Table VI without stating setup context misleads reproducibility.",
+      "rejection_condition": "Silently treating detection baseline and MSFR/CPR instantiation as an identical controlled training path without noting exact model setup.",
+      "qualification_condition": "Disclose detector backbone/head setup context when comparing Table I trajectory to Table VI module evaluations."
+    },
+    {
+      "id": "DEFECT-08-METRIC-DEFINITION-F1-IOU",
+      "issue_item": 8,
+      "severity": "QUALIFIED_FLAG",
+      "semantic_class": "METRIC_CONVENTION_AMBIGUITY",
+      "source_anchor": "PDF p.12 Table IV",
+      "defective_spans": [
+        "在变化检测中，演化出 EvoChangeStar 双向时序交互网络，IoU 从 87.10% 大幅跃升至 89.97%（+2.87%）"
+      ],
+      "source_evidence": {
+        "page": 12,
+        "table": "Table IV",
+        "quote": "LEVIR-CD Validation Set: Baseline F1=89.53, IoU=87.10; EvoChangeStar F1=90.54, IoU=89.97; BIT F1=89.31, IoU=89.37."
+      },
+      "correct_interpretation": "Under standard binary single-class confusion matrix, F1 = 2*IoU / (1+IoU). In Table IV, F1 and IoU values deviate from this strict identity (e.g. BIT IoU > F1, EvoChangeStar IoU=89.97 with F1=90.54 instead of ~94.7%), which reflects benchmark-specific averaging/class-weighting conventions. Merits qualification/clarification, NOT automatic declaration of fraud.",
+      "rejection_condition": "Either declaring the paper fraudulent based on binary F1 formula without investigating averaging conventions, or presenting contradictory F1/IoU numbers as self-evident without qualification.",
+      "qualification_condition": "Flag metric definition convention for clarification, explaining that multi-class or macro-averaging conventions on LEVIR-CD account for the observed F1-IoU relationship."
+    }
+  ]
+}

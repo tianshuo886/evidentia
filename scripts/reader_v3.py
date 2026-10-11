@@ -104,6 +104,10 @@ def _validate_v3_manuscript(root: Path, data: dict):
                         errors.append(f"{block.get('type')} {block.get('evidence_id')} asset does not exist: {asset}")
         if not chapter_refs:
             errors.append(f"section {chapter.get('id')} contains no source evidence references")
+
+    from scientific_claim_verifier import verify_reader_scientific_integrity
+    _, sci_errs = verify_reader_scientific_integrity(root, data)
+    errors.extend(sci_errs)
     return errors
 
 
@@ -116,6 +120,7 @@ def _status(root: Path) -> dict:
         "revision_memo": (root / "model/revision_memo.json").exists(),
         "narrative_plan": (root / "model/narrative_plan.json").exists(),
         "lead_writer": (root / "reader/narrative_manuscript.json").exists(),
+        "claim_ledger": (root / "model/claim_ledger.json").exists(),
         "rendered": (root / "reader/paper_reader.html").exists(),
     }
     if out["lens_manifest"]:

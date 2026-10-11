@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0",
+  "paper_id": "ringmoclaw",
+  "title": "RingMoClaw: An Experience-Inspired Multi-Agent Framework for Self-Evolving Research in Remote Sensing",
+  "authors": [
+    "Kaiyue Kang",
+    "Qixuan He",
+    "Peijin Wang",
+    "Yingchao Feng",
+    "Chao Ren",
+    "Kangxin Wang",
+    "Wenhui Diao",
+    "Yixiao Wang",
+    "Liangjin Zhao",
+    "Kaiwen Wei",
+    "Nayu Liu",
+    "Xian Sun"
+  ],
+  "source_sha256": "32df5e2843de7e8ccd52d56b9dfed257c26786ef3b71fbc397a1c3a5e26fb0fa",
+  "arxiv_id": "2609.00814v2",
+  "primary_category": "cs.CV",
+  "submission_date": "2026-09-12",
+  "page_count": 20,
+  "venue_status": {
+    "venue_claimed_by_pdf": "arXiv:2609.00814v2",
+    "venue_verified_externally": false,
+    "peer_reviewed_status": "UNVERIFIED",
+    "preprint_status": "PREPRINT",
+    "evidence_source": "PDF title page watermark / header"
+  },
+  "evidence_locations": {
+    "title_page": {"page": 1, "description": "arXiv identifier arXiv:2609.00814v2 [cs.CV] 12 Sep 2026"},
+    "architecture_figure": {"page": 4, "label": "Figure 2", "description": "Full RingMoClaw system architecture"},
+    "critic_formulation": {"page": 6, "description": "Critic score formulation Score_t = w1*C_t + w2*(1-B_t) + w3*H_t"},
+    "five_minute_protocol": {"page": 8, "description": "Five-minute agile verification protocol definition"},
+    "fair1m_trajectory": {"page": 9, "label": "Table I", "description": "Best of three independently repeated evolution trajectories on FAIR1M-v1.0"},
+    "change_detection": {"page": 12, "label": "Table IV", "description": "Comparison on LEVIR-CD validation set with F1 and IoU metrics"},
+    "module_ablation": {"page": 13, "label": "Table VI", "description": "Ablation on MSFR and CPR modules with YOLO11x-OBB / Oriented R-CNN baseline context"},
+    "computational_efficiency": {"page": 14, "label": "Table VII", "description": "Computational consumption: 26.90 vs 12.14 GPU-hours, 13.45 vs 10.61 wall-clock hours"},
+    "critic_ablation": {"page": 14, "label": "Table VIII", "description": "Ablation study on Critic mechanism on FAIR1M"},
+    "experience_ablation": {"page": 14, "label": "Table IX", "description": "Ablation on experience bus; Failed reports non-improving iterations per caption"},
+    "agile_verification_metrics": {"page": 14, "label": "Table X", "description": "Detrimental-candidate precision=1.00 and recall=0.83 on FAIR1M"},
+    "discussion_conclusion": {"page": 15, "description": "Scope, boundaries, limitations, and future work"}
+  }
+}

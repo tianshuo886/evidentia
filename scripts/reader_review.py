@@ -53,7 +53,7 @@ def bindings(root):
     """Bind all scientific inputs, displayed assets, and three Reader views."""
     root = Path(root).resolve()
     paths = set(CORE_INPUTS)
-    for name in ("lens_council", "frozen_evidence_package", "scientific_synthesis", "evidence_graph", "manifest"):
+    for name in ("lens_council", "frozen_evidence_package", "scientific_synthesis", "evidence_graph", "manifest", "claim_ledger"):
         if (root / f"model/{name}.json").exists():
             paths.add(f"model/{name}.json")
     manuscript = load_json(root / "reader/narrative_manuscript.json")

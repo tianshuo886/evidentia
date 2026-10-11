@@ -540,6 +540,9 @@ def render_paper_reader_html(manuscript: dict, root: Path) -> str:
     authors = meta.get('authors', [])
     authors_str = '、'.join(authors) if authors else ''
     venue = meta.get('venue') or ''
+    if (meta.get('preprint_status') == 'PREPRINT' or meta.get('peer_reviewed_status') == 'UNVERIFIED') and not meta.get('venue_verified_externally'):
+        if venue and not any(kw in venue.lower() for kw in ('preprint', 'unverified', 'arxiv')):
+            venue = f"{venue} (preprint · venue unverified)"
     year = meta.get('year') or ''
     # Dynamic sections are the canonical presentation sequence. `chapters` is
     # accepted only as a compatibility alias for older manuscripts.
@@ -592,7 +595,11 @@ def render_paper_reader_md(manuscript: dict, root=None) -> str:
     orientation = doc.get('orientation') or doc.get('executive_summary') or {}
     meta = doc.get('paper_meta', {})
     authors = '、'.join(meta.get('authors', [])) if meta.get('authors') else ''
-    meta_line = ' · '.join(x for x in (authors, meta.get('venue', ''), str(meta.get('year') or '')) if x)
+    venue_md = meta.get('venue') or ''
+    if (meta.get('preprint_status') == 'PREPRINT' or meta.get('peer_reviewed_status') == 'UNVERIFIED') and not meta.get('venue_verified_externally'):
+        if venue_md and not any(kw in venue_md.lower() for kw in ('preprint', 'unverified', 'arxiv')):
+            venue_md = f"{venue_md} (preprint · venue unverified)"
+    meta_line = ' · '.join(x for x in (authors, venue_md, str(meta.get('year') or '')) if x)
     lines = [f'# {title}', f'**{subtitle}**', '', meta_line, '']
     if orientation.get('lead'):
         lines.extend([f'> {orientation.get("lead")}', ''])
