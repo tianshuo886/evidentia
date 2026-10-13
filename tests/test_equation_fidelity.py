@@ -144,7 +144,7 @@ def test_rendered_reader_contains_svg_and_zero_placeholders(tmp_path):
     root = fixture(tmp_path)
     source_map = load_json(root / "model/source_map.json")
 
-    # Populate verified Eq. 1 and Eq. 6
+    eqs = KNOWN_BENCHMARK_EQUATIONS["32df5e2843de7e8ccd52d56b9dfed257c26786ef3b71fbc397a1c3a5e26fb0fa"]
     source_map["pages"][0]["equations"] = [
         {
             "equation_id": "EQ-01",
@@ -152,11 +152,12 @@ def test_rendered_reader_contains_svg_and_zero_placeholders(tmp_path):
             "equation_number": 1,
             "page": 1,
             "raw_text": "Score_t = w_1 C_t + w_2 (1 - B_t) + w_3 H_t",
-            "latex": r"\text{Score}_t = w_1 C_t + w_2 (1 - B_t) + w_3 H_t",
+            "latex": eqs[1]["latex"],
             "display_mode": True,
             "source_confidence": "VERIFIED",
-            "role_zh": "Critic 打分公式",
-            "explanation": "Critic 多维结构化打分函数"
+            "role_zh": eqs[1]["role_zh"],
+            "explanation": eqs[1]["explanation"],
+            "pedagogy": eqs[1]["pedagogy"]
         },
         {
             "equation_id": "EQ-06",
@@ -164,11 +165,12 @@ def test_rendered_reader_contains_svg_and_zero_placeholders(tmp_path):
             "equation_number": 6,
             "page": 1,
             "raw_text": "fscore(m) = alpha (DeltaAcc / Deltat) + beta exp(-sigma ||nabla^2||)",
-            "latex": r"f_{\text{score}}(m) = \alpha \left(\frac{\Delta \text{Acc}}{\Delta t}\right) + \beta \exp\left(-\sigma \|\nabla_\theta^2\|\right)",
+            "latex": eqs[6]["latex"],
             "display_mode": True,
             "source_confidence": "VERIFIED",
-            "role_zh": "五分钟早筛评分",
-            "explanation": "五分钟敏捷早筛适应度评分"
+            "role_zh": eqs[6]["role_zh"],
+            "explanation": eqs[6]["explanation"],
+            "pedagogy": eqs[6]["pedagogy"]
         }
     ]
     (root / "model/source_map.json").write_text(json.dumps(source_map, ensure_ascii=False), encoding="utf-8")

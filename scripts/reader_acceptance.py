@@ -244,6 +244,12 @@ def _evaluate_artifact(root: Path, *, artifact_only=False):
     _, verif_errors = verify_reader_scientific_integrity(root, manuscript)
     errors.extend(verif_errors)
 
+    # 4.6 Formula pedagogy and mathematical explanation audit (Issue #40)
+    errors.gate = "formula_pedagogy"
+    from reader_math_explanation_audit import audit_math_pedagogy
+    pedagogy_audit = audit_math_pedagogy(root, manuscript, html_text, md_text)
+    errors.extend(pedagogy_audit.get("errors", []))
+
     # 5. Cross-render semantic parity
     errors.gate = "html_md_pdf_parity"
     errors.extend(parity_errors(root, manuscript, html_text, md_text, pdf_text))
