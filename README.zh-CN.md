@@ -2,12 +2,18 @@
 
 [English](README.md) · [中文](README.zh-CN.md)
 
+> **P0 科研精读质量阻塞｜2026-10-13｜新版真实运行未通过验收｜从 #39 开始**
+>
+> 最新 RingMoClaw 重新精读产物暴露了新的数学语义失真（原论文公式 (6) 被改写）、核心公式占位符、证据锚点失效、解释不充分与科学判断过度确定等问题。前一轮 **#36–#38 已关闭及 2026-10-11 的 PASS 报告仅是历史阶段的证据，不能视为新产物通过验收**。本轮必须使用真实新运行和独立来源核验来修复。
+>
+> **Orca / Codex / 维护者的强制优先级顺序（GitHub 默认按更新时间排序，不代表执行优先级）：**
+> **[#39 从这里开始：公式忠实重建](https://github.com/tianshuo886/evidentia/issues/39)** → **[#40 公式教学式解释](https://github.com/tianshuo886/evidentia/issues/40)** → **[#41 通用科学完整性与结论校准](https://github.com/tianshuo886/evidentia/issues/41)** → **[#42 机制深度与叙事质量](https://github.com/tianshuo886/evidentia/issues/42)** → **[#43 HTML/MD/PDF 交付完整性](https://github.com/tianshuo886/evidentia/issues/43)** → **[#44 最终全新运行与真实评测验收](https://github.com/tianshuo886/evidentia/issues/44)**。
+>
+> 六项全部为 P0 发布阻塞任务。**#39 START HERE，#44 FINAL GATE**。各阶段通过 Issue 内的实际验收标准后再关闭；允许互不依赖的工程修改并行，但不得跳过依赖顺序宣布通过。暂缓 #30–#35 等 P1/P2 功能开发，直至 #44 通过。若重要公式、科学归因、证据链接或交付资产未通过，严禁签发 `PAPER_COMPLETE`。
+>
+> 历史发布记录：[#36](https://github.com/tianshuo886/evidentia/issues/36) / [#37](https://github.com/tianshuo886/evidentia/issues/37) / [#38](https://github.com/tianshuo886/evidentia/issues/38)；[历史质量报告](READER_QUALITY_RELEASE_REPORT.md)。
 
-> **P0 科研精读质量门禁：已全量修复并通过验收，正式发布（2026-10-11）**
-> P0 质量修复三连已严格按序完成并通过真实论文（RingMoClaw）回归验收与 A/B 评测：
-> **[#36 第一阶段：科学准确性](https://github.com/tianshuo886/evidentia/issues/36)** (已关闭) → **[#37 第二阶段：深度讲解与图表覆盖](https://github.com/tianshuo886/evidentia/issues/37)** (已关闭) → **[#38 第三阶段：科学语义回归和真实论文 A/B 验收](https://github.com/tianshuo886/evidentia/issues/38)** (已关闭)。
-> 遗留实质性 P0 事实/归因错误清零。详见 [READER_QUALITY_RELEASE_REPORT.md](READER_QUALITY_RELEASE_REPORT.md)。现已恢复后续 P1/P2 功能开发。
-
+---
 
 ## 基于真实证据的论文深度研究操作系统 (Paper Research OS)
 
