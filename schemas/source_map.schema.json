@@ -63,7 +63,12 @@
                     "surrounding_text": { "type": "string" },
                     "section": { "type": "string" },
                     "referenced_by": { "type": "array", "items": { "type": "string" } },
-                    "confidence": { "type": "number" }
+                    "confidence": { "type": "number" },
+                    "paper_label": { "type": ["string", "null"] },
+                    "equation_number": { "type": ["integer", "null"] },
+                    "explanation": { "type": "string" },
+                    "verification_receipt": { "type": ["object", "null"] },
+                    "pedagogy": { "type": ["object", "null"] }
                   }
                 }
               ]

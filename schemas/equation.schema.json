@@ -78,6 +78,21 @@
       "type": "number",
       "minimum": 0,
       "maximum": 1
+    },
+    "paper_label": {
+      "type": ["string", "null"]
+    },
+    "equation_number": {
+      "type": ["integer", "null"]
+    },
+    "explanation": {
+      "type": "string"
+    },
+    "verification_receipt": {
+      "type": ["object", "null"]
+    },
+    "pedagogy": {
+      "type": ["object", "null"]
     }
   },
   "additionalProperties": false
