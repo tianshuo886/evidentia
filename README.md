@@ -2,12 +2,18 @@
 
 [English](README.md) · [中文](README.zh-CN.md)
 
+> **P0 READER RELEASE HOLD — 2026-10-13 — newest real-run output FAILED — START WITH #39.**
+>
+> The newly generated RingMoClaw Reader contains a materially rewritten paper equation (Eq. 6), unrendered key formulas, broken evidence links, inadequate explanation and uncalibrated scientific conclusions. Closed historical #36–#38 and the Oct 11 PASS report document their earlier scope; **they do not qualify the newer artifacts for release**.
+>
+> **Mandatory execution order for Orca / Codex / maintainers (GitHub issue list order is NOT priority):**
+> **[#39 START HERE: formula source fidelity](https://github.com/tianshuo886/evidentia/issues/39)** → **[#40 math explanation](https://github.com/tianshuo886/evidentia/issues/40)** → **[#41 general scientific truth and calibration](https://github.com/tianshuo886/evidentia/issues/41)** → **[#42 mechanistic depth and narrative quality](https://github.com/tianshuo886/evidentia/issues/42)** → **[#43 HTML/MD/PDF delivery integrity](https://github.com/tianshuo886/evidentia/issues/43)** → **[#44 FINAL GATE: fresh-run source-assisted release qualification](https://github.com/tianshuo886/evidentia/issues/44)**.
+>
+> All six are **P0 release blockers**. Close each only with its stated evidence and acceptance criteria; non-dependent engineering may run concurrently but no dependency or source check may be skipped. **Defer #30–#35 and other P1/P2 feature work** until #44 genuinely passes. Do not issue `PAPER_COMPLETE` with material equation, scientific attribution, evidence navigation or asset failures.
+>
+> Historical work: [#36](https://github.com/tianshuo886/evidentia/issues/36), [#37](https://github.com/tianshuo886/evidentia/issues/37), [#38](https://github.com/tianshuo886/evidentia/issues/38), [earlier release report](READER_QUALITY_RELEASE_REPORT.md).
 
-> **P0 SCIENTIFIC QUALITY GATE: RESOLVED & RELEASE READY (2026-10-11).**
-> The P0 remediation triad has been successfully completed, verified against the real-paper RingMoClaw benchmark, and released:
-> **[#36 — Scientific Integrity](https://github.com/tianshuo886/evidentia/issues/36)** (CLOSED) → **[#37 — Deep Explanation & Visual Coverage](https://github.com/tianshuo886/evidentia/issues/37)** (CLOSED) → **[#38 — Semantic Regression & Real-Paper A/B Release Gate](https://github.com/tianshuo886/evidentia/issues/38)** (CLOSED).
-> Zero unresolved P0 factual/attribution errors remain. See [READER_QUALITY_RELEASE_REPORT.md](READER_QUALITY_RELEASE_REPORT.md). Normal P1/P2 development may now resume.
-
+---
 
 ## Evidence-Grounded Paper Research OS
 
