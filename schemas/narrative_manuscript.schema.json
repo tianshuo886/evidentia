@@ -134,7 +134,14 @@
         "page": { "type": "integer" },
         "items": { "type": "array", "items": { "type": "string" } },
         "latex": { "type": ["string", "null"] },
-        "source_confidence": { "type": "string" }
+        "source_confidence": { "type": "string" },
+        "paper_label": { "type": ["string", "null"] },
+        "equation_number": { "type": ["integer", "null"] },
+        "pedagogy": { "type": ["object", "null"] },
+        "explanation_priority": { "type": "string", "enum": ["MUST_EXPLAIN", "CONCISE_DEFINE", "AUDIT_ONLY"] },
+        "symbol_definitions": { "type": ["array", "null"] },
+        "term_interpretations": { "type": ["array", "null"] },
+        "implementation_proxy": { "type": ["string", "null"] }
       },
       "additionalProperties": true
     }

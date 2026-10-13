@@ -198,28 +198,62 @@ def _table_block(item, claims, roles, *, question=None, section_refs=None):
     return block
 
 
+def _compose_equation_pedagogy_narrative(eq: dict) -> str:
+    """Build a flowing pedagogical narrative explanation for an equation."""
+    ped = eq.get("pedagogy") or {}
+    role = ped.get("role") or eq.get("role_zh") or "核心公式"
+    base_exp = eq.get("explanation") or ""
+
+    parts = []
+    if base_exp:
+        parts.append(base_exp)
+    elif role:
+        parts.append(f"{role}。")
+
+    term_interps = ped.get("term_interpretations") or []
+    if term_interps:
+        term_desc = "；".join(f"{t.get('term')}（{t.get('role', '项')}）用于{t.get('intuition', '')}" for t in term_interps if t.get('term') and t.get('intuition'))
+        if term_desc:
+            parts.append(f"项解析：{term_desc}。")
+
+    proxy = ped.get("implementation_proxy")
+    if proxy:
+        parts.append(f"工程实现与代理：{proxy}")
+
+    unspecified = ped.get("unspecified_details")
+    if unspecified:
+        parts.append("注意：" + "；".join(unspecified) + "。")
+
+    return " ".join(parts).strip()
+
+
 def _equation_blocks(source_map):
     result = []
     for page in _items(source_map.get("pages")):
         for eq in _items(page.get("equations")):
             if isinstance(eq, str):
                 eq = {"equation_id": f"EQ-p{page.get('number', 1)}-{len(result)+1}", "raw_text": eq}
-            # Keep an unrenderable equation as an explicit block.  The release
-            # gate will reject it unless a verified LaTeX source or a decodable
-            # source crop is available; silently dropping it would hide a core
-            # extraction failure.
             if not isinstance(eq, dict):
                 continue
             if eq.get("display_mode") is False and not eq.get("latex") and not eq.get("fallback_asset"):
                 continue
             eid = eq.get("equation_id") or f"EQ-{len(result)+1}"
+            ped = eq.get("pedagogy") or {}
             result.append({
                 "type": "equation", "evidence_id": str(eid),
+                "paper_label": eq.get("paper_label"),
+                "equation_number": eq.get("equation_number"),
                 "raw_text": eq.get("raw_text") or eq.get("latex") or "",
                 "latex": eq.get("latex"), "display_mode": bool(eq.get("display_mode", True)),
                 "source_confidence": eq.get("source_confidence") or "UNCERTAIN",
                 "fallback_asset": eq.get("fallback_asset"),
-                "explanation": _clean(eq.get("role_zh") or eq.get("surrounding_text")),
+                "role_zh": eq.get("role_zh") or ped.get("role"),
+                "explanation": _compose_equation_pedagogy_narrative(eq) or _clean(eq.get("role_zh") or eq.get("surrounding_text")),
+                "pedagogy": ped if ped else None,
+                "explanation_priority": ped.get("explanation_priority", "MUST_EXPLAIN"),
+                "symbol_definitions": ped.get("symbol_definitions") or eq.get("symbols") or [],
+                "term_interpretations": ped.get("term_interpretations") or [],
+                "implementation_proxy": ped.get("implementation_proxy"),
                 "evidence_refs": [f"p.{eq.get('page', page.get('number', 1))}"],
             })
     return result

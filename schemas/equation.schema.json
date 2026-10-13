@@ -92,7 +92,64 @@
       "type": ["object", "null"]
     },
     "pedagogy": {
-      "type": ["object", "null"]
+      "type": ["object", "null"],
+      "properties": {
+        "role": { "type": "string" },
+        "explanation_priority": { "enum": ["MUST_EXPLAIN", "CONCISE_DEFINE", "AUDIT_ONLY"] },
+        "symbol_definitions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["symbol", "interpretation"],
+            "properties": {
+              "symbol": { "type": "string" },
+              "name": { "type": "string" },
+              "interpretation": { "type": "string" },
+              "dimension": { "type": "string" },
+              "domain": { "type": "string" }
+            },
+            "additionalProperties": true
+          }
+        },
+        "input_output": {
+          "type": "object",
+          "properties": {
+            "inputs": { "type": "array", "items": { "type": "string" } },
+            "outputs": { "type": "array", "items": { "type": "string" } }
+          },
+          "additionalProperties": true
+        },
+        "term_interpretations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["term", "intuition"],
+            "properties": {
+              "term": { "type": "string" },
+              "role": { "type": "string" },
+              "intuition": { "type": "string" },
+              "effect": { "type": "string" }
+            },
+            "additionalProperties": true
+          }
+        },
+        "assumptions": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "implementation_proxy": {
+          "type": ["string", "null"]
+        },
+        "source_anchors": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "unspecified_details": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "additionalProperties": true
     }
   },
   "additionalProperties": false

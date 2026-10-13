@@ -334,9 +334,36 @@ figcaption {
 .equation-uncertain { color: var(--stone); font-style: italic; }
 .eq-explanation {
   font-size: 9pt;
-  color: var(--stone);
-  margin-top: 4pt;
+  color: var(--ink);
+  margin-top: 6pt;
   text-align: left;
+  line-height: 1.5;
+}
+.eq-role {
+  font-size: 9pt;
+  font-weight: 600;
+  color: var(--brand);
+  margin-top: 6pt;
+  text-align: left;
+}
+.eq-terms {
+  font-size: 8.5pt;
+  color: var(--ink);
+  margin-top: 6pt;
+  text-align: left;
+  line-height: 1.5;
+}
+.eq-terms ul { margin: 3pt 0 3pt 14pt; padding: 0; }
+.eq-terms li { margin-bottom: 2pt; }
+.eq-proxy {
+  font-size: 8.5pt;
+  color: var(--stone);
+  background: var(--warm-gray, #f8f6f0);
+  padding: 4pt 8pt;
+  border-radius: 3pt;
+  margin-top: 6pt;
+  text-align: left;
+  border-left: 2pt solid var(--gold, #d97706);
 }
 
 /* Quiet evidence anchors */
@@ -513,11 +540,26 @@ def render_block_html(b: dict, root: Path) -> str:
                 math_html = f"<div class='equation-uncertain-trace'>公式源图已锁定于源文档 p.{b.get('page', 1)}。</div>"
 
         label_display = f"公式 {esc(paper_label)} 〔{esc(eq_id)}〕" if paper_label else f"公式 {esc(eq_id)}"
+        ped = b.get('pedagogy') or {}
+        role = ped.get('role') or b.get('role_zh') or ''
+        term_interps = ped.get('term_interpretations') or b.get('term_interpretations') or []
+        proxy = ped.get('implementation_proxy') or b.get('implementation_proxy')
+
+        pedagogy_html = ""
+        if role:
+            pedagogy_html += f"<div class='eq-role'>角色定位：{esc(role)}</div>"
+        if term_interps:
+            terms_li = "".join(f"<li><code>{esc(t.get('term', ''))}</code>（{esc(t.get('role', '项'))}）：{esc(t.get('intuition', ''))}</li>" for t in term_interps if t.get('term'))
+            pedagogy_html += f"<div class='eq-terms'><strong>核心项解析与数学直觉</strong>：<ul>{terms_li}</ul></div>"
+        if proxy:
+            pedagogy_html += f"<div class='eq-proxy'><strong>工程实现与代理说明</strong>：{esc(proxy)}</div>"
+
         return f"""
         <div class='equation-block' id='evidence-{esc(eq_id)}'>
           <div class='eq-label'>{label_display}</div>
           <div class='math-display'>{math_html}</div>
           <div class='eq-explanation'>{exp}</div>
+          {pedagogy_html}
         </div>
         """
         
@@ -653,6 +695,20 @@ def render_paper_reader_md(manuscript: dict, root=None) -> str:
                 else:
                     lines.append(f"![公式源图 {eq_id}](assets/equations/{eq_id}.png)\n")
                 lines.append(f"{block.get('explanation', '')}{cite}\n")
+                ped = block.get('pedagogy') or {}
+                role = ped.get('role') or block.get('role_zh')
+                term_interps = ped.get('term_interpretations') or block.get('term_interpretations') or []
+                proxy = ped.get('implementation_proxy') or block.get('implementation_proxy')
+                if role:
+                    lines.append(f"**角色定位**：{role}\n")
+                if term_interps:
+                    lines.append("**核心项解析与数学直觉**：")
+                    for t in term_interps:
+                        if t.get('term'):
+                            lines.append(f"- `{t.get('term')}`（{t.get('role', '项')}）：{t.get('intuition', '')}")
+                    lines.append("")
+                if proxy:
+                    lines.append(f"**工程实现与代理说明**：{proxy}\n")
             elif kind == 'list':
                 lines.extend([f'- {item}' for item in block.get('items', [])]); lines.append('')
     lines.extend(['## 证据来源与页面锚点 <a id=\'sources\'></a>', '', '需要逐项核对来源时，请打开 [来源与核验记录](evidence_atlas.html)。', ''])
