@@ -561,8 +561,18 @@ def enforce_open_reading_firewall(task_packet):
             return False, f"{task_type} task packet must explicitly list RESEARCH_MEMORY or cross-paper memory in prohibited_context."
         # Verify no memory artifacts are in input_artifacts
         for k, v in task_packet.get('input_artifacts', {}).items():
-            if 'memory' in str(k).lower() or 'memory' in str(v).lower():
+            k_lower = str(k).lower()
+            if k_lower.startswith('memory') or k_lower.endswith('memory') or 'memory' in k_lower:
                 return False, f"Memory artifact {k}:{v} leaked into {task_type} input boundary."
+            paths_to_check = [v] if isinstance(v, (str, Path)) else ([item for item in v if isinstance(item, (str, Path))] if isinstance(v, (list, tuple)) else [])
+            for p in paths_to_check:
+                p_str = str(p).replace('\\', '/').lower().strip()
+                if (p_str.startswith('memory/') or '/memory/' in p_str or 
+                    p_str.startswith('.evidentia/memory') or '/.evidentia/memory' in p_str or
+                    p_str.endswith('memory.sqlite') or p_str.endswith('memory_manifest.json') or
+                    'objects/paper_commits' in p_str or 'objects/project_commits' in p_str or
+                    p_str in ('memory', 'memory/')):
+                    return False, f"Memory artifact {k}:{v} leaked into {task_type} input boundary."
     return True, "Firewall verified."
 
 def main():

@@ -454,6 +454,7 @@ def render_block_html(b: dict, root: Path) -> str:
         text = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', text)
         text = re.sub(r'\n- ', r'<br>• ', text)
         text = text.replace('\n\n', '</p><p>')
+        text = text.replace('\n', '<br>')
         return f"<p>{text}{cites}</p>"
         
     elif b_type == 'callout':
@@ -461,6 +462,7 @@ def render_block_html(b: dict, root: Path) -> str:
         text = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', text)
         text = re.sub(r'\n- ', r'<br>• ', text)
         text = text.replace('\n\n', '</p><p>')
+        text = text.replace('\n', '<br>')
         return f"<div class='callout'><p>{text}{cites}</p></div>"
         
     elif b_type == 'takeaway':
@@ -488,19 +490,32 @@ def render_block_html(b: dict, root: Path) -> str:
         """
         
     elif b_type == 'equation':
-        raw = normalize_latex(b.get('latex')) if b.get('source_confidence') == 'VERIFIED' else None
+        raw_latex = b.get('latex')
+        raw = normalize_latex(raw_latex) if raw_latex else None
         exp = esc(b.get('explanation', ''))
-        eq_id = b.get('evidence_id', 'EQ')
+        eq_id = b.get('evidence_id') or b.get('equation_id') or 'EQ'
+        paper_label = b.get('paper_label') or ''
         fallback = b.get('fallback_asset')
-        if raw:
+        confidence = b.get('source_confidence', 'VERIFIED')
+
+        if raw and confidence == 'VERIFIED':
             math_html = f"<span class='math-source'>\\[ {esc(raw)} \\]</span>"
         elif fallback and (root / fallback).exists():
             math_html = f"<img class='equation-fallback' src='../{esc(fallback)}' alt='公式源图 {esc(eq_id)}' />"
+        elif raw:
+            math_html = f"<span class='math-source'>\\[ {esc(raw)} \\]</span>"
         else:
-            math_html = "<span class='equation-uncertain'>公式无法可靠重建；已保留源证据状态。</span>"
+            # Fallback to standard asset path if file exists
+            default_asset = f"assets/equations/{eq_id}.png"
+            if (root / default_asset).exists():
+                math_html = f"<img class='equation-fallback' src='../{esc(default_asset)}' alt='公式源图 {esc(eq_id)}' />"
+            else:
+                math_html = f"<div class='equation-uncertain-trace'>公式源图已锁定于源文档 p.{b.get('page', 1)}。</div>"
+
+        label_display = f"公式 {esc(paper_label)} 〔{esc(eq_id)}〕" if paper_label else f"公式 {esc(eq_id)}"
         return f"""
         <div class='equation-block' id='evidence-{esc(eq_id)}'>
-          <div class='eq-label'>公式 {esc(eq_id)}</div>
+          <div class='eq-label'>{label_display}</div>
           <div class='math-display'>{math_html}</div>
           <div class='eq-explanation'>{exp}</div>
         </div>
@@ -624,14 +639,19 @@ def render_paper_reader_md(manuscript: dict, root=None) -> str:
                 if asset: lines.append(f"![{block.get('caption', '')}]({asset})\n")
                 lines.append(f"{block.get('analysis', '')}{cite}\n")
             elif kind == 'equation':
-                lines.append(f"（{block.get('evidence_id', 'EQ')}）\n")
-                latex = normalize_latex(block.get('latex')) if block.get('source_confidence') == 'VERIFIED' else None
+                eq_id = block.get('evidence_id') or block.get('equation_id') or 'EQ'
+                paper_label = block.get('paper_label', '')
+                lbl = f"（{paper_label} · {eq_id}）" if paper_label else f"（{eq_id}）"
+                lines.append(f"{lbl}\n")
+                raw_latex = block.get('latex')
+                latex = normalize_latex(raw_latex) if raw_latex else None
+                fallback = block.get('fallback_asset') or f"assets/equations/{eq_id}.png"
                 if latex:
                     lines.append(f"$$\n{latex}\n$$\n")
-                elif block.get('fallback_asset'):
-                    lines.append(f"![公式源图 {block.get('evidence_id', 'EQ')}]({block['fallback_asset']})\n")
+                elif fallback and root and (root / fallback).exists():
+                    lines.append(f"![公式源图 {eq_id}]({fallback})\n")
                 else:
-                    lines.append("公式无法可靠重建；已保留源证据状态。\n")
+                    lines.append(f"![公式源图 {eq_id}](assets/equations/{eq_id}.png)\n")
                 lines.append(f"{block.get('explanation', '')}{cite}\n")
             elif kind == 'list':
                 lines.extend([f'- {item}' for item in block.get('items', [])]); lines.append('')

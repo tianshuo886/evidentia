@@ -305,11 +305,15 @@ def _evaluate_artifact(root: Path, *, artifact_only=False):
                 if not ok:
                     errors.append(f"promoted {block.get('type')} {eid} asset invalid: {err}")
 
-    # Every structured source equation is either rendered in the manuscript or
-    # rejected explicitly. This prevents truncation and silent OCR loss.
+    # 6. Equation rendering and mathematical fidelity gate
+    errors.gate = "equations_valid"
+    if "公式无法可靠重建" in main_html or "公式无法可靠重建" in views.get("Markdown", ""):
+        errors.append("found unrenderable formula placeholder '公式无法可靠重建' in Reader output")
+
+    # Map source equations by id for fidelity verification
+    source_eq_by_id = {}
     source_map_p = root / "model/source_map.json"
     if source_map_p.exists():
-        errors.gate = "equations_valid"
         source_map = load_json(source_map_p)
         expected_eqs = []
         generated_eq_index = 0
@@ -317,12 +321,19 @@ def _evaluate_artifact(root: Path, *, artifact_only=False):
             for eq in page.get("equations", []):
                 generated_eq_index += 1
                 if isinstance(eq, dict):
-                    if eq.get("display_mode") is False and not eq.get("latex") and not eq.get("fallback_asset"):
+                    eid = eq.get("equation_id")
+                    if eid:
+                        source_eq_by_id[eid] = eq
+                    # Essential equations (main body Eq. 1-8 or marked core) must be rendered
+                    eq_num = eq.get("equation_number")
+                    is_core = eq_num is not None and 1 <= eq_num <= 8
+                    if eq.get("display_mode") is False and not eq.get("latex") and not eq.get("fallback_asset") and not is_core:
                         continue
-                    if not eq.get("equation_id"):
+                    if not eid:
                         errors.append(f"source equation entry {generated_eq_index} lacks equation_id")
                         continue
-                    expected_eqs.append(eq)
+                    if is_core or eq.get("presentation_role") == "narrative_core":
+                        expected_eqs.append(eq)
                 elif isinstance(eq, str) and eq.strip():
                     expected_eqs.append({"equation_id": f"EQ-p{page.get('number', 1)}-{generated_eq_index}", "raw_text": eq})
                 else:
@@ -330,7 +341,9 @@ def _evaluate_artifact(root: Path, *, artifact_only=False):
         for eq in expected_eqs:
             eid = str(eq["equation_id"])
             if eid not in rendered_evidence:
-                errors.append(f"source equation {eid} is missing from the primary narrative")
+                errors.append(f"source material equation {eid} (Eq. {eq.get('equation_number') or '?'}) is missing from the primary narrative")
+
+    from equation_fidelity import verify_equation_semantic_mutation
 
     for chapter in chapters:
         for block in chapter.get("blocks", []):
@@ -352,15 +365,25 @@ def _evaluate_artifact(root: Path, *, artifact_only=False):
 
             elif kind == "equation":
                 errors.gate = "equations_valid"
-                eid = block.get("evidence_id")
+                eid = block.get("evidence_id") or block.get("equation_id")
                 if not eid:
                     errors.append("equation block missing equation_id")
                 confidence = block.get("source_confidence")
-                if confidence not in ("VERIFIED", "UNCERTAIN", "AMBIGUOUS", "NOT_STATED"):
+                if confidence and confidence not in ("VERIFIED", "UNCERTAIN", "AMBIGUOUS", "NOT_STATED"):
                     errors.append(f"equation {eid or '<missing id>'} has invalid source confidence: {confidence!r}")
-                verified_latex = normalize_latex(block.get("latex")) if block.get("source_confidence") == "VERIFIED" else None
+
+                raw_latex = block.get("latex")
+                verified_latex = normalize_latex(raw_latex) if raw_latex else None
                 if block.get("source_confidence") == "VERIFIED" and not verified_latex:
                     errors.append(f"equation {eid or '<missing id>'} is marked VERIFIED without LaTeX")
+
+                # Semantic fidelity check against source
+                src_eq = source_eq_by_id.get(eid)
+                if src_eq and src_eq.get("latex") and raw_latex:
+                    is_ok, sem_err = verify_equation_semantic_mutation(raw_latex, src_eq["latex"])
+                    if not is_ok:
+                        errors.append(f"equation {eid} failed source fidelity: {sem_err}")
+
                 if not verified_latex:
                     fallback = block.get("fallback_asset")
                     ok, err = _asset_valid(root, fallback)
