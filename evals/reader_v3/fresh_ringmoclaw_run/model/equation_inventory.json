@@ -1,0 +1,1570 @@
+{
+  "schema_version": "1.0",
+  "source_sha256": "32df5e2843de7e8ccd52d56b9dfed257c26786ef3b71fbc397a1c3a5e26fb0fa",
+  "equations": [
+    {
+      "equation_id": "EQ-01",
+      "paper_label": "Eq. (1)",
+      "equation_number": 1,
+      "page": 6,
+      "source_page": 6,
+      "bbox": [
+        342.32,
+        343.15,
+        572.0,
+        366.74
+      ],
+      "raw_text": "Scoret = w1Ct + w2(1 -Bt) + w3Ht, (1)",
+      "latex": "\\text{Score}_t = w_1 C_t + w_2 (1 - B_t) + w_3 H_t",
+      "display_mode": true,
+      "symbols": [
+        {
+          "symbol": "\\text{Score}_t",
+          "meaning_zh": "第 t 阶段 Critic 综合加权评分"
+        },
+        {
+          "symbol": "C_t",
+          "meaning_zh": "阶段目标完成度 (Task completion, ∈ [0, 1])"
+        },
+        {
+          "symbol": "B_t",
+          "meaning_zh": "核心瓶颈严重度 (Bottleneck impact, ∈ [0, 1])"
+        },
+        {
+          "symbol": "1 - B_t",
+          "meaning_zh": "瓶颈逆向抑制项 (反转瓶颈影响)"
+        },
+        {
+          "symbol": "H_t",
+          "meaning_zh": "全局经验先验一致度 (Global experience influence, ∈ [0, 1])"
+        },
+        {
+          "symbol": "(w_1, w_2, w_3)",
+          "meaning_zh": "阶段特化权重：方案 (0.3, 0.5, 0.2)，数据 (0.35, 0.4, 0.25)，结果 (0.5, 0.3, 0.2)"
+        }
+      ],
+      "role_zh": "Critic 多维结构化打分函数",
+      "explanation": "Critic 多维结构化打分函数：结合阶段完成度 C_t、瓶颈危害度 B_t 与历史经验契合度 H_t，通过 1 - B_t 反转瓶颈抑制效应，采用阶段特化权重评估候选方案质量。",
+      "pedagogy": {
+        "role": "Critic 多维结构化打分函数",
+        "explanation_priority": "MUST_EXPLAIN",
+        "symbol_definitions": [
+          {
+            "symbol": "\\text{Score}_t",
+            "name": "综合评分",
+            "interpretation": "第 t 阶段 Critic 综合加权评分，取值范围 [0, 1]"
+          },
+          {
+            "symbol": "C_t",
+            "name": "目标完成度",
+            "interpretation": "当前阶段目标达成度 (Task completion)，∈ [0, 1]"
+          },
+          {
+            "symbol": "B_t",
+            "name": "瓶颈严重度",
+            "interpretation": "诊断出的核心瓶颈严重程度 (Bottleneck impact)，∈ [0, 1]"
+          },
+          {
+            "symbol": "1 - B_t",
+            "name": "瓶颈逆向抑制项",
+            "interpretation": "反转瓶颈影响；瓶颈越严重则该项越趋近 0，强力压低得分"
+          },
+          {
+            "symbol": "H_t",
+            "name": "历史经验一致度",
+            "interpretation": "与全局经验池成功模式的契合度，∈ [0, 1]"
+          },
+          {
+            "symbol": "(w_1, w_2, w_3)",
+            "name": "阶段特化权重",
+            "interpretation": "方案阶段 (0.3, 0.5, 0.2)，数据阶段 (0.35, 0.4, 0.25)，结果阶段 (0.5, 0.3, 0.2)"
+          }
+        ],
+        "input_output": {
+          "inputs": [
+            "当前阶段执行输出与诊断指标",
+            "候选方案瓶颈度量 B_t 与完成度 C_t",
+            "阶段特化权重向量"
+          ],
+          "outputs": [
+            "综合标量评分 Score_t ∈ [0, 1]",
+            "四级流转决策指令 (Accept/Revise/Reject/Escalate)"
+          ]
+        },
+        "term_interpretations": [
+          {
+            "term": "1 - B_t",
+            "role": "瓶颈反转抑制项",
+            "intuition": "B_t 表示当前策略遭遇瓶颈的严重度。公式采用 1 - B_t 将惩罚反转为可用度：无瓶颈时 (B_t=0) 得满分，瓶颈严重时 (B_t=1) 得分为 0，迫使系统优先解决瓶颈。",
+            "effect": "严重瓶颈方案被迅速压低得分，触发重构或终止"
+          },
+          {
+            "term": "w_1 C_t",
+            "role": "阶段目标牵引项",
+            "intuition": "正向奖励阶段产出成果（如代码可行性或精度增益）。",
+            "effect": "保证演化朝向阶段目标推进"
+          },
+          {
+            "term": "w_3 H_t",
+            "role": "全局经验先验正则项",
+            "intuition": "利用先验经验库约束搜索范围，防止在无先验支持的盲区过度耗费算力。",
+            "effect": "提高跨任务探索效率"
+          }
+        ],
+        "assumptions": [
+          "假设三个评价维度正交且呈线性加权关系",
+          "权重 (w_1, w_2, w_3) 为离线预设静态常量"
+        ],
+        "implementation_proxy": "采用预设静态权重表配合四级控制流阈值，未引入自适应权重在线优化",
+        "source_anchors": [
+          "p.6 Section 3.2.1"
+        ],
+        "unspecified_details": [
+          "原文未给出各阶段四级分支的具体划分数值阈值"
+        ]
+      },
+      "source_confidence": "VERIFIED",
+      "fallback_asset": "assets/equations/EQ-01.png",
+      "surrounding_text": "Scoret = w1Ct + w2(1 -Bt) + w3Ht, (1)",
+      "section": "5 Turbo, while the Critic mechanism is powered by Minimax",
+      "referenced_by": [],
+      "confidence": 0.95,
+      "verification_receipt": {
+        "source_verified": true,
+        "equation_number": 1,
+        "matched_operators": true,
+        "denominator_verified": false,
+        "exponential_verified": false,
+        "norm_verified": false,
+        "subscripts_verified": true
+      }
+    },
+    {
+      "equation_id": "EQ-02",
+      "paper_label": "Eq. (2)",
+      "equation_number": 2,
+      "page": 6,
+      "source_page": 6,
+      "bbox": [
+        351.72,
+        640.3,
+        572.0,
+        667.04
+      ],
+      "raw_text": "o t+1 main = \\Piupdate(st, {ct, Scoret}) , (2)",
+      "latex": "o_{\\text{main}}^{t+1} = \\Pi_{\\text{update}}(s_t, \\{c_t, \\text{Score}_t\\})",
+      "display_mode": true,
+      "symbols": [
+        {
+          "symbol": "o_{\\text{main}}^{t+1}",
+          "meaning_zh": "Main Agent 下一轮决策指令"
+        },
+        {
+          "symbol": "\\Pi_{\\text{update}}",
+          "meaning_zh": "顶层决策更新算子"
+        },
+        {
+          "symbol": "s_t",
+          "meaning_zh": "当前系统状态"
+        },
+        {
+          "symbol": "c_t",
+          "meaning_zh": "Critic 结构化诊断报告"
+        },
+        {
+          "symbol": "\\text{Score}_t",
+          "meaning_zh": "Critic 综合评分"
+        }
+      ],
+      "role_zh": "Main Agent 全局决策状态转移算子",
+      "explanation": "Main Agent 基于 Critic 结构化诊断报告与综合评分实施顶层决策状态转移，确立决策收敛方向。",
+      "pedagogy": {
+        "role": "Main Agent 全局决策状态转移算子",
+        "explanation_priority": "MUST_EXPLAIN",
+        "symbol_definitions": [
+          {
+            "symbol": "o_{\\text{main}}^{t+1}",
+            "name": "下一轮决策指令",
+            "interpretation": "主智能体下一阶段的规划、调度或终止指令"
+          },
+          {
+            "symbol": "\\Pi_{\\text{update}}",
+            "name": "顶层决策更新算子",
+            "interpretation": "基于系统状态与反馈的多智能体协调调度策略"
+          },
+          {
+            "symbol": "s_t",
+            "name": "系统当前状态",
+            "interpretation": "包含历史步数、当前模型配置与代码仓库状态"
+          },
+          {
+            "symbol": "c_t",
+            "name": "Critic 结构化诊断报告",
+            "interpretation": "细粒度定位的瓶颈原因与修复建议"
+          },
+          {
+            "symbol": "\\text{Score}_t",
+            "name": "Critic 综合评分",
+            "interpretation": "Eq. (1) 计算出的标量质量评估分值"
+          }
+        ],
+        "input_output": {
+          "inputs": [
+            "系统当前状态 s_t",
+            "Critic 诊断报告 c_t",
+            "综合评分 Score_t"
+          ],
+          "outputs": [
+            "下一轮决策行动指令 o_{main}^{t+1}"
+          ]
+        },
+        "term_interpretations": [
+          {
+            "term": "\\Pi_{\\text{update}}(s_t, \\{c_t, \\text{Score}_t\\})",
+            "role": "状态转移与调度闭环",
+            "intuition": "Main Agent 依据量化评分与定性诊断进行控制流路由：高分推进，中分结合 c_t 进行局部修复，低分回退。",
+            "effect": "确立自进化探索方向并避免死循环"
+          }
+        ],
+        "assumptions": [
+          "Critic 诊断与评分能够准确反映阶段探索成败"
+        ],
+        "implementation_proxy": "通过 LLM Prompt 编排与状态转移机制实现策略算子，非参数化强化学习网络",
+        "source_anchors": [
+          "p.6 Section 3.2.1"
+        ]
+      },
+      "source_confidence": "VERIFIED",
+      "fallback_asset": "assets/equations/EQ-02.png",
+      "surrounding_text": "o t+1 main = \\Piupdate(st, {ct, Scoret}) , (2)",
+      "section": "5 Turbo, while the Critic mechanism is powered by Minimax",
+      "referenced_by": [],
+      "confidence": 0.95,
+      "verification_receipt": {
+        "source_verified": true,
+        "equation_number": 2,
+        "matched_operators": true,
+        "denominator_verified": false,
+        "exponential_verified": false,
+        "norm_verified": false,
+        "subscripts_verified": true
+      }
+    },
+    {
+      "equation_id": "EQ-03",
+      "paper_label": "Eq. (3)",
+      "equation_number": 3,
+      "page": 7,
+      "source_page": 7,
+      "bbox": [
+        87.79,
+        616.68,
+        306.0,
+        639.62
+      ],
+      "raw_text": "S = {Sarch, Strain, Sdata, Sintg}. (3)",
+      "latex": "\\mathcal{S} = \\{\\mathcal{S}_{\\text{arch}}, \\mathcal{S}_{\\text{train}}, \\mathcal{S}_{\\text{data}}, \\mathcal{S}_{\\text{intg}}\\}",
+      "display_mode": true,
+      "symbols": [
+        {
+          "symbol": "\\mathcal{S}",
+          "meaning_zh": "全局算法搜索空间"
+        },
+        {
+          "symbol": "\\mathcal{S}_{\\text{arch}}",
+          "meaning_zh": "模型架构维度（Backbone/Neck/特征融合）"
+        },
+        {
+          "symbol": "\\mathcal{S}_{\\text{train}}",
+          "meaning_zh": "训练策略维度（损失函数/优化器/超参数）"
+        },
+        {
+          "symbol": "\\mathcal{S}_{\\text{data}}",
+          "meaning_zh": "数据处理维度（重采样/预处理/数据增强）"
+        },
+        {
+          "symbol": "\\mathcal{S}_{\\text{intg}}",
+          "meaning_zh": "系统集成维度（辅助模型/后处理）"
+        }
+      ],
+      "role_zh": "遥感四维结构化搜索空间定义",
+      "explanation": "遥感自主演化搜索空间划分为架构、训练、数据与系统集成四维空间，实现有向剪枝与算子调度。",
+      "pedagogy": {
+        "role": "遥感四维结构化搜索空间定义",
+        "explanation_priority": "CONCISE_DEFINE",
+        "symbol_definitions": [
+          {
+            "symbol": "\\mathcal{S}",
+            "name": "全局搜索空间",
+            "interpretation": "解空间集合"
+          },
+          {
+            "symbol": "\\mathcal{S}_{\\text{arch}}",
+            "name": "架构子空间",
+            "interpretation": "骨干与特征融合算子"
+          },
+          {
+            "symbol": "\\mathcal{S}_{\\text{train}}",
+            "name": "训练子空间",
+            "interpretation": "损失与优化超参"
+          },
+          {
+            "symbol": "\\mathcal{S}_{\\text{data}}",
+            "name": "数据子空间",
+            "interpretation": "数据增强与预处理"
+          },
+          {
+            "symbol": "\\mathcal{S}_{\\text{intg}}",
+            "name": "集成子空间",
+            "interpretation": "后处理与辅助模型"
+          }
+        ],
+        "input_output": {
+          "inputs": [
+            "候选算子库"
+          ],
+          "outputs": [
+            "结构化四维组合配置空间"
+          ]
+        },
+        "term_interpretations": [
+          {
+            "term": "结构化解耦",
+            "role": "维度划分",
+            "intuition": "将复杂的端到端算法设计解耦为四个独立或协同的探索子空间，降低组合爆炸风险。"
+          }
+        ],
+        "assumptions": [
+          "四个子维度在遥感视觉任务中可正交解耦配置"
+        ],
+        "implementation_proxy": null,
+        "source_anchors": [
+          "p.7 Section 3.3.1"
+        ]
+      },
+      "source_confidence": "VERIFIED",
+      "fallback_asset": "assets/equations/EQ-03.png",
+      "surrounding_text": "S = {Sarch, Strain, Sdata, Sintg}. (3)",
+      "section": "5 Turbo, while the Critic mechanism is powered by Minimax",
+      "referenced_by": [],
+      "confidence": 0.95,
+      "verification_receipt": {
+        "source_verified": true,
+        "equation_number": 3,
+        "matched_operators": true,
+        "denominator_verified": false,
+        "exponential_verified": false,
+        "norm_verified": false,
+        "subscripts_verified": true
+      }
+    },
+    {
+      "equation_id": "EQ-04",
+      "paper_label": "Eq. (4)",
+      "equation_number": 4,
+      "page": 7,
+      "source_page": 7,
+      "bbox": [
+        306.0,
+        171.03,
+        572.0,
+        494.05
+      ],
+      "raw_text": "1) External Knowledge Flow: To address the limitation of fixed knowledge bases in handling complex research logic and emerging research needs, we design an online branch based on retrieval augmented generation. The system retrieves knowl- edge from external sources, applies differentiated extraction to textual knowledge and code knowledge, and then maps the results jointly into executable instructions in S. (a) High level method extraction from text. For document type knowledge such as the methodology sections of papers and the README or implementation notes of open source repositories, the system applies semantic distillation with a large language model and focuses on novel loss functions, learning rate schedules, and network connection patterns. These unstructured descriptions are mapped into heuristic guidance vectors within the search space. For instance, if a paper reports that introducing an edge gradient constraint improves detection accuracy, the system formalizes it as an optimization direction Strain(Ledge) in the training strategy layer. (b) Low level operator extraction from code. The system does not directly copy source code. It first removes the pe- ripheral code related to input/output, logging, and framework scaffolding, locates the core forward pass, and extracts the essential components into a reusable operator \\omega. The operator is defined as \\omega = {I, O, F, P}, (4)",
+      "latex": "\\omega = \\{I, O, F, P\\}",
+      "display_mode": true,
+      "symbols": [
+        {
+          "symbol": "\\omega",
+          "meaning_zh": "标准化可复用算子"
+        },
+        {
+          "symbol": "I",
+          "meaning_zh": "输入张量签名 (Input tensor specification)"
+        },
+        {
+          "symbol": "O",
+          "meaning_zh": "输出张量签名 (Output tensor specification)"
+        },
+        {
+          "symbol": "F",
+          "meaning_zh": "核心算子前向计算逻辑 (Core operator logic)"
+        },
+        {
+          "symbol": "P",
+          "meaning_zh": "关键超参数分布 (Key hyperparameters)"
+        }
+      ],
+      "role_zh": "外部文献与代码提取的可复用算子元组",
+      "explanation": "从外部文献与开源代码中剥离环境与脚手架后，提炼出的标准化算子四元组定义。",
+      "pedagogy": {
+        "role": "外部文献与代码提取的可复用算子元组",
+        "explanation_priority": "CONCISE_DEFINE",
+        "symbol_definitions": [
+          {
+            "symbol": "\\omega",
+            "name": "算子元组",
+            "interpretation": "可插拔模块标准化规范"
+          },
+          {
+            "symbol": "I",
+            "name": "输入张量签名",
+            "interpretation": "张量维度与类型约束"
+          },
+          {
+            "symbol": "O",
+            "name": "输出张量签名",
+            "interpretation": "期望输出格式"
+          },
+          {
+            "symbol": "F",
+            "name": "前向逻辑",
+            "interpretation": "无外部依赖的核心算子代码"
+          },
+          {
+            "symbol": "P",
+            "name": "超参数配置",
+            "interpretation": "可调参数默认范围"
+          }
+        ],
+        "input_output": {
+          "inputs": [
+            "外部开源代码库"
+          ],
+          "outputs": [
+            "标准化算子对象"
+          ]
+        },
+        "term_interpretations": [
+          {
+            "term": "(I, O, F, P)",
+            "role": "模块化隔离",
+            "intuition": "剥离无关脚手架代码，仅保留核心计算逻辑与张量接口，确保跨项目可插拔执行。"
+          }
+        ],
+        "assumptions": [
+          "算子具有明确的输入输出张量签名且无隐藏全局状态"
+        ],
+        "implementation_proxy": null,
+        "source_anchors": [
+          "p.7 Section 3.3.2"
+        ]
+      },
+      "source_confidence": "VERIFIED",
+      "fallback_asset": "assets/equations/EQ-04.png",
+      "surrounding_text": "1) External Knowledge Flow: To address the limitation of fixed knowledge bases in handling complex research logic and emerging research needs, we design an online branch based on retrieval augmented generation. The system retrieves knowl- edge from external sources, applies differentiated extraction to textual knowledge and code knowledge, and then maps the results jointly into executable instructions in S. (a) High level method extraction from text. For document type knowledge such as the methodology sections of papers and the README or implementation notes of open source repositories, the system applies semantic distillation with a large language model and focuses on novel loss functions, learning rate schedules, and network connection patterns. These unstructured descriptions are mapped into heuristic guidance vectors within the search space. For instance, if a paper reports that introducing an edge gradient constraint improves detection accuracy, the system formalizes it as an optimization direction Strain(Ledge) in the training strategy layer. (b) Low level operator extraction from code. The system does not directly copy source code. It first removes the pe- ripheral code related to input/output, logging, and framework scaffolding, locates the core forward pass, and extracts the essential components into a reusable operator \\omega. The operator is defined as \\omega = {I, O, F, P}, (4)",
+      "section": "5 Turbo, while the Critic mechanism is powered by Minimax",
+      "referenced_by": [],
+      "confidence": 0.95,
+      "verification_receipt": {
+        "source_verified": true,
+        "equation_number": 4,
+        "matched_operators": true,
+        "denominator_verified": false,
+        "exponential_verified": false,
+        "norm_verified": false,
+        "subscripts_verified": true
+      }
+    },
+    {
+      "equation_id": "EQ-05",
+      "paper_label": "Eq. (5)",
+      "equation_number": 5,
+      "page": 8,
+      "source_page": 8,
+      "bbox": [
+        79.43,
+        461.85,
+        306.0,
+        485.3
+      ],
+      "raw_text": "Mgb \\leftarrow Mgb \\cup Filter(Mloc, Scoret), (5)",
+      "latex": "\\mathcal{M}_{\\text{gb}} \\leftarrow \\mathcal{M}_{\\text{gb}} \\cup \\text{Filter}(\\mathcal{M}_{\\text{loc}}, \\text{Score}_t)",
+      "display_mode": true,
+      "symbols": [
+        {
+          "symbol": "\\mathcal{M}_{\\text{gb}}",
+          "meaning_zh": "跨任务全局经验记忆库"
+        },
+        {
+          "symbol": "\\mathcal{M}_{\\text{loc}}",
+          "meaning_zh": "当前任务内的局部探索记忆"
+        },
+        {
+          "symbol": "\\text{Filter}",
+          "meaning_zh": "基于评分的质量门控与噪声过滤算子"
+        },
+        {
+          "symbol": "\\text{Score}_t",
+          "meaning_zh": "准入质量门槛分值"
+        }
+      ],
+      "role_zh": "跨任务全局经验记忆库增量更新规则",
+      "explanation": "全局经验总线更新规则：通过 Critic 打分门控筛选局部高价值成功路径与典型失败模式，增量合并入跨任务经验库。",
+      "pedagogy": {
+        "role": "跨任务全局经验记忆库增量更新规则",
+        "explanation_priority": "MUST_EXPLAIN",
+        "symbol_definitions": [
+          {
+            "symbol": "\\mathcal{M}_{\\text{gb}}",
+            "name": "全局经验记忆库",
+            "interpretation": "跨任务持久化存储的高价值经验知识库"
+          },
+          {
+            "symbol": "\\mathcal{M}_{\\text{loc}}",
+            "name": "局部探索记忆",
+            "interpretation": "当前单次遥感任务执行过程中的试错轨迹与中间产物"
+          },
+          {
+            "symbol": "\\text{Filter}",
+            "name": "经验过滤算子",
+            "interpretation": "基于打分门槛与冗余去除的经验准入过滤机制"
+          },
+          {
+            "symbol": "\\text{Score}_t",
+            "name": "评估准入门槛分值",
+            "interpretation": "来自 Critic 的评估得分"
+          }
+        ],
+        "input_output": {
+          "inputs": [
+            "已有全局记忆库 M_{gb}",
+            "局部探索日志 M_{loc}",
+            "评估得分 Score_t"
+          ],
+          "outputs": [
+            "更新后的全局记忆库 M_{gb}"
+          ]
+        },
+        "term_interpretations": [
+          {
+            "term": "\\text{Filter}(\\mathcal{M}_{\\text{loc}}, \\text{Score}_t)",
+            "role": "经验质量门控与噪声过滤",
+            "intuition": "防止局部试验中的偶然性噪声和劣质方案污染跨任务经验库，仅将验证高分和典型阻断模式持久化入库。",
+            "effect": "保持全局经验的高信噪比"
+          },
+          {
+            "term": "\\cup",
+            "role": "集合合并与知识累积",
+            "intuition": "随着探索的任务增多，全局经验池持续扩充，为后续新任务提供丰富的先验支持。",
+            "effect": "实现跨任务自主演化经验总线"
+          }
+        ],
+        "assumptions": [
+          "高分策略具备跨遥感场景的迁移有效性"
+        ],
+        "implementation_proxy": "向量数据库检索与元数据索引结合，具体去重聚类公式原文未展开",
+        "source_anchors": [
+          "p.8 Section 3.4"
+        ]
+      },
+      "source_confidence": "VERIFIED",
+      "fallback_asset": "assets/equations/EQ-05.png",
+      "surrounding_text": "Mgb \\leftarrow Mgb \\cup Filter(Mloc, Scoret), (5)",
+      "section": "5 Turbo, while the Critic mechanism is powered by Minimax",
+      "referenced_by": [],
+      "confidence": 0.95,
+      "verification_receipt": {
+        "source_verified": true,
+        "equation_number": 5,
+        "matched_operators": true,
+        "denominator_verified": false,
+        "exponential_verified": false,
+        "norm_verified": false,
+        "subscripts_verified": true
+      }
+    },
+    {
+      "equation_id": "EQ-06",
+      "paper_label": "Eq. (6)",
+      "equation_number": 6,
+      "page": 8,
+      "source_page": 8,
+      "bbox": [
+        139.48,
+        672.47,
+        306.0,
+        703.04
+      ],
+      "raw_text": "\\Delta t + \\beta exp \\left( -\\sigma\\|\\nabla 2 \\theta\\| \\right) , (6)",
+      "latex": "f_{\\text{score}}(m) = \\alpha \\left(\\frac{\\Delta \\text{Acc}}{\\Delta t}\\right) + \\beta \\exp\\left(-\\sigma \\|\\nabla_\\theta^2\\|\\right)",
+      "display_mode": true,
+      "symbols": [
+        {
+          "symbol": "f_{\\text{score}}(m)",
+          "meaning_zh": "候选策略 m 的五分钟早筛综合适应度分值"
+        },
+        {
+          "symbol": "\\Delta \\text{Acc}",
+          "meaning_zh": "初期验证集精度增益（百分点）"
+        },
+        {
+          "symbol": "\\Delta t",
+          "meaning_zh": "早期微缩验证执行时长归一化因子"
+        },
+        {
+          "symbol": "\\frac{\\Delta \\text{Acc}}{\\Delta t}",
+          "meaning_zh": "单位时间性能提升变化率"
+        },
+        {
+          "symbol": "\\exp\\left(-\\sigma \\|\\nabla_\\theta^2\\|\\right)",
+          "meaning_zh": "基于二阶梯度曲率的理论训练稳定性惩罚项"
+        },
+        {
+          "symbol": "\\alpha, \\beta, \\sigma",
+          "meaning_zh": "权衡初期增益与稳定性的平衡超参数"
+        },
+        {
+          "symbol": "\\text{CV}_{50}",
+          "meaning_zh": "工程实用代理：最后 50 步训练损失的变异系数（轻量替代高昂二阶曲率计算）"
+        }
+      ],
+      "role_zh": "五分钟敏捷验证早期综合适应度评分函数",
+      "explanation": "五分钟敏捷验证综合评分函数：平衡单位时间精度增益与训练稳定性；工程实现中以最后 50 步训练损失变异系数作为二阶曲率的轻量化代理指标。",
+      "pedagogy": {
+        "role": "五分钟敏捷验证早期综合适应度评分函数",
+        "explanation_priority": "MUST_EXPLAIN",
+        "symbol_definitions": [
+          {
+            "symbol": "f_{\\text{score}}(m)",
+            "name": "候选策略适应度评分",
+            "interpretation": "对候选策略 m 在 5 分钟微缩验证中的综合量化分值"
+          },
+          {
+            "symbol": "\\Delta \\text{Acc}",
+            "name": "初期精度增益",
+            "interpretation": "在微缩子集上相较 Baseline 的验证精度提升（百分点）"
+          },
+          {
+            "symbol": "\\Delta t",
+            "name": "早筛耗时归一化因子",
+            "interpretation": "5 分钟微缩验证的实际执行时长归一化基准"
+          },
+          {
+            "symbol": "\\frac{\\Delta \\text{Acc}}{\\Delta t}",
+            "name": "单位时间性能收益率",
+            "interpretation": "衡量单位计算耗时下的收敛加速度与精度提升性价比"
+          },
+          {
+            "symbol": "\\exp\\left(-\\sigma \\|\\nabla_\\theta^2\\|\\right)",
+            "name": "二阶曲率指数平稳性惩罚",
+            "interpretation": "基于损失曲面 Hessian 范数的平稳性约束；平坦平稳时趋于 1，剧烈震荡时迅速衰减至 0"
+          },
+          {
+            "symbol": "\\alpha, \\beta, \\sigma",
+            "name": "平衡超参数",
+            "interpretation": "权衡收敛加速度与训练稳定性的加权系数"
+          },
+          {
+            "symbol": "\\text{CV}_{50}",
+            "name": "工程实用代理指标",
+            "interpretation": "最后 50 步训练 loss 的变异系数 (标准差/均值)，轻量替代高昂二阶曲率"
+          }
+        ],
+        "input_output": {
+          "inputs": [
+            "微缩子集初期精度增益 DeltaAcc",
+            "执行耗时 Delta t",
+            "训练损失轨迹"
+          ],
+          "outputs": [
+            "标量适应度评分 f_{score}(m)"
+          ]
+        },
+        "term_interpretations": [
+          {
+            "term": "\\frac{\\Delta \\text{Acc}}{\\Delta t}",
+            "role": "单位时间精度收益率",
+            "intuition": "敏捷早筛关注算力投入产出比。若精度提升极慢导致 DeltaAcc / Delta t 极小，表明方案收敛迟缓，不予晋级全量资源。",
+            "effect": "筛选出初期学习效率高的敏捷方案"
+          },
+          {
+            "term": "\\exp\\left(-\\sigma \\|\\nabla_\\theta^2\\|\\right)",
+            "role": "二阶曲率指数衰减惩罚",
+            "intuition": "Hessian 范数度量损失曲面震荡。指数衰减将惩罚约束在 (0, 1] 区间：曲率极小（平稳平坦）时接近 1；曲率剧烈震荡（梯度爆炸或发散风险）时急速跌落至 0。",
+            "effect": "强力抑制训练不稳定或数值震荡方案"
+          },
+          {
+            "term": "+",
+            "role": "收益与稳定性的加权折中",
+            "intuition": "通过加号将收敛速度增益与平稳性约束线性结合，避免单维度偏颇。",
+            "effect": "兼顾收敛速度与训练平稳性"
+          }
+        ],
+        "assumptions": [
+          "微缩子集（如 10% 样本）上的 5 分钟早期动态与全量收敛轨迹具备正向秩相关性",
+          "平坦的损失曲面有利于遥感多模态泛化"
+        ],
+        "implementation_proxy": "【关键工程代理说明】论文明确指出：直接计算全网络二阶 Hessian 范数 ||nabla_theta^2|| 开销过大，工程实现中采用『训练最后 50 步 loss 的变异系数 CV_50 = sigma / mu』作为二阶平稳性的轻量化代理指标；论文设定适应度综合阈值 f_{score} > 0.55 触发全量资源晋级，但原文未开源具体的 alpha, beta, sigma 标定数值。",
+        "source_anchors": [
+          "p.8 Section 3.3.3",
+          "p.14 Appendix E"
+        ],
+        "unspecified_details": [
+          "原文未公开 alpha, beta, sigma 的确切数值标定"
+        ]
+      },
+      "source_confidence": "VERIFIED",
+      "fallback_asset": "assets/equations/EQ-06.png",
+      "surrounding_text": "\\Delta t + \\beta exp \\left( -\\sigma\\|\\nabla 2 \\theta\\| \\right) , (6)",
+      "section": "5 Turbo, while the Critic mechanism is powered by Minimax",
+      "referenced_by": [],
+      "confidence": 0.95,
+      "verification_receipt": {
+        "source_verified": true,
+        "equation_number": 6,
+        "matched_operators": true,
+        "denominator_verified": true,
+        "exponential_verified": true,
+        "norm_verified": true,
+        "subscripts_verified": true
+      }
+    },
+    {
+      "equation_id": "EQ-07",
+      "paper_label": "Eq. (7)",
+      "equation_number": 7,
+      "page": 14,
+      "source_page": 14,
+      "bbox": [
+        115.34,
+        699.87,
+        306.0,
+        738.22
+      ],
+      "raw_text": "\\rho = 1 -6 PN i=1 d2 i N(N 2 -1), (7)",
+      "latex": "\\rho = 1 - \\frac{6 \\sum_{i=1}^N d_i^2}{N(N^2 - 1)}",
+      "display_mode": true,
+      "symbols": [
+        {
+          "symbol": "\\rho",
+          "meaning_zh": "Spearman 秩相关系数"
+        },
+        {
+          "symbol": "N",
+          "meaning_zh": "验证候选策略样本总数"
+        },
+        {
+          "symbol": "d_i",
+          "meaning_zh": "第 i 个候选在早筛排名与全量最终排名之间的位次差"
+        }
+      ],
+      "role_zh": "五分钟早筛与全量训练排名的 Spearman 秩相关系数",
+      "explanation": "评估五分钟敏捷早筛与全量训练最终收敛精度排名的一致性程度，论文实测 ρ = 0.64 (p=0.03)。",
+      "pedagogy": {
+        "role": "五分钟早筛与全量训练排名的 Spearman 秩相关系数",
+        "explanation_priority": "CONCISE_DEFINE",
+        "symbol_definitions": [
+          {
+            "symbol": "\\rho",
+            "name": "秩相关系数",
+            "interpretation": "非参数单调相关性度量"
+          },
+          {
+            "symbol": "N",
+            "name": "样本数",
+            "interpretation": "参与对比的候选策略总数"
+          },
+          {
+            "symbol": "d_i",
+            "name": "名次位移差",
+            "interpretation": "早筛与全量排名的位次差"
+          }
+        ],
+        "input_output": {
+          "inputs": [
+            "早筛候选排名",
+            "全量收敛排名"
+          ],
+          "outputs": [
+            "标量相关系数 rho"
+          ]
+        },
+        "term_interpretations": [
+          {
+            "term": "\\frac{6 \\sum d_i^2}{N(N^2 - 1)}",
+            "role": "名次平方偏差归一化",
+            "intuition": "名次变动越小，该项越趋近于 0，相关系数越接近 1。"
+          }
+        ],
+        "assumptions": [
+          "排名单调性足以代表策略质量优劣"
+        ],
+        "implementation_proxy": null,
+        "source_anchors": [
+          "p.14 Section 4.2"
+        ]
+      },
+      "source_confidence": "VERIFIED",
+      "fallback_asset": "assets/equations/EQ-07.png",
+      "surrounding_text": "\\rho = 1 -6 PN i=1 d2 i N(N 2 -1), (7)",
+      "section": "TABLE X",
+      "referenced_by": [],
+      "confidence": 0.95,
+      "verification_receipt": {
+        "source_verified": true,
+        "equation_number": 7,
+        "matched_operators": true,
+        "denominator_verified": true,
+        "exponential_verified": false,
+        "norm_verified": false,
+        "subscripts_verified": true
+      }
+    },
+    {
+      "equation_id": "EQ-08",
+      "paper_label": "Eq. (8)",
+      "equation_number": 8,
+      "page": 14,
+      "source_page": 14,
+      "bbox": [
+        310.96,
+        346.79,
+        572.0,
+        382.32
+      ],
+      "raw_text": "Precision = TP TP + FP , Recall = TP TP + FN , (8)",
+      "latex": "\\text{Precision} = \\frac{\\text{TP}}{\\text{TP} + \\text{FP}}, \\quad \\text{Recall} = \\frac{\\text{TP}}{\\text{TP} + \\text{FN}}",
+      "display_mode": true,
+      "symbols": [
+        {
+          "symbol": "\\text{Precision}",
+          "meaning_zh": "劣化候选策略预测精确率（实测 1.00，零误拦截）"
+        },
+        {
+          "symbol": "\\text{Recall}",
+          "meaning_zh": "劣化候选策略预测召回率（实测 0.83，6个中阻断5个，漏过1个）"
+        },
+        {
+          "symbol": "\\text{TP}",
+          "meaning_zh": "真阳性：被早筛正确识别并阻断的劣化策略 (5)"
+        },
+        {
+          "symbol": "\\text{FP}",
+          "meaning_zh": "假阳性：被早筛误拦截的有潜质策略 (0)"
+        },
+        {
+          "symbol": "\\text{FN}",
+          "meaning_zh": "假阴性：漏过早筛并在全量训练中劣化的策略 (1)"
+        }
+      ],
+      "role_zh": "劣化候选策略早筛精确率与召回率",
+      "explanation": "敏捷早筛对劣化策略的分类性能：以劣化策略为正类，实现 Precision=1.00 与 Recall=0.83。",
+      "pedagogy": {
+        "role": "劣化候选策略早筛精确率与召回率",
+        "explanation_priority": "CONCISE_DEFINE",
+        "symbol_definitions": [
+          {
+            "symbol": "Precision",
+            "name": "精确率",
+            "interpretation": "阻断报警中的真实劣化比例 (1.00)"
+          },
+          {
+            "symbol": "Recall",
+            "name": "召回率",
+            "interpretation": "全量劣化方案被成功拦截的比例 (0.83)"
+          }
+        ],
+        "input_output": {
+          "inputs": [
+            "早筛判决结果",
+            "全量训练真实表现"
+          ],
+          "outputs": [
+            "二分类质量指标"
+          ]
+        },
+        "term_interpretations": [
+          {
+            "term": "Precision / Recall",
+            "role": "早筛防误杀与防漏过平衡",
+            "intuition": "零假阳性 (FP=0) 保证不扼杀潜在高优方案，高召回率 (83%) 拦截绝大多数劣质策略。"
+          }
+        ],
+        "assumptions": [
+          "以劣化方案为正类进行早筛过滤评估"
+        ],
+        "implementation_proxy": null,
+        "source_anchors": [
+          "p.14 Section 4.2"
+        ]
+      },
+      "source_confidence": "VERIFIED",
+      "fallback_asset": "assets/equations/EQ-08.png",
+      "surrounding_text": "Precision = TP TP + FP , Recall = TP TP + FN , (8)",
+      "section": "TABLE X",
+      "referenced_by": [],
+      "confidence": 0.95,
+      "verification_receipt": {
+        "source_verified": true,
+        "equation_number": 8,
+        "matched_operators": true,
+        "denominator_verified": true,
+        "exponential_verified": false,
+        "norm_verified": false,
+        "subscripts_verified": true
+      }
+    },
+    {
+      "equation_id": "EQ-09",
+      "paper_label": "Eq. (9)",
+      "equation_number": 9,
+      "page": 18,
+      "source_page": 18,
+      "bbox": [
+        146.76,
+        227.56,
+        306.0,
+        260.98
+      ],
+      "raw_text": "l=1 Rl\\rightarrow r(Pl), (9)",
+      "latex": "F = \\frac{1}{L} \\sum_{l=1}^L R_{l \\rightarrow r}(P_l)",
+      "display_mode": true,
+      "symbols": [
+        {
+          "symbol": "F",
+          "meaning_zh": "统一基准分辨率参考融合特征"
+        },
+        {
+          "symbol": "P_l",
+          "meaning_zh": "第 l 层 FPN 特征金字塔特征"
+        },
+        {
+          "symbol": "R_{l \rightarrow r}",
+          "meaning_zh": "从第 l 层对齐至基准层 r 的双线性插值与卷积调整算子"
+        }
+      ],
+      "role_zh": "MSFR 多尺度特征对其与统一基准融合",
+      "explanation": "MSFR 将不同金字塔层特征统一对齐至基准分辨率尺度并加权平均，构建全局多尺度基底。",
+      "pedagogy": {
+        "role": "MSFR 多尺度特征对齐与统一基准融合",
+        "explanation_priority": "MUST_EXPLAIN",
+        "symbol_definitions": [
+          {
+            "symbol": "F",
+            "name": "统一基准融合特征",
+            "interpretation": "多尺度参考特征张量"
+          },
+          {
+            "symbol": "P_l",
+            "name": "金字塔特征",
+            "interpretation": "第 l 层 FPN 特征图"
+          },
+          {
+            "symbol": "R_{l -> r}",
+            "name": "对齐重采样算子",
+            "interpretation": "插值与 1x1 卷积维度对齐变换"
+          }
+        ],
+        "input_output": {
+          "inputs": [
+            "L 层金字塔特征图 P_1 ... P_L"
+          ],
+          "outputs": [
+            "基准分辨率参考融合特征 F"
+          ]
+        },
+        "term_interpretations": [
+          {
+            "term": "\\frac{1}{L} \\sum R_{l \\rightarrow r}(P_l)",
+            "role": "多尺度特征对齐均值池化",
+            "intuition": "将极小目标（高分辨率底层）与大目标（低分辨率顶层）统一投射到基准尺度下平均，融汇高层语义与底层几何纹理。"
+          }
+        ],
+        "assumptions": [
+          "不同层次特征经过对齐后在特征空间具有可加性"
+        ],
+        "implementation_proxy": "双线性插值配合通道 1x1 卷积",
+        "source_anchors": [
+          "p.15 Appendix A.1"
+        ]
+      },
+      "source_confidence": "VERIFIED",
+      "fallback_asset": "assets/equations/EQ-09.png",
+      "surrounding_text": "l=1 Rl\\rightarrow r(Pl), (9)",
+      "section": "RETRIEVAL SOURCES AND FILTERING RULES",
+      "referenced_by": [],
+      "confidence": 0.95,
+      "verification_receipt": {
+        "source_verified": true,
+        "equation_number": 9,
+        "matched_operators": true,
+        "denominator_verified": true,
+        "exponential_verified": false,
+        "norm_verified": false,
+        "subscripts_verified": true
+      }
+    },
+    {
+      "equation_id": "EQ-10",
+      "paper_label": "Eq. (10)",
+      "equation_number": 10,
+      "page": 18,
+      "source_page": 18,
+      "bbox": [
+        112.37,
+        317.6,
+        306.0,
+        343.57
+      ],
+      "raw_text": "ˆPl = Pl + \\gammalRr\\rightarrow l(F), (10)",
+      "latex": "\\hat{P}_l = P_l + \\gamma_l R_{r \\rightarrow l}(F)",
+      "display_mode": true,
+      "symbols": [
+        {
+          "symbol": "\\hat{P}_l",
+          "meaning_zh": "调制后的增强特征层"
+        },
+        {
+          "symbol": "\\gamma_l",
+          "meaning_zh": "可学习残差门控缩放因子（初始化为 0，确保平滑过渡）"
+        },
+        {
+          "symbol": "R_{r \rightarrow l}",
+          "meaning_zh": "从基准尺度反向重采样至第 l 层特征尺度的变换算子"
+        }
+      ],
+      "role_zh": "MSFR 残差门控特征调制更新",
+      "explanation": "MSFR 采用初始化为 0 的可学习残差门控，将融合上下文平滑注入回各金字塔层，避免破坏原有预训练表征。",
+      "pedagogy": {
+        "role": "MSFR 残差门控特征调制更新",
+        "explanation_priority": "MUST_EXPLAIN",
+        "symbol_definitions": [
+          {
+            "symbol": "\\hat{P}_l",
+            "name": "调制增强特征",
+            "interpretation": "输入下游检测头的增强特征"
+          },
+          {
+            "symbol": "\\gamma_l",
+            "name": "残差门控缩放因子",
+            "interpretation": "可学习标量参数，初始化为 0"
+          },
+          {
+            "symbol": "R_{r -> l}",
+            "name": "逆向重采样算子",
+            "interpretation": "从基准尺度投射回第 l 层原始空间尺度"
+          }
+        ],
+        "input_output": {
+          "inputs": [
+            "原始层特征 P_l",
+            "全局融合特征 F",
+            "门控参数 gamma_l"
+          ],
+          "outputs": [
+            "增强特征图 hat{P}_l"
+          ]
+        },
+        "term_interpretations": [
+          {
+            "term": "\\gamma_l R_{r \\rightarrow l}(F)",
+            "role": "平滑残差增量注入",
+            "intuition": "gamma_l 初始化为 0，使得训练初始阶段 hat{P}_l 严格等价于预训练特征 P_l，防止随机初始化的跨层融合冲垮预训练检测头权重。"
+          }
+        ],
+        "assumptions": [
+          "残差形式保障训练初始收敛平稳性"
+        ],
+        "implementation_proxy": "可学习标量参数乘法",
+        "source_anchors": [
+          "p.15 Appendix A.1"
+        ]
+      },
+      "source_confidence": "VERIFIED",
+      "fallback_asset": "assets/equations/EQ-10.png",
+      "surrounding_text": "ˆPl = Pl + \\gammalRr\\rightarrow l(F), (10)",
+      "section": "RETRIEVAL SOURCES AND FILTERING RULES",
+      "referenced_by": [],
+      "confidence": 0.95,
+      "verification_receipt": {
+        "source_verified": true,
+        "equation_number": 10,
+        "matched_operators": true,
+        "denominator_verified": false,
+        "exponential_verified": false,
+        "norm_verified": false,
+        "subscripts_verified": true
+      }
+    },
+    {
+      "equation_id": "EQ-11",
+      "paper_label": "Eq. (11)",
+      "equation_number": 11,
+      "page": 18,
+      "source_page": 18,
+      "bbox": [
+        122.96,
+        470.21,
+        306.0,
+        493.01
+      ],
+      "raw_text": "e = Norm(Wpf), (11)",
+      "latex": "e = \\text{Norm}(W_p f)",
+      "display_mode": true,
+      "symbols": [
+        {
+          "symbol": "e",
+          "meaning_zh": "L2 归一化后的 128 维紧凑表征向量"
+        },
+        {
+          "symbol": "W_p",
+          "meaning_zh": "线性投影矩阵 (1024 维 -> 128 维)"
+        },
+        {
+          "symbol": "f",
+          "meaning_zh": "共享 RoI 特征向量 (1024 维)"
+        }
+      ],
+      "role_zh": "CPR 共享 RoI 特征映射与归一化嵌入",
+      "explanation": "CPR 将高维 RoI 特征降维投影至紧凑球面嵌入空间，用于度量与类别原型的几何相似度。",
+      "pedagogy": {
+        "role": "CPR 共享 RoI 特征映射与归一化嵌入",
+        "explanation_priority": "CONCISE_DEFINE",
+        "symbol_definitions": [
+          {
+            "symbol": "e",
+            "name": "球面归一化嵌入",
+            "interpretation": "L2 单位范数 128 维向量"
+          },
+          {
+            "symbol": "W_p",
+            "name": "投影降维矩阵",
+            "interpretation": "1024 维 -> 128 维"
+          },
+          {
+            "symbol": "f",
+            "name": "RoI 特征",
+            "interpretation": "检测头提取的高维特征"
+          }
+        ],
+        "input_output": {
+          "inputs": [
+            "高维 RoI 特征 f"
+          ],
+          "outputs": [
+            "紧凑单位向量 e"
+          ]
+        },
+        "term_interpretations": [
+          {
+            "term": "\\text{Norm}(W_p f)",
+            "role": "L2 投影与球面约束",
+            "intuition": "降维并限制在单位超球面上，消解特征范数模长对相似度度量的干扰。"
+          }
+        ],
+        "assumptions": [
+          "类别原型距离在球面余弦空间度量最有效"
+        ],
+        "implementation_proxy": "全连接层配合 F.normalize(dim=-1)",
+        "source_anchors": [
+          "p.15 Appendix A.2"
+        ]
+      },
+      "source_confidence": "VERIFIED",
+      "fallback_asset": "assets/equations/EQ-11.png",
+      "surrounding_text": "e = Norm(Wpf), (11)",
+      "section": "RETRIEVAL SOURCES AND FILTERING RULES",
+      "referenced_by": [],
+      "confidence": 0.95,
+      "verification_receipt": {
+        "source_verified": true,
+        "equation_number": 11,
+        "matched_operators": true,
+        "denominator_verified": false,
+        "exponential_verified": false,
+        "norm_verified": false,
+        "subscripts_verified": true
+      }
+    },
+    {
+      "equation_id": "EQ-12",
+      "paper_label": "Eq. (12)",
+      "equation_number": 12,
+      "page": 18,
+      "source_page": 18,
+      "bbox": [
+        40.0,
+        488.83,
+        306.0,
+        534.71
+      ],
+      "raw_text": "and computes its similarity to the normalized category proto- types ˆP: s = \\taue ˆP T , \\tau = 10. (12)",
+      "latex": "s = \\tau e \\hat{P}^T, \\quad \\tau = 10",
+      "display_mode": true,
+      "symbols": [
+        {
+          "symbol": "s",
+          "meaning_zh": "各类别原型的缩放余弦相似度向量"
+        },
+        {
+          "symbol": "\\tau",
+          "meaning_zh": "温度系数 (固定设为 10，锐化分布)"
+        },
+        {
+          "symbol": "\\hat{P}",
+          "meaning_zh": "L2 归一化的类别原型矩阵"
+        }
+      ],
+      "role_zh": "CPR 类别原型相似度分数计算",
+      "explanation": "计算候选 RoI 嵌入向量与各类别可学习原型之间的余弦距离并以固定温度系数缩放。",
+      "pedagogy": {
+        "role": "CPR 类别原型相似度分数计算",
+        "explanation_priority": "MUST_EXPLAIN",
+        "symbol_definitions": [
+          {
+            "symbol": "s",
+            "name": "相似度分值向量",
+            "interpretation": "与 C 个类别原型的相似度"
+          },
+          {
+            "symbol": "\\tau",
+            "name": "温度系数",
+            "interpretation": "超参数，固定设为 10"
+          },
+          {
+            "symbol": "\\hat{P}",
+            "name": "类别原型矩阵",
+            "interpretation": "可学习且经 L2 归一化的类别中心原型"
+          }
+        ],
+        "input_output": {
+          "inputs": [
+            "RoI 嵌入向量 e",
+            "原型矩阵 hat{P}"
+          ],
+          "outputs": [
+            "锐化后的相似度向量 s"
+          ]
+        },
+        "term_interpretations": [
+          {
+            "term": "\\tau e \\hat{P}^T",
+            "role": "带温度系数的余弦相似度锐化",
+            "intuition": "超球面上的余弦点积取值在 [-1, 1] 之间过于平缓，乘以温度系数 tau=10 可显著放大微小角度差异，增强类别辨识度。"
+          }
+        ],
+        "assumptions": [
+          "固定温度系数 tau=10 在遥感细粒度类别分辨中最佳"
+        ],
+        "implementation_proxy": "矩阵乘法乘以常数 10",
+        "source_anchors": [
+          "p.15 Appendix A.2"
+        ]
+      },
+      "source_confidence": "VERIFIED",
+      "fallback_asset": "assets/equations/EQ-12.png",
+      "surrounding_text": "and computes its similarity to the normalized category proto- types ˆP: s = \\taue ˆP T , \\tau = 10. (12)",
+      "section": "RETRIEVAL SOURCES AND FILTERING RULES",
+      "referenced_by": [],
+      "confidence": 0.95,
+      "verification_receipt": {
+        "source_verified": true,
+        "equation_number": 12,
+        "matched_operators": true,
+        "denominator_verified": false,
+        "exponential_verified": false,
+        "norm_verified": false,
+        "subscripts_verified": true
+      }
+    },
+    {
+      "equation_id": "EQ-13",
+      "paper_label": "Eq. (13)",
+      "equation_number": 13,
+      "page": 18,
+      "source_page": 18,
+      "bbox": [
+        83.93,
+        549.3,
+        306.0,
+        572.76
+      ],
+      "raw_text": "˜zfg = zfg + gs, g = 0.5 tanh(\\theta). (13)",
+      "latex": "\\tilde{z}_{\\text{fg}} = z_{\\text{fg}} + g s, \\quad g = 0.5 \\tanh(\\theta)",
+      "display_mode": true,
+      "symbols": [
+        {
+          "symbol": "\\tilde{z}_{\\text{fg}}",
+          "meaning_zh": "精细校准后的前景类别 logits"
+        },
+        {
+          "symbol": "z_{\text{fg}}",
+          "meaning_zh": "原始检测头输出的前景 logits"
+        },
+        {
+          "symbol": "g",
+          "meaning_zh": "基于 tanh 的动态自适应门控权重 (幅度限制在 [0, 0.5])"
+        },
+        {
+          "symbol": "\\theta",
+          "meaning_zh": "可学习门控参数"
+        }
+      ],
+      "role_zh": "CPR 前景分类 Logit 动态残差调制",
+      "explanation": "CPR 门控校正机制：利用原型相似度微调前景类别 logits，防止过度修正并抑制类别混淆。",
+      "pedagogy": {
+        "role": "CPR 前景分类 Logit 动态残差调制",
+        "explanation_priority": "MUST_EXPLAIN",
+        "symbol_definitions": [
+          {
+            "symbol": "\\tilde{z}_{\\text{fg}}",
+            "name": "校准后前景 logits",
+            "interpretation": "输入最终 softmax 的 logits"
+          },
+          {
+            "symbol": "z_{\text{fg}}",
+            "name": "原始前景 logits",
+            "interpretation": "检测头原本分类分支输出"
+          },
+          {
+            "symbol": "g",
+            "name": "有界门控增益",
+            "interpretation": "幅度被严格限制在 [0, 0.5] 的自适应权重"
+          },
+          {
+            "symbol": "\\theta",
+            "name": "门控参数",
+            "interpretation": "可学习参数"
+          }
+        ],
+        "input_output": {
+          "inputs": [
+            "原始分类 logits",
+            "原型相似度 s",
+            "门控参数 theta"
+          ],
+          "outputs": [
+            "校准后分类 logits"
+          ]
+        },
+        "term_interpretations": [
+          {
+            "term": "g = 0.5 \\tanh(\\theta)",
+            "role": "上界限制门控",
+            "intuition": "tanh 幅度限制在 [-1, 1]，乘以前缀 0.5 使得最大校准增益不超过 0.5，严格防止原型校准喧宾夺主导致原检测头灾难性失真。"
+          }
+        ],
+        "assumptions": [
+          "原型校准作为微调补充，不能颠覆主分类头"
+        ],
+        "implementation_proxy": "PyTorch clamp/tanh 运算",
+        "source_anchors": [
+          "p.15 Appendix A.2"
+        ]
+      },
+      "source_confidence": "VERIFIED",
+      "fallback_asset": "assets/equations/EQ-13.png",
+      "surrounding_text": "˜zfg = zfg + gs, g = 0.5 tanh(\\theta). (13)",
+      "section": "RETRIEVAL SOURCES AND FILTERING RULES",
+      "referenced_by": [],
+      "confidence": 0.95,
+      "verification_receipt": {
+        "source_verified": true,
+        "equation_number": 13,
+        "matched_operators": true,
+        "denominator_verified": false,
+        "exponential_verified": false,
+        "norm_verified": false,
+        "subscripts_verified": true
+      }
+    },
+    {
+      "equation_id": "EQ-14",
+      "paper_label": "Eq. (14)",
+      "equation_number": 14,
+      "page": 18,
+      "source_page": 18,
+      "bbox": [
+        312.73,
+        210.14,
+        572.0,
+        248.54
+      ],
+      "raw_text": "Sim = 0.30Stask + 0.25Sbottleneck + 0.20Sdataset + 0.15Smodel + 0.10Smetric. (14)",
+      "latex": "\\text{Sim} = 0.30 S_{\\text{task}} + 0.25 S_{\\text{bottleneck}} + 0.20 S_{\\text{dataset}} + 0.15 S_{\\text{model}} + 0.10 S_{\\text{metric}}",
+      "display_mode": true,
+      "symbols": [
+        {
+          "symbol": "\\text{Sim}",
+          "meaning_zh": "当前任务与历史经验任务的加权相似度"
+        },
+        {
+          "symbol": "S_{\text{task}}",
+          "meaning_zh": "任务类型与目标相似度"
+        },
+        {
+          "symbol": "S_{\text{bottleneck}}",
+          "meaning_zh": "主导瓶颈相似度"
+        },
+        {
+          "symbol": "S_{\text{dataset}}",
+          "meaning_zh": "数据集特性相似度"
+        },
+        {
+          "symbol": "S_{\text{model}}",
+          "meaning_zh": "模型架构与骨干网络相似度"
+        },
+        {
+          "symbol": "S_{\text{metric}}",
+          "meaning_zh": "核心评测指标相似度"
+        }
+      ],
+      "role_zh": "经验库跨任务相似度综合多维度量",
+      "explanation": "经验检索综合打分机制：依据任务描述、瓶颈模式、数据与模型特性加权检索最相关的先验。",
+      "pedagogy": {
+        "role": "经验库跨任务相似度综合多维度量",
+        "explanation_priority": "CONCISE_DEFINE",
+        "symbol_definitions": [
+          {
+            "symbol": "Sim",
+            "name": "跨任务相似度",
+            "interpretation": "综合相似度评分"
+          },
+          {
+            "symbol": "S_*",
+            "name": "分维度匹配度",
+            "interpretation": "任务、瓶颈、数据、模型与指标五维匹配分"
+          }
+        ],
+        "input_output": {
+          "inputs": [
+            "当前任务特征元数据",
+            "历史任务元数据"
+          ],
+          "outputs": [
+            "综合相似度 Sim ∈ [0, 1]"
+          ]
+        },
+        "term_interpretations": [
+          {
+            "term": "五维加权求和",
+            "role": "多维度加权先验检索",
+            "intuition": "任务目标与瓶颈模式权重最高 (0.30+0.25=0.55)，确保经验检索针对核心痛点。"
+          }
+        ],
+        "assumptions": [
+          "五维元数据正交且权重静态设定有效"
+        ],
+        "implementation_proxy": "向量检索加权计算",
+        "source_anchors": [
+          "p.16 Appendix C"
+        ]
+      },
+      "source_confidence": "VERIFIED",
+      "fallback_asset": "assets/equations/EQ-14.png",
+      "surrounding_text": "Sim = 0.30Stask + 0.25Sbottleneck + 0.20Sdataset + 0.15Smodel + 0.10Smetric. (14)",
+      "section": "RETRIEVAL SOURCES AND FILTERING RULES",
+      "referenced_by": [],
+      "confidence": 0.95,
+      "verification_receipt": {
+        "source_verified": true,
+        "equation_number": 14,
+        "matched_operators": true,
+        "denominator_verified": false,
+        "exponential_verified": false,
+        "norm_verified": false,
+        "subscripts_verified": true
+      }
+    },
+    {
+      "equation_id": "EQ-15",
+      "paper_label": "Eq. (15)",
+      "equation_number": 15,
+      "page": 19,
+      "source_page": 19,
+      "bbox": [
+        92.55,
+        464.69,
+        306.0,
+        488.15
+      ],
+      "raw_text": "Sret = 0.50R + 0.30F + 0.20N, (15)",
+      "latex": "S_{\\text{ret}} = 0.50 R + 0.30 F + 0.20 N",
+      "display_mode": true,
+      "symbols": [
+        {
+          "symbol": "S_{\text{ret}}",
+          "meaning_zh": "外部算子检索综合排序得分"
+        },
+        {
+          "symbol": "R",
+          "meaning_zh": "语义相关度得分 (Relevance)"
+        },
+        {
+          "symbol": "F",
+          "meaning_zh": "代码与算子可用度 (Feasibility)"
+        },
+        {
+          "symbol": "N",
+          "meaning_zh": "新颖度与潜在收益 (Novelty)"
+        }
+      ],
+      "role_zh": "外部文献与代码算子检索优先级排序打分",
+      "explanation": "外部知识流算子排序评分：平衡语义相关性、工程可行性与创新收益。",
+      "pedagogy": {
+        "role": "外部文献与代码算子检索优先级排序打分",
+        "explanation_priority": "CONCISE_DEFINE",
+        "symbol_definitions": [
+          {
+            "symbol": "S_{ret}",
+            "name": "外部算子优先级评分",
+            "interpretation": "外部知识调度排序值"
+          },
+          {
+            "symbol": "R",
+            "name": "语义相关性",
+            "interpretation": "与当前瓶颈解决的相关度"
+          },
+          {
+            "symbol": "F",
+            "name": "工程可行性",
+            "interpretation": "算子代码独立性与执行成本"
+          },
+          {
+            "symbol": "N",
+            "name": "新颖收益",
+            "interpretation": "相较于已知方案的潜在突破度"
+          }
+        ],
+        "input_output": {
+          "inputs": [
+            "候选外部文献与代码分析报告"
+          ],
+          "outputs": [
+            "排序分值 S_ret"
+          ]
+        },
+        "term_interpretations": [
+          {
+            "term": "0.50 R + 0.30 F + 0.20 N",
+            "role": "算子可用性优先平衡",
+            "intuition": "相关性与可行性占 80% 权重，杜绝引入无法在真实环境中运行的虚幻创新。"
+          }
+        ],
+        "assumptions": [
+          "可行性与相关性是决定算子落地的最核心因素"
+        ],
+        "implementation_proxy": null,
+        "source_anchors": [
+          "p.16 Appendix C"
+        ]
+      },
+      "source_confidence": "VERIFIED",
+      "fallback_asset": "assets/equations/EQ-15.png",
+      "surrounding_text": "Sret = 0.50R + 0.30F + 0.20N, (15)",
+      "section": "AGENT PROMPTS FOR RINGMOCLAW",
+      "referenced_by": [],
+      "confidence": 0.95,
+      "verification_receipt": {
+        "source_verified": true,
+        "equation_number": 15,
+        "matched_operators": true,
+        "denominator_verified": false,
+        "exponential_verified": false,
+        "norm_verified": false,
+        "subscripts_verified": true
+      }
+    }
+  ]
+}

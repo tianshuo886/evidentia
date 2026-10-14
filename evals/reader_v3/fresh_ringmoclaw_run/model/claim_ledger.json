@@ -1,0 +1,368 @@
+{
+  "schema_version": "1.0",
+  "paper_id": "ringmoclaw",
+  "source_sha256": "32df5e2843de7e8ccd52d56b9dfed257c26786ef3b71fbc397a1c3a5e26fb0fa",
+  "venue_verification": {
+    "venue_claimed_by_pdf": "arXiv:2609.00814v2 (preprint · venue unverified) · 2026",
+    "venue_verified_externally": false,
+    "peer_reviewed_status": "UNVERIFIED",
+    "preprint_status": "PREPRINT",
+    "evidence_source": "PDF header / bibliographic metadata",
+    "formatted_header_venue": "arXiv:2609.00814v2 (preprint · venue unverified) · 2026"
+  },
+  "claims": [
+    {
+      "claim_id": "CLM-01",
+      "statement": "五分钟敏捷验证协议在早筛劣化候选策略时具有高置信度筛选能力",
+      "source_anchors": [
+        "p.14",
+        "Table X"
+      ],
+      "evidence_refs": [
+        "T10",
+        "p.14"
+      ],
+      "epistemic_category": "OBSERVATION",
+      "numerical_semantics": {
+        "metric": "Precision and Recall on Detrimental Candidates",
+        "positive_class": "detrimental candidates",
+        "unit": "ratio (0-1)",
+        "statistic": "precision=1.00, recall=0.83",
+        "denominator": "TP+FP for precision; TP+FN (total true detrimental=6) for recall",
+        "baseline": "full training ranking",
+        "selection_protocol": "5-minute micro-verification on 2x RTX 4090"
+      },
+      "attribution": {
+        "attributed_to": "AUTHORS",
+        "source_confirmed": true,
+        "project_context_leakage": false
+      },
+      "confidence": "HIGH",
+      "boundaries": [
+        "1 detrimental candidate (17%) escaped early screening; 5 of 6 caught"
+      ],
+      "rules_checked": [
+        "METRIC_POSITIVE_CLASS_INVERSION"
+      ],
+      "verdict": "SUPPORTED",
+      "severity": "INFORMATIONAL",
+      "verifier_reasoning": "Verified in accordance with source evidence and calibrated epistemics."
+    },
+    {
+      "claim_id": "CLM-02",
+      "statement": "消融双流经验总线导致探索迭代中产生 6 次非提升迭代（Failed=6）",
+      "source_anchors": [
+        "p.14",
+        "Table IX"
+      ],
+      "evidence_refs": [
+        "T09",
+        "p.14"
+      ],
+      "epistemic_category": "OBSERVATION",
+      "numerical_semantics": {
+        "metric": "Non-improving iterations count",
+        "positive_class": "non-improving iterations",
+        "unit": "iteration count",
+        "statistic": "Failed = 6",
+        "denominator": "total rounds = 14",
+        "baseline": "full framework (Failed=2, rounds=7)",
+        "selection_protocol": "FAIR1M ablation without experience bus"
+      },
+      "attribution": {
+        "attributed_to": "AUTHORS",
+        "source_confirmed": true,
+        "project_context_leakage": false
+      },
+      "confidence": "HIGH",
+      "boundaries": [
+        "Non-improving search steps, not training crashes or hardware failures"
+      ],
+      "rules_checked": [
+        "METRIC_SEMANTIC_CONFUSION"
+      ],
+      "verdict": "SUPPORTED",
+      "severity": "INFORMATIONAL",
+      "verifier_reasoning": "Verified in accordance with source evidence and calibrated epistemics."
+    },
+    {
+      "claim_id": "CLM-03",
+      "statement": "对比 AutoResearch 基线，RingMoClaw 消耗 12.14 GPU-hours 与 10.61 挂钟小时",
+      "source_anchors": [
+        "p.14",
+        "Table VII"
+      ],
+      "evidence_refs": [
+        "T07",
+        "p.14"
+      ],
+      "epistemic_category": "OBSERVATION",
+      "numerical_semantics": {
+        "metric": "Computational resource consumption and elapsed time",
+        "unit": "GPU-hours & wall-clock hours",
+        "statistic": "GPU-hours: 26.90 -> 12.14; Wall-clock: 13.45 -> 10.61",
+        "baseline": "AutoResearch",
+        "selection_protocol": "Cross-task efficiency comparison"
+      },
+      "attribution": {
+        "attributed_to": "AUTHORS",
+        "source_confirmed": true,
+        "project_context_leakage": false
+      },
+      "confidence": "HIGH",
+      "boundaries": [
+        "GPU-hours measures aggregate parallel GPU time; wall-clock measures elapsed real time"
+      ],
+      "rules_checked": [
+        "METRIC_UNIT_COLLAPSE"
+      ],
+      "verdict": "SUPPORTED",
+      "severity": "INFORMATIONAL",
+      "verifier_reasoning": "Verified in accordance with source evidence and calibrated epistemics."
+    },
+    {
+      "claim_id": "CLM-04",
+      "statement": "论文发表载体与审稿状态核验（arXiv:2609.00814v2 预印本，未经验证的外部期刊）",
+      "source_anchors": [
+        "p.1"
+      ],
+      "evidence_refs": [
+        "p.1"
+      ],
+      "epistemic_category": "OBSERVATION",
+      "numerical_semantics": null,
+      "attribution": {
+        "attributed_to": "AUTHORS",
+        "source_confirmed": true,
+        "project_context_leakage": false
+      },
+      "confidence": "HIGH",
+      "boundaries": [
+        "arXiv preprint stamp arXiv:2609.00814v2; no journal issue/volume in source"
+      ],
+      "rules_checked": [
+        "BIBLIOGRAPHIC_FABRICATION"
+      ],
+      "verdict": "SUPPORTED",
+      "severity": "INFORMATIONAL",
+      "verifier_reasoning": "Verified in accordance with source evidence and calibrated epistemics."
+    },
+    {
+      "claim_id": "CLM-05",
+      "statement": "作者关于定量遥感模式识别与物理机理扩展的讨论（无 PROSAIL/PINN 归属）",
+      "source_anchors": [
+        "p.15"
+      ],
+      "evidence_refs": [
+        "p.15"
+      ],
+      "epistemic_category": "AUTHOR_INTERPRETATION",
+      "numerical_semantics": null,
+      "attribution": {
+        "attributed_to": "AUTHORS",
+        "source_confirmed": true,
+        "project_context_leakage": false
+      },
+      "confidence": "HIGH",
+      "boundaries": [
+        "Authors discuss remote sensing data patterns; PROSAIL/PINN are external project concepts"
+      ],
+      "rules_checked": [
+        "PROJECT_ATTRIBUTION_CONFLATION"
+      ],
+      "verdict": "SUPPORTED",
+      "severity": "INFORMATIONAL",
+      "verifier_reasoning": "Verified in accordance with source evidence and calibrated epistemics."
+    },
+    {
+      "claim_id": "CLM-06",
+      "statement": "FAIR1M 旋转目标检测演化轨迹评测协议（三次独立演化试验中的最优轨迹）",
+      "source_anchors": [
+        "p.9",
+        "Table I"
+      ],
+      "evidence_refs": [
+        "T01",
+        "p.9"
+      ],
+      "epistemic_category": "OBSERVATION",
+      "numerical_semantics": {
+        "metric": "mAP50 (%)",
+        "statistic": "best of 3 independently repeated trajectories",
+        "baseline": "YOLO11x-OBB 47.30%",
+        "selection_protocol": "3 independent evolution runs"
+      },
+      "attribution": {
+        "attributed_to": "AUTHORS",
+        "source_confirmed": true,
+        "project_context_leakage": false
+      },
+      "confidence": "HIGH",
+      "boundaries": [
+        "Reports best run out of 3; variance across 3 runs is not detailed in Table I"
+      ],
+      "rules_checked": [
+        "EXPERIMENTAL_PROTOCOL_OMISSION"
+      ],
+      "verdict": "QUALIFIED",
+      "severity": "P0_BLOCKER",
+      "verifier_reasoning": "Table I reports the best of three independently repeated evolution trajectories, not mean±SD or a single deterministic run. This selection caveat must be stated when citing FAIR1M results."
+    },
+    {
+      "claim_id": "CLM-07",
+      "statement": "MSFR 与 CPR 模块在旋转检测基线上的增益归因与基线设置区分",
+      "source_anchors": [
+        "p.9",
+        "p.13",
+        "Table VI"
+      ],
+      "evidence_refs": [
+        "T06",
+        "p.13"
+      ],
+      "epistemic_category": "OBSERVATION",
+      "numerical_semantics": {
+        "metric": "mAP50 gain",
+        "baseline": "YOLO11x-OBB / Oriented R-CNN setup context",
+        "unit": "percentage points",
+        "statistic": "+0.88mAP with MSFR, +0.94mAP with CPR, joint +1.84mAP in Table VI context"
+      },
+      "attribution": {
+        "attributed_to": "AUTHORS",
+        "source_confirmed": true,
+        "project_context_leakage": false
+      },
+      "confidence": "HIGH",
+      "boundaries": [
+        "Table VI module ablation context differs from Table I sequential evolution increment"
+      ],
+      "rules_checked": [
+        "EXPERIMENTAL_SETUP_CONFOUND"
+      ],
+      "verdict": "SUPPORTED",
+      "severity": "INFORMATIONAL",
+      "verifier_reasoning": "Verified in accordance with source evidence and calibrated epistemics."
+    },
+    {
+      "claim_id": "CLM-08",
+      "statement": "LEVIR-CD 变化检测 F1 与 IoU 指标评测关系属于未决约定（UNRESOLVED）",
+      "source_anchors": [
+        "p.12",
+        "Table IV"
+      ],
+      "evidence_refs": [
+        "T04",
+        "p.12"
+      ],
+      "epistemic_category": "UNRESOLVED",
+      "numerical_semantics": {
+        "metric": "F1 (%) & IoU (%)",
+        "statistic": "F1=90.54, IoU=89.97",
+        "convention_note": "deviates from binary single-class formula due to benchmark averaging conventions"
+      },
+      "attribution": {
+        "attributed_to": "AUTHORS",
+        "source_confirmed": true,
+        "project_context_leakage": false
+      },
+      "confidence": "HIGH",
+      "boundaries": [
+        "Source paper does not publish evaluation code; macro vs class averaging convention is unresolved"
+      ],
+      "rules_checked": [
+        "METRIC_CONVENTION_AMBIGUITY",
+        "UNVERIFIED_CONVENTION_STATED_AS_FACT"
+      ],
+      "verdict": "UNRESOLVED",
+      "severity": "INFORMATIONAL",
+      "verifier_reasoning": "Convention details are unresolved in published source material."
+    },
+    {
+      "claim_id": "CLM-09",
+      "statement": "MSFR 与 CPR 模块联合增益 (+1.84 pp) 属于线性累加范畴，未验证超加性协同增益",
+      "source_anchors": [
+        "p.13",
+        "Table VI"
+      ],
+      "evidence_refs": [
+        "T06",
+        "p.13"
+      ],
+      "epistemic_category": "READER_ASSESSMENT",
+      "numerical_semantics": {
+        "metric": "Joint vs Marginal mAP50 Gains",
+        "statistic": "MSFR: +0.88 pp, CPR: +0.94 pp (sum=1.82 pp); Joint: +1.84 pp",
+        "unit": "percentage points"
+      },
+      "attribution": {
+        "attributed_to": "EVIDENTIA_INDEPENDENT",
+        "source_confirmed": true,
+        "project_context_leakage": false
+      },
+      "confidence": "HIGH",
+      "boundaries": [
+        "0.02 pp deviation from linear sum is within noise margin; super-additive synergy is unproven"
+      ],
+      "rules_checked": [
+        "SYNERGY_OVERCLAIM_WITHOUT_CONTROLS"
+      ],
+      "verdict": "SUPPORTED",
+      "severity": "INFORMATIONAL",
+      "verifier_reasoning": "Verified in accordance with source evidence and calibrated epistemics."
+    },
+    {
+      "claim_id": "CLM-10",
+      "statement": "FAIR1M 旋转检测 mAP50 从 47.30% 提升至 49.14% 属于净增 1.84 个百分点（pp），非 1.84% 相对增幅",
+      "source_anchors": [
+        "p.9",
+        "Table I"
+      ],
+      "evidence_refs": [
+        "T01",
+        "p.9"
+      ],
+      "epistemic_category": "OBSERVATION",
+      "numerical_semantics": {
+        "metric": "FAIR1M mAP50 evolution gain",
+        "statistic": "47.30% -> 49.14% (+1.84 pp)",
+        "unit": "percentage points (pp)"
+      },
+      "attribution": {
+        "attributed_to": "AUTHORS",
+        "source_confirmed": true,
+        "project_context_leakage": false
+      },
+      "confidence": "HIGH",
+      "boundaries": [
+        "Must distinguish absolute difference (1.84 pp) from relative improvement (~3.89%)"
+      ],
+      "rules_checked": [
+        "PERCENTAGE_VS_POINTS_CONFUSION"
+      ],
+      "verdict": "SUPPORTED",
+      "severity": "INFORMATIONAL",
+      "verifier_reasoning": "Verified in accordance with source evidence and calibrated epistemics."
+    }
+  ],
+  "verification_summary": {
+    "total_claims": 10,
+    "supported": 8,
+    "qualified": 1,
+    "contradicted": 0,
+    "unsupported": 0,
+    "unresolved": 1,
+    "critical_contradictions": [],
+    "diagnostics": [
+      {
+        "rule": "EXPERIMENTAL_PROTOCOL_OMISSION",
+        "severity": "P0_BLOCKER",
+        "verdict": "QUALIFIED",
+        "anchor": "PDF p.9 Table I",
+        "message": "Table I reports the best of three independently repeated evolution trajectories, not mean±SD or a single deterministic run. This selection caveat must be stated when citing FAIR1M results.",
+        "offending_span": "FAIR1M 旋转目标检测逐轮演化结果",
+        "patch_instruction": "Add protocol caveat: '注：表I 报告的是三次独立重复演化试验中的最优轨迹结果'."
+      }
+    ],
+    "status": "PASS"
+  }
+}
