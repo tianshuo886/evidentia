@@ -250,6 +250,12 @@ def _evaluate_artifact(root: Path, *, artifact_only=False):
     pedagogy_audit = audit_math_pedagogy(root, manuscript, html_text, md_text)
     errors.extend(pedagogy_audit.get("errors", []))
 
+    # 4.7 Mechanistic narrative depth and visual evidence grounding (Issue #42)
+    errors.gate = "mechanistic_depth"
+    from reader_depth_audit import audit_reader_mechanistic_depth
+    depth_audit = audit_reader_mechanistic_depth(root, manuscript, html_text, md_text)
+    errors.extend(depth_audit.get("errors", []))
+
     # 5. Cross-render semantic parity
     errors.gate = "html_md_pdf_parity"
     errors.extend(parity_errors(root, manuscript, html_text, md_text, pdf_text))
