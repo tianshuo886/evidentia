@@ -170,6 +170,26 @@ def verify_text_claims(text: str, source_metadata: Optional[Dict[str, Any]] = No
             )
         })
 
+    # Unverified physical conservation speculation in author limitations or section lead
+    physics_match = re.search(r"(?:迈向|引入|结合|依赖)?(?:物理守恒|物理耦合|物理机理科学迁移)[^。]*?(?:遥感|反演|科学)?", norm)
+    if ("物理守恒" in norm or "物理耦合" in norm) and not any(kw in norm for kw in ("未提及", "读者延伸", "并非作者", "非作者")):
+        diagnostics.append({
+            "rule": "PROJECT_ATTRIBUTION_CONFLATION",
+            "severity": "P0_BLOCKER",
+            "verdict": "CONTRADICTED",
+            "anchor": "PDF p.15 Discussion/Conclusion",
+            "message": (
+                "The source paper contains zero mention of physical conservation laws ('物理守恒') or physics-informed coupling. "
+                "The authors focus strictly on multi-modal, time-series earth observation, and foundation model adaptation. "
+                "Attributing physical conservation to author limitations breaches the faithful-reading firewall."
+            ),
+            "offending_span": physics_match.group(0) if physics_match else "物理守恒",
+            "patch_instruction": (
+                "Remove '物理守恒' attribution from author limitations and section leads. Report author-stated limitations: "
+                "operator search space bounded, multi-agent communication overhead, sensitivity to image resolution and class imbalance."
+            )
+        })
+
     # Rule 6: Best-of-N Run Protocol Caveat (FAIR1M Table I)
     if "FAIR1M" in norm and ("47.30" in norm or "49.14" in norm or "48.18" in norm):
         if not any(w in norm for w in ("三轮中最好", "三次重复中最好", "最好轨迹", "best of three", "best trajectory", "最优轨迹", "3 次独立演化试验中的最优轨迹", "3次独立演化试验中的最优轨迹")):
@@ -304,8 +324,8 @@ def verify_text_claims(text: str, source_metadata: Optional[Dict[str, Any]] = No
                 "verdict": "QUALIFIED",
                 "anchor": "PDF p.13 Table VI",
                 "message": (
-                    "Combined gain of MSFR (+0.88 pp) and CPR (+0.94 pp) is +1.84 pp, which is numerically consistent with linear additivity "
-                    "(0.88 + 0.94 = 1.82 pp) within margin of error. Asserting super-additive synergy without statistical interaction tests is ungrounded."
+                    "Combined gain of MSFR (+1.01 pp) and CPR (+0.99 pp) is +1.84 pp, which is numerically consistent with linear additivity "
+                    "(1.01 + 0.99 = 2.00 pp) and shows slight diminishing marginal returns (+1.84 vs 2.00 pp). Asserting super-additive synergy without statistical interaction tests is ungrounded."
                 ),
                 "offending_span": "超加性协同 / 协同效应质变",
                 "patch_instruction": "Describe combined gains as additive: '两项模块联合使用时取得 +1.84 个百分点增益，体现了良好的增量累加效果，而非已证明的超加性协同'."
@@ -363,6 +383,122 @@ def verify_text_claims(text: str, source_metadata: Optional[Dict[str, Any]] = No
             })
             break
 
+    # Rule 14: Table I FAIR1M Sequential Evolution Trajectory Fidelity
+    # Ground truth: 47.30 -> 48.18 -> 47.77 -> 47.69 -> 49.11 -> 49.14 (best of 3 independent runs)
+    for clause in clauses:
+        c_norm = _clean_text(clause)
+        if not c_norm:
+            continue
+        c_lower = c_norm.lower()
+        if any(w in c_lower for w in ("table i", "table 1", "表 i", "表i", "表1", "演化轨迹", "逐轮演化", "阶段")):
+            if any(f in c_lower for f in ("47.88", "48.45", "48.82")):
+                diagnostics.append({
+                    "rule": "TABLE_I_TRAJECTORY_FIDELITY",
+                    "severity": "P0_BLOCKER",
+                    "verdict": "CONTRADICTED",
+                    "anchor": "PDF p.9 Table I",
+                    "message": (
+                        "Table I reports exact progression: 47.30% (Baseline) -> 48.18% (Data Aug) -> 47.77% (Config Update) -> "
+                        "47.69% (Few-Shot) -> 49.11% (Multi-Model Fusion) -> 49.14% (Combined Module Innovation). "
+                        "Fabricated intermediate numbers 47.88%, 48.45%, 48.82% contradict the source table."
+                    ),
+                    "offending_span": clause.strip()[:60],
+                    "patch_instruction": (
+                        "Restore exact Table I trajectory: 47.30% -> 48.18% (Data Aug) -> 47.77% (Config Update) -> "
+                        "47.69% (Few-Shot) -> 49.11% (Multi-Model Fusion) -> 49.14% (Combined Module Innovation)."
+                    )
+                })
+                break
+
+    # Rule 15: Table VI Module Ablation Fidelity (MSFR & CPR gains)
+    # Ground truth: Baseline 47.30%, MSFR alone 48.31% (+1.01 pp), CPR alone 48.29% (+0.99 pp), MSFR+CPR 49.14% (+1.84 pp)
+    for clause in clauses:
+        c_norm = _clean_text(clause)
+        if not c_norm:
+            continue
+        c_lower = c_norm.lower()
+        if any(w in c_lower for w in ("table vi", "table 6", "表 vi", "表vi", "表6", "msfr", "cpr", "模块独立")):
+            if any(w in c_lower for w in ("1.15 pp", "1.15pp", "1.15 个百分点", "1.15%", "+1.15")):
+                diagnostics.append({
+                    "rule": "TABLE_VI_MODULE_ABLATION_FIDELITY",
+                    "severity": "P0_BLOCKER",
+                    "verdict": "CONTRADICTED",
+                    "anchor": "PDF p.13 Table VI",
+                    "message": (
+                        "Table VI reports MSFR alone reaches 48.31% mAP50 (+1.01 pp over baseline 47.30%), NOT +1.15 pp."
+                    ),
+                    "offending_span": clause.strip()[:60],
+                    "patch_instruction": "Correct MSFR gain to +1.01 pp (47.30% -> 48.31% mAP50, +0.599M params, +0.604G FLOPs)."
+                })
+                break
+            if any(w in c_lower for w in ("0.92 pp", "0.92pp", "0.92 个百分点", "0.92%", "+0.92")):
+                diagnostics.append({
+                    "rule": "TABLE_VI_MODULE_ABLATION_FIDELITY",
+                    "severity": "P0_BLOCKER",
+                    "verdict": "CONTRADICTED",
+                    "anchor": "PDF p.13 Table VI",
+                    "message": (
+                        "Table VI reports CPR alone reaches 48.29% mAP50 (+0.99 pp over baseline 47.30%), NOT +0.92 pp."
+                    ),
+                    "offending_span": clause.strip()[:60],
+                    "patch_instruction": "Correct CPR gain to +0.99 pp (47.30% -> 48.29% mAP50, +0.131M params, +0.272G FLOPs)."
+                })
+                break
+
+    # Rule 16: Table VIII Critic Mechanism Ablation Fidelity
+    # Ground truth: Full Framework: 7 rounds, 49.14% mAP; w/o Critic Mechanism: 11 rounds, 47.43% mAP (drop of 1.71 pp)
+    for clause in clauses:
+        c_norm = _clean_text(clause)
+        if not c_norm:
+            continue
+        c_lower = c_norm.lower()
+        if any(w in c_lower for w in ("critic", "审稿")):
+            if ("14 轮" in c_norm or "14轮" in c_norm or "47.88" in c_norm) and any(w in c_lower for w in ("移除", "剥离", "无", "w/o", "没有")):
+                diagnostics.append({
+                    "rule": "TABLE_VIII_CRITIC_ABLATION_FIDELITY",
+                    "severity": "P0_BLOCKER",
+                    "verdict": "CONTRADICTED",
+                    "anchor": "PDF p.14 Table VIII",
+                    "message": (
+                        "Table VIII reports removing Critic Mechanism requires 11 rounds and achieves 47.43% mAP (drop of 1.71 pp from 49.14%). "
+                        "Claiming 14 rounds or 47.88% conflates Table VIII with Table IX."
+                    ),
+                    "offending_span": clause.strip()[:60],
+                    "patch_instruction": (
+                        "Correct Table VIII numbers to: Full framework: 7 rounds, 49.14% mAP; w/o Critic: 11 rounds, 47.43% mAP."
+                    )
+                })
+                break
+
+    # Rule 17: Table IX Experience Bus Ablation Fidelity
+    # Ground truth: Full Framework: Rounds=7, Failed=2, mAP=49.14%
+    # w/o External: Rounds=9, Failed=4, mAP=48.44%
+    # w/o Internal: Rounds=11, Failed=5, mAP=47.62%
+    # w/o Both: Rounds=14, Failed=6, mAP=47.53%
+    for clause in clauses:
+        c_norm = _clean_text(clause)
+        if not c_norm:
+            continue
+        c_lower = c_norm.lower()
+        if any(w in c_lower for w in ("table ix", "table 9", "表 ix", "表ix", "表9", "经验总线")):
+            if re.search(r"(?:压减为|减少为|降至|降低至|仅|只有)\s*(?:1|一)\s*次", c_norm) and any(w in c_lower for w in ("非提升", "失败", "failed")):
+                diagnostics.append({
+                    "rule": "TABLE_IX_EXPERIENCE_BUS_ABLATION_FIDELITY",
+                    "severity": "P0_BLOCKER",
+                    "verdict": "CONTRADICTED",
+                    "anchor": "PDF p.14 Table IX",
+                    "message": (
+                        "Table IX reports Full Framework (Ours) experienced Failed = 2 non-improving iterations (out of 7 rounds). "
+                        "Claiming non-improving iterations were reduced to only 1 contradicts the source table."
+                    ),
+                    "offending_span": clause.strip()[:60],
+                    "patch_instruction": (
+                        "Correct Table IX reporting: Full Framework had 2 non-improving iterations (Failed=2); "
+                        "w/o both streams had 6 (Failed=6), achieving a reduction from 6 to 2."
+                    )
+                })
+                break
+
     return diagnostics
 
 
@@ -391,7 +527,7 @@ KNOWN_BENCHMARK_CLAIMS = {
         },
         {
             "claim_id": "CLM-02",
-            "statement": "消融双流经验总线导致探索迭代中产生 6 次非提升迭代（Failed=6）",
+            "statement": "消融双流经验总线导致探索迭代中产生 6 次非提升迭代（Failed=6），完整框架为 2 次（Failed=2）",
             "source_anchors": ["p.14", "Table IX"],
             "evidence_refs": ["T09", "p.14"],
             "epistemic_category": "OBSERVATION",
@@ -399,15 +535,15 @@ KNOWN_BENCHMARK_CLAIMS = {
                 "metric": "Non-improving iterations count",
                 "positive_class": "non-improving iterations",
                 "unit": "iteration count",
-                "statistic": "Failed = 6",
-                "denominator": "total rounds = 14",
+                "statistic": "Failed = 6 (w/o both streams) vs Failed = 2 (full framework)",
+                "denominator": "total rounds = 14 vs 7",
                 "baseline": "full framework (Failed=2, rounds=7)",
                 "selection_protocol": "FAIR1M ablation without experience bus"
             },
             "attribution": {"attributed_to": "AUTHORS", "source_confirmed": True, "project_context_leakage": False},
             "confidence": "HIGH",
             "boundaries": ["Non-improving search steps, not training crashes or hardware failures"],
-            "rules_checked": ["METRIC_SEMANTIC_CONFUSION"]
+            "rules_checked": ["METRIC_SEMANTIC_CONFUSION", "TABLE_IX_EXPERIENCE_BUS_ABLATION_FIDELITY"]
         },
         {
             "claim_id": "CLM-03",
@@ -459,14 +595,14 @@ KNOWN_BENCHMARK_CLAIMS = {
             "epistemic_category": "OBSERVATION",
             "numerical_semantics": {
                 "metric": "mAP50 (%)",
-                "statistic": "best of 3 independently repeated trajectories",
+                "statistic": "best of 3 independently repeated trajectories: 47.30 -> 48.18 -> 47.77 -> 47.69 -> 49.11 -> 49.14",
                 "baseline": "YOLO11x-OBB 47.30%",
                 "selection_protocol": "3 independent evolution runs"
             },
             "attribution": {"attributed_to": "AUTHORS", "source_confirmed": True, "project_context_leakage": False},
             "confidence": "HIGH",
             "boundaries": ["Reports best run out of 3; variance across 3 runs is not detailed in Table I"],
-            "rules_checked": ["EXPERIMENTAL_PROTOCOL_OMISSION"]
+            "rules_checked": ["EXPERIMENTAL_PROTOCOL_OMISSION", "TABLE_I_TRAJECTORY_FIDELITY"]
         },
         {
             "claim_id": "CLM-07",
@@ -476,14 +612,14 @@ KNOWN_BENCHMARK_CLAIMS = {
             "epistemic_category": "OBSERVATION",
             "numerical_semantics": {
                 "metric": "mAP50 gain",
-                "baseline": "YOLO11x-OBB / Oriented R-CNN setup context",
+                "baseline": "YOLO11x-OBB 47.30%",
                 "unit": "percentage points",
-                "statistic": "+0.88mAP with MSFR, +0.94mAP with CPR, joint +1.84mAP in Table VI context"
+                "statistic": "MSFR: 48.31% (+1.01 pp), CPR: 48.29% (+0.99 pp), Joint: 49.14% (+1.84 pp) in Table VI context"
             },
             "attribution": {"attributed_to": "AUTHORS", "source_confirmed": True, "project_context_leakage": False},
             "confidence": "HIGH",
             "boundaries": ["Table VI module ablation context differs from Table I sequential evolution increment"],
-            "rules_checked": ["EXPERIMENTAL_SETUP_CONFOUND"]
+            "rules_checked": ["EXPERIMENTAL_SETUP_CONFOUND", "TABLE_VI_MODULE_ABLATION_FIDELITY"]
         },
         {
             "claim_id": "CLM-08",
@@ -503,18 +639,18 @@ KNOWN_BENCHMARK_CLAIMS = {
         },
         {
             "claim_id": "CLM-09",
-            "statement": "MSFR 与 CPR 模块联合增益 (+1.84 pp) 属于线性累加范畴，未验证超加性协同增益",
+            "statement": "MSFR 与 CPR 模块联合增益 (+1.84 pp) 属于线性累加/边际递减范畴，未验证超加性协同增益",
             "source_anchors": ["p.13", "Table VI"],
             "evidence_refs": ["T06", "p.13"],
             "epistemic_category": "READER_ASSESSMENT",
             "numerical_semantics": {
                 "metric": "Joint vs Marginal mAP50 Gains",
-                "statistic": "MSFR: +0.88 pp, CPR: +0.94 pp (sum=1.82 pp); Joint: +1.84 pp",
+                "statistic": "MSFR: +1.01 pp, CPR: +0.99 pp (sum=2.00 pp); Joint: +1.84 pp",
                 "unit": "percentage points"
             },
             "attribution": {"attributed_to": "EVIDENTIA_INDEPENDENT", "source_confirmed": True, "project_context_leakage": False},
             "confidence": "HIGH",
-            "boundaries": ["0.02 pp deviation from linear sum is within noise margin; super-additive synergy is unproven"],
+            "boundaries": ["Joint gain (+1.84 pp) relative to sum (+2.00 pp) reflects mild diminishing marginal returns, not super-additive synergy"],
             "rules_checked": ["SYNERGY_OVERCLAIM_WITHOUT_CONTROLS"]
         },
         {

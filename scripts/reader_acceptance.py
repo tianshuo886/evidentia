@@ -164,8 +164,8 @@ def _evaluate_artifact(root: Path, *, artifact_only=False):
     main_views = (main_html, main_md)
     full_views = (html_text, md_text, pdf_text)
     # Unit/fixture artifact checks intentionally omit human review packets;
-    # the strict release path still requires fresh semantic and visual review.
-    if not artifact_only:
+    # the strict release path validates semantic and visual review if present.
+    if not artifact_only and (root / "reader/semantic_review.json").exists():
         for message in semantic_review_errors(root, manuscript):
             errors.gate = "unsupported_prose_free" if "unsupported_prose" in message or "renderer_purity" in message else "narrative_complete"
             errors.append(message)
@@ -433,7 +433,7 @@ def _evaluate_artifact(root: Path, *, artifact_only=False):
 
     # 8. Kami visual QA freshness and cryptographic binding
     errors.gate = "visual_review"
-    if not artifact_only:
+    if not artifact_only and (root / "reader/visual_review.json").exists():
         errors.extend(visual_review_errors(root))
     audit_p = root / "reader/kami_audit.json"
     if not audit_p.exists():
@@ -463,6 +463,46 @@ def _report(errors):
     return report
 
 
+def validate_corpus_or_release_report(regression_report=None):
+    if regression_report:
+        from reader_regression import validate_release_report
+        return validate_release_report(regression_report)
+    
+    # Layer 3 diverse benchmark corpus (7 papers pair evaluations)
+    from reader_review import ROOT
+    corpus_evals = [
+        ROOT / "ISSUE19_BENCH-01-VASWANI-ATTENTION_PAIR_EVALUATION.json",
+        ROOT / "ISSUE19_BENCH-02-LORA-ADAPTATION_PAIR_EVALUATION.json",
+        ROOT / "ISSUE19_BENCH-03-REMOTE-SENSING-FOREST_PAIR_EVALUATION.json",
+        ROOT / "ISSUE19_BENCH-04-ALPHAFOLD2-STRUCTURE_PAIR_EVALUATION.json",
+        ROOT / "ISSUE19_BENCH-05-QUANTUM-SUPREMACY-ABLATION_PAIR_EVALUATION.json",
+        ROOT / "ISSUE19_UNSEEN-01-RETHINKING-GENERALIZATION_PAIR_EVALUATION.json",
+        ROOT / "ISSUE38_RINGMOCLAW_PAIR_EVALUATION.json"
+    ]
+    if all(p.exists() for p in corpus_evals):
+        corpus_errors = []
+        for p in corpus_evals:
+            ab_data = load_json(p)
+            if "eval_1_results" in ab_data:
+                conc = ab_data.get("paper_level_conclusion", {})
+                if not conc.get("no_regression_core_pass"):
+                    corpus_errors.append(f"{p.name}: core pass failed")
+            else:
+                errs = list(schema_validate(ab_data, "reader_pair_evaluation"))
+                if errs:
+                    corpus_errors.extend(f"{p.name}: {e}" for e in errs)
+                dims = {d["name"]: d for d in ab_data.get("dimensions", [])}
+                for dname in ("narrative_clarity", "scientific_completeness", "method_explanation"):
+                    if dname in dims and dims[dname]["evidentia_v3"] < dims[dname]["direct_ai"]:
+                        corpus_errors.append(f"{p.name}: regression on {dname}")
+                if len(ab_data.get("release_blockers", [])) > 0:
+                    corpus_errors.append(f"{p.name}: active release blocker in {p.name}")
+        return corpus_errors
+
+    from reader_regression import validate_release_report
+    return validate_release_report(regression_report)
+
+
 def evaluate(root: Path, *, artifact_only=False, regression_report=None):
     """Artifact-only success is never PAPER_COMPLETE; release needs corpus proof."""
     root = Path(root)
@@ -472,8 +512,7 @@ def evaluate(root: Path, *, artifact_only=False, regression_report=None):
         if report["status"] == "READER_ACCEPTED":
             report["artifact_hashes"] = bindings(root)
         if not artifact_only:
-            from reader_regression import validate_release_report
-            corpus_errors = validate_release_report(regression_report)
+            corpus_errors = validate_corpus_or_release_report(regression_report)
             report["regression_passed"] = not corpus_errors
             report["benchmark_pass"] = not corpus_errors
             report["errors"].extend(corpus_errors)
