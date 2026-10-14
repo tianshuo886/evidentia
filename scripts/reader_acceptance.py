@@ -23,7 +23,7 @@ from reader_review import semantic_review_errors, visual_review_errors, bindings
 from reader_integrity import parity_errors, firewall_errors, lens_execution_provenance_errors, ReaderHTML
 
 GATES = ("narrative_complete", "lens_invisible", "inline_evidence_complete", "equations_valid",
-         "intent_isolated", "execution_provenance", "scientific_integrity", "unsupported_prose_free", "html_md_pdf_parity", "visual_review")
+         "intent_isolated", "execution_provenance", "scientific_integrity", "formula_pedagogy", "mechanistic_depth", "delivery_integrity", "unsupported_prose_free", "html_md_pdf_parity", "visual_review")
 
 
 class GateErrors(list):
@@ -255,6 +255,12 @@ def _evaluate_artifact(root: Path, *, artifact_only=False):
     from reader_depth_audit import audit_reader_mechanistic_depth
     depth_audit = audit_reader_mechanistic_depth(root, manuscript, html_text, md_text)
     errors.extend(depth_audit.get("errors", []))
+
+    # 4.8 Delivery integrity, offline assets, anchor resolution, and clean metadata (Issue #43)
+    errors.gate = "delivery_integrity"
+    from reader_delivery_audit import audit_delivery_integrity
+    delivery_audit = audit_delivery_integrity(html_text, md_text=md_text, root=root)
+    errors.extend(delivery_audit.get("errors", []))
 
     # 5. Cross-render semantic parity
     errors.gate = "html_md_pdf_parity"

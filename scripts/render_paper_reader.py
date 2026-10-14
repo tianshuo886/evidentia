@@ -19,10 +19,24 @@ from validate_common import load_json, sha256
 # Deterministic composition is quarantined for legacy compatibility only.
 import kami_adapter
 
+def normalize_text_newlines(text: str) -> str:
+    """Convert literal escaped '\\n' sequences into actual newlines, preserving LaTeX math commands."""
+    if not text:
+        return ""
+    latex_n_cmds = ("\\nabla", "\\neq", "\\nu", "\\notin", "\\null", "\\ni", "\\neg", "\\ne", "\\natural", "\\nearrow", "\\nwarrow", "\\norm")
+    def _repl(m):
+        idx = m.start()
+        surrounding = text[idx:idx+15]
+        if any(surrounding.startswith(cmd) for cmd in latex_n_cmds):
+            return m.group(0)
+        return "\n"
+    return re.sub(r'\\n', _repl, text)
+
 def sanitize_editorial_text(text: str) -> str:
     """Strip internal audit tags and pipeline process vocabulary before rendering."""
     if not text:
         return ""
+    text = normalize_text_newlines(text)
     text = re.sub(r'【(?:科学核验|证据核验|核验记录|审查透镜|机制核验|门禁检查|事实核查|事实核验|核验结论|审计标记|核验通过)[^】]*】', '', text)
     text = text.replace("必须严格恪守", "遵循").replace("输入防火墙", "上下文隔离").replace("防火墙机制", "隔离机制")
     text = text.replace("Lead Writer", "科学编辑").replace("Reviewer Lens", "证据审查").replace("Author Lens", "作者解释")
@@ -31,6 +45,18 @@ def sanitize_editorial_text(text: str) -> str:
 def esc(x):
     cleaned = sanitize_editorial_text(str(x or ''))
     return html.escape(cleaned)
+
+def format_meta_line(authors: str, venue: str, year: any) -> str:
+    """Format publication metadata line, ensuring year is never rendered twice."""
+    year_str = str(year or '').strip()
+    parts = []
+    if authors:
+        parts.append(authors)
+    if venue:
+        parts.append(venue)
+    if year_str and (not venue or not re.search(rf'\b{re.escape(year_str)}\b', venue)):
+        parts.append(year_str)
+    return ' · '.join(parts)
 
 FORBIDDEN_MAIN_READER_PHRASES = ('详情见图谱', '图谱详情', '六大透镜', '跨透镜', '六个 Lens', '六个Lens')
 
@@ -57,16 +83,49 @@ def normalize_latex(raw):
                 return None
     return value if value and depth == 0 else None
 
-def _inline_evidence_cites(ev_refs):
+def _render_cites_span(ev_refs, local_ids: set[str] = None) -> str:
     if not ev_refs:
         return ''
-    # Only source assets and page anchors have destinations in the human
-    # surface; claim IDs remain in the semantic IR and Atlas.
-    visible = [e for e in ev_refs if str(e).startswith(('F', 'T', 'EQ', 'p.'))]
-    cites = ' '.join(f'<a href="#{esc(e) if str(e).startswith("p.") else "evidence-" + esc(e)}" class="evidence-cite" aria-label="证据 {esc(e)}">[{esc(e)}]</a>' for e in visible)
-    if not cites:
+    visible = [str(e).strip() for e in ev_refs if str(e).strip().startswith(('F', 'T', 'EQ', 'p.'))]
+    if not visible:
         return ''
-    return f' <span class="evidence-cites">{cites}</span>'
+    links = []
+    for e in visible:
+        if e.startswith('p.'):
+            if local_ids is None or e in local_ids:
+                links.append(f'<a href="#{esc(e)}" class="evidence-cite" aria-label="证据 {esc(e)}">[{esc(e)}]</a>')
+            else:
+                links.append(f'<a href="evidence_atlas.html#{esc(e)}" class="evidence-cite" aria-label="证据 {esc(e)} (图谱)">[{esc(e)}]</a>')
+        else:
+            target_id = f"evidence-{e}"
+            if local_ids is None or target_id in local_ids:
+                links.append(f'<a href="#{esc(target_id)}" class="evidence-cite" aria-label="证据 {esc(e)}">[{esc(e)}]</a>')
+            else:
+                links.append(f'<a href="evidence_atlas.html#{esc(target_id)}" class="evidence-cite" aria-label="证据 {esc(e)} (图谱)">[{esc(e)}]</a>')
+    if not links:
+        return ''
+    return f'<span class="evidence-cites">{" ".join(links)}</span>'
+
+def _inline_evidence_cites(ev_refs, local_ids: set[str] = None):
+    span = _render_cites_span(ev_refs, local_ids)
+    return f' {span}' if span else ''
+
+def format_cites_in_text_html(text: str, local_ids: set[str] = None) -> tuple[str, set[str]]:
+    """Convert in-text Chinese citation brackets 〔...〕 to styled citation spans, tracking cited IDs."""
+    cited_refs = set()
+    if not text:
+        return "", cited_refs
+    
+    def _repl(match):
+        inner = match.group(1)
+        raw_items = [x.strip() for x in re.split(r'[,、]', inner) if x.strip()]
+        for item in raw_items:
+            cited_refs.add(item)
+        cites_html = _render_cites_span(raw_items, local_ids)
+        return cites_html if cites_html else match.group(0)
+    
+    formatted = re.sub(r'〔([^〕]+)〕', _repl, text)
+    return formatted, cited_refs
 
 KAMI_LONG_DOC_CSS = """
 /* Keep release rendering offline and deterministic.  The prior remote font
@@ -306,7 +365,8 @@ figure.kami-figure {
 }
 figure.kami-figure img {
   max-width: 100%;
-  max-height: 380px;
+  max-height: 520px;
+  object-fit: contain;
   display: block;
   margin: 0 auto 8pt auto;
   border-radius: 2pt;
@@ -393,8 +453,35 @@ figcaption {
 .evidence-cite:hover {
   text-decoration: underline;
 }
+.page-anchor {
+  display: inline-block;
+  margin: 2pt 4pt;
+  padding: 1pt 5pt;
+  background: var(--ivory);
+  border: 1pt solid var(--border);
+  border-radius: 3pt;
+  font-family: var(--sans);
+  font-size: 8.5pt;
+}
+.page-anchor-link {
+  color: var(--brand);
+  text-decoration: none;
+}
+.page-anchor-link:hover {
+  text-decoration: underline;
+}
 @media print {
+  body {
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+    background: transparent;
+  }
   .evidence-cite { display: none; }
+  .chapter { break-before: page; }
+  figure.kami-figure, .takeaway, .callout, .equation-block { break-inside: avoid; }
+  figure.kami-figure img, .table-asset, .equation-fallback { max-height: 480px; object-fit: contain; }
 }
 .evidence-binding { font-family: var(--sans); font-size: 8pt; color: var(--brand); margin-right: 5pt; }
 
@@ -480,49 +567,63 @@ def rebind_visual_assets(manuscript: dict, root: Path) -> list[dict[str, str]]:
     return changes
 
 
-def render_block_html(b: dict, root: Path) -> str:
+def render_block_html(b: dict, root: Path, local_ids: set[str] = None) -> str:
     b_type = b.get('type')
     ev_refs = b.get('evidence_refs', [])
-    cites = _inline_evidence_cites(ev_refs) if ev_refs else ""
     
     if b_type == 'paragraph':
         text = esc(b.get('text', ''))
-        # support basic markdown bold in text
+        text, cited_refs = format_cites_in_text_html(text, local_ids)
+        remaining_refs = [r for r in ev_refs if str(r).strip() not in cited_refs]
+        trailing_cites = f" {_render_cites_span(remaining_refs, local_ids)}" if remaining_refs else ""
         text = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', text)
         text = re.sub(r'\n- ', r'<br>• ', text)
+        text = re.sub(r'\n(\d+)\. ', r'<br>\1. ', text)
         text = text.replace('\n\n', '</p><p>')
         text = text.replace('\n', '<br>')
-        return f"<p>{text}{cites}</p>"
+        return f"<p>{text}{trailing_cites}</p>"
         
     elif b_type == 'callout':
         text = esc(b.get('text', ''))
+        text, cited_refs = format_cites_in_text_html(text, local_ids)
+        remaining_refs = [r for r in ev_refs if str(r).strip() not in cited_refs]
+        trailing_cites = f" {_render_cites_span(remaining_refs, local_ids)}" if remaining_refs else ""
         text = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', text)
         text = re.sub(r'\n- ', r'<br>• ', text)
+        text = re.sub(r'\n(\d+)\. ', r'<br>\1. ', text)
         text = text.replace('\n\n', '</p><p>')
         text = text.replace('\n', '<br>')
-        return f"<div class='callout'><p>{text}{cites}</p></div>"
+        return f"<div class='callout'><p>{text}{trailing_cites}</p></div>"
         
     elif b_type == 'takeaway':
         text = esc(b.get('text', ''))
+        text, cited_refs = format_cites_in_text_html(text, local_ids)
+        remaining_refs = [r for r in ev_refs if str(r).strip() not in cited_refs]
+        trailing_cites = f" {_render_cites_span(remaining_refs, local_ids)}" if remaining_refs else ""
         text = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', text)
-        return f"<div class='takeaway'><div class='takeaway-label'>核心关注</div><p>{text}{cites}</p></div>"
+        text = text.replace('\n', '<br>')
+        return f"<div class='takeaway'><div class='takeaway-label'>核心关注</div><p>{text}{trailing_cites}</p></div>"
         
     elif b_type == 'figure':
         fid = b.get('evidence_id', 'FIG')
         cap = esc(b.get('caption', ''))
         analysis = esc(b.get('analysis', ''))
+        analysis, cited_refs = format_cites_in_text_html(analysis, local_ids)
+        remaining_refs = [r for r in ev_refs if str(r).strip() not in cited_refs]
+        trailing_cites = f" {_render_cites_span(remaining_refs, local_ids)}" if remaining_refs else ""
         analysis = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', analysis)
         analysis = analysis.replace('\n\n', '<br>')
+        analysis = analysis.replace('\n', '<br>')
         asset = resolve_visual_asset(b, root)
         img_html = ""
         if asset and (root / asset).exists():
-            img_html = f"<img src='../{esc(asset)}' alt='{cap}' />"
+            img_html = f"<img src='../{esc(asset)}' alt='{cap}' onerror=\"this.onerror=null; this.src=this.src.includes('../')?this.src.replace('../',''):('../'+this.src);\" />"
             
         return f"""
         <figure class="kami-figure" id="evidence-{esc(fid)}">
           {img_html}
           <figcaption>{cap} <span class="evidence-binding">〔{esc(fid)}〕</span></figcaption>
-          <div class="figure-analysis">{analysis}{cites}</div>
+          <div class="figure-analysis">{analysis}{trailing_cites}</div>
         </figure>
         """
         
@@ -530,6 +631,9 @@ def render_block_html(b: dict, root: Path) -> str:
         raw_latex = b.get('latex')
         raw = normalize_latex(raw_latex) if raw_latex else None
         exp = esc(b.get('explanation', ''))
+        exp, cited_refs = format_cites_in_text_html(exp, local_ids)
+        remaining_refs = [r for r in ev_refs if str(r).strip() not in cited_refs]
+        trailing_cites = f" {_render_cites_span(remaining_refs, local_ids)}" if remaining_refs else ""
         eq_id = b.get('evidence_id') or b.get('equation_id') or 'EQ'
         paper_label = b.get('paper_label') or ''
         fallback = b.get('fallback_asset')
@@ -538,14 +642,13 @@ def render_block_html(b: dict, root: Path) -> str:
         if raw and confidence == 'VERIFIED':
             math_html = f"<span class='math-source'>\\[ {esc(raw)} \\]</span>"
         elif fallback and (root / fallback).exists():
-            math_html = f"<img class='equation-fallback' src='../{esc(fallback)}' alt='公式源图 {esc(eq_id)}' />"
+            math_html = f"<img class='equation-fallback' src='../{esc(fallback)}' alt='公式源图 {esc(eq_id)}' onerror=\"this.onerror=null; this.src=this.src.includes('../')?this.src.replace('../',''):('../'+this.src);\" />"
         elif raw:
             math_html = f"<span class='math-source'>\\[ {esc(raw)} \\]</span>"
         else:
-            # Fallback to standard asset path if file exists
             default_asset = f"assets/equations/{eq_id}.png"
             if (root / default_asset).exists():
-                math_html = f"<img class='equation-fallback' src='../{esc(default_asset)}' alt='公式源图 {esc(eq_id)}' />"
+                math_html = f"<img class='equation-fallback' src='../{esc(default_asset)}' alt='公式源图 {esc(eq_id)}' onerror=\"this.onerror=null; this.src=this.src.includes('../')?this.src.replace('../',''):('../'+this.src);\" />"
             else:
                 math_html = f"<div class='equation-uncertain-trace'>公式源图已锁定于源文档 p.{b.get('page', 1)}。</div>"
 
@@ -568,7 +671,7 @@ def render_block_html(b: dict, root: Path) -> str:
         <div class='equation-block' id='evidence-{esc(eq_id)}'>
           <div class='eq-label'>{label_display}</div>
           <div class='math-display'>{math_html}</div>
-          <div class='eq-explanation'>{exp}</div>
+          <div class='eq-explanation'>{exp}{trailing_cites}</div>
           {pedagogy_html}
         </div>
         """
@@ -577,16 +680,19 @@ def render_block_html(b: dict, root: Path) -> str:
         tid = b.get('evidence_id', 'TAB')
         cap = esc(b.get('caption', ''))
         analysis = esc(b.get('analysis', ''))
+        analysis, cited_refs = format_cites_in_text_html(analysis, local_ids)
+        remaining_refs = [r for r in ev_refs if str(r).strip() not in cited_refs]
+        trailing_cites = f" {_render_cites_span(remaining_refs, local_ids)}" if remaining_refs else ""
         analysis = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', analysis)
         img_html = ''
         asset = resolve_visual_asset(b, root)
         if asset and (root / asset).exists():
-            img_html = f"<img src='../{esc(asset)}' alt='{cap}' class='table-asset' />"
+            img_html = f"<img src='../{esc(asset)}' alt='{cap}' class='table-asset' onerror=\"this.onerror=null; this.src=this.src.includes('../')?this.src.replace('../',''):('../'+this.src);\" />"
         return f"""
         <div class="takeaway" id="evidence-{esc(tid)}">
           <div class="takeaway-label">{cap} <span class="evidence-binding">〔{esc(tid)}〕</span></div>
           {img_html}
-          <div style="font-size:9.5pt; margin-top:6pt;">{analysis}{cites}</div>
+          <div style="font-size:9.5pt; margin-top:6pt;">{analysis}{trailing_cites}</div>
         </div>
         """
         
@@ -614,28 +720,73 @@ def render_paper_reader_html(manuscript: dict, root: Path) -> str:
     # Dynamic sections are the canonical presentation sequence. `chapters` is
     # accepted only as a compatibility alias for older manuscripts.
     chapters = doc.get('sections') or doc.get('chapters', [])
+
+    pm = load_json(root / 'model/paper_model.json') if (root / 'model/paper_model.json').exists() else {}
+
+    # Pass 1: Collect all page numbers and local element IDs to ensure 100% anchor resolution
+    page_nums = {1}
+    for item in pm.get('claims', []) + pm.get('figures', []) + pm.get('tables', []):
+        if item.get('page'):
+            try: page_nums.add(int(item['page']))
+            except (ValueError, TypeError): pass
+        for ref in item.get('evidence', []):
+            if str(ref).startswith('p.'):
+                try: page_nums.add(int(str(ref)[2:]))
+                except (ValueError, TypeError): pass
+
+    local_ids = {'ch-sources'}
+    for idx, chapter in enumerate(chapters, 1):
+        cid = chapter.get('id', f'spine-{idx:02d}')
+        local_ids.add(f'ch-{cid}')
+        for block in chapter.get('blocks', []):
+            b_type = block.get('type')
+            if b_type == 'figure' and block.get('evidence_id'):
+                local_ids.add(f"evidence-{block['evidence_id']}")
+            elif b_type == 'equation':
+                eq_id = block.get('evidence_id') or block.get('equation_id')
+                if eq_id:
+                    local_ids.add(f"evidence-{eq_id}")
+            elif b_type == 'table' and block.get('evidence_id'):
+                local_ids.add(f"evidence-{block['evidence_id']}")
+
+            if block.get('page'):
+                try: page_nums.add(int(block['page']))
+                except (ValueError, TypeError): pass
+            for ref in block.get('evidence_refs', []):
+                if str(ref).startswith('p.'):
+                    try: page_nums.add(int(str(ref)[2:]))
+                    except (ValueError, TypeError): pass
+            text_probe = (block.get('text') or '') + ' ' + (block.get('analysis') or '') + ' ' + (block.get('caption') or '')
+            for m in re.finditer(r'\bp\.(\d+)\b', text_probe):
+                page_nums.add(int(m.group(1)))
+
+    for n in page_nums:
+        local_ids.add(f"p.{n}")
+
     toc_items = []
     for idx, chapter in enumerate(chapters, 1):
         cid = chapter.get('id', f'spine-{idx:02d}')
         toc_items.append(f"<div class='toc-item'><a class='toc-title' href='#ch-{esc(cid)}'><span class='toc-num'>{idx:02d}</span> · {esc(chapter.get('title', ''))}</a></div>")
     toc_items.append(f"<div class='toc-item'><a class='toc-title' href='#ch-sources'><span class='toc-num'>{len(chapters)+1:02d}</span> · 证据来源与页面锚点</a></div>")
+    
     chapters_html = []
     for idx, chapter in enumerate(chapters, 1):
         cid = chapter.get('id', f'spine-{idx:02d}')
-        blocks = '\n'.join(render_block_html(block, root) for block in chapter.get('blocks', []))
+        blocks = '\n'.join(render_block_html(block, root, local_ids=local_ids) for block in chapter.get('blocks', []))
         lead_text = chapter.get('lead_paragraph') or chapter.get('lead', '')
         chapters_html.append(f"<section class='chapter' id='ch-{esc(cid)}'><h1>{esc(chapter.get('title', ''))}</h1><div class='lead'>{esc(lead_text)}</div><div class='chapter-body'>{blocks}</div></section>")
+    
     app = doc.get('appendix_summary', {})
-    refs = []
-    pm = load_json(root / 'model/paper_model.json') if (root / 'model/paper_model.json').exists() else {}
-    page_nums = {1}
-    for item in pm.get('claims', []) + pm.get('figures', []) + pm.get('tables', []):
-        if item.get('page'): page_nums.add(item['page'])
-        for ref in item.get('evidence', []):
-            if str(ref).startswith('p.'):
-                try: page_nums.add(int(str(ref)[2:]))
-                except ValueError: pass
-    refs_html = '、'.join(f"<a id='p.{n}' href='#p.{n}'>p.{n}</a>" for n in sorted(page_nums))
+    has_pdf = (root / 'source/paper.pdf').exists()
+    pdf_href = '../source/paper.pdf' if has_pdf else None
+    anchors = []
+    for n in sorted(page_nums):
+        if pdf_href:
+            anchors.append(f"<span class='page-anchor' id='p.{n}'><a href='{pdf_href}#page={n}' target='_blank' rel='noopener' class='page-anchor-link'>p.{n}</a></span>")
+        else:
+            anchors.append(f"<span class='page-anchor' id='p.{n}'>p.{n}</span>")
+    refs_html = '、'.join(anchors)
+
     appendix = f"""
     <section class='chapter appendix' id='ch-sources'>
       <h1>证据来源与页面锚点</h1>
@@ -645,7 +796,7 @@ def render_paper_reader_html(manuscript: dict, root: Path) -> str:
       <p><a href='evidence_atlas.html'>查看逐项来源与核验记录</a></p>
     </section>
     """
-    meta_line = ' · '.join(x for x in (authors_str, venue, str(year)) if x)
+    meta_line = format_meta_line(authors_str, venue, year)
     return f"""<!doctype html>
 <html lang='zh-CN'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'><title>{esc(title)}</title><style>{KAMI_LONG_DOC_CSS}</style></head>
 <body>
@@ -666,7 +817,7 @@ def render_paper_reader_md(manuscript: dict, root=None) -> str:
     if (meta.get('preprint_status') == 'PREPRINT' or meta.get('peer_reviewed_status') == 'UNVERIFIED') and not meta.get('venue_verified_externally'):
         if venue_md and not any(kw in venue_md.lower() for kw in ('preprint', 'unverified', 'arxiv')):
             venue_md = f"{venue_md} (preprint · venue unverified)"
-    meta_line = ' · '.join(x for x in (authors, venue_md, str(meta.get('year') or '')) if x)
+    meta_line = format_meta_line(authors, venue_md, meta.get('year'))
     lines = [f'# {title}', f'**{subtitle}**', '', meta_line, '']
     if orientation.get('lead'):
         lines.extend([f'> {orientation.get("lead")}', ''])
@@ -681,8 +832,12 @@ def render_paper_reader_md(manuscript: dict, root=None) -> str:
         lead_text = sanitize_editorial_text(chapter.get('lead_paragraph') or chapter.get('lead', ''))
         lines.extend([f"## {idx}. {chapter.get('title', '')} <a id='{cid}'></a>", '', f"> *{lead_text}*", ''])
         for block in chapter.get('blocks', []):
-            kind = block.get('type'); text = sanitize_editorial_text(block.get('text', '')); refs = block.get('evidence_refs', [])
-            cite = f" 〔{', '.join(refs)}〕" if refs else ''
+            kind = block.get('type')
+            text = sanitize_editorial_text(block.get('text', ''))
+            refs = [str(r).strip() for r in block.get('evidence_refs', []) if str(r).strip()]
+            in_text_cites = {r.strip() for m in re.finditer(r'〔([^〕]+)〕', text) for r in re.split(r'[,、]', m.group(1)) if r.strip()}
+            remaining_refs = [r for r in refs if r not in in_text_cites]
+            cite = f" 〔{', '.join(remaining_refs)}〕" if remaining_refs else ''
             if kind in ('paragraph', 'callout', 'takeaway'):
                 lines.append(f"{text}{cite}\n")
             elif kind in ('figure', 'table'):
@@ -690,7 +845,11 @@ def render_paper_reader_md(manuscript: dict, root=None) -> str:
                 lines.append(f"### {caption}\n")
                 asset = resolve_visual_asset(block, root) if root else block.get('asset')
                 if asset: lines.append(f"![{caption}]({asset})\n")
-                lines.append(f"{sanitize_editorial_text(block.get('analysis', ''))}{cite}\n")
+                analysis = sanitize_editorial_text(block.get('analysis', ''))
+                in_text_analysis = {r.strip() for m in re.finditer(r'〔([^〕]+)〕', analysis) for r in re.split(r'[,、]', m.group(1)) if r.strip()}
+                remaining_analysis_refs = [r for r in refs if r not in in_text_analysis]
+                cite_analysis = f" 〔{', '.join(remaining_analysis_refs)}〕" if remaining_analysis_refs else ''
+                lines.append(f"{analysis}{cite_analysis}\n")
             elif kind == 'equation':
                 eq_id = block.get('evidence_id') or block.get('equation_id') or 'EQ'
                 paper_label = block.get('paper_label', '')
@@ -705,7 +864,11 @@ def render_paper_reader_md(manuscript: dict, root=None) -> str:
                     lines.append(f"![公式源图 {eq_id}]({fallback})\n")
                 else:
                     lines.append(f"![公式源图 {eq_id}](assets/equations/{eq_id}.png)\n")
-                lines.append(f"{block.get('explanation', '')}{cite}\n")
+                explanation = sanitize_editorial_text(block.get('explanation', ''))
+                in_text_exp = {r.strip() for m in re.finditer(r'〔([^〕]+)〕', explanation) for r in re.split(r'[,、]', m.group(1)) if r.strip()}
+                remaining_exp_refs = [r for r in refs if r not in in_text_exp]
+                cite_exp = f" 〔{', '.join(remaining_exp_refs)}〕" if remaining_exp_refs else ''
+                lines.append(f"{explanation}{cite_exp}\n")
                 ped = block.get('pedagogy') or {}
                 role = ped.get('role') or block.get('role_zh')
                 term_interps = ped.get('term_interpretations') or block.get('term_interpretations') or []
