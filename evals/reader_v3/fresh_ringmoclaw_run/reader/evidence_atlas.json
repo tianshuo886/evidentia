@@ -1,0 +1,1015 @@
+{
+  "schema_version": "3.0",
+  "paper_id": "ringmoclaw",
+  "source_sha256": "32df5e2843de7e8ccd52d56b9dfed257c26786ef3b71fbc397a1c3a5e26fb0fa",
+  "items": [
+    {
+      "id": "F01",
+      "kind": "figure",
+      "page": 2,
+      "label": "Fig. 1",
+      "caption": "Fig. 1: Comparison of existing remote sensing research agents and RingMoClaw. RingMoClaw introduces a unified research loop with independent critique and dual-stream experience evolution for continuous model improvement.",
+      "asset": "assets/figures/fig01_p2_3988x2475.png",
+      "verification_status": "inspected",
+      "confidence": 0.99,
+      "used_in": [
+        {
+          "chapter_id": "sec-01",
+          "chapter_title": "范式跃迁：从一次性任务编排到自演化科研闭环",
+          "block_type": "figure"
+        }
+      ]
+    },
+    {
+      "id": "F02",
+      "kind": "figure",
+      "page": 4,
+      "label": "Fig. 2",
+      "caption": "Fig. 2: Overall architecture of RingMoClaw. The self-evolving research pipeline (left) and the Critic pipeline (right) are coupled through a dual-stream dynamic experience bus (center), which integrates external knowledge flow and internal experimental flow to support automated research iteration and the continuous refinement of the structured search space.",
+      "asset": "assets/figures/fig02_p4_4594x1975.png",
+      "verification_status": "inspected",
+      "confidence": 0.99,
+      "used_in": [
+        {
+          "chapter_id": "sec-02",
+          "chapter_title": "架构解耦：执行分支、异构 Critic 审稿与三阶段质检卡点",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "sec-02",
+          "chapter_title": "架构解耦：执行分支、异构 Critic 审稿与三阶段质检卡点",
+          "block_type": "figure"
+        }
+      ]
+    },
+    {
+      "id": "F03",
+      "kind": "figure",
+      "page": 6,
+      "label": "Fig. 3",
+      "caption": "Fig. 3: Object-detection workflow of the proposed framework. The research pipeline performs staged model optimization, while the Critic mechanism reviews intermediate outputs and returns feedback for strategy revision and experience accumulation.",
+      "asset": "assets/figures/fig03_p6_2481x2264.png",
+      "verification_status": "inspected",
+      "confidence": 0.99,
+      "used_in": []
+    },
+    {
+      "id": "F04",
+      "kind": "figure",
+      "page": 7,
+      "label": "Fig. 4",
+      "caption": "Fig. 4: Illustration of the Critic mechanism. The Critic mechanism intervenes at three key nodes of the execution chain, namely the plan review, the data review, and the result review. All feedback is routed through the Main Agent for global coordination, and every iteration is written into the global experience pool after standardization.",
+      "asset": "assets/figures/fig04_p7_1684x1946.png",
+      "verification_status": "inspected",
+      "confidence": 0.99,
+      "used_in": [
+        {
+          "chapter_id": "sec-02",
+          "chapter_title": "架构解耦：执行分支、异构 Critic 审稿与三阶段质检卡点",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "sec-02",
+          "chapter_title": "架构解耦：执行分支、异构 Critic 审稿与三阶段质检卡点",
+          "block_type": "figure"
+        }
+      ]
+    },
+    {
+      "id": "F05",
+      "kind": "figure",
+      "page": 8,
+      "label": "Fig. 5",
+      "caption": "Fig. 5: Dual-stream dynamic experience bus for autonomous research evolution. External knowledge from literature and code and internal experience from task memory and cross-task memory are integrated into global and local experience pools. The experience bus dynamically prunes and expands the structured search space, guides candidate scheme instantiation, and updates the main agent through agile verification, thereby transforming blind trial-and-error search into experience-guided optimization toward task-specific solutions.",
+      "asset": "assets/figures/fig05_p8_4400x1393.png",
+      "verification_status": "inspected",
+      "confidence": 0.99,
+      "used_in": [
+        {
+          "chapter_id": "sec-03",
+          "chapter_title": "经验认知中枢：双流动态经验总线与五分钟敏捷验证协议",
+          "block_type": "figure"
+        }
+      ]
+    },
+    {
+      "id": "T01",
+      "kind": "table",
+      "page": 9,
+      "label": "TABLE I",
+      "caption": "TABLE I: OBJECT DETECTION RESULTS ON FAIR1M (%). OVERALL MAP50 AND PER-CATEGORY AP ARE REPORTED FOR SELECTED WEAK CATEGORIES. REPRESENTATIVE DETECTORS ARE COMPARED WITH THE BASELINE AND SUCCESSIVE EVOLUTION STAGES OF RINGMOCLAW. BEST RESULTS ARE IN BOLD.",
+      "asset": "assets/figures/crop_T01_p9_923x898.png",
+      "verification_status": "inspected",
+      "confidence": 0.92,
+      "used_in": [
+        {
+          "chapter_id": "sec-04",
+          "chapter_title": "实证突破：目标检测七轮轨迹复盘与 MSFR/CPR 架构自主创新",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "sec-04",
+          "chapter_title": "实证突破：目标检测七轮轨迹复盘与 MSFR/CPR 架构自主创新",
+          "block_type": "table"
+        }
+      ]
+    },
+    {
+      "id": "F06",
+      "kind": "figure",
+      "page": 10,
+      "label": "Fig. 6",
+      "caption": "Fig. 6: Weak categories detection results on FAIR1M across different evolution stages. From left to right: (1) Baseline, (2) Data Augmentation, (3) Training Strategy Optimization, (4) Two-Stage Few-Shot Detection, (5) Multi-Model Fusion, and (6) Module Innovation. Green boxes denote true positives (TP) of base categories; yellow/purple boxes denote true positives (TP) of weak/rare categories; red boxes denote false negatives (FN, missed detections); and pink boxes denote false positives (FP, incorrect detections). The figure illustrates how progressive improvements in architecture and module design reduce both missed detections and false positives, particularly for weak categories, highlighting the effectiveness of the proposed RingMoClaw Auto-Research framework in addressing long-tail fine-grained detection challenges.",
+      "asset": "assets/figures/fig07_p10_4401x2227.png",
+      "verification_status": "inspected",
+      "confidence": 0.99,
+      "used_in": []
+    },
+    {
+      "id": "F07",
+      "kind": "figure",
+      "page": 10,
+      "label": "Fig. 7",
+      "caption": "Fig. 7: Training behavior of the final detector on FAIR1M. (a) Training and validation loss curves over 20 epochs. (b) Mean precision-recall curve over the 37 object categories.",
+      "asset": "assets/figures/fig08_p10_1482x1739.png",
+      "verification_status": "inspected",
+      "confidence": 0.94,
+      "used_in": []
+    },
+    {
+      "id": "T02",
+      "kind": "table",
+      "page": 11,
+      "label": "TABLE II",
+      "caption": "TABLE II: SCENE CLASSIFICATION RESULTS ON NWPU-RESISC45 (%). THE TABLE REPORTS OVERALL ACCURACY AND PER-CATEGORY ACCURACY FOR SELECTED WEAK CATEGORIES. REPRESENTATIVE CLASSIFIERS ARE COMPARED WITH THE BASELINE AND FUSION STRATEGIES SELECTED BY RINGMOCLAW. BEST RESULTS ARE IN BOLD.",
+      "asset": "assets/figures/crop_T02_p11_790x449.png",
+      "verification_status": "inspected",
+      "confidence": 0.92,
+      "used_in": []
+    },
+    {
+      "id": "F08",
+      "kind": "figure",
+      "page": 11,
+      "label": "Fig. 8",
+      "caption": "Fig. 8: Class activation map visualization of the baseline classifier and the candidate classifiers selected for score-level fusion on representative weak categories of NWPU-RESISC45. Different candidate models attend to different discriminative regions, indicating clear complementary behavior across scene categories.",
+      "asset": "assets/figures/fig10_p11_3665x1903.png",
+      "verification_status": "inspected",
+      "confidence": 0.99,
+      "used_in": []
+    },
+    {
+      "id": "T03",
+      "kind": "table",
+      "page": 12,
+      "label": "TABLE III",
+      "caption": "TABLE III: COMPARISON WITH REPRESENTATIVE REMOTE SENSING SEMANTIC SEGMENTATION METHODS AND THE EVOLUTION RESULTS OF RINGMOCLAW ON ISAID VALIDATION SET. BEST RESULTS ARE IN BOLD.",
+      "asset": "assets/figures/crop_T03_p12_729x905.png",
+      "verification_status": "inspected",
+      "confidence": 0.92,
+      "used_in": []
+    },
+    {
+      "id": "T04",
+      "kind": "table",
+      "page": 12,
+      "label": "TABLE IV",
+      "caption": "TABLE IV: COMPARISON WITH REPRESENTATIVE REMOTE SENSING CHANGE DETECTION METHODS AND THE EVOLUTION RESULTS OF RINGMOCLAW ON LEVIR-CD VALIDATION SET. BEST RESULTS ARE IN BOLD.",
+      "asset": "assets/figures/crop_T04_p12_729x679.png",
+      "verification_status": "inspected",
+      "confidence": 0.92,
+      "used_in": []
+    },
+    {
+      "id": "T05",
+      "kind": "table",
+      "page": 13,
+      "label": "TABLE V",
+      "caption": "TABLE V: CROSS-TASK COMPARISON WITH REPRESENTATIVE RESEARCH-AUTOMATION FRAMEWORKS. PERFORMANCE GAINS ARE COMPUTED RELATIVE TO THE CORRESPONDING BASELINE MODEL FOR EACH TASK.",
+      "asset": "assets/figures/crop_T05_p13_885x902.png",
+      "verification_status": "inspected",
+      "confidence": 0.92,
+      "used_in": []
+    },
+    {
+      "id": "T06",
+      "kind": "table",
+      "page": 13,
+      "label": "TABLE VI",
+      "caption": "TABLE VI: EVALUATION OF THE MSFR AND CPR.",
+      "asset": "assets/figures/crop_T06_p13_1011x900.png",
+      "verification_status": "inspected",
+      "confidence": 0.92,
+      "used_in": [
+        {
+          "chapter_id": "sec-04",
+          "chapter_title": "实证突破：目标检测七轮轨迹复盘与 MSFR/CPR 架构自主创新",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "sec-04",
+          "chapter_title": "实证突破：目标检测七轮轨迹复盘与 MSFR/CPR 架构自主创新",
+          "block_type": "table"
+        }
+      ]
+    },
+    {
+      "id": "F09",
+      "kind": "figure",
+      "page": 13,
+      "label": "Fig. 9",
+      "caption": "Fig. 9: Per class recall on weak categories of FAIR1M for the baseline and three single technique variants. Each variant adds one technique to the baseline: a class aware sampler, a focal loss, and a BFPA attention module.",
+      "asset": "assets/figures/fig15_p13_1384x1140.png",
+      "verification_status": "inspected",
+      "confidence": 0.99,
+      "used_in": []
+    },
+    {
+      "id": "T07",
+      "kind": "table",
+      "page": 14,
+      "label": "TABLE VII",
+      "caption": "TABLE VII: PRACTICAL COST AND SEARCH EFFICIENCY COMPARISON OF AUTONOMOUS RESEARCH FRAMEWORKS ON THE OBJECT DETECTION TASK.",
+      "asset": "assets/figures/crop_T07_p14_907x908.png",
+      "verification_status": "inspected",
+      "confidence": 0.92,
+      "used_in": [
+        {
+          "chapter_id": "sec-05",
+          "chapter_title": "全域泛化与效率超越：跨任务评测与对标 AutoResearch",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "sec-05",
+          "chapter_title": "全域泛化与效率超越：跨任务评测与对标 AutoResearch",
+          "block_type": "table"
+        }
+      ]
+    },
+    {
+      "id": "T08",
+      "kind": "table",
+      "page": 14,
+      "label": "TABLE VIII",
+      "caption": "TABLE VIII: ABLATION STUDY ON THE CRITIC MECHANISM ON FAIR1M.",
+      "asset": "assets/figures/crop_T08_p14_908x892.png",
+      "verification_status": "inspected",
+      "confidence": 0.92,
+      "used_in": [
+        {
+          "chapter_id": "sec-06",
+          "chapter_title": "深度消融与边界反思：有效性边界与未来科研启示",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "sec-06",
+          "chapter_title": "深度消融与边界反思：有效性边界与未来科研启示",
+          "block_type": "table"
+        }
+      ]
+    },
+    {
+      "id": "T09",
+      "kind": "table",
+      "page": 14,
+      "label": "TABLE IX",
+      "caption": "TABLE IX: ABLATION STUDY ON THE DUAL-STREAM EXPERIENCE BUS ON FAIR1M.",
+      "asset": "assets/figures/crop_T09_p14_902x630.png",
+      "verification_status": "inspected",
+      "confidence": 0.92,
+      "used_in": [
+        {
+          "chapter_id": "sec-06",
+          "chapter_title": "深度消融与边界反思：有效性边界与未来科研启示",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "sec-06",
+          "chapter_title": "深度消融与边界反思：有效性边界与未来科研启示",
+          "block_type": "table"
+        }
+      ]
+    },
+    {
+      "id": "T10",
+      "kind": "table",
+      "page": 14,
+      "label": "TABLE X",
+      "caption": "TABLE X: VALIDATION OF THE FIVE-MINUTE VERIFICATION PROTOCOL ON THE OBJECT DETECTION TASK.",
+      "asset": "assets/figures/crop_T10_p14_1415x925.png",
+      "verification_status": "inspected",
+      "confidence": 0.92,
+      "used_in": [
+        {
+          "chapter_id": "sec-03",
+          "chapter_title": "经验认知中枢：双流动态经验总线与五分钟敏捷验证协议",
+          "block_type": "table"
+        }
+      ]
+    },
+    {
+      "id": "T11",
+      "kind": "table",
+      "page": 19,
+      "label": "TABLE XI",
+      "caption": "TABLE XI: REPRESENTATIVE OPERATORS IN THE SEARCH-SPACE INSTANTIATION FOR THE FAIR1M ORIENTED OBJECT DETECTION TASK.",
+      "asset": "assets/figures/crop_T11_p19_943x881.png",
+      "verification_status": "inspected",
+      "confidence": 0.92,
+      "used_in": []
+    },
+    {
+      "id": "p.1",
+      "kind": "page",
+      "page": 1,
+      "label": "p.1",
+      "caption": null,
+      "asset": "source_pages/page-001.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "sec-01",
+          "chapter_title": "范式跃迁：从一次性任务编排到自演化科研闭环",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "p.2",
+      "kind": "page",
+      "page": 2,
+      "label": "p.2",
+      "caption": null,
+      "asset": "source_pages/page-002.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "sec-01",
+          "chapter_title": "范式跃迁：从一次性任务编排到自演化科研闭环",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "sec-01",
+          "chapter_title": "范式跃迁：从一次性任务编排到自演化科研闭环",
+          "block_type": "figure"
+        }
+      ]
+    },
+    {
+      "id": "p.3",
+      "kind": "page",
+      "page": 3,
+      "label": "p.3",
+      "caption": null,
+      "asset": "source_pages/page-003.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "sec-01",
+          "chapter_title": "范式跃迁：从一次性任务编排到自演化科研闭环",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "p.4",
+      "kind": "page",
+      "page": 4,
+      "label": "p.4",
+      "caption": null,
+      "asset": "source_pages/page-004.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "sec-01",
+          "chapter_title": "范式跃迁：从一次性任务编排到自演化科研闭环",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "sec-02",
+          "chapter_title": "架构解耦：执行分支、异构 Critic 审稿与三阶段质检卡点",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "sec-02",
+          "chapter_title": "架构解耦：执行分支、异构 Critic 审稿与三阶段质检卡点",
+          "block_type": "figure"
+        }
+      ]
+    },
+    {
+      "id": "p.5",
+      "kind": "page",
+      "page": 5,
+      "label": "p.5",
+      "caption": null,
+      "asset": "source_pages/page-005.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "sec-02",
+          "chapter_title": "架构解耦：执行分支、异构 Critic 审稿与三阶段质检卡点",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "sec-02",
+          "chapter_title": "架构解耦：执行分支、异构 Critic 审稿与三阶段质检卡点",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "p.6",
+      "kind": "page",
+      "page": 6,
+      "label": "p.6",
+      "caption": null,
+      "asset": "source_pages/page-006.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "sec-02",
+          "chapter_title": "架构解耦：执行分支、异构 Critic 审稿与三阶段质检卡点",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "sec-02",
+          "chapter_title": "架构解耦：执行分支、异构 Critic 审稿与三阶段质检卡点",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "sec-02",
+          "chapter_title": "架构解耦：执行分支、异构 Critic 审稿与三阶段质检卡点",
+          "block_type": "equation"
+        },
+        {
+          "chapter_id": "sec-02",
+          "chapter_title": "架构解耦：执行分支、异构 Critic 审稿与三阶段质检卡点",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "sec-02",
+          "chapter_title": "架构解耦：执行分支、异构 Critic 审稿与三阶段质检卡点",
+          "block_type": "equation"
+        },
+        {
+          "chapter_id": "sec-02",
+          "chapter_title": "架构解耦：执行分支、异构 Critic 审稿与三阶段质检卡点",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "EQ-01",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-01",
+      "caption": "Scoret = w1Ct + w2(1 -Bt) + w3Ht, (1)",
+      "asset": "assets/equations/EQ-01.png",
+      "verification_status": "VERIFIED",
+      "confidence": null,
+      "used_in": [
+        {
+          "chapter_id": "sec-02",
+          "chapter_title": "架构解耦：执行分支、异构 Critic 审稿与三阶段质检卡点",
+          "block_type": "equation"
+        },
+        {
+          "chapter_id": "sec-02",
+          "chapter_title": "架构解耦：执行分支、异构 Critic 审稿与三阶段质检卡点",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "EQ-02",
+      "kind": "equation",
+      "page": 6,
+      "label": "EQ-02",
+      "caption": "o t+1 main = \\Piupdate(st, {ct, Scoret}) , (2)",
+      "asset": "assets/equations/EQ-02.png",
+      "verification_status": "VERIFIED",
+      "confidence": null,
+      "used_in": [
+        {
+          "chapter_id": "sec-02",
+          "chapter_title": "架构解耦：执行分支、异构 Critic 审稿与三阶段质检卡点",
+          "block_type": "equation"
+        },
+        {
+          "chapter_id": "sec-02",
+          "chapter_title": "架构解耦：执行分支、异构 Critic 审稿与三阶段质检卡点",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "p.7",
+      "kind": "page",
+      "page": 7,
+      "label": "p.7",
+      "caption": null,
+      "asset": "source_pages/page-007.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "sec-02",
+          "chapter_title": "架构解耦：执行分支、异构 Critic 审稿与三阶段质检卡点",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "sec-03",
+          "chapter_title": "经验认知中枢：双流动态经验总线与五分钟敏捷验证协议",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "sec-03",
+          "chapter_title": "经验认知中枢：双流动态经验总线与五分钟敏捷验证协议",
+          "block_type": "equation"
+        },
+        {
+          "chapter_id": "sec-03",
+          "chapter_title": "经验认知中枢：双流动态经验总线与五分钟敏捷验证协议",
+          "block_type": "equation"
+        }
+      ]
+    },
+    {
+      "id": "EQ-03",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-03",
+      "caption": "S = {Sarch, Strain, Sdata, Sintg}. (3)",
+      "asset": "assets/equations/EQ-03.png",
+      "verification_status": "VERIFIED",
+      "confidence": null,
+      "used_in": [
+        {
+          "chapter_id": "sec-03",
+          "chapter_title": "经验认知中枢：双流动态经验总线与五分钟敏捷验证协议",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "sec-03",
+          "chapter_title": "经验认知中枢：双流动态经验总线与五分钟敏捷验证协议",
+          "block_type": "equation"
+        }
+      ]
+    },
+    {
+      "id": "EQ-04",
+      "kind": "equation",
+      "page": 7,
+      "label": "EQ-04",
+      "caption": "1) External Knowledge Flow: To address the limitation of fixed knowledge bases in handling complex research logic and emerging research needs, we design an online branch based on retrieval augmented generation. The system retrieves knowl- edge from external sources, applies differentiated extraction to textual knowledge and code knowledge, and then maps the results jointly into executable instructions in S. (a) High level method extraction from text. For document type knowledge such as the methodology sections of papers and the README or implementation notes of open source repositories, the system applies semantic distillation with a large language model and focuses on novel loss functions, learning rate schedules, and network connection patterns. These unstructured descriptions are mapped into heuristic guidance vectors within the search space. For instance, if a paper reports that introducing an edge gradient constraint improves detection accuracy, the system formalizes it as an optimization direction Strain(Ledge) in the training strategy layer. (b) Low level operator extraction from code. The system does not directly copy source code. It first removes the pe- ripheral code related to input/output, logging, and framework scaffolding, locates the core forward pass, and extracts the essential components into a reusable operator \\omega. The operator is defined as \\omega = {I, O, F, P}, (4)",
+      "asset": "assets/equations/EQ-04.png",
+      "verification_status": "VERIFIED",
+      "confidence": null,
+      "used_in": [
+        {
+          "chapter_id": "sec-03",
+          "chapter_title": "经验认知中枢：双流动态经验总线与五分钟敏捷验证协议",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "sec-03",
+          "chapter_title": "经验认知中枢：双流动态经验总线与五分钟敏捷验证协议",
+          "block_type": "equation"
+        }
+      ]
+    },
+    {
+      "id": "p.8",
+      "kind": "page",
+      "page": 8,
+      "label": "p.8",
+      "caption": null,
+      "asset": "source_pages/page-008.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "sec-03",
+          "chapter_title": "经验认知中枢：双流动态经验总线与五分钟敏捷验证协议",
+          "block_type": "figure"
+        },
+        {
+          "chapter_id": "sec-03",
+          "chapter_title": "经验认知中枢：双流动态经验总线与五分钟敏捷验证协议",
+          "block_type": "equation"
+        },
+        {
+          "chapter_id": "sec-03",
+          "chapter_title": "经验认知中枢：双流动态经验总线与五分钟敏捷验证协议",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "sec-03",
+          "chapter_title": "经验认知中枢：双流动态经验总线与五分钟敏捷验证协议",
+          "block_type": "equation"
+        },
+        {
+          "chapter_id": "sec-03",
+          "chapter_title": "经验认知中枢：双流动态经验总线与五分钟敏捷验证协议",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "EQ-05",
+      "kind": "equation",
+      "page": 8,
+      "label": "EQ-05",
+      "caption": "Mgb \\leftarrow Mgb \\cup Filter(Mloc, Scoret), (5)",
+      "asset": "assets/equations/EQ-05.png",
+      "verification_status": "VERIFIED",
+      "confidence": null,
+      "used_in": [
+        {
+          "chapter_id": "sec-03",
+          "chapter_title": "经验认知中枢：双流动态经验总线与五分钟敏捷验证协议",
+          "block_type": "equation"
+        },
+        {
+          "chapter_id": "sec-03",
+          "chapter_title": "经验认知中枢：双流动态经验总线与五分钟敏捷验证协议",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "EQ-06",
+      "kind": "equation",
+      "page": 8,
+      "label": "EQ-06",
+      "caption": "\\Delta t + \\beta exp \\left( -\\sigma\\|\\nabla 2 \\theta\\| \\right) , (6)",
+      "asset": "assets/equations/EQ-06.png",
+      "verification_status": "VERIFIED",
+      "confidence": null,
+      "used_in": [
+        {
+          "chapter_id": "sec-03",
+          "chapter_title": "经验认知中枢：双流动态经验总线与五分钟敏捷验证协议",
+          "block_type": "equation"
+        },
+        {
+          "chapter_id": "sec-03",
+          "chapter_title": "经验认知中枢：双流动态经验总线与五分钟敏捷验证协议",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "p.9",
+      "kind": "page",
+      "page": 9,
+      "label": "p.9",
+      "caption": null,
+      "asset": "source_pages/page-009.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "sec-04",
+          "chapter_title": "实证突破：目标检测七轮轨迹复盘与 MSFR/CPR 架构自主创新",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "sec-04",
+          "chapter_title": "实证突破：目标检测七轮轨迹复盘与 MSFR/CPR 架构自主创新",
+          "block_type": "table"
+        }
+      ]
+    },
+    {
+      "id": "p.10",
+      "kind": "page",
+      "page": 10,
+      "label": "p.10",
+      "caption": null,
+      "asset": "source_pages/page-010.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "sec-04",
+          "chapter_title": "实证突破：目标检测七轮轨迹复盘与 MSFR/CPR 架构自主创新",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "p.11",
+      "kind": "page",
+      "page": 11,
+      "label": "p.11",
+      "caption": null,
+      "asset": "source_pages/page-011.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "sec-05",
+          "chapter_title": "全域泛化与效率超越：跨任务评测与对标 AutoResearch",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "p.12",
+      "kind": "page",
+      "page": 12,
+      "label": "p.12",
+      "caption": null,
+      "asset": "source_pages/page-012.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "sec-05",
+          "chapter_title": "全域泛化与效率超越：跨任务评测与对标 AutoResearch",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "sec-05",
+          "chapter_title": "全域泛化与效率超越：跨任务评测与对标 AutoResearch",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "p.13",
+      "kind": "page",
+      "page": 13,
+      "label": "p.13",
+      "caption": null,
+      "asset": "source_pages/page-013.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "sec-04",
+          "chapter_title": "实证突破：目标检测七轮轨迹复盘与 MSFR/CPR 架构自主创新",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "sec-04",
+          "chapter_title": "实证突破：目标检测七轮轨迹复盘与 MSFR/CPR 架构自主创新",
+          "block_type": "table"
+        }
+      ]
+    },
+    {
+      "id": "p.14",
+      "kind": "page",
+      "page": 14,
+      "label": "p.14",
+      "caption": null,
+      "asset": "source_pages/page-014.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "sec-03",
+          "chapter_title": "经验认知中枢：双流动态经验总线与五分钟敏捷验证协议",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "sec-03",
+          "chapter_title": "经验认知中枢：双流动态经验总线与五分钟敏捷验证协议",
+          "block_type": "equation"
+        },
+        {
+          "chapter_id": "sec-03",
+          "chapter_title": "经验认知中枢：双流动态经验总线与五分钟敏捷验证协议",
+          "block_type": "equation"
+        },
+        {
+          "chapter_id": "sec-03",
+          "chapter_title": "经验认知中枢：双流动态经验总线与五分钟敏捷验证协议",
+          "block_type": "table"
+        },
+        {
+          "chapter_id": "sec-05",
+          "chapter_title": "全域泛化与效率超越：跨任务评测与对标 AutoResearch",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "sec-05",
+          "chapter_title": "全域泛化与效率超越：跨任务评测与对标 AutoResearch",
+          "block_type": "table"
+        },
+        {
+          "chapter_id": "sec-06",
+          "chapter_title": "深度消融与边界反思：有效性边界与未来科研启示",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "sec-06",
+          "chapter_title": "深度消融与边界反思：有效性边界与未来科研启示",
+          "block_type": "table"
+        },
+        {
+          "chapter_id": "sec-06",
+          "chapter_title": "深度消融与边界反思：有效性边界与未来科研启示",
+          "block_type": "paragraph"
+        },
+        {
+          "chapter_id": "sec-06",
+          "chapter_title": "深度消融与边界反思：有效性边界与未来科研启示",
+          "block_type": "table"
+        }
+      ]
+    },
+    {
+      "id": "EQ-07",
+      "kind": "equation",
+      "page": 14,
+      "label": "EQ-07",
+      "caption": "\\rho = 1 -6 PN i=1 d2 i N(N 2 -1), (7)",
+      "asset": "assets/equations/EQ-07.png",
+      "verification_status": "VERIFIED",
+      "confidence": null,
+      "used_in": [
+        {
+          "chapter_id": "sec-03",
+          "chapter_title": "经验认知中枢：双流动态经验总线与五分钟敏捷验证协议",
+          "block_type": "equation"
+        }
+      ]
+    },
+    {
+      "id": "EQ-08",
+      "kind": "equation",
+      "page": 14,
+      "label": "EQ-08",
+      "caption": "Precision = TP TP + FP , Recall = TP TP + FN , (8)",
+      "asset": "assets/equations/EQ-08.png",
+      "verification_status": "VERIFIED",
+      "confidence": null,
+      "used_in": [
+        {
+          "chapter_id": "sec-03",
+          "chapter_title": "经验认知中枢：双流动态经验总线与五分钟敏捷验证协议",
+          "block_type": "equation"
+        }
+      ]
+    },
+    {
+      "id": "p.15",
+      "kind": "page",
+      "page": 15,
+      "label": "p.15",
+      "caption": null,
+      "asset": "source_pages/page-015.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": [
+        {
+          "chapter_id": "sec-06",
+          "chapter_title": "深度消融与边界反思：有效性边界与未来科研启示",
+          "block_type": "paragraph"
+        }
+      ]
+    },
+    {
+      "id": "p.16",
+      "kind": "page",
+      "page": 16,
+      "label": "p.16",
+      "caption": null,
+      "asset": "source_pages/page-016.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "p.17",
+      "kind": "page",
+      "page": 17,
+      "label": "p.17",
+      "caption": null,
+      "asset": "source_pages/page-017.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "p.18",
+      "kind": "page",
+      "page": 18,
+      "label": "p.18",
+      "caption": null,
+      "asset": "source_pages/page-018.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "EQ-09",
+      "kind": "equation",
+      "page": 18,
+      "label": "EQ-09",
+      "caption": "l=1 Rl\\rightarrow r(Pl), (9)",
+      "asset": "assets/equations/EQ-09.png",
+      "verification_status": "VERIFIED",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-10",
+      "kind": "equation",
+      "page": 18,
+      "label": "EQ-10",
+      "caption": "ˆPl = Pl + \\gammalRr\\rightarrow l(F), (10)",
+      "asset": "assets/equations/EQ-10.png",
+      "verification_status": "VERIFIED",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-11",
+      "kind": "equation",
+      "page": 18,
+      "label": "EQ-11",
+      "caption": "e = Norm(Wpf), (11)",
+      "asset": "assets/equations/EQ-11.png",
+      "verification_status": "VERIFIED",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-12",
+      "kind": "equation",
+      "page": 18,
+      "label": "EQ-12",
+      "caption": "and computes its similarity to the normalized category proto- types ˆP: s = \\taue ˆP T , \\tau = 10. (12)",
+      "asset": "assets/equations/EQ-12.png",
+      "verification_status": "VERIFIED",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-13",
+      "kind": "equation",
+      "page": 18,
+      "label": "EQ-13",
+      "caption": "˜zfg = zfg + gs, g = 0.5 tanh(\\theta). (13)",
+      "asset": "assets/equations/EQ-13.png",
+      "verification_status": "VERIFIED",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "EQ-14",
+      "kind": "equation",
+      "page": 18,
+      "label": "EQ-14",
+      "caption": "Sim = 0.30Stask + 0.25Sbottleneck + 0.20Sdataset + 0.15Smodel + 0.10Smetric. (14)",
+      "asset": "assets/equations/EQ-14.png",
+      "verification_status": "VERIFIED",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.19",
+      "kind": "page",
+      "page": 19,
+      "label": "p.19",
+      "caption": null,
+      "asset": "source_pages/page-019.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    },
+    {
+      "id": "EQ-15",
+      "kind": "equation",
+      "page": 19,
+      "label": "EQ-15",
+      "caption": "Sret = 0.50R + 0.30F + 0.20N, (15)",
+      "asset": "assets/equations/EQ-15.png",
+      "verification_status": "VERIFIED",
+      "confidence": null,
+      "used_in": []
+    },
+    {
+      "id": "p.20",
+      "kind": "page",
+      "page": 20,
+      "label": "p.20",
+      "caption": null,
+      "asset": "source_pages/page-020.png",
+      "verification_status": "SOURCE_PAGE",
+      "confidence": 1.0,
+      "used_in": []
+    }
+  ]
+}

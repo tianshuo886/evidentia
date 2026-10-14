@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "run_id": "8d4499b5-3f34-4f73-92b4-4f769d1325da",
+  "mode": "evidentia",
+  "intent": "PAPER_READING",
+  "phase": "INGEST",
+  "source_sha256": "32df5e2843de7e8ccd52d56b9dfed257c26786ef3b71fbc397a1c3a5e26fb0fa",
+  "base_sha256": null,
+  "allowed_inputs": [
+    "working/paper.pdf"
+  ],
+  "forbidden_inputs": [
+    "apply/",
+    "project/",
+    "memory/project/"
+  ],
+  "artifacts": {},
+  "completed_phases": [],
+  "artifact_hashes": {},
+  "executor": {},
+  "history": [
+    {
+      "phase": "INGEST",
+      "status": "started",
+      "at": "2026-10-14T09:17:35.441061+00:00"
+    }
+  ]
+}

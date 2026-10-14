@@ -1,0 +1,82 @@
+{
+  "status": "OK",
+  "presentation_contract": {
+    "presentation_only": true,
+    "scientific_authority": "Lead Writer / narrative_manuscript.json",
+    "warning_classification_policy": "BLOCKING / NON_BLOCKING / HUMAN_REVIEW_REQUIRED"
+  },
+  "blocking_defects_count": 0,
+  "kami_root": "/Users/shentianshuo/.agents/skills/kami",
+  "pdf": "evals/reader_v3/fresh_ringmoclaw_run/reader/paper_reader.pdf",
+  "pdf_sha256": "6aae93b456f05e6dc985f8a60522ffee6a5db93a9888c5fde5479867833c0798",
+  "html": "evals/reader_v3/fresh_ringmoclaw_run/reader/paper_reader.html",
+  "html_sha256": "0bac0983ae3c458dce650bf9fea4dc69e193558a79877c32789156d3961328d2",
+  "checks": [
+    {
+      "args": [
+        "--check-placeholders",
+        "/Users/shentianshuo/.agents/skills/evidentia/evals/reader_v3/fresh_ringmoclaw_run/reader/paper_reader.html"
+      ],
+      "check": "--check-placeholders",
+      "severity": "PASS",
+      "returncode": 0,
+      "stdout": "OK: /Users/shentianshuo/.agents/skills/evidentia/evals/reader_v3/fresh_ringmoclaw_run/reader/paper_reader.html: no placeholders\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "--check-style",
+        "/Users/shentianshuo/.agents/skills/evidentia/evals/reader_v3/fresh_ringmoclaw_run/reader/paper_reader.html"
+      ],
+      "check": "--check-style",
+      "severity": "NON_BLOCKING",
+      "returncode": 1,
+      "stdout": "ERROR: /Users/shentianshuo/.agents/skills/evidentia/evals/reader_v3/fresh_ringmoclaw_run/reader/paper_reader.html: 3 style finding(s)\n  /Users/shentianshuo/.agents/skills/evidentia/evals/reader_v3/fresh_ringmoclaw_run/reader/paper_reader.html:303  [off-palette] #f8f6f0 is not a registered token; single-accent palette violated\n  /Users/shentianshuo/.agents/skills/evidentia/evals/reader_v3/fresh_ringmoclaw_run/reader/paper_reader.html:308  [off-palette] #d97706 is not a registered token; single-accent palette violated\n  /Users/shentianshuo/.agents/skills/evidentia/evals/reader_v3/fresh_ringmoclaw_run/reader/paper_reader.html:298  [emphasis-container-mix] 2 different emphasis fills in one document (.callout (#faf9f5), .eq-proxy (--warm-gray)); a page raises passages one way, reused, not a new container per idea\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "--check-visual",
+        "/Users/shentianshuo/.agents/skills/evidentia/evals/reader_v3/fresh_ringmoclaw_run/reader/paper_reader.pdf"
+      ],
+      "check": "--check-visual",
+      "severity": "PASS",
+      "returncode": 0,
+      "stdout": "gmoclaw_run/reader/paper_reader-visual/page-03.png\n  /Users/shentianshuo/.agents/skills/evidentia/evals/reader_v3/fresh_ringmoclaw_run/reader/paper_reader-visual/page-04.png\n  /Users/shentianshuo/.agents/skills/evidentia/evals/reader_v3/fresh_ringmoclaw_run/reader/paper_reader-visual/page-05.png\n  /Users/shentianshuo/.agents/skills/evidentia/evals/reader_v3/fresh_ringmoclaw_run/reader/paper_reader-visual/page-06.png\n  /Users/shentianshuo/.agents/skills/evidentia/evals/reader_v3/fresh_ringmoclaw_run/reader/paper_reader-visual/page-07.png\n  /Users/shentianshuo/.agents/skills/evidentia/evals/reader_v3/fresh_ringmoclaw_run/reader/paper_reader-visual/page-08.png\n  /Users/shentianshuo/.agents/skills/evidentia/evals/reader_v3/fresh_ringmoclaw_run/reader/paper_reader-visual/page-09.png\n  /Users/shentianshuo/.agents/skills/evidentia/evals/reader_v3/fresh_ringmoclaw_run/reader/paper_reader-visual/page-10.png\n  /Users/shentianshuo/.agents/skills/evidentia/evals/reader_v3/fresh_ringmoclaw_run/reader/paper_reader-visual/page-11.png\n  /Users/shentianshuo/.agents/skills/evidentia/evals/reader_v3/fresh_ringmoclaw_run/reader/paper_reader-visual/page-12.png\n  /Users/shentianshuo/.agents/skills/evidentia/evals/reader_v3/fresh_ringmoclaw_run/reader/paper_reader-visual/page-13.png\n  /Users/shentianshuo/.agents/skills/evidentia/evals/reader_v3/fresh_ringmoclaw_run/reader/paper_reader-visual/page-14.png\n  /Users/shentianshuo/.agents/skills/evidentia/evals/reader_v3/fresh_ringmoclaw_run/reader/paper_reader-visual/page-15.png\n  /Users/shentianshuo/.agents/skills/evidentia/evals/reader_v3/fresh_ringmoclaw_run/reader/paper_reader-visual/page-16.png\n  /Users/shentianshuo/.agents/skills/evidentia/evals/reader_v3/fresh_ringmoclaw_run/reader/paper_reader-visual/page-17.png\nFont check (deterministic, settles checklist item 1):\nOK: /Users/shentianshuo/.agents/skills/evidentia/evals/reader_v3/fresh_ringmoclaw_run/reader/paper_reader.pdf: CJK body text in TsangerJinKai02 (6351 ideographs)\nReview checklist (view every page image before shipping):\n  - fonts: no fallback boxes or mixed families; CJK bold is a real weight, not synthetic\n  - tags and chips: solid backgrounds, no double rectangle or double ring artifacts\n  - figures: no overlapping labels, arrows never touch module edges, arrowheads visible\n  - page breaks: no heading stranded at a page bottom, no card or table split mid-body\n  - emphasis: brand color only on numbers or distinctive phrases, at most 2 per line\n  - density: body pages read 60-80% full (cover and last page exempt), no orphan trailing line\n  - wraps: no line one word from wrapping, no line wrapping early before filling its container\n  - alignment: columns share baselines, margins are even, nothing crowds the page edge\n  - tables: one neutral rule color, hairline dividers, and enough vertical padding for each row to breathe\n  - subtraction: no decorative ticks, short rules, or side accents; every visible rule separates data, regions, relationships, or state\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "--check-orphans",
+        "/Users/shentianshuo/.agents/skills/evidentia/evals/reader_v3/fresh_ringmoclaw_run/reader/paper_reader.pdf"
+      ],
+      "check": "--check-orphans",
+      "severity": "PASS",
+      "returncode": 0,
+      "stdout": "  /Users/shentianshuo/.agents/skills/evidentia/evals/reader_v3/fresh_ringmoclaw_run/reader/paper_reader.pdf p1: orphan: \"化多智能体科研框架\" (1 word(s), 9 chars)\n  /Users/shentianshuo/.agents/skills/evidentia/evals/reader_v3/fresh_ringmoclaw_run/reader/paper_reader.pdf p4: orphan: \"点\" (1 word(s), 1 chars)\n  /Users/shentianshuo/.agents/skills/evidentia/evals/reader_v3/fresh_ringmoclaw_run/reader/paper_reader.pdf p7: orphan: \"协议\" (1 word(s), 2 chars)\n  /Users/shentianshuo/.agents/skills/evidentia/evals/reader_v3/fresh_ringmoclaw_run/reader/paper_reader.pdf p8: orphan: \"验库。\" (1 word(s), 3 chars)\n  /Users/shentianshuo/.agents/skills/evidentia/evals/reader_v3/fresh_ringmoclaw_run/reader/paper_reader.pdf p11: orphan: \"自主创新\" (1 word(s), 4 chars)\n  /Users/shentianshuo/.agents/skills/evidentia/evals/reader_v3/fresh_ringmoclaw_run/reader/paper_reader.pdf p13: orphan: \"AutoResearch\" (1 word(s), 12 chars)\n  /Users/shentianshuo/.agents/skills/evidentia/evals/reader_v3/fresh_ringmoclaw_run/reader/paper_reader.pdf p17: orphan: \"、\" (1 word(s), 1 chars)\n  /Users/shentianshuo/.agents/skills/evidentia/evals/reader_v3/fresh_ringmoclaw_run/reader/paper_reader.pdf p17: orphan: \"p.19\" (1 word(s), 4 chars)\n\n8 orphan(s) found across 1 PDF(s)\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "--check-density",
+        "/Users/shentianshuo/.agents/skills/evidentia/evals/reader_v3/fresh_ringmoclaw_run/reader/paper_reader.pdf"
+      ],
+      "check": "--check-density",
+      "severity": "PASS",
+      "returncode": 0,
+      "stdout": "  SPARSE: /Users/shentianshuo/.agents/skills/evidentia/evals/reader_v3/fresh_ringmoclaw_run/reader/paper_reader.pdf p13: 52% trailing whitespace\n\n1 density warning(s) across 1 PDF(s)\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "--check-fonts",
+        "/Users/shentianshuo/.agents/skills/evidentia/evals/reader_v3/fresh_ringmoclaw_run/reader/paper_reader.pdf"
+      ],
+      "check": "--check-fonts",
+      "severity": "PASS",
+      "returncode": 0,
+      "stdout": "OK: /Users/shentianshuo/.agents/skills/evidentia/evals/reader_v3/fresh_ringmoclaw_run/reader/paper_reader.pdf: CJK body text in TsangerJinKai02 (6351 ideographs)\n",
+      "stderr": ""
+    }
+  ]
+}
