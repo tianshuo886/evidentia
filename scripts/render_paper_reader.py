@@ -19,8 +19,18 @@ from validate_common import load_json, sha256
 # Deterministic composition is quarantined for legacy compatibility only.
 import kami_adapter
 
+def sanitize_editorial_text(text: str) -> str:
+    """Strip internal audit tags and pipeline process vocabulary before rendering."""
+    if not text:
+        return ""
+    text = re.sub(r'【(?:科学核验|证据核验|核验记录|审查透镜|机制核验|门禁检查|事实核查|事实核验|核验结论|审计标记|核验通过)[^】]*】', '', text)
+    text = text.replace("必须严格恪守", "遵循").replace("输入防火墙", "上下文隔离").replace("防火墙机制", "隔离机制")
+    text = text.replace("Lead Writer", "科学编辑").replace("Reviewer Lens", "证据审查").replace("Author Lens", "作者解释")
+    return text
+
 def esc(x):
-    return html.escape(str(x or ''))
+    cleaned = sanitize_editorial_text(str(x or ''))
+    return html.escape(cleaned)
 
 FORBIDDEN_MAIN_READER_PHRASES = ('详情见图谱', '图谱详情', '六大透镜', '跨透镜', '六个 Lens', '六个Lens')
 
@@ -668,18 +678,19 @@ def render_paper_reader_md(manuscript: dict, root=None) -> str:
     lines.extend(['', '---', ''])
     for idx, chapter in enumerate(chapters, 1):
         cid = chapter.get('id', f'spine-{idx:02d}')
-        lead_text = chapter.get('lead_paragraph') or chapter.get('lead', '')
+        lead_text = sanitize_editorial_text(chapter.get('lead_paragraph') or chapter.get('lead', ''))
         lines.extend([f"## {idx}. {chapter.get('title', '')} <a id='{cid}'></a>", '', f"> *{lead_text}*", ''])
         for block in chapter.get('blocks', []):
-            kind = block.get('type'); text = block.get('text', ''); refs = block.get('evidence_refs', [])
+            kind = block.get('type'); text = sanitize_editorial_text(block.get('text', '')); refs = block.get('evidence_refs', [])
             cite = f" 〔{', '.join(refs)}〕" if refs else ''
             if kind in ('paragraph', 'callout', 'takeaway'):
                 lines.append(f"{text}{cite}\n")
             elif kind in ('figure', 'table'):
-                lines.append(f"### {block.get('caption', '图表')}\n")
+                caption = sanitize_editorial_text(block.get('caption', '图表'))
+                lines.append(f"### {caption}\n")
                 asset = resolve_visual_asset(block, root) if root else block.get('asset')
-                if asset: lines.append(f"![{block.get('caption', '')}]({asset})\n")
-                lines.append(f"{block.get('analysis', '')}{cite}\n")
+                if asset: lines.append(f"![{caption}]({asset})\n")
+                lines.append(f"{sanitize_editorial_text(block.get('analysis', ''))}{cite}\n")
             elif kind == 'equation':
                 eq_id = block.get('evidence_id') or block.get('equation_id') or 'EQ'
                 paper_label = block.get('paper_label', '')
