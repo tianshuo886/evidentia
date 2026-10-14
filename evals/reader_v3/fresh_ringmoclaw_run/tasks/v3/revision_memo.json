@@ -1,0 +1,60 @@
+{
+  "task_id": "TASK-V3-REVISION-MEMO",
+  "task_type": "REVISION_MEMO",
+  "required_capability": "SCIENTIFIC_EDITORIAL_RECONCILIATION",
+  "scientific_contract": "Act as a scientific editor. Reconcile independent specialist rereads into a Revision Memo only. Do not write the final Reader and do not decide disagreements by voting.",
+  "description": "Reader v3 Council/Editor revision memo.",
+  "input_artifacts": {
+    "source_pdf": "source/paper.pdf",
+    "lead_reader_draft": "model/paper_understanding_draft.json",
+    "lens_manifest": "model/lens_v3_manifest.json",
+    "lens_outputs": [
+      "lens_v3/argument_narrative.json",
+      "lens_v3/method_study_design.json",
+      "lens_v3/evidence_results.json",
+      "lens_v3/validity_boundary.json",
+      "lens_v3/mechanism_causality.json",
+      "lens_v3/reproducibility_implementation.json"
+    ]
+  },
+  "target_output": "model/revision_memo.json",
+  "output_schema": "revision_memo",
+  "source_sha256": "32df5e2843de7e8ccd52d56b9dfed257c26786ef3b71fbc397a1c3a5e26fb0fa",
+  "base_sha256": "9036b3e1e1575dfaad4cd49908a18e8236215985a834e9b97438c7abde86b1df",
+  "contract_version": "3.0",
+  "prompt_version": "3.0",
+  "allowed_inputs": [
+    "source/",
+    "source_pages/",
+    "assets/",
+    "model/paper_understanding_draft.json",
+    "model/lens_v3_manifest.json",
+    "lens_v3/"
+  ],
+  "forbidden_inputs": [
+    "apply/",
+    "project/",
+    "memory/project/"
+  ],
+  "prohibited_context": [
+    "PROJECT_APPLY",
+    "RESEARCH_MEMORY"
+  ],
+  "constraints": [
+    "REVISION_MEMO_ONLY",
+    "NO_MAJORITY_VOTING",
+    "PRESERVE_UNRESOLVED"
+  ],
+  "instructions": "Read the Lead Reader draft and all six independent Lens reports. Produce a concise editorial Revision Memo. Identify scientific explanation deficits (missing necessary mechanism, variable, experiment control, discrepancy, boundary). For each deficit, mark action as MUST_EXPLAIN, QUALIFY, CAN_LINK_TO_ATLAS, or UNRESOLVED with precise source anchors. Reconcile specialist findings, merge duplicates, preserve real conflicts, and leave genuinely unresolved points unresolved. Do not produce a new paper summary.",
+  "executor_template": {
+    "host": "generic-host",
+    "host_version": "UNKNOWN",
+    "provider": "UNKNOWN",
+    "model": "UNKNOWN",
+    "model_version": "UNKNOWN",
+    "reasoning_profile": "standard",
+    "tool_profile": "paper-only",
+    "started_at": "2026-10-14T12:24:52.087254+00:00",
+    "completed_at": "2026-10-14T12:24:52.087254+00:00"
+  }
+}

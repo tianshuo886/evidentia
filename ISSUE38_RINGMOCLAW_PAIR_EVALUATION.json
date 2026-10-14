@@ -14,7 +14,7 @@
   "condition_b": {
     "system": "Evidentia Reader v3 (Scientific Integrity + Deep Coverage Remediation)",
     "model": "antigravity/gemini-3.8-flash",
-    "manuscript_sha256": "1b9454dcf1a784627c9b97cd04f27524365b44c3b97307c100f73b49ac5d5afb",
+    "manuscript_sha256": "fa8a637702a847d88ef701689dad148459a8e0d8eabb127893e358ac441dfd36",
     "path": "reader/narrative_manuscript.json"
   },
   "dimensions": [

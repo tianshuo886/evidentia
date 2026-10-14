@@ -1,0 +1,314 @@
+{
+  "task_id": "TASK-V3-LEAD-READING",
+  "execution_kind": "HOST_AGENT",
+  "executor": {
+    "kind": "HOST_AGENT",
+    "host": "antigravity",
+    "model": "antigravity/gemini-3.8-flash",
+    "started_at": "2026-10-14T12:24:50.508166+00:00",
+    "completed_at": "2026-10-14T12:24:50.508166+00:00",
+    "tool_profile": "paper-only"
+  },
+  "started_at": "2026-10-14T12:24:50.508166+00:00",
+  "completed_at": "2026-10-14T12:24:50.508166+00:00",
+  "result": {
+    "schema_version": "1.0",
+    "paper_id": "ringmoclaw",
+    "source_sha256": "32df5e2843de7e8ccd52d56b9dfed257c26786ef3b71fbc397a1c3a5e26fb0fa",
+    "paper_type": "remote_sensing",
+    "paper_characterization": "面向遥感旋转目标检测、场景分类、变化检测与语义分割的自演化多智能体科研框架",
+    "structure_characterization": "六章自然演化：范式跃迁与核心动能 -> 架构解耦与决策形式化 -> 数学形式化与早筛策略 -> FAIR1M 演化轨迹与微结构自主创新 -> 全域泛化与效率超越 -> 深度消融与科学边界",
+    "argument_topology": {
+      "nodes": [
+        {
+          "id": "N01",
+          "role": "problem_definition",
+          "semantic_role": "problem",
+          "proposition": "传统自动化科研框架依赖单智能体与预设流水线，在遥感多模态大尺度长尾场景中面临幻觉自评与算力爆炸双重瓶颈。",
+          "explanation": "遥感数据包含极高长尾混淆度与尺度跨度，传统框架缺乏异构独立同行审查，主智能体易陷入自评同谋偏见。",
+          "evidence_refs": [
+            "F01",
+            "p.1",
+            "p.2"
+          ],
+          "source_anchors": [
+            "p.1",
+            "p.2"
+          ],
+          "epistemic_status": "SUPPORTED"
+        },
+        {
+          "id": "N02",
+          "role": "framework_architecture",
+          "semantic_role": "architecture",
+          "proposition": "解耦执行集群与审查中枢，依托异构模型构建三阶段同行审稿卡点，配合双流经验总线实现启发式定向剪枝。",
+          "explanation": "系统解耦了执行层与独立 Critic 审稿层，形成方案审查、代码审查与实验审查三重防线。",
+          "evidence_refs": [
+            "F02",
+            "p.3",
+            "p.4"
+          ],
+          "source_anchors": [
+            "p.3",
+            "p.4"
+          ],
+          "epistemic_status": "VERIFIED"
+        },
+        {
+          "id": "N03",
+          "role": "mathematical_formulation",
+          "semantic_role": "formulation",
+          "proposition": "定义状态决策空间与复合多目标综合评分函数，结合五分钟代理早筛指标实现低成本候选过滤。",
+          "explanation": "公式 (1)-(8) 分别形式化了阶段状态转移、综合评分函数、敏捷验证代理指标及加权打分规则。",
+          "evidence_refs": [
+            "F04",
+            "p.5",
+            "p.6",
+            "p.7",
+            "p.8"
+          ],
+          "source_anchors": [
+            "p.5",
+            "p.6",
+            "p.7",
+            "p.8"
+          ],
+          "epistemic_status": "VERIFIED"
+        },
+        {
+          "id": "N04",
+          "role": "empirical_evolution",
+          "semantic_role": "evolution",
+          "proposition": "在 FAIR1M 旋转目标检测基准上自发演化出 MSFR 多尺度特征细化模块与 CPR 对比原型细化分类头，以微量参数换取精度阶跃。",
+          "explanation": "YOLO11x-OBB 基线 47.30% 经过数据工程、微结构假设与算子探索最终推进至 49.14% mAP50（3 次独立实验中最优轨迹）。",
+          "evidence_refs": [
+            "T01",
+            "T06",
+            "p.9",
+            "p.13"
+          ],
+          "source_anchors": [
+            "p.9",
+            "p.13"
+          ],
+          "epistemic_status": "VERIFIED"
+        },
+        {
+          "id": "N05",
+          "role": "efficiency_benchmark",
+          "semantic_role": "efficiency",
+          "proposition": "全流程总 GPU 算力消耗时间从 26.90 小时大幅缩减至 12.14 小时（节省 54.9%），实际挂钟时间缩减至 10.61 小时。",
+          "explanation": "依托双流经验总线的禁忌表与负记忆剪枝，系统在四项遥感下游任务中均以 4-7 轮快速收敛。",
+          "evidence_refs": [
+            "T07",
+            "p.14"
+          ],
+          "source_anchors": [
+            "p.14"
+          ],
+          "epistemic_status": "VERIFIED"
+        },
+        {
+          "id": "N06",
+          "role": "component_ablation",
+          "semantic_role": "ablation",
+          "proposition": "剥离独立 Critic 导致收敛步数从 7 轮增至 11 轮且精度降至 47.43%；剥离双流总线导致非提升试错探索从 2 次增至 6 次。",
+          "explanation": "严格消融实验定量证实了同行审查与显式记忆对约束搜索空间与抑制自评偏见的核心贡献。",
+          "evidence_refs": [
+            "T08",
+            "T09",
+            "p.14"
+          ],
+          "source_anchors": [
+            "p.14"
+          ],
+          "epistemic_status": "VERIFIED"
+        },
+        {
+          "id": "N07",
+          "role": "validity_boundary",
+          "semantic_role": "boundary",
+          "proposition": "当前框架受限于预设 23 类算子表达空间与离线数据分布；多智能体交互通信开销较大，未来需向多模态与时序遥感观测持续拓展。",
+          "explanation": "作者在第 15 页坦承了算子空间上界、类别不平衡与通信开销等现实局限。",
+          "evidence_refs": [
+            "p.15"
+          ],
+          "source_anchors": [
+            "p.15"
+          ],
+          "epistemic_status": "SUPPORTED"
+        }
+      ],
+      "relations": [
+        {
+          "from": "N01",
+          "to": "N02",
+          "relation": "motivates_architecture",
+          "relation_type": "motivation",
+          "origin": "author"
+        },
+        {
+          "from": "N02",
+          "to": "N03",
+          "relation": "formalizes_decisions",
+          "relation_type": "formulation",
+          "origin": "author"
+        },
+        {
+          "from": "N03",
+          "to": "N04",
+          "relation": "drives_empirical_discovery",
+          "relation_type": "execution",
+          "origin": "author"
+        },
+        {
+          "from": "N04",
+          "to": "N05",
+          "relation": "evidences_efficiency",
+          "relation_type": "evidence",
+          "origin": "author"
+        },
+        {
+          "from": "N05",
+          "to": "N06",
+          "relation": "substantiates_components",
+          "relation_type": "ablation",
+          "origin": "author"
+        },
+        {
+          "from": "N06",
+          "to": "N07",
+          "relation": "delineates_limitations",
+          "relation_type": "boundary",
+          "origin": "author"
+        }
+      ],
+      "ordering": [
+        "N01",
+        "N02",
+        "N03",
+        "N04",
+        "N05",
+        "N06",
+        "N07"
+      ]
+    },
+    "concept_dependency_map": [
+      {
+        "concept": "异构同行审稿机制",
+        "prerequisites": [
+          "大模型自评幻觉",
+          "角色解耦"
+        ],
+        "source_anchors": [
+          "p.3",
+          "p.4"
+        ],
+        "why": "理解为何单智能体无法胜任科学评判，必须由不同模型家族充当独立审查者"
+      },
+      {
+        "concept": "双流经验总线",
+        "prerequisites": [
+          "外生文献检索",
+          "内生试错负记忆"
+        ],
+        "source_anchors": [
+          "p.4",
+          "p.5"
+        ],
+        "why": "理解正向先验注入与反向试错禁忌如何协同压缩探索空间"
+      },
+      {
+        "concept": "五分钟敏捷早筛代理任务",
+        "prerequisites": [
+          "短时学习率调度",
+          "子集采样代理"
+        ],
+        "source_anchors": [
+          "p.6",
+          "p.7"
+        ],
+        "why": "理解如何在极低算力预算下预测候选策略的全量训练质量"
+      },
+      {
+        "concept": "MSFR 与 CPR 模块微结构",
+        "prerequisites": [
+          "零初始化门控残差",
+          "类别原型余弦对齐"
+        ],
+        "source_anchors": [
+          "p.9",
+          "p.13"
+        ],
+        "why": "理解自发演化算子如何平衡小目标高频特征细化与长尾类别流形聚类"
+      }
+    ],
+    "narrative": "RingMoClaw 论文针对传统自动化科学研究框架中单智能体盲目探索、自评同谋偏见与算力严重浪费的痛点，提出了首个面向遥感领域的经验驱动自演化科研框架。其核心论证逻辑包含三个支柱：第一，在系统架构上实现执行集群与异构审查中枢的严格物理与角色解耦，通过方案审查、代码审查与实验审查三道硬质检卡点，从机制上杜绝了大模型自我评价的虚妄幻觉。第二，在决策与搜索空间上，构建融合外生文献知识流与内生试错记忆流的双流经验总线，并形式化了状态转移、敏捷验证与加权打分数学模型，使非提升探索迭代从 6 次显著压缩至 2 次，GPU 运行时间节省 54.9%。第三，在实证层面，不仅在 FAIR1M 旋转检测上从 47.30% 演化出 49.14%（并发现 MSFR 与 CPR 两个轻量高增益微结构），而且在场景分类、语义分割与变化检测等多样化遥感下游任务中证实了跨任务泛化能力。作者同时严谨指出了预设算子表达空间上限与通信开销等客观边界。",
+    "decisive_evidence": [
+      {
+        "evidence": [
+          "F02",
+          "p.3"
+        ],
+        "why_it_matters": "确立多智能体自演化框架的三层架构与交互闭环"
+      },
+      {
+        "evidence": [
+          "F04",
+          "p.6"
+        ],
+        "why_it_matters": "确立五分钟敏捷早筛代理任务协议与候选策略过滤机制"
+      },
+      {
+        "evidence": [
+          "T01",
+          "p.9"
+        ],
+        "why_it_matters": "记录 FAIR1M 目标检测三次独立实验中最优演化轨迹（47.30% 至 49.14%）"
+      },
+      {
+        "evidence": [
+          "T06",
+          "p.13"
+        ],
+        "why_it_matters": "量化 MSFR (+1.01 pp) 与 CPR (+0.99 pp) 独立与联合 (+1.84 pp) 消融收益与微量算力开销"
+      },
+      {
+        "evidence": [
+          "T07",
+          "p.14"
+        ],
+        "why_it_matters": "对标 AutoResearch 确立全流程 GPU-hours 节省 54.9% 与挂钟时间节省"
+      },
+      {
+        "evidence": [
+          "T08",
+          "p.14"
+        ],
+        "why_it_matters": "消融异构 Critic 机制确立其在缩短收敛轮数（7 轮 vs 11 轮）与提升精度（49.14% vs 47.43%）上的不可或缺作用"
+      },
+      {
+        "evidence": [
+          "T09",
+          "p.14"
+        ],
+        "why_it_matters": "消融双流经验总线确立非提升试错探索从 6 次降至 2 次的剪枝机理"
+      },
+      {
+        "evidence": [
+          "T10",
+          "p.14"
+        ],
+        "why_it_matters": "五分钟敏捷早筛测得劣化候选精确率 1.00，召回率 0.83"
+      }
+    ],
+    "uncertainties": [
+      "LEVIR-CD 变化检测 F1 与 IoU 指标偏离单类别二值公式，属于基准约定未决项 UNRESOLVED",
+      "当前预设算子表达空间对跨模态复杂物理反演任务的外推适用边界"
+    ],
+    "open_issues": [
+      "算子库之外的未知网络拓扑自动发现机制",
+      "更长程多模态大模型交互的通信与延迟优化"
+    ]
+  }
+}

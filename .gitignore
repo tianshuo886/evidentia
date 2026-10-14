@@ -38,7 +38,8 @@ runs/
 # Evidentia local execution artifacts
 audit_report.json
 model/
-!evals/reader_v3/fresh_ringmoclaw_run/model/
+!evals/reader_v3/fresh_ringmoclaw_run/
+!evals/reader_v3/fresh_ringmoclaw_run/**
 evals/reader_regression/
 
 # OS / Editor

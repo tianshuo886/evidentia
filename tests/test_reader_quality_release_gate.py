@@ -94,6 +94,11 @@ def test_layer2_defective_real_reader_fails_with_exact_anchors():
     ("Kaiyue Kang · IEEE Transactions on Geoscience and Remote Sensing (TGRS) · 2026", "BIBLIOGRAPHIC_FABRICATION"),
     ("作者坦承若要迁移至 PROSAIL 与 PINN，必须引入物理机理守恒定律。", "PROJECT_ATTRIBUTION_CONFLATION"),
     ("FAIR1M 目标检测 mAP50 从 47.30% 稳步提升至 49.14%。", "EXPERIMENTAL_PROTOCOL_OMISSION"),
+    ("表I 演化轨迹呈现了 47.88%、48.45% 与 48.82% 等阶段数值。", "TABLE_I_TRAJECTORY_FIDELITY"),
+    ("表VI 显示单独引入 MSFR 使 mAP50 提升 1.15 pp。", "TABLE_VI_MODULE_ABLATION_FIDELITY"),
+    ("表VI 显示单独引入 CPR 使 mAP50 提升 0.92 pp。", "TABLE_VI_MODULE_ABLATION_FIDELITY"),
+    ("消融实验中移除 Critic 审稿机制导致收敛需要 14 轮且仅取得 47.88% mAP。", "TABLE_VIII_CRITIC_ABLATION_FIDELITY"),
+    ("在表IX 双流经验总线消融中，非提升探索迭代压减为仅 1 次。", "TABLE_IX_EXPERIENCE_BUS_ABLATION_FIDELITY"),
 ])
 def test_layer2_adversarial_mutations_fail_closed(mutation, expected_rule):
     """Targeted mutations of prose must fail closed on the specific integrity rule."""
@@ -112,6 +117,22 @@ def test_layer2_non_failure_controls_pass():
     # Control 2: Properly distinguished GPU-hours and wall-clock
     c2 = "GPU 算力消耗时间（GPU-hours）从 26.90 小时压减至 12.14 小时，实际挂钟时间（wall-clock hours）从 13.45 小时缩减至 10.61 小时。"
     assert not any(d["rule"] == "METRIC_UNIT_COLLAPSE" for d in verify_text_claims(c2))
+
+    # Control 5: Table I trajectory and protocol
+    c5 = "表I 演化轨迹：47.30% -> 48.18% -> 47.77% -> 47.69% -> 49.11% -> 49.14%（注：表I 报告的是三次独立重复演化试验中的最优轨迹结果）。"
+    assert not any(d["rule"] == "TABLE_I_TRAJECTORY_FIDELITY" for d in verify_text_claims(c5))
+
+    # Control 6: Table VI MSFR and CPR gains
+    c6 = "表VI 中单独引入 MSFR 使 mAP 提升 1.01 个百分点（从 47.30% 增至 48.31%），单独引入 CPR 使 mAP 提升 0.99 个百分点（从 47.30% 增至 48.29%）。"
+    assert not any(d["rule"] == "TABLE_VI_MODULE_ABLATION_FIDELITY" for d in verify_text_claims(c6))
+
+    # Control 7: Table VIII Critic ablation
+    c7 = "表VIII 中移除独立 Critic 审稿机制后，收敛所需轮数由 7 轮增至 11 轮且精度降至 47.43% mAP。"
+    assert not any(d["rule"] == "TABLE_VIII_CRITIC_ABLATION_FIDELITY" for d in verify_text_claims(c7))
+
+    # Control 8: Table IX Experience bus ablation
+    c8 = "表IX 中引入双流经验总线后，非提升探索迭代由 6 次压减为 2 次。"
+    assert not any(d["rule"] == "TABLE_IX_EXPERIENCE_BUS_ABLATION_FIDELITY" for d in verify_text_claims(c8))
 
     # Control 3: Explicit clarification that failed iterations were non-improving, not crashes
     c3 = "经历了 6 次非提升探索迭代（failed iterations，指未能带来验证集精度增益的候选搜索尝试，而非训练程序崩溃）。"

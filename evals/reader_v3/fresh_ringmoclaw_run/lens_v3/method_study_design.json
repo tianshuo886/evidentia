@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "lens": "method_study_design",
+  "lens_kind": "core",
+  "source_sha256": "32df5e2843de7e8ccd52d56b9dfed257c26786ef3b71fbc397a1c3a5e26fb0fa",
+  "base_sha256": "9036b3e1e1575dfaad4cd49908a18e8236215985a834e9b97438c7abde86b1df",
+  "summary": "审查研究设计与决策形式化：包含阶段状态转移模型、加权评分函数与五分钟敏捷早筛协议。",
+  "findings": [
+    {
+      "id": "FND-MSD-01",
+      "statement": "五分钟敏捷早筛协议基于短学习率调度和困难样本子集，在全量训练前以极低预算预测候选方案潜质",
+      "evidence": [
+        "F04",
+        "p.6",
+        "p.7"
+      ],
+      "epistemic": "VERIFIED",
+      "action": "KEEP",
+      "importance": "CRITICAL",
+      "reason": "关键研究设计机制"
+    },
+    {
+      "id": "FND-MSD-02",
+      "statement": "多目标评分函数综合了精度提升率与参数曲率正则项，抑制无效复杂度的恶性膨胀",
+      "evidence": [
+        "p.8"
+      ],
+      "epistemic": "VERIFIED",
+      "action": "EXPAND",
+      "importance": "MAJOR",
+      "reason": "形式化决策依据"
+    }
+  ]
+}

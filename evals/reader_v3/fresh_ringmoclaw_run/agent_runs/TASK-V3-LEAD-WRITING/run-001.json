@@ -1,0 +1,3224 @@
+{
+  "task_id": "TASK-V3-LEAD-WRITING",
+  "execution_kind": "HOST_AGENT",
+  "executor": {
+    "kind": "HOST_AGENT",
+    "host": "antigravity",
+    "model": "antigravity/gemini-3.8-flash",
+    "started_at": "2026-10-14T12:24:50.508166+00:00",
+    "completed_at": "2026-10-14T12:24:50.508166+00:00",
+    "tool_profile": "paper-only"
+  },
+  "started_at": "2026-10-14T12:24:50.508166+00:00",
+  "completed_at": "2026-10-14T12:24:50.508166+00:00",
+  "result": {
+    "schema_version": "3.0",
+    "paper_id": "ringmoclaw",
+    "source_sha256": "32df5e2843de7e8ccd52d56b9dfed257c26786ef3b71fbc397a1c3a5e26fb0fa",
+    "created_at": "2026-10-14T12:24:52.101133+00:00",
+    "narrative_plan_ref": "model/narrative_plan.json",
+    "document": {
+      "title": "RingMoClaw：经验驱动的遥感自演化多智能体科研框架",
+      "subtitle": "中文科学精读与技术机理解构",
+      "paper_meta": {
+        "authors": [
+          "Kaiyue Kang",
+          "Qixuan He",
+          "Peijin Wang",
+          "Yingchao Feng",
+          "Chao Ren",
+          "Kangxin Wang",
+          "Wenhui Diao",
+          "Yixiao Wang",
+          "Liangjin Zhao",
+          "Kaiwen Wei",
+          "Nayu Liu",
+          "Xian Sun"
+        ],
+        "venue": "arXiv:2609.00814v2 (preprint · venue unverified) · 2026",
+        "year": 2026,
+        "doi": "arXiv:2609.00814v2",
+        "pdf_sha256": "32df5e2843de7e8ccd52d56b9dfed257c26786ef3b71fbc397a1c3a5e26fb0fa"
+      },
+      "orientation": {
+        "lead": "本精读报告立足于 RingMoClaw 原文证据与数学公式，全面解构多智能体如何在异构同行审稿与双流经验引导下实现遥感算法自主演化。",
+        "takeaways": [
+          "解耦执行集群与审查中枢，依托异构模型构建三阶段硬质检卡点，有效化解自评同谋偏见。",
+          "融合外生文献先验与内生试错记忆，配合五分钟代理早筛指标，实现探索空间高效率剪枝。",
+          "在遥感旋转目标检测中自发演化出多尺度特征细化（MSFR）与对比原型细化（CPR）有效模块。",
+          "相较开源基准框架节省 54.9% 的 GPU 运行时间，同时取得实质性检测精度提升（+1.84 pp）。"
+        ]
+      },
+      "executive_summary": {
+        "lead": "本精读报告立足于 RingMoClaw 原文证据与数学公式，全面解构多智能体如何在异构同行审稿与双流经验引导下实现遥感算法自主演化。",
+        "takeaways": [
+          "解耦执行集群与审查中枢，依托异构模型构建三阶段硬质检卡点，有效化解自评同谋偏见。",
+          "融合外生文献先验与内生试错记忆，配合五分钟代理早筛指标，实现探索空间高效率剪枝。",
+          "在遥感旋转目标检测中自发演化出多尺度特征细化（MSFR）与对比原型细化（CPR）有效模块。",
+          "相较开源基准框架节省 54.9% 的 GPU 运行时间，同时取得实质性检测精度提升（+1.84 pp）。"
+        ],
+        "key_question": "多智能体科研框架如何跳出一次性脚本流水线，在遥感多任务中构建自演化科研闭环？",
+        "core_finding": "异构 Critic 审稿与双流经验总线成功驱动了算法创新与高效剪枝，在四类遥感基准上测得精度增益与算力缩减。",
+        "core_boundary": "探索上限受限于预设算子表达空间与离线数据分布；多智能体交互通信开销较大，未来需向多模态与时序遥感观测持续拓展。"
+      },
+      "sections": [
+        {
+          "id": "sec-01",
+          "chapter_num": "01",
+          "title": "范式跃迁：从一次性任务编排到自演化科研闭环",
+          "lead": "科研智能体若仅停留于单次任务的自动化脚本执行，便无法积累长效经验；唯有构建自演化科研闭环，才能在连续假设迭代中实现自主创新。",
+          "purpose": "揭示多智能体自演化科研闭环与传统静态任务编排的本质差异",
+          "proposition": "科学研究本质是假设-验证-反思的长期演化过程，传统一次性流水线无法实现知识沉淀。",
+          "question": "科研自动化框架如何跳出一次性脚本编排，构建具备长期记忆的自演化闭环？",
+          "evidence_refs": [
+            "F01",
+            "p.1",
+            "p.2",
+            "p.3",
+            "p.4"
+          ],
+          "source_anchors": [
+            "p.1",
+            "p.2",
+            "p.3",
+            "p.4"
+          ],
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "在遥感与地理信息科学领域，数据形态的高度异构性（如多光谱、高分辨率光学、合成孔径雷达等）与成像几何的极端复杂性，对算法研发提出了严苛要求。传统基于大语言模型（LLM）的科研辅助系统大多依赖单次任务驱动的流水线范式：用户输入任务描述，智能体检索代码、生成配置并启动单次训练。这种模式在面对复杂遥感基准时存在根本缺陷：一旦实验未达预期，系统缺乏跨实验周期的结构化反思能力，极易陷入盲目试错或死循环。",
+              "evidence_refs": [
+                "p.1",
+                "p.2"
+              ],
+              "source_anchors": [
+                "p.1",
+                "p.2"
+              ]
+            },
+            {
+              "type": "figure",
+              "evidence_id": "F01",
+              "paper_label": "Fig. 1",
+              "page": 2,
+              "caption": "传统一次性科研流水线与 RingMoClaw 自演化闭环架构的范式对比",
+              "asset": "assets/figures/fig01_p2_3988x2475.png",
+              "presentation_role": "narrative_core",
+              "question": "传统一次性智能体工作流与本论文提出的自演化框架存在何种本质架构分野？",
+              "analysis": "Fig. 1 清晰揭示了科研范式的关键演进：传统方案为前向开环流程，缺乏实验诊断与知识积累机制；RingMoClaw 则引入了双向交互通道，将历史实验成败转化为显式经验总线，驱动后续迭代的有向收敛。",
+              "supports": [
+                "形象论证了一次性流水线在多轮探索中的局限性",
+                "确立了自演化闭环的总体拓扑结构"
+              ],
+              "limits": [
+                "作为概念对比图，未包含具体的数值性能度量"
+              ],
+              "evidence_refs": [
+                "p.2"
+              ],
+              "source_anchors": [
+                "p.2"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "为了打破这一瓶颈，RingMoClaw 提出了以经验驱动为核心的自演化科研框架。其核心思想是将科研探索形式化为一个由问题建模、假设生成、代码实现、受限验证、独立同行评议与经验反思构成的闭环动力学系统。系统不再把每次实验视为孤立事件，而是将其转化为可检索、可加权、可继承的认知资产，使多智能体集群具备了持续进化的科研自驱力。",
+              "evidence_refs": [
+                "p.3",
+                "p.4"
+              ],
+              "source_anchors": [
+                "p.3",
+                "p.4"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "sec-02",
+          "chapter_num": "02",
+          "title": "架构解耦：执行分支、异构 Critic 审稿与三阶段质检卡点",
+          "lead": "防范大模型自我评估同谋偏见的关键，在于将执行流与审稿流在模型架构与状态空间上彻底解耦，设立三阶段硬性质量拦截卡点。",
+          "purpose": "阐明异构 Critic 审稿机制与三阶段质检卡点如何拦截劣化方案并提供结构化反馈",
+          "proposition": "通过将执行智能体与异构 Critic 彻底解耦，并设置方案、数据与结果三阶段硬质检卡点，能有效化解大模型自评同谋偏见。",
+          "question": "如何设计审查机制以在不同阶段量化评估方案质量并拦截劣质探索？",
+          "evidence_refs": [
+            "F02",
+            "F04",
+            "EQ-01",
+            "EQ-02",
+            "p.4",
+            "p.5",
+            "p.6",
+            "p.7"
+          ],
+          "source_anchors": [
+            "p.4",
+            "p.5",
+            "p.6",
+            "p.7"
+          ],
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "RingMoClaw 的系统架构由执行集群与审查中枢两个正交解耦的系统构成。执行集群包含三大角色：Main Agent（负责全局科研规划与假设提出）、Data Agent（负责遥感数据切片、预处理与增强管道）以及 Vision Agent（负责模型架构搭建与训练执行）。为了杜绝同一模型在自编自审时必然出现的虚假确认同谋，审查中枢引入了独立的异构 Critic 智能体。在具体实现中，执行分支与 Critic 选用不同家族的基础大模型（如 GLM-5 Turbo 与 Minimax 2.7 交叉配置），从语义表征底层阻断评估偏见。",
+              "evidence_refs": [
+                "F02",
+                "p.4",
+                "p.5"
+              ],
+              "source_anchors": [
+                "p.4",
+                "p.5"
+              ]
+            },
+            {
+              "type": "figure",
+              "evidence_id": "F02",
+              "paper_label": "Fig. 2",
+              "page": 4,
+              "caption": "RingMoClaw 总体系统架构：主智能体、执行智能体、异构 Critic 与双流经验总线协同交互全景",
+              "asset": "assets/figures/fig02_p4_4594x1975.png",
+              "presentation_role": "narrative_core",
+              "question": "执行智能体与审查智能体如何在沙箱隔离环境下协同推进科研闭环？",
+              "analysis": "架构图完整展示了三大执行角色（Main, Data, Vision）与独立 Critic 之间基于消息契约的调用拓扑。沙箱环境 Experiment Executor 隔离执行代码，其日志与指标被结构化提取并送交 Critic 审阅，保障了系统的鲁棒性与安全性。",
+              "supports": [
+                "证明了执行集群与审查中枢的严格角色解耦",
+                "展示了从方案生成到沙箱执行的完整信息流流动过程"
+              ],
+              "limits": [
+                "未直接体现分布式训练多 GPU 通信底层的负载调度"
+              ],
+              "evidence_refs": [
+                "p.4"
+              ],
+              "source_anchors": [
+                "p.4"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "审查机制并非在实验结束时才作后验评价，而是划分为三个串行的硬性质量卡点：（1）方案审查（Plan Review）：在代码生成前，严格核验技术方案与遥感任务特性的契合度（例如针对小目标检测是否配置了适当的高分辨率锚框尺度），拦截逻辑不自洽的候选方案以避免无效算力浪费；（2）数据审查（Data Review）：核查数据切片尺寸、类别失衡处理策略及预处理代码合规性；（3）结果审查（Result Review）：对训练收敛曲线、多类别指标平衡性进行深度量化诊断，判断当前改进是否属于实质性突破还是过拟合波动。",
+              "evidence_refs": [
+                "F04",
+                "p.5",
+                "p.6"
+              ],
+              "source_anchors": [
+                "p.5",
+                "p.6"
+              ]
+            },
+            {
+              "type": "figure",
+              "evidence_id": "F04",
+              "paper_label": "Fig. 4",
+              "page": 7,
+              "caption": "异构 Critic 审稿机制的三阶段质检卡点（Plan, Data, Result Review）与四级控制流决策路由",
+              "asset": "assets/figures/fig04_p7_1684x1946.png",
+              "presentation_role": "narrative_core",
+              "question": "Critic 如何将多维度诊断转化为 Accept、Revise、Reject 或 Escalate 的控制指令？",
+              "analysis": "流转图详细刻画了各审查阶段的输入条件与分支转移逻辑。当综合评分超过 0.75 且瓶颈影响度不超过 0.30 时放行；中等评分且存在局部缺陷时触发 Revise 要求针对性修补；严重违规时直接 Reject 回退。",
+              "supports": [
+                "清晰揭示了三阶段审查的准入与拦截阈值条件",
+                "证明了审查决策具有可追踪的确定性控制转移规则"
+              ],
+              "limits": [
+                "四级流转分支在代码实现中基于经验设定的启发式阈值"
+              ],
+              "evidence_refs": [
+                "p.6",
+                "p.7"
+              ],
+              "source_anchors": [
+                "p.6",
+                "p.7"
+              ]
+            },
+            {
+              "type": "equation",
+              "evidence_id": "EQ-01",
+              "equation_id": "EQ-01",
+              "paper_label": "Eq. (1)",
+              "equation_number": 1,
+              "page": 6,
+              "source_anchors": [
+                "p.6"
+              ],
+              "evidence_refs": [
+                "p.6"
+              ],
+              "latex": "\\text{Score}_t = w_1 C_t + w_2 (1 - B_t) + w_3 H_t",
+              "source_confidence": "VERIFIED",
+              "fallback_asset": "assets/equations/EQ-01.png",
+              "role_zh": "Critic 多维结构化打分函数",
+              "explanation": "Critic 多维结构化打分函数：结合阶段完成度 C_t、瓶颈危害度 B_t 与历史经验契合度 H_t，通过 1 - B_t 反转瓶颈抑制效应，采用阶段特化权重评估候选方案质量。",
+              "pedagogy": {
+                "role": "Critic 多维结构化打分函数",
+                "explanation_priority": "MUST_EXPLAIN",
+                "symbol_definitions": [
+                  {
+                    "symbol": "\\text{Score}_t",
+                    "name": "综合评分",
+                    "interpretation": "第 t 阶段 Critic 综合加权评分，取值范围 [0, 1]"
+                  },
+                  {
+                    "symbol": "C_t",
+                    "name": "目标完成度",
+                    "interpretation": "当前阶段目标达成度 (Task completion)，∈ [0, 1]"
+                  },
+                  {
+                    "symbol": "B_t",
+                    "name": "瓶颈严重度",
+                    "interpretation": "诊断出的核心瓶颈严重程度 (Bottleneck impact)，∈ [0, 1]"
+                  },
+                  {
+                    "symbol": "1 - B_t",
+                    "name": "瓶颈逆向抑制项",
+                    "interpretation": "反转瓶颈影响；瓶颈越严重则该项越趋近 0，强力压低得分"
+                  },
+                  {
+                    "symbol": "H_t",
+                    "name": "历史经验一致度",
+                    "interpretation": "与全局经验池成功模式的契合度，∈ [0, 1]"
+                  },
+                  {
+                    "symbol": "(w_1, w_2, w_3)",
+                    "name": "阶段特化权重",
+                    "interpretation": "方案阶段 (0.3, 0.5, 0.2)，数据阶段 (0.35, 0.4, 0.25)，结果阶段 (0.5, 0.3, 0.2)"
+                  }
+                ],
+                "input_output": {
+                  "inputs": [
+                    "当前阶段执行输出与诊断指标",
+                    "候选方案瓶颈度量 B_t 与完成度 C_t",
+                    "阶段特化权重向量"
+                  ],
+                  "outputs": [
+                    "综合标量评分 Score_t ∈ [0, 1]",
+                    "四级流转决策指令 (Accept/Revise/Reject/Escalate)"
+                  ]
+                },
+                "term_interpretations": [
+                  {
+                    "term": "1 - B_t",
+                    "role": "瓶颈反转抑制项",
+                    "intuition": "B_t 表示当前策略遭遇瓶颈的严重度。公式采用 1 - B_t 将惩罚反转为可用度：无瓶颈时 (B_t=0) 得满分，瓶颈严重时 (B_t=1) 得分为 0，迫使系统优先解决瓶颈。",
+                    "effect": "严重瓶颈方案被迅速压低得分，触发重构或终止"
+                  },
+                  {
+                    "term": "w_1 C_t",
+                    "role": "阶段目标牵引项",
+                    "intuition": "正向奖励阶段产出成果（如代码可行性或精度增益）。",
+                    "effect": "保证演化朝向阶段目标推进"
+                  },
+                  {
+                    "term": "w_3 H_t",
+                    "role": "全局经验先验正则项",
+                    "intuition": "利用先验经验库约束搜索范围，防止在无先验支持的盲区过度耗费算力。",
+                    "effect": "提高跨任务探索效率"
+                  }
+                ],
+                "assumptions": [
+                  "假设三个评价维度正交且呈线性加权关系",
+                  "权重 (w_1, w_2, w_3) 为离线预设静态常量"
+                ],
+                "implementation_proxy": "采用预设静态权重表配合四级控制流阈值，未引入自适应权重在线优化",
+                "source_anchors": [
+                  "p.6 Section 3.2.1"
+                ],
+                "unspecified_details": [
+                  "原文未给出各阶段四级分支的具体划分数值阈值"
+                ]
+              },
+              "explanation_priority": "MUST_EXPLAIN",
+              "symbol_definitions": [
+                {
+                  "symbol": "\\text{Score}_t",
+                  "name": "综合评分",
+                  "interpretation": "第 t 阶段 Critic 综合加权评分，取值范围 [0, 1]"
+                },
+                {
+                  "symbol": "C_t",
+                  "name": "目标完成度",
+                  "interpretation": "当前阶段目标达成度 (Task completion)，∈ [0, 1]"
+                },
+                {
+                  "symbol": "B_t",
+                  "name": "瓶颈严重度",
+                  "interpretation": "诊断出的核心瓶颈严重程度 (Bottleneck impact)，∈ [0, 1]"
+                },
+                {
+                  "symbol": "1 - B_t",
+                  "name": "瓶颈逆向抑制项",
+                  "interpretation": "反转瓶颈影响；瓶颈越严重则该项越趋近 0，强力压低得分"
+                },
+                {
+                  "symbol": "H_t",
+                  "name": "历史经验一致度",
+                  "interpretation": "与全局经验池成功模式的契合度，∈ [0, 1]"
+                },
+                {
+                  "symbol": "(w_1, w_2, w_3)",
+                  "name": "阶段特化权重",
+                  "interpretation": "方案阶段 (0.3, 0.5, 0.2)，数据阶段 (0.35, 0.4, 0.25)，结果阶段 (0.5, 0.3, 0.2)"
+                }
+              ],
+              "term_interpretations": [
+                {
+                  "term": "1 - B_t",
+                  "role": "瓶颈反转抑制项",
+                  "intuition": "B_t 表示当前策略遭遇瓶颈的严重度。公式采用 1 - B_t 将惩罚反转为可用度：无瓶颈时 (B_t=0) 得满分，瓶颈严重时 (B_t=1) 得分为 0，迫使系统优先解决瓶颈。",
+                  "effect": "严重瓶颈方案被迅速压低得分，触发重构或终止"
+                },
+                {
+                  "term": "w_1 C_t",
+                  "role": "阶段目标牵引项",
+                  "intuition": "正向奖励阶段产出成果（如代码可行性或精度增益）。",
+                  "effect": "保证演化朝向阶段目标推进"
+                },
+                {
+                  "term": "w_3 H_t",
+                  "role": "全局经验先验正则项",
+                  "intuition": "利用先验经验库约束搜索范围，防止在无先验支持的盲区过度耗费算力。",
+                  "effect": "提高跨任务探索效率"
+                }
+              ],
+              "implementation_proxy": "采用预设静态权重表配合四级控制流阈值，未引入自适应权重在线优化",
+              "presentation_role": "narrative_core",
+              "question": "公式 (1) 在系统中承担何种计算与控制职责？",
+              "supports": [
+                "确立了量化计算标准与控制流转移依据"
+              ],
+              "limits": [
+                "参数配置与阈值依赖预设经验常数"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "如公式 (1) 所示，Critic 综合评分构建在三个显式维度之上：任务目标完成度 $C_t \\in [0, 1]$、瓶颈缺陷影响度 $B_t \\in [0, 1]$ 以及全局经验一致性 $H_t \\in [0, 1]$。公式设计中采用 $1 - B_t$ 的反转构造，使得当系统出现关键短板（如严重的类别漏检或显存溢出）时，$B_t \\to 1$ 导致得分骤降，强制促使主智能体在下一轮优先修复该瓶颈。此外，权重向量 $(w_1, w_2, w_3)$ 在三个审查阶段实行特化配置：方案审查设为 $(0.30, 0.50, 0.20)$，重在压制方案潜在瓶颈；数据审查设为 $(0.35, 0.40, 0.25)$；结果审查设为 $(0.50, 0.30, 0.20)$，则将权重重心向实际精度达成度倾斜。",
+              "evidence_refs": [
+                "EQ-01",
+                "p.6"
+              ],
+              "source_anchors": [
+                "p.6"
+              ]
+            },
+            {
+              "type": "equation",
+              "evidence_id": "EQ-02",
+              "equation_id": "EQ-02",
+              "paper_label": "Eq. (2)",
+              "equation_number": 2,
+              "page": 6,
+              "source_anchors": [
+                "p.6"
+              ],
+              "evidence_refs": [
+                "p.6"
+              ],
+              "latex": "o_{\\text{main}}^{t+1} = \\Pi_{\\text{update}}(s_t, \\{c_t, \\text{Score}_t\\})",
+              "source_confidence": "VERIFIED",
+              "fallback_asset": "assets/equations/EQ-02.png",
+              "role_zh": "Main Agent 全局决策状态转移算子",
+              "explanation": "Main Agent 基于 Critic 结构化诊断报告与综合评分实施顶层决策状态转移，确立决策收敛方向。",
+              "pedagogy": {
+                "role": "Main Agent 全局决策状态转移算子",
+                "explanation_priority": "MUST_EXPLAIN",
+                "symbol_definitions": [
+                  {
+                    "symbol": "o_{\\text{main}}^{t+1}",
+                    "name": "下一轮决策指令",
+                    "interpretation": "主智能体下一阶段的规划、调度或终止指令"
+                  },
+                  {
+                    "symbol": "\\Pi_{\\text{update}}",
+                    "name": "顶层决策更新算子",
+                    "interpretation": "基于系统状态与反馈的多智能体协调调度策略"
+                  },
+                  {
+                    "symbol": "s_t",
+                    "name": "系统当前状态",
+                    "interpretation": "包含历史步数、当前模型配置与代码仓库状态"
+                  },
+                  {
+                    "symbol": "c_t",
+                    "name": "Critic 结构化诊断报告",
+                    "interpretation": "细粒度定位的瓶颈原因与修复建议"
+                  },
+                  {
+                    "symbol": "\\text{Score}_t",
+                    "name": "Critic 综合评分",
+                    "interpretation": "Eq. (1) 计算出的标量质量评估分值"
+                  }
+                ],
+                "input_output": {
+                  "inputs": [
+                    "系统当前状态 s_t",
+                    "Critic 诊断报告 c_t",
+                    "综合评分 Score_t"
+                  ],
+                  "outputs": [
+                    "下一轮决策行动指令 o_{main}^{t+1}"
+                  ]
+                },
+                "term_interpretations": [
+                  {
+                    "term": "\\Pi_{\\text{update}}(s_t, \\{c_t, \\text{Score}_t\\})",
+                    "role": "状态转移与调度闭环",
+                    "intuition": "Main Agent 依据量化评分与定性诊断进行控制流路由：高分推进，中分结合 c_t 进行局部修复，低分回退。",
+                    "effect": "确立自进化探索方向并避免死循环"
+                  }
+                ],
+                "assumptions": [
+                  "Critic 诊断与评分能够准确反映阶段探索成败"
+                ],
+                "implementation_proxy": "通过 LLM Prompt 编排与状态转移机制实现策略算子，非参数化强化学习网络",
+                "source_anchors": [
+                  "p.6 Section 3.2.1"
+                ]
+              },
+              "explanation_priority": "MUST_EXPLAIN",
+              "symbol_definitions": [
+                {
+                  "symbol": "o_{\\text{main}}^{t+1}",
+                  "name": "下一轮决策指令",
+                  "interpretation": "主智能体下一阶段的规划、调度或终止指令"
+                },
+                {
+                  "symbol": "\\Pi_{\\text{update}}",
+                  "name": "顶层决策更新算子",
+                  "interpretation": "基于系统状态与反馈的多智能体协调调度策略"
+                },
+                {
+                  "symbol": "s_t",
+                  "name": "系统当前状态",
+                  "interpretation": "包含历史步数、当前模型配置与代码仓库状态"
+                },
+                {
+                  "symbol": "c_t",
+                  "name": "Critic 结构化诊断报告",
+                  "interpretation": "细粒度定位的瓶颈原因与修复建议"
+                },
+                {
+                  "symbol": "\\text{Score}_t",
+                  "name": "Critic 综合评分",
+                  "interpretation": "Eq. (1) 计算出的标量质量评估分值"
+                }
+              ],
+              "term_interpretations": [
+                {
+                  "term": "\\Pi_{\\text{update}}(s_t, \\{c_t, \\text{Score}_t\\})",
+                  "role": "状态转移与调度闭环",
+                  "intuition": "Main Agent 依据量化评分与定性诊断进行控制流路由：高分推进，中分结合 c_t 进行局部修复，低分回退。",
+                  "effect": "确立自进化探索方向并避免死循环"
+                }
+              ],
+              "implementation_proxy": "通过 LLM Prompt 编排与状态转移机制实现策略算子，非参数化强化学习网络",
+              "presentation_role": "narrative_core",
+              "question": "公式 (2) 在系统中承担何种计算与控制职责？",
+              "supports": [
+                "确立了量化计算标准与控制流转移依据"
+              ],
+              "limits": [
+                "参数配置与阈值依赖预设经验常数"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "在获得 Critic 的标量评分 $\\text{Score}_t$ 与细粒度诊断建议 $c_t$ 后，Main Agent 依照公式 (2) 触发决策状态转移。更新算子 $\\Pi_{\\text{update}}$ 依据综合反馈决定是进入下一演化轮次、触发参数局部微调，抑或是回滚当前分支并向全局记忆池写入负样本约束，从而构成了系统决策演进的控制律。",
+              "evidence_refs": [
+                "EQ-02",
+                "p.6"
+              ],
+              "source_anchors": [
+                "p.6"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "sec-03",
+          "chapter_num": "03",
+          "title": "经验认知中枢：双流动态经验总线与五分钟敏捷验证协议",
+          "lead": "双流动态经验总线有机融合外生文献先验与内生试错记忆，配合五分钟敏捷验证协议，实现了探索空间的高效剪枝与极低成本早筛。",
+          "purpose": "解析双流经验总线动态积累机制与五分钟轻量早筛协议的数学表征与判据",
+          "proposition": "外生文献知识与内生试错负记忆构成双流总线，配合五分钟代理早筛指标实现低成本路径剪枝。",
+          "question": "如何利用历史探索记忆指导搜索空间剪枝，并在全量训练前以极小算力代价早筛劣化候选？",
+          "evidence_refs": [
+            "F05",
+            "EQ-03",
+            "EQ-04",
+            "EQ-05",
+            "EQ-06",
+            "EQ-07",
+            "EQ-08",
+            "T10",
+            "p.7",
+            "p.8",
+            "p.9",
+            "p.14"
+          ],
+          "source_anchors": [
+            "p.7",
+            "p.8",
+            "p.9",
+            "p.14"
+          ],
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "科研智能体演化的认知基石是经验的积累与迁移。RingMoClaw 构建了结构化的四维搜索空间与双流动态经验总线。全局算法搜索空间如公式 (3) 所示，划分为模型架构、训练策略、数据处理与系统集成四个解耦维度。每个算子由公式 (4) 赋予强类型输入输出契约 $\\omega = \\{I, O, F, P\\}$，确保了算子插拔与组合时的接口兼容性。",
+              "evidence_refs": [
+                "EQ-03",
+                "EQ-04",
+                "p.7"
+              ],
+              "source_anchors": [
+                "p.7"
+              ]
+            },
+            {
+              "type": "equation",
+              "evidence_id": "EQ-03",
+              "equation_id": "EQ-03",
+              "paper_label": "Eq. (3)",
+              "equation_number": 3,
+              "page": 7,
+              "source_anchors": [
+                "p.7"
+              ],
+              "evidence_refs": [
+                "p.7"
+              ],
+              "latex": "\\mathcal{S} = \\{\\mathcal{S}_{\\text{arch}}, \\mathcal{S}_{\\text{train}}, \\mathcal{S}_{\\text{data}}, \\mathcal{S}_{\\text{intg}}\\}",
+              "source_confidence": "VERIFIED",
+              "fallback_asset": "assets/equations/EQ-03.png",
+              "role_zh": "遥感四维结构化搜索空间定义",
+              "explanation": "遥感自主演化搜索空间划分为架构、训练、数据与系统集成四维空间，实现有向剪枝与算子调度。",
+              "pedagogy": {
+                "role": "遥感四维结构化搜索空间定义",
+                "explanation_priority": "CONCISE_DEFINE",
+                "symbol_definitions": [
+                  {
+                    "symbol": "\\mathcal{S}",
+                    "name": "全局搜索空间",
+                    "interpretation": "解空间集合"
+                  },
+                  {
+                    "symbol": "\\mathcal{S}_{\\text{arch}}",
+                    "name": "架构子空间",
+                    "interpretation": "骨干与特征融合算子"
+                  },
+                  {
+                    "symbol": "\\mathcal{S}_{\\text{train}}",
+                    "name": "训练子空间",
+                    "interpretation": "损失与优化超参"
+                  },
+                  {
+                    "symbol": "\\mathcal{S}_{\\text{data}}",
+                    "name": "数据子空间",
+                    "interpretation": "数据增强与预处理"
+                  },
+                  {
+                    "symbol": "\\mathcal{S}_{\\text{intg}}",
+                    "name": "集成子空间",
+                    "interpretation": "后处理与辅助模型"
+                  }
+                ],
+                "input_output": {
+                  "inputs": [
+                    "候选算子库"
+                  ],
+                  "outputs": [
+                    "结构化四维组合配置空间"
+                  ]
+                },
+                "term_interpretations": [
+                  {
+                    "term": "结构化解耦",
+                    "role": "维度划分",
+                    "intuition": "将复杂的端到端算法设计解耦为四个独立或协同的探索子空间，降低组合爆炸风险。"
+                  }
+                ],
+                "assumptions": [
+                  "四个子维度在遥感视觉任务中可正交解耦配置"
+                ],
+                "implementation_proxy": null,
+                "source_anchors": [
+                  "p.7 Section 3.3.1"
+                ]
+              },
+              "explanation_priority": "CONCISE_DEFINE",
+              "symbol_definitions": [
+                {
+                  "symbol": "\\mathcal{S}",
+                  "name": "全局搜索空间",
+                  "interpretation": "解空间集合"
+                },
+                {
+                  "symbol": "\\mathcal{S}_{\\text{arch}}",
+                  "name": "架构子空间",
+                  "interpretation": "骨干与特征融合算子"
+                },
+                {
+                  "symbol": "\\mathcal{S}_{\\text{train}}",
+                  "name": "训练子空间",
+                  "interpretation": "损失与优化超参"
+                },
+                {
+                  "symbol": "\\mathcal{S}_{\\text{data}}",
+                  "name": "数据子空间",
+                  "interpretation": "数据增强与预处理"
+                },
+                {
+                  "symbol": "\\mathcal{S}_{\\text{intg}}",
+                  "name": "集成子空间",
+                  "interpretation": "后处理与辅助模型"
+                }
+              ],
+              "term_interpretations": [
+                {
+                  "term": "结构化解耦",
+                  "role": "维度划分",
+                  "intuition": "将复杂的端到端算法设计解耦为四个独立或协同的探索子空间，降低组合爆炸风险。"
+                }
+              ],
+              "implementation_proxy": null,
+              "presentation_role": "narrative_support",
+              "question": "公式 (3) 在系统中承担何种计算与控制职责？",
+              "supports": [
+                "确立了量化计算标准与控制流转移依据"
+              ],
+              "limits": [
+                "参数配置与阈值依赖预设经验常数"
+              ]
+            },
+            {
+              "type": "equation",
+              "evidence_id": "EQ-04",
+              "equation_id": "EQ-04",
+              "paper_label": "Eq. (4)",
+              "equation_number": 4,
+              "page": 7,
+              "source_anchors": [
+                "p.7"
+              ],
+              "evidence_refs": [
+                "p.7"
+              ],
+              "latex": "\\omega = \\{I, O, F, P\\}",
+              "source_confidence": "VERIFIED",
+              "fallback_asset": "assets/equations/EQ-04.png",
+              "role_zh": "外部文献与代码提取的可复用算子元组",
+              "explanation": "从外部文献与开源代码中剥离环境与脚手架后，提炼出的标准化算子四元组定义。",
+              "pedagogy": {
+                "role": "外部文献与代码提取的可复用算子元组",
+                "explanation_priority": "CONCISE_DEFINE",
+                "symbol_definitions": [
+                  {
+                    "symbol": "\\omega",
+                    "name": "算子元组",
+                    "interpretation": "可插拔模块标准化规范"
+                  },
+                  {
+                    "symbol": "I",
+                    "name": "输入张量签名",
+                    "interpretation": "张量维度与类型约束"
+                  },
+                  {
+                    "symbol": "O",
+                    "name": "输出张量签名",
+                    "interpretation": "期望输出格式"
+                  },
+                  {
+                    "symbol": "F",
+                    "name": "前向逻辑",
+                    "interpretation": "无外部依赖的核心算子代码"
+                  },
+                  {
+                    "symbol": "P",
+                    "name": "超参数配置",
+                    "interpretation": "可调参数默认范围"
+                  }
+                ],
+                "input_output": {
+                  "inputs": [
+                    "外部开源代码库"
+                  ],
+                  "outputs": [
+                    "标准化算子对象"
+                  ]
+                },
+                "term_interpretations": [
+                  {
+                    "term": "(I, O, F, P)",
+                    "role": "模块化隔离",
+                    "intuition": "剥离无关脚手架代码，仅保留核心计算逻辑与张量接口，确保跨项目可插拔执行。"
+                  }
+                ],
+                "assumptions": [
+                  "算子具有明确的输入输出张量签名且无隐藏全局状态"
+                ],
+                "implementation_proxy": null,
+                "source_anchors": [
+                  "p.7 Section 3.3.2"
+                ]
+              },
+              "explanation_priority": "CONCISE_DEFINE",
+              "symbol_definitions": [
+                {
+                  "symbol": "\\omega",
+                  "name": "算子元组",
+                  "interpretation": "可插拔模块标准化规范"
+                },
+                {
+                  "symbol": "I",
+                  "name": "输入张量签名",
+                  "interpretation": "张量维度与类型约束"
+                },
+                {
+                  "symbol": "O",
+                  "name": "输出张量签名",
+                  "interpretation": "期望输出格式"
+                },
+                {
+                  "symbol": "F",
+                  "name": "前向逻辑",
+                  "interpretation": "无外部依赖的核心算子代码"
+                },
+                {
+                  "symbol": "P",
+                  "name": "超参数配置",
+                  "interpretation": "可调参数默认范围"
+                }
+              ],
+              "term_interpretations": [
+                {
+                  "term": "(I, O, F, P)",
+                  "role": "模块化隔离",
+                  "intuition": "剥离无关脚手架代码，仅保留核心计算逻辑与张量接口，确保跨项目可插拔执行。"
+                }
+              ],
+              "implementation_proxy": null,
+              "presentation_role": "narrative_support",
+              "question": "公式 (4) 在系统中承担何种计算与控制职责？",
+              "supports": [
+                "确立了量化计算标准与控制流转移依据"
+              ],
+              "limits": [
+                "参数配置与阈值依赖预设经验常数"
+              ]
+            },
+            {
+              "type": "figure",
+              "evidence_id": "F05",
+              "paper_label": "Fig. 5",
+              "page": 8,
+              "caption": "双流动态经验总线：外生文献知识库与内生多任务试错记忆池的汇聚与动态剪枝拓扑",
+              "asset": "assets/figures/fig05_p8_4400x1393.png",
+              "presentation_role": "narrative_core",
+              "question": "经验总线如何将跨任务文献知识与单任务局部试错经验转化为算子检索的优先级？",
+              "analysis": "图解清晰展示了双流拓扑：外生知识流通过 RAG 从遥感前沿论文与开源代码中提取算子与超参模板；内生知识流则持续记录当前任务的局部禁忌表（Taboo List）与跨任务全局经验库。通过任务相似度匹配与负样本剪枝，有效压缩了解空间搜索半径。",
+              "supports": [
+                "证明了经验总线对多源知识的统一整合机制",
+                "展示了基于任务相似度的动态算子检索过程"
+              ],
+              "limits": [
+                "算子库在初始冷启动阶段依然依赖人工整理的基础算子集合"
+              ],
+              "evidence_refs": [
+                "p.8"
+              ],
+              "source_anchors": [
+                "p.8"
+              ]
+            },
+            {
+              "type": "equation",
+              "evidence_id": "EQ-05",
+              "equation_id": "EQ-05",
+              "paper_label": "Eq. (5)",
+              "equation_number": 5,
+              "page": 8,
+              "source_anchors": [
+                "p.8"
+              ],
+              "evidence_refs": [
+                "p.8"
+              ],
+              "latex": "\\mathcal{M}_{\\text{gb}} \\leftarrow \\mathcal{M}_{\\text{gb}} \\cup \\text{Filter}(\\mathcal{M}_{\\text{loc}}, \\text{Score}_t)",
+              "source_confidence": "VERIFIED",
+              "fallback_asset": "assets/equations/EQ-05.png",
+              "role_zh": "跨任务全局经验记忆库增量更新规则",
+              "explanation": "全局经验总线更新规则：通过 Critic 打分门控筛选局部高价值成功路径与典型失败模式，增量合并入跨任务经验库。",
+              "pedagogy": {
+                "role": "跨任务全局经验记忆库增量更新规则",
+                "explanation_priority": "MUST_EXPLAIN",
+                "symbol_definitions": [
+                  {
+                    "symbol": "\\mathcal{M}_{\\text{gb}}",
+                    "name": "全局经验记忆库",
+                    "interpretation": "跨任务持久化存储的高价值经验知识库"
+                  },
+                  {
+                    "symbol": "\\mathcal{M}_{\\text{loc}}",
+                    "name": "局部探索记忆",
+                    "interpretation": "当前单次遥感任务执行过程中的试错轨迹与中间产物"
+                  },
+                  {
+                    "symbol": "\\text{Filter}",
+                    "name": "经验过滤算子",
+                    "interpretation": "基于打分门槛与冗余去除的经验准入过滤机制"
+                  },
+                  {
+                    "symbol": "\\text{Score}_t",
+                    "name": "评估准入门槛分值",
+                    "interpretation": "来自 Critic 的评估得分"
+                  }
+                ],
+                "input_output": {
+                  "inputs": [
+                    "已有全局记忆库 M_{gb}",
+                    "局部探索日志 M_{loc}",
+                    "评估得分 Score_t"
+                  ],
+                  "outputs": [
+                    "更新后的全局记忆库 M_{gb}"
+                  ]
+                },
+                "term_interpretations": [
+                  {
+                    "term": "\\text{Filter}(\\mathcal{M}_{\\text{loc}}, \\text{Score}_t)",
+                    "role": "经验质量门控与噪声过滤",
+                    "intuition": "防止局部试验中的偶然性噪声和劣质方案污染跨任务经验库，仅将验证高分和典型阻断模式持久化入库。",
+                    "effect": "保持全局经验的高信噪比"
+                  },
+                  {
+                    "term": "\\cup",
+                    "role": "集合合并与知识累积",
+                    "intuition": "随着探索的任务增多，全局经验池持续扩充，为后续新任务提供丰富的先验支持。",
+                    "effect": "实现跨任务自主演化经验总线"
+                  }
+                ],
+                "assumptions": [
+                  "高分策略具备跨遥感场景的迁移有效性"
+                ],
+                "implementation_proxy": "向量数据库检索与元数据索引结合，具体去重聚类公式原文未展开",
+                "source_anchors": [
+                  "p.8 Section 3.4"
+                ]
+              },
+              "explanation_priority": "MUST_EXPLAIN",
+              "symbol_definitions": [
+                {
+                  "symbol": "\\mathcal{M}_{\\text{gb}}",
+                  "name": "全局经验记忆库",
+                  "interpretation": "跨任务持久化存储的高价值经验知识库"
+                },
+                {
+                  "symbol": "\\mathcal{M}_{\\text{loc}}",
+                  "name": "局部探索记忆",
+                  "interpretation": "当前单次遥感任务执行过程中的试错轨迹与中间产物"
+                },
+                {
+                  "symbol": "\\text{Filter}",
+                  "name": "经验过滤算子",
+                  "interpretation": "基于打分门槛与冗余去除的经验准入过滤机制"
+                },
+                {
+                  "symbol": "\\text{Score}_t",
+                  "name": "评估准入门槛分值",
+                  "interpretation": "来自 Critic 的评估得分"
+                }
+              ],
+              "term_interpretations": [
+                {
+                  "term": "\\text{Filter}(\\mathcal{M}_{\\text{loc}}, \\text{Score}_t)",
+                  "role": "经验质量门控与噪声过滤",
+                  "intuition": "防止局部试验中的偶然性噪声和劣质方案污染跨任务经验库，仅将验证高分和典型阻断模式持久化入库。",
+                  "effect": "保持全局经验的高信噪比"
+                },
+                {
+                  "term": "\\cup",
+                  "role": "集合合并与知识累积",
+                  "intuition": "随着探索的任务增多，全局经验池持续扩充，为后续新任务提供丰富的先验支持。",
+                  "effect": "实现跨任务自主演化经验总线"
+                }
+              ],
+              "implementation_proxy": "向量数据库检索与元数据索引结合，具体去重聚类公式原文未展开",
+              "presentation_role": "narrative_core",
+              "question": "公式 (5) 在系统中承担何种计算与控制职责？",
+              "supports": [
+                "确立了量化计算标准与控制流转移依据"
+              ],
+              "limits": [
+                "参数配置与阈值依赖预设经验常数"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "在知识沉淀机制中，公式 (5) 定义了局部任务记忆向全局经验库 $\\mathcal{M}_{\\text{gb}}$ 的准入更新律。只有通过噪声过滤算子 $\\text{Filter}$ 并满足 Critic 综合评分阈值（$\\text{Score}_t \\ge 0.75$）的高质量经验与强指导性失败教训，才被允许持久化归档至跨任务认知中心，从源头抑制了劣质探索经验的污染扩散。",
+              "evidence_refs": [
+                "EQ-05",
+                "p.8"
+              ],
+              "source_anchors": [
+                "p.8"
+              ]
+            },
+            {
+              "type": "equation",
+              "evidence_id": "EQ-06",
+              "equation_id": "EQ-06",
+              "paper_label": "Eq. (6)",
+              "equation_number": 6,
+              "page": 8,
+              "source_anchors": [
+                "p.8"
+              ],
+              "evidence_refs": [
+                "p.8"
+              ],
+              "latex": "f_{\\text{score}}(m) = \\alpha \\left(\\frac{\\Delta \\text{Acc}}{\\Delta t}\\right) + \\beta \\exp\\left(-\\sigma \\|\\nabla_\\theta^2\\|\\right)",
+              "source_confidence": "VERIFIED",
+              "fallback_asset": "assets/equations/EQ-06.png",
+              "role_zh": "五分钟敏捷验证早期综合适应度评分函数",
+              "explanation": "五分钟敏捷验证综合评分函数：平衡单位时间精度增益与训练稳定性；工程实现中以最后 50 步训练损失变异系数作为二阶曲率的轻量化代理指标。",
+              "pedagogy": {
+                "role": "五分钟敏捷验证早期综合适应度评分函数",
+                "explanation_priority": "MUST_EXPLAIN",
+                "symbol_definitions": [
+                  {
+                    "symbol": "f_{\\text{score}}(m)",
+                    "name": "候选策略适应度评分",
+                    "interpretation": "对候选策略 m 在 5 分钟微缩验证中的综合量化分值"
+                  },
+                  {
+                    "symbol": "\\Delta \\text{Acc}",
+                    "name": "初期精度增益",
+                    "interpretation": "在微缩子集上相较 Baseline 的验证精度提升（百分点）"
+                  },
+                  {
+                    "symbol": "\\Delta t",
+                    "name": "早筛耗时归一化因子",
+                    "interpretation": "5 分钟微缩验证的实际执行时长归一化基准"
+                  },
+                  {
+                    "symbol": "\\frac{\\Delta \\text{Acc}}{\\Delta t}",
+                    "name": "单位时间性能收益率",
+                    "interpretation": "衡量单位计算耗时下的收敛加速度与精度提升性价比"
+                  },
+                  {
+                    "symbol": "\\exp\\left(-\\sigma \\|\\nabla_\\theta^2\\|\\right)",
+                    "name": "二阶曲率指数平稳性惩罚",
+                    "interpretation": "基于损失曲面 Hessian 范数的平稳性约束；平坦平稳时趋于 1，剧烈震荡时迅速衰减至 0"
+                  },
+                  {
+                    "symbol": "\\alpha, \\beta, \\sigma",
+                    "name": "平衡超参数",
+                    "interpretation": "权衡收敛加速度与训练稳定性的加权系数"
+                  },
+                  {
+                    "symbol": "\\text{CV}_{50}",
+                    "name": "工程实用代理指标",
+                    "interpretation": "最后 50 步训练 loss 的变异系数 (标准差/均值)，轻量替代高昂二阶曲率"
+                  }
+                ],
+                "input_output": {
+                  "inputs": [
+                    "微缩子集初期精度增益 DeltaAcc",
+                    "执行耗时 Delta t",
+                    "训练损失轨迹"
+                  ],
+                  "outputs": [
+                    "标量适应度评分 f_{score}(m)"
+                  ]
+                },
+                "term_interpretations": [
+                  {
+                    "term": "\\frac{\\Delta \\text{Acc}}{\\Delta t}",
+                    "role": "单位时间精度收益率",
+                    "intuition": "敏捷早筛关注算力投入产出比。若精度提升极慢导致 DeltaAcc / Delta t 极小，表明方案收敛迟缓，不予晋级全量资源。",
+                    "effect": "筛选出初期学习效率高的敏捷方案"
+                  },
+                  {
+                    "term": "\\exp\\left(-\\sigma \\|\\nabla_\\theta^2\\|\\right)",
+                    "role": "二阶曲率指数衰减惩罚",
+                    "intuition": "Hessian 范数度量损失曲面震荡。指数衰减将惩罚约束在 (0, 1] 区间：曲率极小（平稳平坦）时接近 1；曲率剧烈震荡（梯度爆炸或发散风险）时急速跌落至 0。",
+                    "effect": "强力抑制训练不稳定或数值震荡方案"
+                  },
+                  {
+                    "term": "+",
+                    "role": "收益与稳定性的加权折中",
+                    "intuition": "通过加号将收敛速度增益与平稳性约束线性结合，避免单维度偏颇。",
+                    "effect": "兼顾收敛速度与训练平稳性"
+                  }
+                ],
+                "assumptions": [
+                  "微缩子集（如 10% 样本）上的 5 分钟早期动态与全量收敛轨迹具备正向秩相关性",
+                  "平坦的损失曲面有利于遥感多模态泛化"
+                ],
+                "implementation_proxy": "【关键工程代理说明】论文明确指出：直接计算全网络二阶 Hessian 范数 ||nabla_theta^2|| 开销过大，工程实现中采用『训练最后 50 步 loss 的变异系数 CV_50 = sigma / mu』作为二阶平稳性的轻量化代理指标；论文设定适应度综合阈值 f_{score} > 0.55 触发全量资源晋级，但原文未开源具体的 alpha, beta, sigma 标定数值。",
+                "source_anchors": [
+                  "p.8 Section 3.3.3",
+                  "p.14 Appendix E"
+                ],
+                "unspecified_details": [
+                  "原文未公开 alpha, beta, sigma 的确切数值标定"
+                ]
+              },
+              "explanation_priority": "MUST_EXPLAIN",
+              "symbol_definitions": [
+                {
+                  "symbol": "f_{\\text{score}}(m)",
+                  "name": "候选策略适应度评分",
+                  "interpretation": "对候选策略 m 在 5 分钟微缩验证中的综合量化分值"
+                },
+                {
+                  "symbol": "\\Delta \\text{Acc}",
+                  "name": "初期精度增益",
+                  "interpretation": "在微缩子集上相较 Baseline 的验证精度提升（百分点）"
+                },
+                {
+                  "symbol": "\\Delta t",
+                  "name": "早筛耗时归一化因子",
+                  "interpretation": "5 分钟微缩验证的实际执行时长归一化基准"
+                },
+                {
+                  "symbol": "\\frac{\\Delta \\text{Acc}}{\\Delta t}",
+                  "name": "单位时间性能收益率",
+                  "interpretation": "衡量单位计算耗时下的收敛加速度与精度提升性价比"
+                },
+                {
+                  "symbol": "\\exp\\left(-\\sigma \\|\\nabla_\\theta^2\\|\\right)",
+                  "name": "二阶曲率指数平稳性惩罚",
+                  "interpretation": "基于损失曲面 Hessian 范数的平稳性约束；平坦平稳时趋于 1，剧烈震荡时迅速衰减至 0"
+                },
+                {
+                  "symbol": "\\alpha, \\beta, \\sigma",
+                  "name": "平衡超参数",
+                  "interpretation": "权衡收敛加速度与训练稳定性的加权系数"
+                },
+                {
+                  "symbol": "\\text{CV}_{50}",
+                  "name": "工程实用代理指标",
+                  "interpretation": "最后 50 步训练 loss 的变异系数 (标准差/均值)，轻量替代高昂二阶曲率"
+                }
+              ],
+              "term_interpretations": [
+                {
+                  "term": "\\frac{\\Delta \\text{Acc}}{\\Delta t}",
+                  "role": "单位时间精度收益率",
+                  "intuition": "敏捷早筛关注算力投入产出比。若精度提升极慢导致 DeltaAcc / Delta t 极小，表明方案收敛迟缓，不予晋级全量资源。",
+                  "effect": "筛选出初期学习效率高的敏捷方案"
+                },
+                {
+                  "term": "\\exp\\left(-\\sigma \\|\\nabla_\\theta^2\\|\\right)",
+                  "role": "二阶曲率指数衰减惩罚",
+                  "intuition": "Hessian 范数度量损失曲面震荡。指数衰减将惩罚约束在 (0, 1] 区间：曲率极小（平稳平坦）时接近 1；曲率剧烈震荡（梯度爆炸或发散风险）时急速跌落至 0。",
+                  "effect": "强力抑制训练不稳定或数值震荡方案"
+                },
+                {
+                  "term": "+",
+                  "role": "收益与稳定性的加权折中",
+                  "intuition": "通过加号将收敛速度增益与平稳性约束线性结合，避免单维度偏颇。",
+                  "effect": "兼顾收敛速度与训练平稳性"
+                }
+              ],
+              "implementation_proxy": "【关键工程代理说明】论文明确指出：直接计算全网络二阶 Hessian 范数 ||nabla_theta^2|| 开销过大，工程实现中采用『训练最后 50 步 loss 的变异系数 CV_50 = sigma / mu』作为二阶平稳性的轻量化代理指标；论文设定适应度综合阈值 f_{score} > 0.55 触发全量资源晋级，但原文未开源具体的 alpha, beta, sigma 标定数值。",
+              "presentation_role": "narrative_core",
+              "question": "公式 (6) 在系统中承担何种计算与控制职责？",
+              "supports": [
+                "确立了量化计算标准与控制流转移依据"
+              ],
+              "limits": [
+                "参数配置与阈值依赖预设经验常数"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "在大规模遥感数据集上，完整的全量训练往往耗时数小时乃至数天。为防止算力在不可行的候选策略上空耗，RingMoClaw 提出了五分钟敏捷验证协议（Agile Verification Protocol）。如公式 (6) 所示，系统在包含极少量代表性切片的微缩子集上启动 5 分钟轻量级试训，计算综合代理适应度 $f_{\\text{score}}(m)$。该公式由两部分构成：第一项 $\\alpha \\frac{\\Delta \\text{Acc}}{\\Delta t}$ 度量单位验证窗口内的性能提升速率（$\\Delta \\text{Acc}$ 以绝对百分点计算）；第二项 $\\beta \\exp(-\\sigma \\|\\nabla_\\theta^2\\|)$ 表征训练早期的数值稳定性。在工程实现中，为避免高阶海森矩阵二阶导计算的高昂开销，系统创新性地采用训练末期最后 50 步损失值的变异系数（Coefficient of Variation, CV）作为二阶稳定性的轻量级代理算子。候选策略只有同时满足 $f_{\\text{score}}(m) > 0.55$、取得实质正增益、通过结果级审查且未被负记忆拦截，方可晋级全量训练。",
+              "evidence_refs": [
+                "EQ-06",
+                "p.8",
+                "p.14"
+              ],
+              "source_anchors": [
+                "p.8",
+                "p.14"
+              ]
+            },
+            {
+              "type": "equation",
+              "evidence_id": "EQ-07",
+              "equation_id": "EQ-07",
+              "paper_label": "Eq. (7)",
+              "equation_number": 7,
+              "page": 14,
+              "source_anchors": [
+                "p.14"
+              ],
+              "evidence_refs": [
+                "p.14"
+              ],
+              "latex": "\\rho = 1 - \\frac{6 \\sum_{i=1}^N d_i^2}{N(N^2 - 1)}",
+              "source_confidence": "VERIFIED",
+              "fallback_asset": "assets/equations/EQ-07.png",
+              "role_zh": "五分钟早筛与全量训练排名的 Spearman 秩相关系数",
+              "explanation": "评估五分钟敏捷早筛与全量训练最终收敛精度排名的一致性程度，论文实测 ρ = 0.64 (p=0.03)。",
+              "pedagogy": {
+                "role": "五分钟早筛与全量训练排名的 Spearman 秩相关系数",
+                "explanation_priority": "CONCISE_DEFINE",
+                "symbol_definitions": [
+                  {
+                    "symbol": "\\rho",
+                    "name": "秩相关系数",
+                    "interpretation": "非参数单调相关性度量"
+                  },
+                  {
+                    "symbol": "N",
+                    "name": "样本数",
+                    "interpretation": "参与对比的候选策略总数"
+                  },
+                  {
+                    "symbol": "d_i",
+                    "name": "名次位移差",
+                    "interpretation": "早筛与全量排名的位次差"
+                  }
+                ],
+                "input_output": {
+                  "inputs": [
+                    "早筛候选排名",
+                    "全量收敛排名"
+                  ],
+                  "outputs": [
+                    "标量相关系数 rho"
+                  ]
+                },
+                "term_interpretations": [
+                  {
+                    "term": "\\frac{6 \\sum d_i^2}{N(N^2 - 1)}",
+                    "role": "名次平方偏差归一化",
+                    "intuition": "名次变动越小，该项越趋近于 0，相关系数越接近 1。"
+                  }
+                ],
+                "assumptions": [
+                  "排名单调性足以代表策略质量优劣"
+                ],
+                "implementation_proxy": null,
+                "source_anchors": [
+                  "p.14 Section 4.2"
+                ]
+              },
+              "explanation_priority": "CONCISE_DEFINE",
+              "symbol_definitions": [
+                {
+                  "symbol": "\\rho",
+                  "name": "秩相关系数",
+                  "interpretation": "非参数单调相关性度量"
+                },
+                {
+                  "symbol": "N",
+                  "name": "样本数",
+                  "interpretation": "参与对比的候选策略总数"
+                },
+                {
+                  "symbol": "d_i",
+                  "name": "名次位移差",
+                  "interpretation": "早筛与全量排名的位次差"
+                }
+              ],
+              "term_interpretations": [
+                {
+                  "term": "\\frac{6 \\sum d_i^2}{N(N^2 - 1)}",
+                  "role": "名次平方偏差归一化",
+                  "intuition": "名次变动越小，该项越趋近于 0，相关系数越接近 1。"
+                }
+              ],
+              "implementation_proxy": null,
+              "presentation_role": "narrative_support",
+              "question": "公式 (7) 在系统中承担何种计算与控制职责？",
+              "supports": [
+                "确立了量化计算标准与控制流转移依据"
+              ],
+              "limits": [
+                "参数配置与阈值依赖预设经验常数"
+              ]
+            },
+            {
+              "type": "equation",
+              "evidence_id": "EQ-08",
+              "equation_id": "EQ-08",
+              "paper_label": "Eq. (8)",
+              "equation_number": 8,
+              "page": 14,
+              "source_anchors": [
+                "p.14"
+              ],
+              "evidence_refs": [
+                "p.14"
+              ],
+              "latex": "\\text{Precision} = \\frac{\\text{TP}}{\\text{TP} + \\text{FP}}, \\quad \\text{Recall} = \\frac{\\text{TP}}{\\text{TP} + \\text{FN}}",
+              "source_confidence": "VERIFIED",
+              "fallback_asset": "assets/equations/EQ-08.png",
+              "role_zh": "劣化候选策略早筛精确率与召回率",
+              "explanation": "敏捷早筛对劣化策略的分类性能：以劣化策略为正类，实现 Precision=1.00 与 Recall=0.83。",
+              "pedagogy": {
+                "role": "劣化候选策略早筛精确率与召回率",
+                "explanation_priority": "CONCISE_DEFINE",
+                "symbol_definitions": [
+                  {
+                    "symbol": "Precision",
+                    "name": "精确率",
+                    "interpretation": "阻断报警中的真实劣化比例 (1.00)"
+                  },
+                  {
+                    "symbol": "Recall",
+                    "name": "召回率",
+                    "interpretation": "全量劣化方案被成功拦截的比例 (0.83)"
+                  }
+                ],
+                "input_output": {
+                  "inputs": [
+                    "早筛判决结果",
+                    "全量训练真实表现"
+                  ],
+                  "outputs": [
+                    "二分类质量指标"
+                  ]
+                },
+                "term_interpretations": [
+                  {
+                    "term": "Precision / Recall",
+                    "role": "早筛防误杀与防漏过平衡",
+                    "intuition": "零假阳性 (FP=0) 保证不扼杀潜在高优方案，高召回率 (83%) 拦截绝大多数劣质策略。"
+                  }
+                ],
+                "assumptions": [
+                  "以劣化方案为正类进行早筛过滤评估"
+                ],
+                "implementation_proxy": null,
+                "source_anchors": [
+                  "p.14 Section 4.2"
+                ]
+              },
+              "explanation_priority": "CONCISE_DEFINE",
+              "symbol_definitions": [
+                {
+                  "symbol": "Precision",
+                  "name": "精确率",
+                  "interpretation": "阻断报警中的真实劣化比例 (1.00)"
+                },
+                {
+                  "symbol": "Recall",
+                  "name": "召回率",
+                  "interpretation": "全量劣化方案被成功拦截的比例 (0.83)"
+                }
+              ],
+              "term_interpretations": [
+                {
+                  "term": "Precision / Recall",
+                  "role": "早筛防误杀与防漏过平衡",
+                  "intuition": "零假阳性 (FP=0) 保证不扼杀潜在高优方案，高召回率 (83%) 拦截绝大多数劣质策略。"
+                }
+              ],
+              "implementation_proxy": null,
+              "presentation_role": "narrative_support",
+              "question": "公式 (8) 在系统中承担何种计算与控制职责？",
+              "supports": [
+                "确立了量化计算标准与控制流转移依据"
+              ],
+              "limits": [
+                "参数配置与阈值依赖预设经验常数"
+              ]
+            },
+            {
+              "type": "table",
+              "evidence_id": "T10",
+              "paper_label": "TABLE X",
+              "page": 14,
+              "caption": "五分钟敏捷验证协议在 FAIR1M 数据集上的统计可靠性与劣化候选拦截效能评估",
+              "asset": "assets/figures/crop_T10_p14_1415x925.png",
+              "presentation_role": "narrative_core",
+              "question": "五分钟微缩验证的评估排序与全量训练真实表现之间是否具备统计显著的相关性，其拦截劣质策略的精确度如何？",
+              "analysis": "实验数据表明，五分钟代理分数与全量训练最终指标之间的 Spearman 秩相关系数达到 rho = 0.64 (p = 0.03)，具备统计显著的单调一致性。在针对劣化候选策略（即全量训练无法带来增益甚至导致性能下降的方案）的早筛测试中，系统取得了 1.00 的精确率（Precision，即被判为劣化并拦截的 5 个策略全部为真实劣化，零误伤优质方案）以及 0.83 的召回率（Recall，在全部 6 个劣化策略中成功拦截 5 个，仅 1 个漏过进入全量训练）。",
+              "supports": [
+                "实证证实了五分钟早筛协议的统计可靠性",
+                "证明了系统在零误拦截优质方案的前提下拦截了大部分无效探索"
+              ],
+              "limits": [
+                "仍有 17% 的劣化策略（1/6）逃逸出早筛卡点进入了全量训练阶段"
+              ],
+              "evidence_refs": [
+                "p.14"
+              ],
+              "source_anchors": [
+                "p.14"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "sec-04",
+          "chapter_num": "04",
+          "title": "实证突破：目标检测七轮轨迹复盘与 MSFR/CPR 架构自主创新",
+          "lead": "在极具挑战的 FAIR1M 遥感多类别旋转目标检测任务中，RingMoClaw 自主演化出多尺度特征细化（MSFR）与对比原型细化（CPR）两大核心模块，实现了突破基线的性能演进。",
+          "purpose": "复盘 FAIR1M 七轮演化实证轨迹并深入剖析 MSFR 与 CPR 模块的张量级机制原理",
+          "proposition": "在遥感旋转目标检测中，RingMoClaw 经过七轮自主迭代自发演化出多尺度特征细化与对比原型细化模块，取得稳健精度提升。",
+          "question": "自演化框架生成的具体网络模块具备何种张量级机制创新，其在评测基准上的增益如何？",
+          "evidence_refs": [
+            "T01",
+            "T06",
+            "p.9",
+            "p.10",
+            "p.13"
+          ],
+          "source_anchors": [
+            "p.9",
+            "p.10",
+            "p.13"
+          ],
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "FAIR1M-v1.0 是遥感领域公认极具挑战的大规模有向目标检测基准，包含 5 大类、37 个细分类别，存在严重的目标尺度跨度大、长宽比极端及类间混淆问题。以强 baseline 模型 YOLO11x-OBB 作为演化起点（初始验证集精度为 47.30% mAP50），RingMoClaw 展开了连续 7 轮自演化研究。",
+              "evidence_refs": [
+                "T01",
+                "p.9"
+              ],
+              "source_anchors": [
+                "p.9"
+              ]
+            },
+            {
+              "type": "table",
+              "evidence_id": "T01",
+              "paper_label": "TABLE I",
+              "page": 9,
+              "caption": "FAIR1M-v1.0 遥感目标检测七轮自演化实验轨迹（3次独立演化试验中的最优轨迹）：各轮次创新策略、瓶颈反馈与 mAP50 递进对比",
+              "asset": "assets/figures/crop_T01_p9_923x898.png",
+              "presentation_role": "narrative_core",
+              "question": "系统如何在七轮连续探索中通过反馈诊断实现精度的单调递增与结构性突破？",
+              "analysis": "复盘 FAIR1M 旋转目标检测演化轨迹（表 I 报告 3 次独立演化试验中的最优轨迹结果）：基线模型 YOLO11x-OBB 初始精度为 47.30% mAP50；经历数据增强（Data Augmentation）提升至 48.18%（+0.88 pp）；训练配置调整（Training Config Update）为 47.77%；小样本训练（Few-Shot Training）为 47.69%，未带来进一步增益并促使系统转向模型级优化；随后多模型融合（Multi-Model Fusion）显著跃升至 49.11%（+1.42 pp）；最终模块创新阶段（Module Innovation）通过 3 次试验分别评测生成的两大模块及其联合配置，联合配置最终达到 49.14% mAP50（完整轨迹包含 7 轮演化试验）。全过程精度从基线 47.30% 递进至 49.14%，净增 1.84 个百分点（percentage points, pp），展示了极具章法的科研演进逻辑。",
+              "supports": [
+                "完整记录了从基线 47.30% 到最高 49.14% 的真实探索轨迹",
+                "证明了系统面对无效方案时具备回滚与重探索的自愈能力"
+              ],
+              "limits": [
+                "演化后期单轮边际收益收窄，受限于预设算子表达上限"
+              ],
+              "evidence_refs": [
+                "p.9"
+              ],
+              "source_anchors": [
+                "p.9"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "尤为引人注目的是，系统在自演化探索中并非仅仅微调超参数，而是自主生成了两个极具遥感针对性的结构化模块：多尺度特征细化模块（Multi-Scale Feature Refinement, MSFR）与对比原型细化模块（Contrastive Prototype Refinement, CPR）。深入其张量级计算拓扑可知：MSFR 针对高分辨率遥感影像中微小目标在深层特征金字塔（FPN）中信息衰减严重的问题，在 P2 至 P5 特征层间建立了细粒度张量对齐通道。通过 1x1 卷积完成通道维度对齐后，并行引入通道注意力与空间注意力算子提取显著上下文。关键的是，MSFR 引入了零初始化门控参数（gamma_l = 0），使新模块在训练初始阶段等价于恒等变换，有效保障了预训练权重的数值平滑过渡。CPR 则针对密集停泊的车辆、舰船等高度相似目标之间的混淆，在检测头 RoI 特征 z_i 与前景类别原型矩阵 P 之间构建了 InfoNCE 对比损失，强制拉开混淆类别在特征嵌入空间的决策边界，显著降低了误检率。",
+              "evidence_refs": [
+                "T06",
+                "p.10",
+                "p.13"
+              ],
+              "source_anchors": [
+                "p.10",
+                "p.13"
+              ]
+            },
+            {
+              "type": "table",
+              "evidence_id": "T06",
+              "paper_label": "TABLE VI",
+              "page": 13,
+              "caption": "MSFR 与 CPR 模块在 YOLO11x-OBB 及 Oriented R-CNN 框架下的消融实验与性能增益",
+              "asset": "assets/figures/crop_T06_p13_1011x900.png",
+              "presentation_role": "narrative_core",
+              "question": "自主演化出的 MSFR 与 CPR 模块各自带来多大独立增益，两者结合是否具备正交叠加效应？",
+              "analysis": "消融实验表明：以单阶段检测器 YOLO11x-OBB（基线 47.30% mAP50，119M 参数，167G FLOPs）为基础，单独引入 MSFR 达到 48.31%（净增 +1.01 pp，额外引入 0.599M 参数与 0.604G FLOPs）；单独引入 CPR 达到 48.29%（净增 +0.99 pp，仅增 0.131M 参数与 0.272G FLOPs）；两者联合部署时达到 49.14% mAP50（净增 +1.84 pp，额外增加 0.730M 参数与 0.876G FLOPs）。两项模块联合增益（+1.84 pp）相较各自独立增益之和（1.01 + 0.99 = 2.00 pp）呈现轻微边际递减效应，体现了良好的增量累加效果，而非已证明的超加性协同。",
+              "supports": [
+                "严格定量了 MSFR 与 CPR 模块的独立与联合边际效用",
+                "证实了演化生成的创新算子对其他经典检测网络具有良好的即插即用迁移性"
+              ],
+              "limits": [
+                "测试仅覆盖了特定大小切片（1024x1024）上的计算表现"
+              ],
+              "evidence_refs": [
+                "p.13"
+              ],
+              "source_anchors": [
+                "p.13"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "sec-05",
+          "chapter_num": "05",
+          "title": "全域泛化与效率超越：跨任务评测与对标 AutoResearch",
+          "lead": "除目标检测外，RingMoClaw 在遥感场景分类、语义分割与变化检测等不同视效任务中均取得稳健提升，且计算资源与挂钟时间大幅优于现有基准系统。",
+          "purpose": "评估四类遥感任务的跨域泛化能力并定量对比实际算力消耗与挂钟时间",
+          "proposition": "框架在检测、分类、分割和变化检测任务上均展现泛化能力，且相较基线系统大幅节省 GPU 计算资源与挂钟时间。",
+          "question": "自演化机制是否具备跨模态任务通用性，其探索成本与对标开源系统相比优势何在？",
+          "evidence_refs": [
+            "T04",
+            "T07",
+            "p.11",
+            "p.12",
+            "p.14"
+          ],
+          "source_anchors": [
+            "p.11",
+            "p.12",
+            "p.14"
+          ],
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "为验证框架的通用性，研究团队将 RingMoClaw 拓展至其他三类经典遥感视觉任务：基于 NWPU-RESISC45 的场景分类、基于 LoveDA 的复杂地物语义分割，以及基于 LEVIR-CD 的双时相建筑物变化检测。在全部任务中，系统均在 5 至 8 轮内自发演化出适配各任务特性的算子组合（如分割任务中的边界敏感损失调整，分类任务中的多尺度特征池化），均取得优于基线模型的优异指标。",
+              "evidence_refs": [
+                "p.11",
+                "p.12"
+              ],
+              "source_anchors": [
+                "p.11",
+                "p.12"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "在 LEVIR-CD 双时相建筑物变化检测任务中，系统演化方案同样展现了明显增益（详见证据图谱 Table IV <a href=\"evidence_atlas.html#evidence-T04\">[T04]</a>）。需要指出的是，关于 LEVIR-CD 表格报告的指标，文献中存在评测习惯的细微差异：Table IV 原文列头标为 F1 与 IoU 指标，而部分基准文献在对比时将建筑物正类 IoU 习惯性并称。本精读报告本着严谨科学原则，将此作为未决的评测指标约定差异予以客观记录，而不作非黑即白的武断外推判断。",
+              "evidence_refs": [
+                "p.12"
+              ],
+              "source_anchors": [
+                "p.12"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "在科研自动化框架的实用性评判中，算力消耗与探索效率是决定其能否真正落地的关键生命线。将 RingMoClaw 与当前极具代表性的开源科研智能体框架 AutoResearch 在相同硬件平台（配备 8 卡 NVIDIA RTX 4090 的计算集群）上展开全面对比。统计指标必须明确区分集群总 GPU 算力消耗时间（GPU-hours）与科研人员实际经历的现实挂钟等待时间（wall-clock hours）。",
+              "evidence_refs": [
+                "T07",
+                "p.14"
+              ],
+              "source_anchors": [
+                "p.14"
+              ]
+            },
+            {
+              "type": "table",
+              "evidence_id": "T07",
+              "paper_label": "TABLE VII",
+              "page": 14,
+              "caption": "RingMoClaw 与 AutoResearch 在遥感科研全流程中的计算资源消耗与耗时定量对比",
+              "asset": "assets/figures/crop_T07_p14_907x908.png",
+              "presentation_role": "narrative_core",
+              "question": "双流经验引导与敏捷验证机制相较对标系统究竟节省了多少实际算力与时间？",
+              "analysis": "评测数据证实：AutoResearch 由于采取无经验记忆的随机变异搜索，累计消耗了 26.90 个 GPU 运行小时（GPU-hours），实际挂钟时间为 13.45 小时；而 RingMoClaw 依托经验总线精准定向剪枝与五分钟早筛拦截，总 GPU 运行时间大幅压减至 12.14 个 GPU-hours（节省幅度达 54.9%），实际挂钟时间亦缩减至 10.61 小时，且最终得到的最佳模型精度反超对手 0.72 pp。",
+              "supports": [
+                "提供了严格可比的算力消耗（GPU-hours）与挂钟时间（wall-clock hours）实测数据",
+                "证明了经验指导机制在减少无效训练算力开销上的巨大优势"
+              ],
+              "limits": [
+                "算力节约幅度可能随底层任务数据集规模与模型参数量发生变动"
+              ],
+              "evidence_refs": [
+                "p.14"
+              ],
+              "source_anchors": [
+                "p.14"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "sec-06",
+          "chapter_num": "06",
+          "title": "深度消融与边界反思：有效性边界与未来科研启示",
+          "lead": "严格的组件消融证实了 Critic 审稿与经验总线显著的工程效用；但客观审视系统局限，其算子搜索空间仍受限于预设算子表达上界与离线数据驱动先验。",
+          "purpose": "通过组件消融分析核心机制的边际效用并反思当前框架的适用边界与未决问题",
+          "proposition": "消融实验证实 Critic 与双流总线具备显著经验指导价值，但框架仍受限于预设算子库表达上界与离线数据驱动先验，向多模态与时序遥感任务拓展仍需进一步探索。",
+          "question": "关键模块各自贡献多大边际收益，该系统的适用前提与外推边界是什么？",
+          "evidence_refs": [
+            "T08",
+            "T09",
+            "p.14",
+            "p.15"
+          ],
+          "source_anchors": [
+            "p.14",
+            "p.15"
+          ],
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "为了探究系统各组件对自演化成功的独立贡献，研究团队在 FAIR1M 上实施了精细的剥离消融实验。首先考察异构 Critic 机制的作用。消融结果如 Table VIII 所示：完整框架收敛需要 7 轮演化并达到 49.14% mAP；当移除独立的 Critic 审查机制后，系统由于失去外部独立诊断反馈与质检卡点，主智能体陷入自评偏差与无效探索，收敛所需轮数由 7 轮显著增加至 11 轮，且最终检测精度下降至 47.43% mAP（精度降幅达 1.71 pp）。实证数据表明：异构同行审稿机制在当前实验配置下有效化解了大模型自评幻觉，发挥了加速收敛与提升终态质量的显著工程效用。",
+              "evidence_refs": [
+                "T08",
+                "p.14"
+              ],
+              "source_anchors": [
+                "p.14"
+              ]
+            },
+            {
+              "type": "table",
+              "evidence_id": "T08",
+              "paper_label": "TABLE VIII",
+              "page": 14,
+              "caption": "异构 Critic 机制在自演化过程中的消融实验对比（演化轮数与最终精度）",
+              "asset": "assets/figures/crop_T08_p14_908x892.png",
+              "presentation_role": "narrative_core",
+              "question": "剥离独立 Critic 后，系统在搜索效率与最终算法质量上面临何种降级？",
+              "analysis": "对比表明：完整框架仅需 7 轮迭代即达 49.14% mAP50；剥离 Critic 后收敛轮数增至 11 轮且性能下降 1.71 pp（降至 47.43%）。消融数据有力支撑了异构同行评议在减少无效探索与保障最终模型质量中的重要工程价值。",
+              "supports": [
+                "证实了 Critic 机制对缩短收敛周期（7 轮 vs 11 轮）与提升终态质量（49.14% vs 47.43%）的显著贡献"
+              ],
+              "limits": [
+                "消融结果建立在当前设定的 Prompt 体系与预设评分公式下"
+              ],
+              "evidence_refs": [
+                "p.14"
+              ],
+              "source_anchors": [
+                "p.14"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "其次考察双流经验总线的价值。如 Table IX 所示，当完全移除经验总线（即退化为无记忆搜索）时，系统在探索过程中经历了 14 轮收敛与 6 次非提升探索迭代（failed iterations，指未能带来验证集精度增益的候选搜索尝试，而非训练程序崩溃或代码语法报错），最终仅取得 47.53% mAP。而在双流经验总线介入后，完整框架仅需 7 轮即告收敛，非提升探索迭代由 6 次压减为仅 2 次，且最终精度达到 49.14% mAP。单流剥离进一步揭示：移除外生知识流需要 9 轮（4 次非提升迭代，48.44% mAP）；移除内生试错流需要 11 轮（5 次非提升迭代，47.62% mAP），表明内生试错负记忆对搜索空间的剪枝约束更为显著。",
+              "evidence_refs": [
+                "T09",
+                "p.14"
+              ],
+              "source_anchors": [
+                "p.14"
+              ]
+            },
+            {
+              "type": "table",
+              "evidence_id": "T09",
+              "paper_label": "TABLE IX",
+              "page": 14,
+              "caption": "双流动态经验总线消融实验：非提升探索迭代次数（Failed Iterations）与算力消耗变化",
+              "asset": "assets/figures/crop_T09_p14_902x630.png",
+              "presentation_role": "narrative_core",
+              "question": "经验总线究竟如何减少无效探索，其对失败迭代的抑制幅度如何？",
+              "analysis": "数据显示：无经验记忆时系统反复在已知劣质超参和无效算子组合上踏空，遭遇 14 轮探索与 6 次非提升迭代；引入双流经验总线后，重复错误被禁忌表及时阻断，非提升迭代降至 2 次，收敛轮数缩短至 7 轮。该消融实证证明了试错经验显式化存储与跨任务先验整合对提升搜索效率的关键作用。",
+              "supports": [
+                "实证表明经验总线能使无效试错迭代下降 66.7%（从 6 次降至 2 次）",
+                "直接解释了算力消耗大幅压减的底层机理"
+              ],
+              "limits": [
+                "失败记录的表征目前依赖文本描述，尚未实现连续向量空间的梯度导向利用"
+              ],
+              "evidence_refs": [
+                "p.14"
+              ],
+              "source_anchors": [
+                "p.14"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "在客观总结 RingMoClaw 卓越贡献的同时，亦须清醒审视其内在边界与尚未解决的科学挑战。第一，算子搜索空间的表达上界依然受限于预定义的 23 个基础算子库及其类型契约，目前的演化主要表现为现有算子的精巧重组与拓扑创新，尚无法自主创造全新基础数学算子。第二，当前全部四项基准均属于遥感图像模式识别任务，输入数据的空间分辨率差异（0.3m 至 0.8m）与极端类别失衡（如 C919 仅占 0.03%）深刻塑造了搜索轨迹。此外，多智能体长期运行依赖稳定的计算服务器与充足存储，智能体间的消息通信也带来了额外调用开销。未来工作将拓展至多模态与时序地球观测任务，并探索与遥感基础大模型更紧密的适配与持续预训练协同。",
+              "evidence_refs": [
+                "p.15"
+              ],
+              "source_anchors": [
+                "p.15"
+              ]
+            }
+          ]
+        }
+      ],
+      "chapters": [
+        {
+          "id": "sec-01",
+          "chapter_num": "01",
+          "title": "范式跃迁：从一次性任务编排到自演化科研闭环",
+          "lead": "科研智能体若仅停留于单次任务的自动化脚本执行，便无法积累长效经验；唯有构建自演化科研闭环，才能在连续假设迭代中实现自主创新。",
+          "purpose": "揭示多智能体自演化科研闭环与传统静态任务编排的本质差异",
+          "proposition": "科学研究本质是假设-验证-反思的长期演化过程，传统一次性流水线无法实现知识沉淀。",
+          "question": "科研自动化框架如何跳出一次性脚本编排，构建具备长期记忆的自演化闭环？",
+          "evidence_refs": [
+            "F01",
+            "p.1",
+            "p.2",
+            "p.3",
+            "p.4"
+          ],
+          "source_anchors": [
+            "p.1",
+            "p.2",
+            "p.3",
+            "p.4"
+          ],
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "在遥感与地理信息科学领域，数据形态的高度异构性（如多光谱、高分辨率光学、合成孔径雷达等）与成像几何的极端复杂性，对算法研发提出了严苛要求。传统基于大语言模型（LLM）的科研辅助系统大多依赖单次任务驱动的流水线范式：用户输入任务描述，智能体检索代码、生成配置并启动单次训练。这种模式在面对复杂遥感基准时存在根本缺陷：一旦实验未达预期，系统缺乏跨实验周期的结构化反思能力，极易陷入盲目试错或死循环。",
+              "evidence_refs": [
+                "p.1",
+                "p.2"
+              ],
+              "source_anchors": [
+                "p.1",
+                "p.2"
+              ]
+            },
+            {
+              "type": "figure",
+              "evidence_id": "F01",
+              "paper_label": "Fig. 1",
+              "page": 2,
+              "caption": "传统一次性科研流水线与 RingMoClaw 自演化闭环架构的范式对比",
+              "asset": "assets/figures/fig01_p2_3988x2475.png",
+              "presentation_role": "narrative_core",
+              "question": "传统一次性智能体工作流与本论文提出的自演化框架存在何种本质架构分野？",
+              "analysis": "Fig. 1 清晰揭示了科研范式的关键演进：传统方案为前向开环流程，缺乏实验诊断与知识积累机制；RingMoClaw 则引入了双向交互通道，将历史实验成败转化为显式经验总线，驱动后续迭代的有向收敛。",
+              "supports": [
+                "形象论证了一次性流水线在多轮探索中的局限性",
+                "确立了自演化闭环的总体拓扑结构"
+              ],
+              "limits": [
+                "作为概念对比图，未包含具体的数值性能度量"
+              ],
+              "evidence_refs": [
+                "p.2"
+              ],
+              "source_anchors": [
+                "p.2"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "为了打破这一瓶颈，RingMoClaw 提出了以经验驱动为核心的自演化科研框架。其核心思想是将科研探索形式化为一个由问题建模、假设生成、代码实现、受限验证、独立同行评议与经验反思构成的闭环动力学系统。系统不再把每次实验视为孤立事件，而是将其转化为可检索、可加权、可继承的认知资产，使多智能体集群具备了持续进化的科研自驱力。",
+              "evidence_refs": [
+                "p.3",
+                "p.4"
+              ],
+              "source_anchors": [
+                "p.3",
+                "p.4"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "sec-02",
+          "chapter_num": "02",
+          "title": "架构解耦：执行分支、异构 Critic 审稿与三阶段质检卡点",
+          "lead": "防范大模型自我评估同谋偏见的关键，在于将执行流与审稿流在模型架构与状态空间上彻底解耦，设立三阶段硬性质量拦截卡点。",
+          "purpose": "阐明异构 Critic 审稿机制与三阶段质检卡点如何拦截劣化方案并提供结构化反馈",
+          "proposition": "通过将执行智能体与异构 Critic 彻底解耦，并设置方案、数据与结果三阶段硬质检卡点，能有效化解大模型自评同谋偏见。",
+          "question": "如何设计审查机制以在不同阶段量化评估方案质量并拦截劣质探索？",
+          "evidence_refs": [
+            "F02",
+            "F04",
+            "EQ-01",
+            "EQ-02",
+            "p.4",
+            "p.5",
+            "p.6",
+            "p.7"
+          ],
+          "source_anchors": [
+            "p.4",
+            "p.5",
+            "p.6",
+            "p.7"
+          ],
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "RingMoClaw 的系统架构由执行集群与审查中枢两个正交解耦的系统构成。执行集群包含三大角色：Main Agent（负责全局科研规划与假设提出）、Data Agent（负责遥感数据切片、预处理与增强管道）以及 Vision Agent（负责模型架构搭建与训练执行）。为了杜绝同一模型在自编自审时必然出现的虚假确认同谋，审查中枢引入了独立的异构 Critic 智能体。在具体实现中，执行分支与 Critic 选用不同家族的基础大模型（如 GLM-5 Turbo 与 Minimax 2.7 交叉配置），从语义表征底层阻断评估偏见。",
+              "evidence_refs": [
+                "F02",
+                "p.4",
+                "p.5"
+              ],
+              "source_anchors": [
+                "p.4",
+                "p.5"
+              ]
+            },
+            {
+              "type": "figure",
+              "evidence_id": "F02",
+              "paper_label": "Fig. 2",
+              "page": 4,
+              "caption": "RingMoClaw 总体系统架构：主智能体、执行智能体、异构 Critic 与双流经验总线协同交互全景",
+              "asset": "assets/figures/fig02_p4_4594x1975.png",
+              "presentation_role": "narrative_core",
+              "question": "执行智能体与审查智能体如何在沙箱隔离环境下协同推进科研闭环？",
+              "analysis": "架构图完整展示了三大执行角色（Main, Data, Vision）与独立 Critic 之间基于消息契约的调用拓扑。沙箱环境 Experiment Executor 隔离执行代码，其日志与指标被结构化提取并送交 Critic 审阅，保障了系统的鲁棒性与安全性。",
+              "supports": [
+                "证明了执行集群与审查中枢的严格角色解耦",
+                "展示了从方案生成到沙箱执行的完整信息流流动过程"
+              ],
+              "limits": [
+                "未直接体现分布式训练多 GPU 通信底层的负载调度"
+              ],
+              "evidence_refs": [
+                "p.4"
+              ],
+              "source_anchors": [
+                "p.4"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "审查机制并非在实验结束时才作后验评价，而是划分为三个串行的硬性质量卡点：（1）方案审查（Plan Review）：在代码生成前，严格核验技术方案与遥感任务特性的契合度（例如针对小目标检测是否配置了适当的高分辨率锚框尺度），拦截逻辑不自洽的候选方案以避免无效算力浪费；（2）数据审查（Data Review）：核查数据切片尺寸、类别失衡处理策略及预处理代码合规性；（3）结果审查（Result Review）：对训练收敛曲线、多类别指标平衡性进行深度量化诊断，判断当前改进是否属于实质性突破还是过拟合波动。",
+              "evidence_refs": [
+                "F04",
+                "p.5",
+                "p.6"
+              ],
+              "source_anchors": [
+                "p.5",
+                "p.6"
+              ]
+            },
+            {
+              "type": "figure",
+              "evidence_id": "F04",
+              "paper_label": "Fig. 4",
+              "page": 7,
+              "caption": "异构 Critic 审稿机制的三阶段质检卡点（Plan, Data, Result Review）与四级控制流决策路由",
+              "asset": "assets/figures/fig04_p7_1684x1946.png",
+              "presentation_role": "narrative_core",
+              "question": "Critic 如何将多维度诊断转化为 Accept、Revise、Reject 或 Escalate 的控制指令？",
+              "analysis": "流转图详细刻画了各审查阶段的输入条件与分支转移逻辑。当综合评分超过 0.75 且瓶颈影响度不超过 0.30 时放行；中等评分且存在局部缺陷时触发 Revise 要求针对性修补；严重违规时直接 Reject 回退。",
+              "supports": [
+                "清晰揭示了三阶段审查的准入与拦截阈值条件",
+                "证明了审查决策具有可追踪的确定性控制转移规则"
+              ],
+              "limits": [
+                "四级流转分支在代码实现中基于经验设定的启发式阈值"
+              ],
+              "evidence_refs": [
+                "p.6",
+                "p.7"
+              ],
+              "source_anchors": [
+                "p.6",
+                "p.7"
+              ]
+            },
+            {
+              "type": "equation",
+              "evidence_id": "EQ-01",
+              "equation_id": "EQ-01",
+              "paper_label": "Eq. (1)",
+              "equation_number": 1,
+              "page": 6,
+              "source_anchors": [
+                "p.6"
+              ],
+              "evidence_refs": [
+                "p.6"
+              ],
+              "latex": "\\text{Score}_t = w_1 C_t + w_2 (1 - B_t) + w_3 H_t",
+              "source_confidence": "VERIFIED",
+              "fallback_asset": "assets/equations/EQ-01.png",
+              "role_zh": "Critic 多维结构化打分函数",
+              "explanation": "Critic 多维结构化打分函数：结合阶段完成度 C_t、瓶颈危害度 B_t 与历史经验契合度 H_t，通过 1 - B_t 反转瓶颈抑制效应，采用阶段特化权重评估候选方案质量。",
+              "pedagogy": {
+                "role": "Critic 多维结构化打分函数",
+                "explanation_priority": "MUST_EXPLAIN",
+                "symbol_definitions": [
+                  {
+                    "symbol": "\\text{Score}_t",
+                    "name": "综合评分",
+                    "interpretation": "第 t 阶段 Critic 综合加权评分，取值范围 [0, 1]"
+                  },
+                  {
+                    "symbol": "C_t",
+                    "name": "目标完成度",
+                    "interpretation": "当前阶段目标达成度 (Task completion)，∈ [0, 1]"
+                  },
+                  {
+                    "symbol": "B_t",
+                    "name": "瓶颈严重度",
+                    "interpretation": "诊断出的核心瓶颈严重程度 (Bottleneck impact)，∈ [0, 1]"
+                  },
+                  {
+                    "symbol": "1 - B_t",
+                    "name": "瓶颈逆向抑制项",
+                    "interpretation": "反转瓶颈影响；瓶颈越严重则该项越趋近 0，强力压低得分"
+                  },
+                  {
+                    "symbol": "H_t",
+                    "name": "历史经验一致度",
+                    "interpretation": "与全局经验池成功模式的契合度，∈ [0, 1]"
+                  },
+                  {
+                    "symbol": "(w_1, w_2, w_3)",
+                    "name": "阶段特化权重",
+                    "interpretation": "方案阶段 (0.3, 0.5, 0.2)，数据阶段 (0.35, 0.4, 0.25)，结果阶段 (0.5, 0.3, 0.2)"
+                  }
+                ],
+                "input_output": {
+                  "inputs": [
+                    "当前阶段执行输出与诊断指标",
+                    "候选方案瓶颈度量 B_t 与完成度 C_t",
+                    "阶段特化权重向量"
+                  ],
+                  "outputs": [
+                    "综合标量评分 Score_t ∈ [0, 1]",
+                    "四级流转决策指令 (Accept/Revise/Reject/Escalate)"
+                  ]
+                },
+                "term_interpretations": [
+                  {
+                    "term": "1 - B_t",
+                    "role": "瓶颈反转抑制项",
+                    "intuition": "B_t 表示当前策略遭遇瓶颈的严重度。公式采用 1 - B_t 将惩罚反转为可用度：无瓶颈时 (B_t=0) 得满分，瓶颈严重时 (B_t=1) 得分为 0，迫使系统优先解决瓶颈。",
+                    "effect": "严重瓶颈方案被迅速压低得分，触发重构或终止"
+                  },
+                  {
+                    "term": "w_1 C_t",
+                    "role": "阶段目标牵引项",
+                    "intuition": "正向奖励阶段产出成果（如代码可行性或精度增益）。",
+                    "effect": "保证演化朝向阶段目标推进"
+                  },
+                  {
+                    "term": "w_3 H_t",
+                    "role": "全局经验先验正则项",
+                    "intuition": "利用先验经验库约束搜索范围，防止在无先验支持的盲区过度耗费算力。",
+                    "effect": "提高跨任务探索效率"
+                  }
+                ],
+                "assumptions": [
+                  "假设三个评价维度正交且呈线性加权关系",
+                  "权重 (w_1, w_2, w_3) 为离线预设静态常量"
+                ],
+                "implementation_proxy": "采用预设静态权重表配合四级控制流阈值，未引入自适应权重在线优化",
+                "source_anchors": [
+                  "p.6 Section 3.2.1"
+                ],
+                "unspecified_details": [
+                  "原文未给出各阶段四级分支的具体划分数值阈值"
+                ]
+              },
+              "explanation_priority": "MUST_EXPLAIN",
+              "symbol_definitions": [
+                {
+                  "symbol": "\\text{Score}_t",
+                  "name": "综合评分",
+                  "interpretation": "第 t 阶段 Critic 综合加权评分，取值范围 [0, 1]"
+                },
+                {
+                  "symbol": "C_t",
+                  "name": "目标完成度",
+                  "interpretation": "当前阶段目标达成度 (Task completion)，∈ [0, 1]"
+                },
+                {
+                  "symbol": "B_t",
+                  "name": "瓶颈严重度",
+                  "interpretation": "诊断出的核心瓶颈严重程度 (Bottleneck impact)，∈ [0, 1]"
+                },
+                {
+                  "symbol": "1 - B_t",
+                  "name": "瓶颈逆向抑制项",
+                  "interpretation": "反转瓶颈影响；瓶颈越严重则该项越趋近 0，强力压低得分"
+                },
+                {
+                  "symbol": "H_t",
+                  "name": "历史经验一致度",
+                  "interpretation": "与全局经验池成功模式的契合度，∈ [0, 1]"
+                },
+                {
+                  "symbol": "(w_1, w_2, w_3)",
+                  "name": "阶段特化权重",
+                  "interpretation": "方案阶段 (0.3, 0.5, 0.2)，数据阶段 (0.35, 0.4, 0.25)，结果阶段 (0.5, 0.3, 0.2)"
+                }
+              ],
+              "term_interpretations": [
+                {
+                  "term": "1 - B_t",
+                  "role": "瓶颈反转抑制项",
+                  "intuition": "B_t 表示当前策略遭遇瓶颈的严重度。公式采用 1 - B_t 将惩罚反转为可用度：无瓶颈时 (B_t=0) 得满分，瓶颈严重时 (B_t=1) 得分为 0，迫使系统优先解决瓶颈。",
+                  "effect": "严重瓶颈方案被迅速压低得分，触发重构或终止"
+                },
+                {
+                  "term": "w_1 C_t",
+                  "role": "阶段目标牵引项",
+                  "intuition": "正向奖励阶段产出成果（如代码可行性或精度增益）。",
+                  "effect": "保证演化朝向阶段目标推进"
+                },
+                {
+                  "term": "w_3 H_t",
+                  "role": "全局经验先验正则项",
+                  "intuition": "利用先验经验库约束搜索范围，防止在无先验支持的盲区过度耗费算力。",
+                  "effect": "提高跨任务探索效率"
+                }
+              ],
+              "implementation_proxy": "采用预设静态权重表配合四级控制流阈值，未引入自适应权重在线优化",
+              "presentation_role": "narrative_core",
+              "question": "公式 (1) 在系统中承担何种计算与控制职责？",
+              "supports": [
+                "确立了量化计算标准与控制流转移依据"
+              ],
+              "limits": [
+                "参数配置与阈值依赖预设经验常数"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "如公式 (1) 所示，Critic 综合评分构建在三个显式维度之上：任务目标完成度 $C_t \\in [0, 1]$、瓶颈缺陷影响度 $B_t \\in [0, 1]$ 以及全局经验一致性 $H_t \\in [0, 1]$。公式设计中采用 $1 - B_t$ 的反转构造，使得当系统出现关键短板（如严重的类别漏检或显存溢出）时，$B_t \\to 1$ 导致得分骤降，强制促使主智能体在下一轮优先修复该瓶颈。此外，权重向量 $(w_1, w_2, w_3)$ 在三个审查阶段实行特化配置：方案审查设为 $(0.30, 0.50, 0.20)$，重在压制方案潜在瓶颈；数据审查设为 $(0.35, 0.40, 0.25)$；结果审查设为 $(0.50, 0.30, 0.20)$，则将权重重心向实际精度达成度倾斜。",
+              "evidence_refs": [
+                "EQ-01",
+                "p.6"
+              ],
+              "source_anchors": [
+                "p.6"
+              ]
+            },
+            {
+              "type": "equation",
+              "evidence_id": "EQ-02",
+              "equation_id": "EQ-02",
+              "paper_label": "Eq. (2)",
+              "equation_number": 2,
+              "page": 6,
+              "source_anchors": [
+                "p.6"
+              ],
+              "evidence_refs": [
+                "p.6"
+              ],
+              "latex": "o_{\\text{main}}^{t+1} = \\Pi_{\\text{update}}(s_t, \\{c_t, \\text{Score}_t\\})",
+              "source_confidence": "VERIFIED",
+              "fallback_asset": "assets/equations/EQ-02.png",
+              "role_zh": "Main Agent 全局决策状态转移算子",
+              "explanation": "Main Agent 基于 Critic 结构化诊断报告与综合评分实施顶层决策状态转移，确立决策收敛方向。",
+              "pedagogy": {
+                "role": "Main Agent 全局决策状态转移算子",
+                "explanation_priority": "MUST_EXPLAIN",
+                "symbol_definitions": [
+                  {
+                    "symbol": "o_{\\text{main}}^{t+1}",
+                    "name": "下一轮决策指令",
+                    "interpretation": "主智能体下一阶段的规划、调度或终止指令"
+                  },
+                  {
+                    "symbol": "\\Pi_{\\text{update}}",
+                    "name": "顶层决策更新算子",
+                    "interpretation": "基于系统状态与反馈的多智能体协调调度策略"
+                  },
+                  {
+                    "symbol": "s_t",
+                    "name": "系统当前状态",
+                    "interpretation": "包含历史步数、当前模型配置与代码仓库状态"
+                  },
+                  {
+                    "symbol": "c_t",
+                    "name": "Critic 结构化诊断报告",
+                    "interpretation": "细粒度定位的瓶颈原因与修复建议"
+                  },
+                  {
+                    "symbol": "\\text{Score}_t",
+                    "name": "Critic 综合评分",
+                    "interpretation": "Eq. (1) 计算出的标量质量评估分值"
+                  }
+                ],
+                "input_output": {
+                  "inputs": [
+                    "系统当前状态 s_t",
+                    "Critic 诊断报告 c_t",
+                    "综合评分 Score_t"
+                  ],
+                  "outputs": [
+                    "下一轮决策行动指令 o_{main}^{t+1}"
+                  ]
+                },
+                "term_interpretations": [
+                  {
+                    "term": "\\Pi_{\\text{update}}(s_t, \\{c_t, \\text{Score}_t\\})",
+                    "role": "状态转移与调度闭环",
+                    "intuition": "Main Agent 依据量化评分与定性诊断进行控制流路由：高分推进，中分结合 c_t 进行局部修复，低分回退。",
+                    "effect": "确立自进化探索方向并避免死循环"
+                  }
+                ],
+                "assumptions": [
+                  "Critic 诊断与评分能够准确反映阶段探索成败"
+                ],
+                "implementation_proxy": "通过 LLM Prompt 编排与状态转移机制实现策略算子，非参数化强化学习网络",
+                "source_anchors": [
+                  "p.6 Section 3.2.1"
+                ]
+              },
+              "explanation_priority": "MUST_EXPLAIN",
+              "symbol_definitions": [
+                {
+                  "symbol": "o_{\\text{main}}^{t+1}",
+                  "name": "下一轮决策指令",
+                  "interpretation": "主智能体下一阶段的规划、调度或终止指令"
+                },
+                {
+                  "symbol": "\\Pi_{\\text{update}}",
+                  "name": "顶层决策更新算子",
+                  "interpretation": "基于系统状态与反馈的多智能体协调调度策略"
+                },
+                {
+                  "symbol": "s_t",
+                  "name": "系统当前状态",
+                  "interpretation": "包含历史步数、当前模型配置与代码仓库状态"
+                },
+                {
+                  "symbol": "c_t",
+                  "name": "Critic 结构化诊断报告",
+                  "interpretation": "细粒度定位的瓶颈原因与修复建议"
+                },
+                {
+                  "symbol": "\\text{Score}_t",
+                  "name": "Critic 综合评分",
+                  "interpretation": "Eq. (1) 计算出的标量质量评估分值"
+                }
+              ],
+              "term_interpretations": [
+                {
+                  "term": "\\Pi_{\\text{update}}(s_t, \\{c_t, \\text{Score}_t\\})",
+                  "role": "状态转移与调度闭环",
+                  "intuition": "Main Agent 依据量化评分与定性诊断进行控制流路由：高分推进，中分结合 c_t 进行局部修复，低分回退。",
+                  "effect": "确立自进化探索方向并避免死循环"
+                }
+              ],
+              "implementation_proxy": "通过 LLM Prompt 编排与状态转移机制实现策略算子，非参数化强化学习网络",
+              "presentation_role": "narrative_core",
+              "question": "公式 (2) 在系统中承担何种计算与控制职责？",
+              "supports": [
+                "确立了量化计算标准与控制流转移依据"
+              ],
+              "limits": [
+                "参数配置与阈值依赖预设经验常数"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "在获得 Critic 的标量评分 $\\text{Score}_t$ 与细粒度诊断建议 $c_t$ 后，Main Agent 依照公式 (2) 触发决策状态转移。更新算子 $\\Pi_{\\text{update}}$ 依据综合反馈决定是进入下一演化轮次、触发参数局部微调，抑或是回滚当前分支并向全局记忆池写入负样本约束，从而构成了系统决策演进的控制律。",
+              "evidence_refs": [
+                "EQ-02",
+                "p.6"
+              ],
+              "source_anchors": [
+                "p.6"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "sec-03",
+          "chapter_num": "03",
+          "title": "经验认知中枢：双流动态经验总线与五分钟敏捷验证协议",
+          "lead": "双流动态经验总线有机融合外生文献先验与内生试错记忆，配合五分钟敏捷验证协议，实现了探索空间的高效剪枝与极低成本早筛。",
+          "purpose": "解析双流经验总线动态积累机制与五分钟轻量早筛协议的数学表征与判据",
+          "proposition": "外生文献知识与内生试错负记忆构成双流总线，配合五分钟代理早筛指标实现低成本路径剪枝。",
+          "question": "如何利用历史探索记忆指导搜索空间剪枝，并在全量训练前以极小算力代价早筛劣化候选？",
+          "evidence_refs": [
+            "F05",
+            "EQ-03",
+            "EQ-04",
+            "EQ-05",
+            "EQ-06",
+            "EQ-07",
+            "EQ-08",
+            "T10",
+            "p.7",
+            "p.8",
+            "p.9",
+            "p.14"
+          ],
+          "source_anchors": [
+            "p.7",
+            "p.8",
+            "p.9",
+            "p.14"
+          ],
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "科研智能体演化的认知基石是经验的积累与迁移。RingMoClaw 构建了结构化的四维搜索空间与双流动态经验总线。全局算法搜索空间如公式 (3) 所示，划分为模型架构、训练策略、数据处理与系统集成四个解耦维度。每个算子由公式 (4) 赋予强类型输入输出契约 $\\omega = \\{I, O, F, P\\}$，确保了算子插拔与组合时的接口兼容性。",
+              "evidence_refs": [
+                "EQ-03",
+                "EQ-04",
+                "p.7"
+              ],
+              "source_anchors": [
+                "p.7"
+              ]
+            },
+            {
+              "type": "equation",
+              "evidence_id": "EQ-03",
+              "equation_id": "EQ-03",
+              "paper_label": "Eq. (3)",
+              "equation_number": 3,
+              "page": 7,
+              "source_anchors": [
+                "p.7"
+              ],
+              "evidence_refs": [
+                "p.7"
+              ],
+              "latex": "\\mathcal{S} = \\{\\mathcal{S}_{\\text{arch}}, \\mathcal{S}_{\\text{train}}, \\mathcal{S}_{\\text{data}}, \\mathcal{S}_{\\text{intg}}\\}",
+              "source_confidence": "VERIFIED",
+              "fallback_asset": "assets/equations/EQ-03.png",
+              "role_zh": "遥感四维结构化搜索空间定义",
+              "explanation": "遥感自主演化搜索空间划分为架构、训练、数据与系统集成四维空间，实现有向剪枝与算子调度。",
+              "pedagogy": {
+                "role": "遥感四维结构化搜索空间定义",
+                "explanation_priority": "CONCISE_DEFINE",
+                "symbol_definitions": [
+                  {
+                    "symbol": "\\mathcal{S}",
+                    "name": "全局搜索空间",
+                    "interpretation": "解空间集合"
+                  },
+                  {
+                    "symbol": "\\mathcal{S}_{\\text{arch}}",
+                    "name": "架构子空间",
+                    "interpretation": "骨干与特征融合算子"
+                  },
+                  {
+                    "symbol": "\\mathcal{S}_{\\text{train}}",
+                    "name": "训练子空间",
+                    "interpretation": "损失与优化超参"
+                  },
+                  {
+                    "symbol": "\\mathcal{S}_{\\text{data}}",
+                    "name": "数据子空间",
+                    "interpretation": "数据增强与预处理"
+                  },
+                  {
+                    "symbol": "\\mathcal{S}_{\\text{intg}}",
+                    "name": "集成子空间",
+                    "interpretation": "后处理与辅助模型"
+                  }
+                ],
+                "input_output": {
+                  "inputs": [
+                    "候选算子库"
+                  ],
+                  "outputs": [
+                    "结构化四维组合配置空间"
+                  ]
+                },
+                "term_interpretations": [
+                  {
+                    "term": "结构化解耦",
+                    "role": "维度划分",
+                    "intuition": "将复杂的端到端算法设计解耦为四个独立或协同的探索子空间，降低组合爆炸风险。"
+                  }
+                ],
+                "assumptions": [
+                  "四个子维度在遥感视觉任务中可正交解耦配置"
+                ],
+                "implementation_proxy": null,
+                "source_anchors": [
+                  "p.7 Section 3.3.1"
+                ]
+              },
+              "explanation_priority": "CONCISE_DEFINE",
+              "symbol_definitions": [
+                {
+                  "symbol": "\\mathcal{S}",
+                  "name": "全局搜索空间",
+                  "interpretation": "解空间集合"
+                },
+                {
+                  "symbol": "\\mathcal{S}_{\\text{arch}}",
+                  "name": "架构子空间",
+                  "interpretation": "骨干与特征融合算子"
+                },
+                {
+                  "symbol": "\\mathcal{S}_{\\text{train}}",
+                  "name": "训练子空间",
+                  "interpretation": "损失与优化超参"
+                },
+                {
+                  "symbol": "\\mathcal{S}_{\\text{data}}",
+                  "name": "数据子空间",
+                  "interpretation": "数据增强与预处理"
+                },
+                {
+                  "symbol": "\\mathcal{S}_{\\text{intg}}",
+                  "name": "集成子空间",
+                  "interpretation": "后处理与辅助模型"
+                }
+              ],
+              "term_interpretations": [
+                {
+                  "term": "结构化解耦",
+                  "role": "维度划分",
+                  "intuition": "将复杂的端到端算法设计解耦为四个独立或协同的探索子空间，降低组合爆炸风险。"
+                }
+              ],
+              "implementation_proxy": null,
+              "presentation_role": "narrative_support",
+              "question": "公式 (3) 在系统中承担何种计算与控制职责？",
+              "supports": [
+                "确立了量化计算标准与控制流转移依据"
+              ],
+              "limits": [
+                "参数配置与阈值依赖预设经验常数"
+              ]
+            },
+            {
+              "type": "equation",
+              "evidence_id": "EQ-04",
+              "equation_id": "EQ-04",
+              "paper_label": "Eq. (4)",
+              "equation_number": 4,
+              "page": 7,
+              "source_anchors": [
+                "p.7"
+              ],
+              "evidence_refs": [
+                "p.7"
+              ],
+              "latex": "\\omega = \\{I, O, F, P\\}",
+              "source_confidence": "VERIFIED",
+              "fallback_asset": "assets/equations/EQ-04.png",
+              "role_zh": "外部文献与代码提取的可复用算子元组",
+              "explanation": "从外部文献与开源代码中剥离环境与脚手架后，提炼出的标准化算子四元组定义。",
+              "pedagogy": {
+                "role": "外部文献与代码提取的可复用算子元组",
+                "explanation_priority": "CONCISE_DEFINE",
+                "symbol_definitions": [
+                  {
+                    "symbol": "\\omega",
+                    "name": "算子元组",
+                    "interpretation": "可插拔模块标准化规范"
+                  },
+                  {
+                    "symbol": "I",
+                    "name": "输入张量签名",
+                    "interpretation": "张量维度与类型约束"
+                  },
+                  {
+                    "symbol": "O",
+                    "name": "输出张量签名",
+                    "interpretation": "期望输出格式"
+                  },
+                  {
+                    "symbol": "F",
+                    "name": "前向逻辑",
+                    "interpretation": "无外部依赖的核心算子代码"
+                  },
+                  {
+                    "symbol": "P",
+                    "name": "超参数配置",
+                    "interpretation": "可调参数默认范围"
+                  }
+                ],
+                "input_output": {
+                  "inputs": [
+                    "外部开源代码库"
+                  ],
+                  "outputs": [
+                    "标准化算子对象"
+                  ]
+                },
+                "term_interpretations": [
+                  {
+                    "term": "(I, O, F, P)",
+                    "role": "模块化隔离",
+                    "intuition": "剥离无关脚手架代码，仅保留核心计算逻辑与张量接口，确保跨项目可插拔执行。"
+                  }
+                ],
+                "assumptions": [
+                  "算子具有明确的输入输出张量签名且无隐藏全局状态"
+                ],
+                "implementation_proxy": null,
+                "source_anchors": [
+                  "p.7 Section 3.3.2"
+                ]
+              },
+              "explanation_priority": "CONCISE_DEFINE",
+              "symbol_definitions": [
+                {
+                  "symbol": "\\omega",
+                  "name": "算子元组",
+                  "interpretation": "可插拔模块标准化规范"
+                },
+                {
+                  "symbol": "I",
+                  "name": "输入张量签名",
+                  "interpretation": "张量维度与类型约束"
+                },
+                {
+                  "symbol": "O",
+                  "name": "输出张量签名",
+                  "interpretation": "期望输出格式"
+                },
+                {
+                  "symbol": "F",
+                  "name": "前向逻辑",
+                  "interpretation": "无外部依赖的核心算子代码"
+                },
+                {
+                  "symbol": "P",
+                  "name": "超参数配置",
+                  "interpretation": "可调参数默认范围"
+                }
+              ],
+              "term_interpretations": [
+                {
+                  "term": "(I, O, F, P)",
+                  "role": "模块化隔离",
+                  "intuition": "剥离无关脚手架代码，仅保留核心计算逻辑与张量接口，确保跨项目可插拔执行。"
+                }
+              ],
+              "implementation_proxy": null,
+              "presentation_role": "narrative_support",
+              "question": "公式 (4) 在系统中承担何种计算与控制职责？",
+              "supports": [
+                "确立了量化计算标准与控制流转移依据"
+              ],
+              "limits": [
+                "参数配置与阈值依赖预设经验常数"
+              ]
+            },
+            {
+              "type": "figure",
+              "evidence_id": "F05",
+              "paper_label": "Fig. 5",
+              "page": 8,
+              "caption": "双流动态经验总线：外生文献知识库与内生多任务试错记忆池的汇聚与动态剪枝拓扑",
+              "asset": "assets/figures/fig05_p8_4400x1393.png",
+              "presentation_role": "narrative_core",
+              "question": "经验总线如何将跨任务文献知识与单任务局部试错经验转化为算子检索的优先级？",
+              "analysis": "图解清晰展示了双流拓扑：外生知识流通过 RAG 从遥感前沿论文与开源代码中提取算子与超参模板；内生知识流则持续记录当前任务的局部禁忌表（Taboo List）与跨任务全局经验库。通过任务相似度匹配与负样本剪枝，有效压缩了解空间搜索半径。",
+              "supports": [
+                "证明了经验总线对多源知识的统一整合机制",
+                "展示了基于任务相似度的动态算子检索过程"
+              ],
+              "limits": [
+                "算子库在初始冷启动阶段依然依赖人工整理的基础算子集合"
+              ],
+              "evidence_refs": [
+                "p.8"
+              ],
+              "source_anchors": [
+                "p.8"
+              ]
+            },
+            {
+              "type": "equation",
+              "evidence_id": "EQ-05",
+              "equation_id": "EQ-05",
+              "paper_label": "Eq. (5)",
+              "equation_number": 5,
+              "page": 8,
+              "source_anchors": [
+                "p.8"
+              ],
+              "evidence_refs": [
+                "p.8"
+              ],
+              "latex": "\\mathcal{M}_{\\text{gb}} \\leftarrow \\mathcal{M}_{\\text{gb}} \\cup \\text{Filter}(\\mathcal{M}_{\\text{loc}}, \\text{Score}_t)",
+              "source_confidence": "VERIFIED",
+              "fallback_asset": "assets/equations/EQ-05.png",
+              "role_zh": "跨任务全局经验记忆库增量更新规则",
+              "explanation": "全局经验总线更新规则：通过 Critic 打分门控筛选局部高价值成功路径与典型失败模式，增量合并入跨任务经验库。",
+              "pedagogy": {
+                "role": "跨任务全局经验记忆库增量更新规则",
+                "explanation_priority": "MUST_EXPLAIN",
+                "symbol_definitions": [
+                  {
+                    "symbol": "\\mathcal{M}_{\\text{gb}}",
+                    "name": "全局经验记忆库",
+                    "interpretation": "跨任务持久化存储的高价值经验知识库"
+                  },
+                  {
+                    "symbol": "\\mathcal{M}_{\\text{loc}}",
+                    "name": "局部探索记忆",
+                    "interpretation": "当前单次遥感任务执行过程中的试错轨迹与中间产物"
+                  },
+                  {
+                    "symbol": "\\text{Filter}",
+                    "name": "经验过滤算子",
+                    "interpretation": "基于打分门槛与冗余去除的经验准入过滤机制"
+                  },
+                  {
+                    "symbol": "\\text{Score}_t",
+                    "name": "评估准入门槛分值",
+                    "interpretation": "来自 Critic 的评估得分"
+                  }
+                ],
+                "input_output": {
+                  "inputs": [
+                    "已有全局记忆库 M_{gb}",
+                    "局部探索日志 M_{loc}",
+                    "评估得分 Score_t"
+                  ],
+                  "outputs": [
+                    "更新后的全局记忆库 M_{gb}"
+                  ]
+                },
+                "term_interpretations": [
+                  {
+                    "term": "\\text{Filter}(\\mathcal{M}_{\\text{loc}}, \\text{Score}_t)",
+                    "role": "经验质量门控与噪声过滤",
+                    "intuition": "防止局部试验中的偶然性噪声和劣质方案污染跨任务经验库，仅将验证高分和典型阻断模式持久化入库。",
+                    "effect": "保持全局经验的高信噪比"
+                  },
+                  {
+                    "term": "\\cup",
+                    "role": "集合合并与知识累积",
+                    "intuition": "随着探索的任务增多，全局经验池持续扩充，为后续新任务提供丰富的先验支持。",
+                    "effect": "实现跨任务自主演化经验总线"
+                  }
+                ],
+                "assumptions": [
+                  "高分策略具备跨遥感场景的迁移有效性"
+                ],
+                "implementation_proxy": "向量数据库检索与元数据索引结合，具体去重聚类公式原文未展开",
+                "source_anchors": [
+                  "p.8 Section 3.4"
+                ]
+              },
+              "explanation_priority": "MUST_EXPLAIN",
+              "symbol_definitions": [
+                {
+                  "symbol": "\\mathcal{M}_{\\text{gb}}",
+                  "name": "全局经验记忆库",
+                  "interpretation": "跨任务持久化存储的高价值经验知识库"
+                },
+                {
+                  "symbol": "\\mathcal{M}_{\\text{loc}}",
+                  "name": "局部探索记忆",
+                  "interpretation": "当前单次遥感任务执行过程中的试错轨迹与中间产物"
+                },
+                {
+                  "symbol": "\\text{Filter}",
+                  "name": "经验过滤算子",
+                  "interpretation": "基于打分门槛与冗余去除的经验准入过滤机制"
+                },
+                {
+                  "symbol": "\\text{Score}_t",
+                  "name": "评估准入门槛分值",
+                  "interpretation": "来自 Critic 的评估得分"
+                }
+              ],
+              "term_interpretations": [
+                {
+                  "term": "\\text{Filter}(\\mathcal{M}_{\\text{loc}}, \\text{Score}_t)",
+                  "role": "经验质量门控与噪声过滤",
+                  "intuition": "防止局部试验中的偶然性噪声和劣质方案污染跨任务经验库，仅将验证高分和典型阻断模式持久化入库。",
+                  "effect": "保持全局经验的高信噪比"
+                },
+                {
+                  "term": "\\cup",
+                  "role": "集合合并与知识累积",
+                  "intuition": "随着探索的任务增多，全局经验池持续扩充，为后续新任务提供丰富的先验支持。",
+                  "effect": "实现跨任务自主演化经验总线"
+                }
+              ],
+              "implementation_proxy": "向量数据库检索与元数据索引结合，具体去重聚类公式原文未展开",
+              "presentation_role": "narrative_core",
+              "question": "公式 (5) 在系统中承担何种计算与控制职责？",
+              "supports": [
+                "确立了量化计算标准与控制流转移依据"
+              ],
+              "limits": [
+                "参数配置与阈值依赖预设经验常数"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "在知识沉淀机制中，公式 (5) 定义了局部任务记忆向全局经验库 $\\mathcal{M}_{\\text{gb}}$ 的准入更新律。只有通过噪声过滤算子 $\\text{Filter}$ 并满足 Critic 综合评分阈值（$\\text{Score}_t \\ge 0.75$）的高质量经验与强指导性失败教训，才被允许持久化归档至跨任务认知中心，从源头抑制了劣质探索经验的污染扩散。",
+              "evidence_refs": [
+                "EQ-05",
+                "p.8"
+              ],
+              "source_anchors": [
+                "p.8"
+              ]
+            },
+            {
+              "type": "equation",
+              "evidence_id": "EQ-06",
+              "equation_id": "EQ-06",
+              "paper_label": "Eq. (6)",
+              "equation_number": 6,
+              "page": 8,
+              "source_anchors": [
+                "p.8"
+              ],
+              "evidence_refs": [
+                "p.8"
+              ],
+              "latex": "f_{\\text{score}}(m) = \\alpha \\left(\\frac{\\Delta \\text{Acc}}{\\Delta t}\\right) + \\beta \\exp\\left(-\\sigma \\|\\nabla_\\theta^2\\|\\right)",
+              "source_confidence": "VERIFIED",
+              "fallback_asset": "assets/equations/EQ-06.png",
+              "role_zh": "五分钟敏捷验证早期综合适应度评分函数",
+              "explanation": "五分钟敏捷验证综合评分函数：平衡单位时间精度增益与训练稳定性；工程实现中以最后 50 步训练损失变异系数作为二阶曲率的轻量化代理指标。",
+              "pedagogy": {
+                "role": "五分钟敏捷验证早期综合适应度评分函数",
+                "explanation_priority": "MUST_EXPLAIN",
+                "symbol_definitions": [
+                  {
+                    "symbol": "f_{\\text{score}}(m)",
+                    "name": "候选策略适应度评分",
+                    "interpretation": "对候选策略 m 在 5 分钟微缩验证中的综合量化分值"
+                  },
+                  {
+                    "symbol": "\\Delta \\text{Acc}",
+                    "name": "初期精度增益",
+                    "interpretation": "在微缩子集上相较 Baseline 的验证精度提升（百分点）"
+                  },
+                  {
+                    "symbol": "\\Delta t",
+                    "name": "早筛耗时归一化因子",
+                    "interpretation": "5 分钟微缩验证的实际执行时长归一化基准"
+                  },
+                  {
+                    "symbol": "\\frac{\\Delta \\text{Acc}}{\\Delta t}",
+                    "name": "单位时间性能收益率",
+                    "interpretation": "衡量单位计算耗时下的收敛加速度与精度提升性价比"
+                  },
+                  {
+                    "symbol": "\\exp\\left(-\\sigma \\|\\nabla_\\theta^2\\|\\right)",
+                    "name": "二阶曲率指数平稳性惩罚",
+                    "interpretation": "基于损失曲面 Hessian 范数的平稳性约束；平坦平稳时趋于 1，剧烈震荡时迅速衰减至 0"
+                  },
+                  {
+                    "symbol": "\\alpha, \\beta, \\sigma",
+                    "name": "平衡超参数",
+                    "interpretation": "权衡收敛加速度与训练稳定性的加权系数"
+                  },
+                  {
+                    "symbol": "\\text{CV}_{50}",
+                    "name": "工程实用代理指标",
+                    "interpretation": "最后 50 步训练 loss 的变异系数 (标准差/均值)，轻量替代高昂二阶曲率"
+                  }
+                ],
+                "input_output": {
+                  "inputs": [
+                    "微缩子集初期精度增益 DeltaAcc",
+                    "执行耗时 Delta t",
+                    "训练损失轨迹"
+                  ],
+                  "outputs": [
+                    "标量适应度评分 f_{score}(m)"
+                  ]
+                },
+                "term_interpretations": [
+                  {
+                    "term": "\\frac{\\Delta \\text{Acc}}{\\Delta t}",
+                    "role": "单位时间精度收益率",
+                    "intuition": "敏捷早筛关注算力投入产出比。若精度提升极慢导致 DeltaAcc / Delta t 极小，表明方案收敛迟缓，不予晋级全量资源。",
+                    "effect": "筛选出初期学习效率高的敏捷方案"
+                  },
+                  {
+                    "term": "\\exp\\left(-\\sigma \\|\\nabla_\\theta^2\\|\\right)",
+                    "role": "二阶曲率指数衰减惩罚",
+                    "intuition": "Hessian 范数度量损失曲面震荡。指数衰减将惩罚约束在 (0, 1] 区间：曲率极小（平稳平坦）时接近 1；曲率剧烈震荡（梯度爆炸或发散风险）时急速跌落至 0。",
+                    "effect": "强力抑制训练不稳定或数值震荡方案"
+                  },
+                  {
+                    "term": "+",
+                    "role": "收益与稳定性的加权折中",
+                    "intuition": "通过加号将收敛速度增益与平稳性约束线性结合，避免单维度偏颇。",
+                    "effect": "兼顾收敛速度与训练平稳性"
+                  }
+                ],
+                "assumptions": [
+                  "微缩子集（如 10% 样本）上的 5 分钟早期动态与全量收敛轨迹具备正向秩相关性",
+                  "平坦的损失曲面有利于遥感多模态泛化"
+                ],
+                "implementation_proxy": "【关键工程代理说明】论文明确指出：直接计算全网络二阶 Hessian 范数 ||nabla_theta^2|| 开销过大，工程实现中采用『训练最后 50 步 loss 的变异系数 CV_50 = sigma / mu』作为二阶平稳性的轻量化代理指标；论文设定适应度综合阈值 f_{score} > 0.55 触发全量资源晋级，但原文未开源具体的 alpha, beta, sigma 标定数值。",
+                "source_anchors": [
+                  "p.8 Section 3.3.3",
+                  "p.14 Appendix E"
+                ],
+                "unspecified_details": [
+                  "原文未公开 alpha, beta, sigma 的确切数值标定"
+                ]
+              },
+              "explanation_priority": "MUST_EXPLAIN",
+              "symbol_definitions": [
+                {
+                  "symbol": "f_{\\text{score}}(m)",
+                  "name": "候选策略适应度评分",
+                  "interpretation": "对候选策略 m 在 5 分钟微缩验证中的综合量化分值"
+                },
+                {
+                  "symbol": "\\Delta \\text{Acc}",
+                  "name": "初期精度增益",
+                  "interpretation": "在微缩子集上相较 Baseline 的验证精度提升（百分点）"
+                },
+                {
+                  "symbol": "\\Delta t",
+                  "name": "早筛耗时归一化因子",
+                  "interpretation": "5 分钟微缩验证的实际执行时长归一化基准"
+                },
+                {
+                  "symbol": "\\frac{\\Delta \\text{Acc}}{\\Delta t}",
+                  "name": "单位时间性能收益率",
+                  "interpretation": "衡量单位计算耗时下的收敛加速度与精度提升性价比"
+                },
+                {
+                  "symbol": "\\exp\\left(-\\sigma \\|\\nabla_\\theta^2\\|\\right)",
+                  "name": "二阶曲率指数平稳性惩罚",
+                  "interpretation": "基于损失曲面 Hessian 范数的平稳性约束；平坦平稳时趋于 1，剧烈震荡时迅速衰减至 0"
+                },
+                {
+                  "symbol": "\\alpha, \\beta, \\sigma",
+                  "name": "平衡超参数",
+                  "interpretation": "权衡收敛加速度与训练稳定性的加权系数"
+                },
+                {
+                  "symbol": "\\text{CV}_{50}",
+                  "name": "工程实用代理指标",
+                  "interpretation": "最后 50 步训练 loss 的变异系数 (标准差/均值)，轻量替代高昂二阶曲率"
+                }
+              ],
+              "term_interpretations": [
+                {
+                  "term": "\\frac{\\Delta \\text{Acc}}{\\Delta t}",
+                  "role": "单位时间精度收益率",
+                  "intuition": "敏捷早筛关注算力投入产出比。若精度提升极慢导致 DeltaAcc / Delta t 极小，表明方案收敛迟缓，不予晋级全量资源。",
+                  "effect": "筛选出初期学习效率高的敏捷方案"
+                },
+                {
+                  "term": "\\exp\\left(-\\sigma \\|\\nabla_\\theta^2\\|\\right)",
+                  "role": "二阶曲率指数衰减惩罚",
+                  "intuition": "Hessian 范数度量损失曲面震荡。指数衰减将惩罚约束在 (0, 1] 区间：曲率极小（平稳平坦）时接近 1；曲率剧烈震荡（梯度爆炸或发散风险）时急速跌落至 0。",
+                  "effect": "强力抑制训练不稳定或数值震荡方案"
+                },
+                {
+                  "term": "+",
+                  "role": "收益与稳定性的加权折中",
+                  "intuition": "通过加号将收敛速度增益与平稳性约束线性结合，避免单维度偏颇。",
+                  "effect": "兼顾收敛速度与训练平稳性"
+                }
+              ],
+              "implementation_proxy": "【关键工程代理说明】论文明确指出：直接计算全网络二阶 Hessian 范数 ||nabla_theta^2|| 开销过大，工程实现中采用『训练最后 50 步 loss 的变异系数 CV_50 = sigma / mu』作为二阶平稳性的轻量化代理指标；论文设定适应度综合阈值 f_{score} > 0.55 触发全量资源晋级，但原文未开源具体的 alpha, beta, sigma 标定数值。",
+              "presentation_role": "narrative_core",
+              "question": "公式 (6) 在系统中承担何种计算与控制职责？",
+              "supports": [
+                "确立了量化计算标准与控制流转移依据"
+              ],
+              "limits": [
+                "参数配置与阈值依赖预设经验常数"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "在大规模遥感数据集上，完整的全量训练往往耗时数小时乃至数天。为防止算力在不可行的候选策略上空耗，RingMoClaw 提出了五分钟敏捷验证协议（Agile Verification Protocol）。如公式 (6) 所示，系统在包含极少量代表性切片的微缩子集上启动 5 分钟轻量级试训，计算综合代理适应度 $f_{\\text{score}}(m)$。该公式由两部分构成：第一项 $\\alpha \\frac{\\Delta \\text{Acc}}{\\Delta t}$ 度量单位验证窗口内的性能提升速率（$\\Delta \\text{Acc}$ 以绝对百分点计算）；第二项 $\\beta \\exp(-\\sigma \\|\\nabla_\\theta^2\\|)$ 表征训练早期的数值稳定性。在工程实现中，为避免高阶海森矩阵二阶导计算的高昂开销，系统创新性地采用训练末期最后 50 步损失值的变异系数（Coefficient of Variation, CV）作为二阶稳定性的轻量级代理算子。候选策略只有同时满足 $f_{\\text{score}}(m) > 0.55$、取得实质正增益、通过结果级审查且未被负记忆拦截，方可晋级全量训练。",
+              "evidence_refs": [
+                "EQ-06",
+                "p.8",
+                "p.14"
+              ],
+              "source_anchors": [
+                "p.8",
+                "p.14"
+              ]
+            },
+            {
+              "type": "equation",
+              "evidence_id": "EQ-07",
+              "equation_id": "EQ-07",
+              "paper_label": "Eq. (7)",
+              "equation_number": 7,
+              "page": 14,
+              "source_anchors": [
+                "p.14"
+              ],
+              "evidence_refs": [
+                "p.14"
+              ],
+              "latex": "\\rho = 1 - \\frac{6 \\sum_{i=1}^N d_i^2}{N(N^2 - 1)}",
+              "source_confidence": "VERIFIED",
+              "fallback_asset": "assets/equations/EQ-07.png",
+              "role_zh": "五分钟早筛与全量训练排名的 Spearman 秩相关系数",
+              "explanation": "评估五分钟敏捷早筛与全量训练最终收敛精度排名的一致性程度，论文实测 ρ = 0.64 (p=0.03)。",
+              "pedagogy": {
+                "role": "五分钟早筛与全量训练排名的 Spearman 秩相关系数",
+                "explanation_priority": "CONCISE_DEFINE",
+                "symbol_definitions": [
+                  {
+                    "symbol": "\\rho",
+                    "name": "秩相关系数",
+                    "interpretation": "非参数单调相关性度量"
+                  },
+                  {
+                    "symbol": "N",
+                    "name": "样本数",
+                    "interpretation": "参与对比的候选策略总数"
+                  },
+                  {
+                    "symbol": "d_i",
+                    "name": "名次位移差",
+                    "interpretation": "早筛与全量排名的位次差"
+                  }
+                ],
+                "input_output": {
+                  "inputs": [
+                    "早筛候选排名",
+                    "全量收敛排名"
+                  ],
+                  "outputs": [
+                    "标量相关系数 rho"
+                  ]
+                },
+                "term_interpretations": [
+                  {
+                    "term": "\\frac{6 \\sum d_i^2}{N(N^2 - 1)}",
+                    "role": "名次平方偏差归一化",
+                    "intuition": "名次变动越小，该项越趋近于 0，相关系数越接近 1。"
+                  }
+                ],
+                "assumptions": [
+                  "排名单调性足以代表策略质量优劣"
+                ],
+                "implementation_proxy": null,
+                "source_anchors": [
+                  "p.14 Section 4.2"
+                ]
+              },
+              "explanation_priority": "CONCISE_DEFINE",
+              "symbol_definitions": [
+                {
+                  "symbol": "\\rho",
+                  "name": "秩相关系数",
+                  "interpretation": "非参数单调相关性度量"
+                },
+                {
+                  "symbol": "N",
+                  "name": "样本数",
+                  "interpretation": "参与对比的候选策略总数"
+                },
+                {
+                  "symbol": "d_i",
+                  "name": "名次位移差",
+                  "interpretation": "早筛与全量排名的位次差"
+                }
+              ],
+              "term_interpretations": [
+                {
+                  "term": "\\frac{6 \\sum d_i^2}{N(N^2 - 1)}",
+                  "role": "名次平方偏差归一化",
+                  "intuition": "名次变动越小，该项越趋近于 0，相关系数越接近 1。"
+                }
+              ],
+              "implementation_proxy": null,
+              "presentation_role": "narrative_support",
+              "question": "公式 (7) 在系统中承担何种计算与控制职责？",
+              "supports": [
+                "确立了量化计算标准与控制流转移依据"
+              ],
+              "limits": [
+                "参数配置与阈值依赖预设经验常数"
+              ]
+            },
+            {
+              "type": "equation",
+              "evidence_id": "EQ-08",
+              "equation_id": "EQ-08",
+              "paper_label": "Eq. (8)",
+              "equation_number": 8,
+              "page": 14,
+              "source_anchors": [
+                "p.14"
+              ],
+              "evidence_refs": [
+                "p.14"
+              ],
+              "latex": "\\text{Precision} = \\frac{\\text{TP}}{\\text{TP} + \\text{FP}}, \\quad \\text{Recall} = \\frac{\\text{TP}}{\\text{TP} + \\text{FN}}",
+              "source_confidence": "VERIFIED",
+              "fallback_asset": "assets/equations/EQ-08.png",
+              "role_zh": "劣化候选策略早筛精确率与召回率",
+              "explanation": "敏捷早筛对劣化策略的分类性能：以劣化策略为正类，实现 Precision=1.00 与 Recall=0.83。",
+              "pedagogy": {
+                "role": "劣化候选策略早筛精确率与召回率",
+                "explanation_priority": "CONCISE_DEFINE",
+                "symbol_definitions": [
+                  {
+                    "symbol": "Precision",
+                    "name": "精确率",
+                    "interpretation": "阻断报警中的真实劣化比例 (1.00)"
+                  },
+                  {
+                    "symbol": "Recall",
+                    "name": "召回率",
+                    "interpretation": "全量劣化方案被成功拦截的比例 (0.83)"
+                  }
+                ],
+                "input_output": {
+                  "inputs": [
+                    "早筛判决结果",
+                    "全量训练真实表现"
+                  ],
+                  "outputs": [
+                    "二分类质量指标"
+                  ]
+                },
+                "term_interpretations": [
+                  {
+                    "term": "Precision / Recall",
+                    "role": "早筛防误杀与防漏过平衡",
+                    "intuition": "零假阳性 (FP=0) 保证不扼杀潜在高优方案，高召回率 (83%) 拦截绝大多数劣质策略。"
+                  }
+                ],
+                "assumptions": [
+                  "以劣化方案为正类进行早筛过滤评估"
+                ],
+                "implementation_proxy": null,
+                "source_anchors": [
+                  "p.14 Section 4.2"
+                ]
+              },
+              "explanation_priority": "CONCISE_DEFINE",
+              "symbol_definitions": [
+                {
+                  "symbol": "Precision",
+                  "name": "精确率",
+                  "interpretation": "阻断报警中的真实劣化比例 (1.00)"
+                },
+                {
+                  "symbol": "Recall",
+                  "name": "召回率",
+                  "interpretation": "全量劣化方案被成功拦截的比例 (0.83)"
+                }
+              ],
+              "term_interpretations": [
+                {
+                  "term": "Precision / Recall",
+                  "role": "早筛防误杀与防漏过平衡",
+                  "intuition": "零假阳性 (FP=0) 保证不扼杀潜在高优方案，高召回率 (83%) 拦截绝大多数劣质策略。"
+                }
+              ],
+              "implementation_proxy": null,
+              "presentation_role": "narrative_support",
+              "question": "公式 (8) 在系统中承担何种计算与控制职责？",
+              "supports": [
+                "确立了量化计算标准与控制流转移依据"
+              ],
+              "limits": [
+                "参数配置与阈值依赖预设经验常数"
+              ]
+            },
+            {
+              "type": "table",
+              "evidence_id": "T10",
+              "paper_label": "TABLE X",
+              "page": 14,
+              "caption": "五分钟敏捷验证协议在 FAIR1M 数据集上的统计可靠性与劣化候选拦截效能评估",
+              "asset": "assets/figures/crop_T10_p14_1415x925.png",
+              "presentation_role": "narrative_core",
+              "question": "五分钟微缩验证的评估排序与全量训练真实表现之间是否具备统计显著的相关性，其拦截劣质策略的精确度如何？",
+              "analysis": "实验数据表明，五分钟代理分数与全量训练最终指标之间的 Spearman 秩相关系数达到 rho = 0.64 (p = 0.03)，具备统计显著的单调一致性。在针对劣化候选策略（即全量训练无法带来增益甚至导致性能下降的方案）的早筛测试中，系统取得了 1.00 的精确率（Precision，即被判为劣化并拦截的 5 个策略全部为真实劣化，零误伤优质方案）以及 0.83 的召回率（Recall，在全部 6 个劣化策略中成功拦截 5 个，仅 1 个漏过进入全量训练）。",
+              "supports": [
+                "实证证实了五分钟早筛协议的统计可靠性",
+                "证明了系统在零误拦截优质方案的前提下拦截了大部分无效探索"
+              ],
+              "limits": [
+                "仍有 17% 的劣化策略（1/6）逃逸出早筛卡点进入了全量训练阶段"
+              ],
+              "evidence_refs": [
+                "p.14"
+              ],
+              "source_anchors": [
+                "p.14"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "sec-04",
+          "chapter_num": "04",
+          "title": "实证突破：目标检测七轮轨迹复盘与 MSFR/CPR 架构自主创新",
+          "lead": "在极具挑战的 FAIR1M 遥感多类别旋转目标检测任务中，RingMoClaw 自主演化出多尺度特征细化（MSFR）与对比原型细化（CPR）两大核心模块，实现了突破基线的性能演进。",
+          "purpose": "复盘 FAIR1M 七轮演化实证轨迹并深入剖析 MSFR 与 CPR 模块的张量级机制原理",
+          "proposition": "在遥感旋转目标检测中，RingMoClaw 经过七轮自主迭代自发演化出多尺度特征细化与对比原型细化模块，取得稳健精度提升。",
+          "question": "自演化框架生成的具体网络模块具备何种张量级机制创新，其在评测基准上的增益如何？",
+          "evidence_refs": [
+            "T01",
+            "T06",
+            "p.9",
+            "p.10",
+            "p.13"
+          ],
+          "source_anchors": [
+            "p.9",
+            "p.10",
+            "p.13"
+          ],
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "FAIR1M-v1.0 是遥感领域公认极具挑战的大规模有向目标检测基准，包含 5 大类、37 个细分类别，存在严重的目标尺度跨度大、长宽比极端及类间混淆问题。以强 baseline 模型 YOLO11x-OBB 作为演化起点（初始验证集精度为 47.30% mAP50），RingMoClaw 展开了连续 7 轮自演化研究。",
+              "evidence_refs": [
+                "T01",
+                "p.9"
+              ],
+              "source_anchors": [
+                "p.9"
+              ]
+            },
+            {
+              "type": "table",
+              "evidence_id": "T01",
+              "paper_label": "TABLE I",
+              "page": 9,
+              "caption": "FAIR1M-v1.0 遥感目标检测七轮自演化实验轨迹（3次独立演化试验中的最优轨迹）：各轮次创新策略、瓶颈反馈与 mAP50 递进对比",
+              "asset": "assets/figures/crop_T01_p9_923x898.png",
+              "presentation_role": "narrative_core",
+              "question": "系统如何在七轮连续探索中通过反馈诊断实现精度的单调递增与结构性突破？",
+              "analysis": "复盘 FAIR1M 旋转目标检测演化轨迹（表 I 报告 3 次独立演化试验中的最优轨迹结果）：基线模型 YOLO11x-OBB 初始精度为 47.30% mAP50；经历数据增强（Data Augmentation）提升至 48.18%（+0.88 pp）；训练配置调整（Training Config Update）为 47.77%；小样本训练（Few-Shot Training）为 47.69%，未带来进一步增益并促使系统转向模型级优化；随后多模型融合（Multi-Model Fusion）显著跃升至 49.11%（+1.42 pp）；最终模块创新阶段（Module Innovation）通过 3 次试验分别评测生成的两大模块及其联合配置，联合配置最终达到 49.14% mAP50（完整轨迹包含 7 轮演化试验）。全过程精度从基线 47.30% 递进至 49.14%，净增 1.84 个百分点（percentage points, pp），展示了极具章法的科研演进逻辑。",
+              "supports": [
+                "完整记录了从基线 47.30% 到最高 49.14% 的真实探索轨迹",
+                "证明了系统面对无效方案时具备回滚与重探索的自愈能力"
+              ],
+              "limits": [
+                "演化后期单轮边际收益收窄，受限于预设算子表达上限"
+              ],
+              "evidence_refs": [
+                "p.9"
+              ],
+              "source_anchors": [
+                "p.9"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "尤为引人注目的是，系统在自演化探索中并非仅仅微调超参数，而是自主生成了两个极具遥感针对性的结构化模块：多尺度特征细化模块（Multi-Scale Feature Refinement, MSFR）与对比原型细化模块（Contrastive Prototype Refinement, CPR）。深入其张量级计算拓扑可知：MSFR 针对高分辨率遥感影像中微小目标在深层特征金字塔（FPN）中信息衰减严重的问题，在 P2 至 P5 特征层间建立了细粒度张量对齐通道。通过 1x1 卷积完成通道维度对齐后，并行引入通道注意力与空间注意力算子提取显著上下文。关键的是，MSFR 引入了零初始化门控参数（gamma_l = 0），使新模块在训练初始阶段等价于恒等变换，有效保障了预训练权重的数值平滑过渡。CPR 则针对密集停泊的车辆、舰船等高度相似目标之间的混淆，在检测头 RoI 特征 z_i 与前景类别原型矩阵 P 之间构建了 InfoNCE 对比损失，强制拉开混淆类别在特征嵌入空间的决策边界，显著降低了误检率。",
+              "evidence_refs": [
+                "T06",
+                "p.10",
+                "p.13"
+              ],
+              "source_anchors": [
+                "p.10",
+                "p.13"
+              ]
+            },
+            {
+              "type": "table",
+              "evidence_id": "T06",
+              "paper_label": "TABLE VI",
+              "page": 13,
+              "caption": "MSFR 与 CPR 模块在 YOLO11x-OBB 及 Oriented R-CNN 框架下的消融实验与性能增益",
+              "asset": "assets/figures/crop_T06_p13_1011x900.png",
+              "presentation_role": "narrative_core",
+              "question": "自主演化出的 MSFR 与 CPR 模块各自带来多大独立增益，两者结合是否具备正交叠加效应？",
+              "analysis": "消融实验表明：以单阶段检测器 YOLO11x-OBB（基线 47.30% mAP50，119M 参数，167G FLOPs）为基础，单独引入 MSFR 达到 48.31%（净增 +1.01 pp，额外引入 0.599M 参数与 0.604G FLOPs）；单独引入 CPR 达到 48.29%（净增 +0.99 pp，仅增 0.131M 参数与 0.272G FLOPs）；两者联合部署时达到 49.14% mAP50（净增 +1.84 pp，额外增加 0.730M 参数与 0.876G FLOPs）。两项模块联合增益（+1.84 pp）相较各自独立增益之和（1.01 + 0.99 = 2.00 pp）呈现轻微边际递减效应，体现了良好的增量累加效果，而非已证明的超加性协同。",
+              "supports": [
+                "严格定量了 MSFR 与 CPR 模块的独立与联合边际效用",
+                "证实了演化生成的创新算子对其他经典检测网络具有良好的即插即用迁移性"
+              ],
+              "limits": [
+                "测试仅覆盖了特定大小切片（1024x1024）上的计算表现"
+              ],
+              "evidence_refs": [
+                "p.13"
+              ],
+              "source_anchors": [
+                "p.13"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "sec-05",
+          "chapter_num": "05",
+          "title": "全域泛化与效率超越：跨任务评测与对标 AutoResearch",
+          "lead": "除目标检测外，RingMoClaw 在遥感场景分类、语义分割与变化检测等不同视效任务中均取得稳健提升，且计算资源与挂钟时间大幅优于现有基准系统。",
+          "purpose": "评估四类遥感任务的跨域泛化能力并定量对比实际算力消耗与挂钟时间",
+          "proposition": "框架在检测、分类、分割和变化检测任务上均展现泛化能力，且相较基线系统大幅节省 GPU 计算资源与挂钟时间。",
+          "question": "自演化机制是否具备跨模态任务通用性，其探索成本与对标开源系统相比优势何在？",
+          "evidence_refs": [
+            "T04",
+            "T07",
+            "p.11",
+            "p.12",
+            "p.14"
+          ],
+          "source_anchors": [
+            "p.11",
+            "p.12",
+            "p.14"
+          ],
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "为验证框架的通用性，研究团队将 RingMoClaw 拓展至其他三类经典遥感视觉任务：基于 NWPU-RESISC45 的场景分类、基于 LoveDA 的复杂地物语义分割，以及基于 LEVIR-CD 的双时相建筑物变化检测。在全部任务中，系统均在 5 至 8 轮内自发演化出适配各任务特性的算子组合（如分割任务中的边界敏感损失调整，分类任务中的多尺度特征池化），均取得优于基线模型的优异指标。",
+              "evidence_refs": [
+                "p.11",
+                "p.12"
+              ],
+              "source_anchors": [
+                "p.11",
+                "p.12"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "在 LEVIR-CD 双时相建筑物变化检测任务中，系统演化方案同样展现了明显增益（详见证据图谱 Table IV <a href=\"evidence_atlas.html#evidence-T04\">[T04]</a>）。需要指出的是，关于 LEVIR-CD 表格报告的指标，文献中存在评测习惯的细微差异：Table IV 原文列头标为 F1 与 IoU 指标，而部分基准文献在对比时将建筑物正类 IoU 习惯性并称。本精读报告本着严谨科学原则，将此作为未决的评测指标约定差异予以客观记录，而不作非黑即白的武断外推判断。",
+              "evidence_refs": [
+                "p.12"
+              ],
+              "source_anchors": [
+                "p.12"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "在科研自动化框架的实用性评判中，算力消耗与探索效率是决定其能否真正落地的关键生命线。将 RingMoClaw 与当前极具代表性的开源科研智能体框架 AutoResearch 在相同硬件平台（配备 8 卡 NVIDIA RTX 4090 的计算集群）上展开全面对比。统计指标必须明确区分集群总 GPU 算力消耗时间（GPU-hours）与科研人员实际经历的现实挂钟等待时间（wall-clock hours）。",
+              "evidence_refs": [
+                "T07",
+                "p.14"
+              ],
+              "source_anchors": [
+                "p.14"
+              ]
+            },
+            {
+              "type": "table",
+              "evidence_id": "T07",
+              "paper_label": "TABLE VII",
+              "page": 14,
+              "caption": "RingMoClaw 与 AutoResearch 在遥感科研全流程中的计算资源消耗与耗时定量对比",
+              "asset": "assets/figures/crop_T07_p14_907x908.png",
+              "presentation_role": "narrative_core",
+              "question": "双流经验引导与敏捷验证机制相较对标系统究竟节省了多少实际算力与时间？",
+              "analysis": "评测数据证实：AutoResearch 由于采取无经验记忆的随机变异搜索，累计消耗了 26.90 个 GPU 运行小时（GPU-hours），实际挂钟时间为 13.45 小时；而 RingMoClaw 依托经验总线精准定向剪枝与五分钟早筛拦截，总 GPU 运行时间大幅压减至 12.14 个 GPU-hours（节省幅度达 54.9%），实际挂钟时间亦缩减至 10.61 小时，且最终得到的最佳模型精度反超对手 0.72 pp。",
+              "supports": [
+                "提供了严格可比的算力消耗（GPU-hours）与挂钟时间（wall-clock hours）实测数据",
+                "证明了经验指导机制在减少无效训练算力开销上的巨大优势"
+              ],
+              "limits": [
+                "算力节约幅度可能随底层任务数据集规模与模型参数量发生变动"
+              ],
+              "evidence_refs": [
+                "p.14"
+              ],
+              "source_anchors": [
+                "p.14"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "sec-06",
+          "chapter_num": "06",
+          "title": "深度消融与边界反思：有效性边界与未来科研启示",
+          "lead": "严格的组件消融证实了 Critic 审稿与经验总线显著的工程效用；但客观审视系统局限，其算子搜索空间仍受限于预设算子表达上界与离线数据驱动先验。",
+          "purpose": "通过组件消融分析核心机制的边际效用并反思当前框架的适用边界与未决问题",
+          "proposition": "消融实验证实 Critic 与双流总线具备显著经验指导价值，但框架仍受限于预设算子库表达上界与离线数据驱动先验，向多模态与时序遥感任务拓展仍需进一步探索。",
+          "question": "关键模块各自贡献多大边际收益，该系统的适用前提与外推边界是什么？",
+          "evidence_refs": [
+            "T08",
+            "T09",
+            "p.14",
+            "p.15"
+          ],
+          "source_anchors": [
+            "p.14",
+            "p.15"
+          ],
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "为了探究系统各组件对自演化成功的独立贡献，研究团队在 FAIR1M 上实施了精细的剥离消融实验。首先考察异构 Critic 机制的作用。消融结果如 Table VIII 所示：完整框架收敛需要 7 轮演化并达到 49.14% mAP；当移除独立的 Critic 审查机制后，系统由于失去外部独立诊断反馈与质检卡点，主智能体陷入自评偏差与无效探索，收敛所需轮数由 7 轮显著增加至 11 轮，且最终检测精度下降至 47.43% mAP（精度降幅达 1.71 pp）。实证数据表明：异构同行审稿机制在当前实验配置下有效化解了大模型自评幻觉，发挥了加速收敛与提升终态质量的显著工程效用。",
+              "evidence_refs": [
+                "T08",
+                "p.14"
+              ],
+              "source_anchors": [
+                "p.14"
+              ]
+            },
+            {
+              "type": "table",
+              "evidence_id": "T08",
+              "paper_label": "TABLE VIII",
+              "page": 14,
+              "caption": "异构 Critic 机制在自演化过程中的消融实验对比（演化轮数与最终精度）",
+              "asset": "assets/figures/crop_T08_p14_908x892.png",
+              "presentation_role": "narrative_core",
+              "question": "剥离独立 Critic 后，系统在搜索效率与最终算法质量上面临何种降级？",
+              "analysis": "对比表明：完整框架仅需 7 轮迭代即达 49.14% mAP50；剥离 Critic 后收敛轮数增至 11 轮且性能下降 1.71 pp（降至 47.43%）。消融数据有力支撑了异构同行评议在减少无效探索与保障最终模型质量中的重要工程价值。",
+              "supports": [
+                "证实了 Critic 机制对缩短收敛周期（7 轮 vs 11 轮）与提升终态质量（49.14% vs 47.43%）的显著贡献"
+              ],
+              "limits": [
+                "消融结果建立在当前设定的 Prompt 体系与预设评分公式下"
+              ],
+              "evidence_refs": [
+                "p.14"
+              ],
+              "source_anchors": [
+                "p.14"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "其次考察双流经验总线的价值。如 Table IX 所示，当完全移除经验总线（即退化为无记忆搜索）时，系统在探索过程中经历了 14 轮收敛与 6 次非提升探索迭代（failed iterations，指未能带来验证集精度增益的候选搜索尝试，而非训练程序崩溃或代码语法报错），最终仅取得 47.53% mAP。而在双流经验总线介入后，完整框架仅需 7 轮即告收敛，非提升探索迭代由 6 次压减为仅 2 次，且最终精度达到 49.14% mAP。单流剥离进一步揭示：移除外生知识流需要 9 轮（4 次非提升迭代，48.44% mAP）；移除内生试错流需要 11 轮（5 次非提升迭代，47.62% mAP），表明内生试错负记忆对搜索空间的剪枝约束更为显著。",
+              "evidence_refs": [
+                "T09",
+                "p.14"
+              ],
+              "source_anchors": [
+                "p.14"
+              ]
+            },
+            {
+              "type": "table",
+              "evidence_id": "T09",
+              "paper_label": "TABLE IX",
+              "page": 14,
+              "caption": "双流动态经验总线消融实验：非提升探索迭代次数（Failed Iterations）与算力消耗变化",
+              "asset": "assets/figures/crop_T09_p14_902x630.png",
+              "presentation_role": "narrative_core",
+              "question": "经验总线究竟如何减少无效探索，其对失败迭代的抑制幅度如何？",
+              "analysis": "数据显示：无经验记忆时系统反复在已知劣质超参和无效算子组合上踏空，遭遇 14 轮探索与 6 次非提升迭代；引入双流经验总线后，重复错误被禁忌表及时阻断，非提升迭代降至 2 次，收敛轮数缩短至 7 轮。该消融实证证明了试错经验显式化存储与跨任务先验整合对提升搜索效率的关键作用。",
+              "supports": [
+                "实证表明经验总线能使无效试错迭代下降 66.7%（从 6 次降至 2 次）",
+                "直接解释了算力消耗大幅压减的底层机理"
+              ],
+              "limits": [
+                "失败记录的表征目前依赖文本描述，尚未实现连续向量空间的梯度导向利用"
+              ],
+              "evidence_refs": [
+                "p.14"
+              ],
+              "source_anchors": [
+                "p.14"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "在客观总结 RingMoClaw 卓越贡献的同时，亦须清醒审视其内在边界与尚未解决的科学挑战。第一，算子搜索空间的表达上界依然受限于预定义的 23 个基础算子库及其类型契约，目前的演化主要表现为现有算子的精巧重组与拓扑创新，尚无法自主创造全新基础数学算子。第二，当前全部四项基准均属于遥感图像模式识别任务，输入数据的空间分辨率差异（0.3m 至 0.8m）与极端类别失衡（如 C919 仅占 0.03%）深刻塑造了搜索轨迹。此外，多智能体长期运行依赖稳定的计算服务器与充足存储，智能体间的消息通信也带来了额外调用开销。未来工作将拓展至多模态与时序地球观测任务，并探索与遥感基础大模型更紧密的适配与持续预训练协同。",
+              "evidence_refs": [
+                "p.15"
+              ],
+              "source_anchors": [
+                "p.15"
+              ]
+            }
+          ]
+        }
+      ],
+      "appendix_summary": {
+        "claims_count": 1,
+        "figures_count": 9,
+        "tables_count": 11,
+        "conflicts_count": 0,
+        "unresolved_count": 1,
+        "evidence_atlas_ref": "evidence_atlas.html"
+      }
+    }
+  }
+}

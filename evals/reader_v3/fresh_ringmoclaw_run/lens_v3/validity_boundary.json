@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0",
+  "lens": "validity_boundary",
+  "lens_kind": "core",
+  "source_sha256": "32df5e2843de7e8ccd52d56b9dfed257c26786ef3b71fbc397a1c3a5e26fb0fa",
+  "base_sha256": "9036b3e1e1575dfaad4cd49908a18e8236215985a834e9b97438c7abde86b1df",
+  "summary": "审查方法有效性边界：预设算子表达空间上界、类别不平衡与通信开销，杜绝向物理守恒过度引申。",
+  "findings": [
+    {
+      "id": "FND-VB-01",
+      "statement": "当前演化搜索严格受限于预设的 23 类候选算子空间与离线数据分布，超出算子库的新型拓扑无法自发合成",
+      "evidence": [
+        "p.15"
+      ],
+      "epistemic": "VERIFIED",
+      "action": "QUALIFY",
+      "importance": "CRITICAL",
+      "reason": "明确方法表达力上界"
+    },
+    {
+      "id": "FND-VB-02",
+      "statement": "LEVIR-CD 变化检测 F1 与 IoU 指标偏离单类别二值公式，原论文未公开具体评测代码，属于宏平均/多分类基准约定未决项 UNRESOLVED",
+      "evidence": [
+        "p.12"
+      ],
+      "epistemic": "UNRESOLVED",
+      "action": "QUALIFY",
+      "importance": "MAJOR",
+      "reason": "恪守科学未决项"
+    },
+    {
+      "id": "FND-VB-03",
+      "statement": "原论文局限性讨论主要聚焦于算子空间、类别不平衡与通信开销，未涉及物理守恒定律，不可进行无依据的物理迁移过度外推",
+      "evidence": [
+        "p.15"
+      ],
+      "epistemic": "VERIFIED",
+      "action": "CORRECT",
+      "importance": "CRITICAL",
+      "reason": "杜绝物理守恒过度引申"
+    }
+  ]
+}

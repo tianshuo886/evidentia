@@ -1,0 +1,69 @@
+{
+  "schema_version": "1.0",
+  "council_id": "COUNCIL-RINGMOCLAW",
+  "source_sha256": "32df5e2843de7e8ccd52d56b9dfed257c26786ef3b71fbc397a1c3a5e26fb0fa",
+  "base_model_sha256": "9036b3e1e1575dfaad4cd49908a18e8236215985a834e9b97438c7abde86b1df",
+  "evidence_package_sha256": "5578a913f2746cc94d5ab98b627a3eea44d7da0b3925d23d5c24a7023a337a01",
+  "round1": [
+    {
+      "lens": "argument_narrative",
+      "artifact": "lens_v3/argument_narrative.json",
+      "sha256": "1ea91e95f484230e5304d5f4ee9d6f56cb55da7e8b3a97a618f8b92363269069"
+    },
+    {
+      "lens": "method_study_design",
+      "artifact": "lens_v3/method_study_design.json",
+      "sha256": "b029f3262637f677adc7d905814a8dc58992e71f566d1a8f5e33258e06593c5b"
+    },
+    {
+      "lens": "evidence_results",
+      "artifact": "lens_v3/evidence_results.json",
+      "sha256": "19243e3a1c5d3e983a384677dbe0a53a315fe9ae2bfe2fa87760178a0323d29d"
+    },
+    {
+      "lens": "validity_boundary",
+      "artifact": "lens_v3/validity_boundary.json",
+      "sha256": "71020b4b177dd42a2b9acc46e934796ac5177a8b0a21fd0e0693597d3b9a6038"
+    },
+    {
+      "lens": "mechanism_causality",
+      "artifact": "lens_v3/mechanism_causality.json",
+      "sha256": "64e9b564bf0789698bcc2b202341c20085659ec2022e90b74efb4ca51bea7cf5"
+    },
+    {
+      "lens": "reproducibility_implementation",
+      "artifact": "lens_v3/reproducibility_implementation.json",
+      "sha256": "34ac06b636ff97b0daef254454156556ce4c0bd005a1dc9e42b50008efbaa974"
+    }
+  ],
+  "items": [
+    {
+      "topic": "Table I FAIR1M 演化轨迹保真度",
+      "verdict": "必须严格按照 47.30 -> 48.18 -> 47.77 -> 47.69 -> 49.11 -> 49.14 恢复真实演化数值，注明 3 次实验最优结果。"
+    },
+    {
+      "topic": "Table VI 模块消融增益准确性",
+      "verdict": "准确反映 MSFR +1.01 pp 与 CPR +0.99 pp 独立增益及联合 +1.84 pp 增益，界定为线性累加与轻微边际递减。"
+    },
+    {
+      "topic": "Table VIII Critic 消融独立价值",
+      "verdict": "确立移除 Critic 导致 11 轮收敛与 47.43% mAP（降幅 1.71 pp），不可与 Table IX 混淆。"
+    },
+    {
+      "topic": "Table IX 双流总线非提升试错抑制",
+      "verdict": "确立非提升探索迭代由 6 次压减为 2 次，算力消耗由 26.90h 降至 12.14h。"
+    },
+    {
+      "topic": "方法边界与局限性界定",
+      "verdict": "立足 23 类预设算子表达空间上界与通信开销，严禁无依据的物理守恒定律过度引申。"
+    }
+  ],
+  "unresolved": [
+    {
+      "id": "UNR-01",
+      "topic": "LEVIR-CD averaging convention",
+      "status": "UNRESOLVED"
+    }
+  ],
+  "no_majority_voting": true
+}

@@ -1,0 +1,111 @@
+{
+  "schema_version": "1.0",
+  "paper_id": "ringmoclaw",
+  "source_sha256": "32df5e2843de7e8ccd52d56b9dfed257c26786ef3b71fbc397a1c3a5e26fb0fa",
+  "summary": "编委会审阅意见：要求 Lead Writer 重点强化公式 (1)-(8) 的教学式推导、Table I 演化轨迹保真度、Table VI 算力-性能边际收益平衡、Table VIII Critic 消融独立价值（7 轮 / 49.14% vs 11 轮 / 47.43%）及 Table IX 双流经验总线剪枝实证（非提升试错 6 次降至 2 次）；严格恪守方法边界，禁止添加未由原文支持的物理守恒定律推论。",
+  "revisions": [
+    {
+      "id": "REV-01",
+      "priority": "P0",
+      "action": "CORRECT",
+      "deficit_category": "DISCREPANCY",
+      "instruction": "严格按照 Table I 恢复真实演化轨迹：47.30% -> 48.18% -> 47.77% -> 47.69% -> 49.11% -> 49.14%，注明 3 次重复试验最优结果，严禁出现 47.88%、48.45%、48.82% 等虚假数值。",
+      "rationale": "维护实验数据绝对保真度",
+      "evidence": [
+        "T01",
+        "p.9"
+      ],
+      "source_lenses": [
+        "evidence_results"
+      ]
+    },
+    {
+      "id": "REV-02",
+      "priority": "P0",
+      "action": "CORRECT",
+      "deficit_category": "DISCREPANCY",
+      "instruction": "严格按照 Table VI 修正模块消融增益：MSFR 独立提升 1.01 pp（47.30% -> 48.31%），CPR 独立提升 0.99 pp（47.30% -> 48.29%），联合提升 1.84 pp（47.30% -> 49.14%），指出联合增益符合线性累加与轻微边际递减（1.01+0.99=2.00 vs 1.84 pp），杜绝超加性过度断言。",
+      "rationale": "准确量化微结构贡献与边际收益",
+      "evidence": [
+        "T06",
+        "p.13"
+      ],
+      "source_lenses": [
+        "evidence_results",
+        "mechanism_causality"
+      ]
+    },
+    {
+      "id": "REV-03",
+      "priority": "P0",
+      "action": "CORRECT",
+      "deficit_category": "DISCREPANCY",
+      "instruction": "严格按照 Table VIII 修正 Critic 消融结果：剥离 Critic 后收敛轮数增至 11 轮且最终精度降至 47.43% mAP（降幅 1.71 pp），严禁与 Table IX 混淆为 14 轮或 47.88%。",
+      "rationale": "避免跨表数据混淆，忠实呈现同行审稿作用",
+      "evidence": [
+        "T08",
+        "p.14"
+      ],
+      "source_lenses": [
+        "evidence_results"
+      ]
+    },
+    {
+      "id": "REV-04",
+      "priority": "P0",
+      "action": "CORRECT",
+      "deficit_category": "DISCREPANCY",
+      "instruction": "严格按照 Table IX 修正双流总线消融结果：完整框架非提升探索迭代为 2 次（Failed=2），剥离双流总线后为 6 次（Failed=6），非提升迭代从 6 次降至 2 次（压减 66.7%），绝非压减为 1 次。",
+      "rationale": "准确量化双流经验总线的剪枝效能",
+      "evidence": [
+        "T09",
+        "p.14"
+      ],
+      "source_lenses": [
+        "evidence_results"
+      ]
+    },
+    {
+      "id": "REV-05",
+      "priority": "P0",
+      "action": "CORRECT",
+      "deficit_category": "BOUNDARY",
+      "instruction": "第 6 章导语与总结中删除'物理守恒'相关引申，忠实复述原文作者在第 15 页阐述的 23 类预设算子表达空间上界、类别不平衡与通信开销等实际局限。",
+      "rationale": "严格立足论文第一手证据，严防投射外部预设",
+      "evidence": [
+        "p.15"
+      ],
+      "source_lenses": [
+        "validity_boundary"
+      ]
+    },
+    {
+      "id": "REV-06",
+      "priority": "P0",
+      "action": "MUST_EXPLAIN",
+      "deficit_category": "MECHANISM",
+      "instruction": "深入推导公式 (1)-(8)，给出每个符号的物理与数学含义、操作语义及设计权衡，嵌入 MathJax 预渲染矢量公式块与回退位图。",
+      "rationale": "实现教材级数学公式忠实重建与教学式呈现",
+      "evidence": [
+        "p.5",
+        "p.6",
+        "p.7",
+        "p.8",
+        "p.14"
+      ],
+      "source_lenses": [
+        "method_study_design",
+        "mechanism_causality"
+      ]
+    }
+  ],
+  "unresolved": [
+    {
+      "issue": "LEVIR-CD 变化检测 F1 与 IoU 指标偏离单类别二值公式",
+      "evidence": [
+        "p.12"
+      ],
+      "reason": "原论文未公开具体评测代码与混淆矩阵定义，属于宏平均/多分类基准约定未决项 UNRESOLVED"
+    }
+  ]
+}

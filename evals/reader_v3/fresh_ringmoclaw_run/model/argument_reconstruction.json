@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "paper_id": "ringmoclaw",
   "source_sha256": "32df5e2843de7e8ccd52d56b9dfed257c26786ef3b71fbc397a1c3a5e26fb0fa",
-  "created_at": "2026-10-14T09:49:01.994676+00:00",
+  "created_at": "2026-10-14T12:24:50.491667+00:00",
   "central_question": "如何克服大模型在遥感科研中盲目试错、缺乏记忆与反思的瓶颈，实现自主进化的全闭环科研框架？",
   "motivation": "实验评测主要集中在遥感图像模式识别任务，多模态与时序扩展及多智能体通信开销仍待优化",
   "prior_assumptions_or_gap": "假定评测基准数据分布与真实遥感任务具备一致性",

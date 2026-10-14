@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0",
+  "lens": "reproducibility_implementation",
+  "lens_kind": "specialist",
+  "source_sha256": "32df5e2843de7e8ccd52d56b9dfed257c26786ef3b71fbc397a1c3a5e26fb0fa",
+  "base_sha256": "9036b3e1e1575dfaad4cd49908a18e8236215985a834e9b97438c7abde86b1df",
+  "summary": "复现性与工程细节审查：基础模型、超参数、代理任务预算与未开源脚本界定。",
+  "findings": [
+    {
+      "id": "FND-RI-01",
+      "statement": "论文详细给出了四类任务的基础模型选型（YOLO11x-OBB, Oriented R-CNN）、早筛超参数与消融对比设置",
+      "evidence": [
+        "T01",
+        "T06",
+        "T07",
+        "p.9",
+        "p.13",
+        "p.14"
+      ],
+      "epistemic": "VERIFIED",
+      "action": "KEEP",
+      "importance": "MAJOR",
+      "reason": "复现基本完备"
+    },
+    {
+      "id": "FND-RI-02",
+      "statement": "多智能体通信 Prompt 模板及 LEVIR-CD 评测脚本未在预印本中完全公开，属于需要未来代码开源补齐的工程细节",
+      "evidence": [
+        "p.12",
+        "p.15"
+      ],
+      "epistemic": "PARTIAL",
+      "action": "QUALIFY",
+      "importance": "MINOR",
+      "reason": "复现限制记录"
+    }
+  ]
+}

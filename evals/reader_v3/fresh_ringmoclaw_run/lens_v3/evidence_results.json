@@ -1,0 +1,82 @@
+{
+  "schema_version": "1.0",
+  "lens": "evidence_results",
+  "lens_kind": "core",
+  "source_sha256": "32df5e2843de7e8ccd52d56b9dfed257c26786ef3b71fbc397a1c3a5e26fb0fa",
+  "base_sha256": "9036b3e1e1575dfaad4cd49908a18e8236215985a834e9b97438c7abde86b1df",
+  "summary": "严格审查实验结果与实证数据：Table I 轨迹保真度、Table VI 模块收益、Table VIII 与 Table IX 消融真实数值。",
+  "findings": [
+    {
+      "id": "FND-ER-01",
+      "statement": "FAIR1M 旋转检测实验全流程独立重复 3 次，表I 报告的是 3 次试验中最优演化轨迹（47.30% 至 49.14%）",
+      "evidence": [
+        "T01",
+        "p.9"
+      ],
+      "epistemic": "VERIFIED",
+      "action": "CORRECT",
+      "importance": "CRITICAL",
+      "reason": "必须强调 best of 3 协议条件，不可混入伪造的阶段数值"
+    },
+    {
+      "id": "FND-ER-02",
+      "statement": "表VI 模块消融显示 MSFR 单独引入取得 +1.01 pp 增益（48.31%），CPR 单独引入取得 +0.99 pp 增益（48.29%），联合增益为 +1.84 pp（49.14%）",
+      "evidence": [
+        "T06",
+        "p.13"
+      ],
+      "epistemic": "VERIFIED",
+      "action": "CORRECT",
+      "importance": "CRITICAL",
+      "reason": "纠正增益数值偏差，真实反映 +1.01 pp 与 +0.99 pp"
+    },
+    {
+      "id": "FND-ER-03",
+      "statement": "表VIII 异构 Critic 消融显示：移除 Critic 后收敛轮数增至 11 轮且精度降至 47.43% mAP（降幅 1.71 pp）",
+      "evidence": [
+        "T08",
+        "p.14"
+      ],
+      "epistemic": "VERIFIED",
+      "action": "CORRECT",
+      "importance": "CRITICAL",
+      "reason": "严禁与表IX 混淆，表VIII 真实数值为 11 轮与 47.43%"
+    },
+    {
+      "id": "FND-ER-04",
+      "statement": "表IX 双流经验总线消融显示：完整框架非提升探索迭代仅为 2 次，而完全剥离总线后增至 6 次（收敛轮数由 7 轮增至 14 轮，精度 47.53%）",
+      "evidence": [
+        "T09",
+        "p.14"
+      ],
+      "epistemic": "VERIFIED",
+      "action": "CORRECT",
+      "importance": "CRITICAL",
+      "reason": "完整框架非提升迭代是 2 次而非 1 次，消融剥离后为 6 次"
+    },
+    {
+      "id": "FND-ER-05",
+      "statement": "表VII 对标显示总 GPU 算力消耗时间从 26.90 小时大幅缩减至 12.14 小时（节省 54.9%），实际挂钟时间从 13.45 小时缩减至 10.61 小时",
+      "evidence": [
+        "T07",
+        "p.14"
+      ],
+      "epistemic": "VERIFIED",
+      "action": "KEEP",
+      "importance": "MAJOR",
+      "reason": "准确区分 GPU 算力时与挂钟时间"
+    },
+    {
+      "id": "FND-ER-06",
+      "statement": "表X 敏捷早筛验证表明：劣化方案识别精确率为 1.00，召回率为 0.83（识别 5 个，漏检 1 个）",
+      "evidence": [
+        "T10",
+        "p.14"
+      ],
+      "epistemic": "VERIFIED",
+      "action": "KEEP",
+      "importance": "MAJOR",
+      "reason": "准确界定正类为劣化策略"
+    }
+  ]
+}

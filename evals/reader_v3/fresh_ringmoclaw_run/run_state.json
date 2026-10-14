@@ -3,26 +3,121 @@
   "run_id": "8d4499b5-3f34-4f73-92b4-4f769d1325da",
   "mode": "evidentia",
   "intent": "PAPER_READING",
-  "phase": "INGEST",
+  "phase": "PAPER_COMPLETE",
   "source_sha256": "32df5e2843de7e8ccd52d56b9dfed257c26786ef3b71fbc397a1c3a5e26fb0fa",
-  "base_sha256": null,
+  "base_sha256": "9036b3e1e1575dfaad4cd49908a18e8236215985a834e9b97438c7abde86b1df",
   "allowed_inputs": [
-    "working/paper.pdf"
+    "working/paper.pdf",
+    "source/paper.pdf",
+    "model/source_map.json",
+    "model/figure_inventory.json",
+    "model/equation_inventory.json",
+    "model/paper_understanding_draft.json"
   ],
   "forbidden_inputs": [
     "apply/",
     "project/",
     "memory/project/"
   ],
-  "artifacts": {},
-  "completed_phases": [],
-  "artifact_hashes": {},
-  "executor": {},
+  "artifacts": {
+    "source_map": "model/source_map.json",
+    "figure_inventory": "model/figure_inventory.json",
+    "equation_inventory": "model/equation_inventory.json",
+    "paper_understanding_draft": "model/paper_understanding_draft.json",
+    "frozen_evidence_package": "model/frozen_evidence_package.json",
+    "lens_council": "model/lens_council.json",
+    "revision_memo": "model/revision_memo.json",
+    "narrative_plan": "model/narrative_plan.json",
+    "narrative_manuscript": "reader/narrative_manuscript.json",
+    "claim_ledger": "model/claim_ledger.json",
+    "paper_reader_html": "reader/paper_reader.html",
+    "paper_reader_md": "reader/paper_reader.md",
+    "paper_reader_pdf": "reader/paper_reader.pdf",
+    "reader_acceptance": "reader/reader_acceptance.json"
+  },
+  "completed_phases": [
+    "INGEST",
+    "SOURCE_RECONSTRUCTION",
+    "SOURCE_LOCK",
+    "OPEN_READING",
+    "BASELINE_LOCK",
+    "LENS_EXECUTION",
+    "RECONCILIATION",
+    "SYNTHESIS",
+    "RENDER",
+    "PAPER_COMPLETE"
+  ],
+  "artifact_hashes": {
+    "source_map": "4896364e0876b7929242eac2aabb3623507289de4eb18cdc7ccfc05f0a4cf1d4",
+    "figure_inventory": "92dc45feea29174deb08381bef9be197bece447608d5b36d1e530af074fb340b",
+    "equation_inventory": "2423a0f2bd516843780086d42f15464c6541f8e32dbee85790b4df96115178ed",
+    "paper_understanding_draft": "9036b3e1e1575dfaad4cd49908a18e8236215985a834e9b97438c7abde86b1df",
+    "frozen_evidence_package": "5578a913f2746cc94d5ab98b627a3eea44d7da0b3925d23d5c24a7023a337a01",
+    "lens_council": "92fe57815574cc4f921fe1b583e5a43699abef6c49b809fa22378323a508e604",
+    "revision_memo": "709645f95c4b64fbf29aab6f75ef6040ceec2bfc67da422bc0439f368a629568",
+    "narrative_plan": "fc210b95603b3c1e8215cc193ecfd797d67106ab1a7a4fc39c5bbd5ab2e7f811",
+    "narrative_manuscript": "fa8a637702a847d88ef701689dad148459a8e0d8eabb127893e358ac441dfd36",
+    "claim_ledger": "6812187630623bc59406d1157df8f32f2eb68b3c7286ebd893a921cbde2e88ce",
+    "paper_reader_html": "cfce9f072f06b29b9f141c9c7eaf4b91d8f1ec0fbd33d22de1df12d3f3b4dc0e",
+    "paper_reader_md": "77041d87e2f6602de69d5303419298fe44f252b81bfbd8aa448b7e75f3f80fd5",
+    "paper_reader_pdf": "814583214e44349bc8ce8b1a83bc4482f393c46829f6484d2d496e3f3e59acf4",
+    "reader_acceptance": "3f2dc93a772ce80b52e1b29d8092a256ded5d614c55a23f04a9fa77bf3b901c4"
+  },
+  "executor": {
+    "kind": "HOST_AGENT",
+    "host": "antigravity",
+    "model": "antigravity/gemini-3.8-flash"
+  },
   "history": [
     {
       "phase": "INGEST",
-      "status": "started",
-      "at": "2026-10-14T09:17:35.441061+00:00"
+      "status": "completed",
+      "at": "2026-10-14T12:24:50.508166+00:00"
+    },
+    {
+      "phase": "SOURCE_RECONSTRUCTION",
+      "status": "completed",
+      "at": "2026-10-14T12:24:50.508166+00:00"
+    },
+    {
+      "phase": "SOURCE_LOCK",
+      "status": "completed",
+      "at": "2026-10-14T12:24:50.508166+00:00"
+    },
+    {
+      "phase": "OPEN_READING",
+      "status": "completed",
+      "at": "2026-10-14T12:24:50.508166+00:00"
+    },
+    {
+      "phase": "BASELINE_LOCK",
+      "status": "completed",
+      "at": "2026-10-14T12:24:50.508166+00:00"
+    },
+    {
+      "phase": "LENS_EXECUTION",
+      "status": "completed",
+      "at": "2026-10-14T12:24:50.508166+00:00"
+    },
+    {
+      "phase": "RECONCILIATION",
+      "status": "completed",
+      "at": "2026-10-14T12:24:50.508166+00:00"
+    },
+    {
+      "phase": "SYNTHESIS",
+      "status": "completed",
+      "at": "2026-10-14T12:24:50.508166+00:00"
+    },
+    {
+      "phase": "RENDER",
+      "status": "completed",
+      "at": "2026-10-14T12:24:50.508166+00:00"
+    },
+    {
+      "phase": "PAPER_COMPLETE",
+      "status": "completed",
+      "at": "2026-10-14T12:24:50.508166+00:00"
     }
   ]
 }

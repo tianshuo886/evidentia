@@ -1,0 +1,3344 @@
+{
+  "schema_version": "1.0",
+  "source_sha256": "32df5e2843de7e8ccd52d56b9dfed257c26786ef3b71fbc397a1c3a5e26fb0fa",
+  "pdf": "/Users/shentianshuo/.agents/skills/evidentia/evals/reader_v3/fresh_ringmoclaw_run/source/paper.pdf",
+  "pages": 20,
+  "items": [
+    {
+      "id": "F01",
+      "paper_label": "Fig. 1",
+      "kind": "figure",
+      "page": 2,
+      "caption_original": "Fig. 1: Comparison of existing remote sensing research agents and RingMoClaw. RingMoClaw introduces a unified research loop with independent critique and dual-stream experience evolution for continuous model improvement.",
+      "caption_status": "OK",
+      "source_location": "p.2",
+      "role": "critical",
+      "depth": "deep",
+      "file": "assets/figures/fig01_p2_3988x2475.png",
+      "bbox": [
+        48.9640007019043,
+        355.0955810546875,
+        563.0355834960938,
+        372.0326843261719
+      ],
+      "caption_bbox": [
+        48.9640007019043,
+        355.0955810546875,
+        563.0355834960938,
+        372.0326843261719
+      ],
+      "figure_bbox": [
+        74.66899871826172,
+        56.068389892578125,
+        537.3408203125,
+        343.2080078125
+      ],
+      "subfigures": [],
+      "asset": "assets/figures/fig01_p2_3988x2475.png",
+      "extraction_method": "embedded",
+      "confidence": 0.9,
+      "inspection": "inspected",
+      "inspection_status": "inspected",
+      "reviewed_by": null,
+      "review_note": null,
+      "binding_method": "MULTIMODAL_PAGE_LOCALIZATION",
+      "binding_confidence": 0.99,
+      "needs_visual_review": false,
+      "needs_review": false,
+      "row_count": null,
+      "col_count": null,
+      "structure": null,
+      "headers": null,
+      "rows": null,
+      "parsed_cells": null,
+      "raw_visual_fallback": null,
+      "structure_status": null,
+      "reconstruction_confidence": null,
+      "localization_method": "MULTIMODAL_PAGE_LOCALIZATION",
+      "localization_confidence": 0.99
+    },
+    {
+      "id": "F02",
+      "paper_label": "Fig. 2",
+      "kind": "figure",
+      "page": 4,
+      "caption_original": "Fig. 2: Overall architecture of RingMoClaw. The self-evolving research pipeline (left) and the Critic pipeline (right) are coupled through a dual-stream dynamic experience bus (center), which integrates external knowledge flow and internal experimental flow to support automated research iteration and the continuous refinement of the structured search space.",
+      "caption_status": "OK",
+      "source_location": "p.4",
+      "role": "critical",
+      "depth": "deep",
+      "file": "assets/figures/fig02_p4_4594x1975.png",
+      "bbox": [
+        48.9640007019043,
+        288.9615783691406,
+        563.03564453125,
+        314.86468505859375
+      ],
+      "caption_bbox": [
+        48.9640007019043,
+        288.9615783691406,
+        563.03564453125,
+        314.86468505859375
+      ],
+      "figure_bbox": [
+        48.9640007019043,
+        56.068328857421875,
+        563.03759765625,
+        277.072998046875
+      ],
+      "subfigures": [],
+      "asset": "assets/figures/fig02_p4_4594x1975.png",
+      "extraction_method": "embedded",
+      "confidence": 0.9,
+      "inspection": "inspected",
+      "inspection_status": "inspected",
+      "reviewed_by": null,
+      "review_note": null,
+      "binding_method": "MULTIMODAL_PAGE_LOCALIZATION",
+      "binding_confidence": 0.99,
+      "needs_visual_review": false,
+      "needs_review": false,
+      "row_count": null,
+      "col_count": null,
+      "structure": null,
+      "headers": null,
+      "rows": null,
+      "parsed_cells": null,
+      "raw_visual_fallback": null,
+      "structure_status": null,
+      "reconstruction_confidence": null,
+      "localization_method": "MULTIMODAL_PAGE_LOCALIZATION",
+      "localization_confidence": 0.99
+    },
+    {
+      "id": "F03",
+      "paper_label": "Fig. 3",
+      "kind": "figure",
+      "page": 6,
+      "caption_original": "Fig. 3: Object-detection workflow of the proposed framework. The research pipeline performs staged model optimization, while the Critic mechanism reviews intermediate outputs and returns feedback for strategy revision and experience accumulation.",
+      "caption_status": "OK",
+      "source_location": "p.6",
+      "role": "critical",
+      "depth": "deep",
+      "file": "assets/figures/fig03_p6_2481x2264.png",
+      "bbox": [
+        48.9640007019043,
+        302.517578125,
+        300.02215576171875,
+        337.3866882324219
+      ],
+      "caption_bbox": [
+        48.9640007019043,
+        302.517578125,
+        300.02215576171875,
+        337.3866882324219
+      ],
+      "figure_bbox": [
+        48.9640007019043,
+        56.07139587402344,
+        306.0046081542969,
+        290.6300048828125
+      ],
+      "subfigures": [],
+      "asset": "assets/figures/fig03_p6_2481x2264.png",
+      "extraction_method": "embedded",
+      "confidence": 0.9,
+      "inspection": "inspected",
+      "inspection_status": "inspected",
+      "reviewed_by": null,
+      "review_note": null,
+      "binding_method": "MULTIMODAL_PAGE_LOCALIZATION",
+      "binding_confidence": 0.99,
+      "needs_visual_review": false,
+      "needs_review": false,
+      "row_count": null,
+      "col_count": null,
+      "structure": null,
+      "headers": null,
+      "rows": null,
+      "parsed_cells": null,
+      "raw_visual_fallback": null,
+      "structure_status": null,
+      "reconstruction_confidence": null,
+      "localization_method": "MULTIMODAL_PAGE_LOCALIZATION",
+      "localization_confidence": 0.99
+    },
+    {
+      "id": "F04",
+      "paper_label": "Fig. 4",
+      "kind": "figure",
+      "page": 7,
+      "caption_original": "Fig. 4: Illustration of the Critic mechanism. The Critic mechanism intervenes at three key nodes of the execution chain, namely the plan review, the data review, and the result review. All feedback is routed through the Main Agent for global coordination, and every iteration is written into the global experience pool after standardization.",
+      "caption_status": "OK",
+      "source_location": "p.7",
+      "role": "critical",
+      "depth": "deep",
+      "file": "assets/figures/fig04_p7_1684x1946.png",
+      "bbox": [
+        48.9640007019043,
+        335.2845764160156,
+        300.02215576171875,
+        379.11968994140625
+      ],
+      "caption_bbox": [
+        48.9640007019043,
+        335.2845764160156,
+        300.02215576171875,
+        379.11968994140625
+      ],
+      "figure_bbox": [
+        58.827999114990234,
+        56.07080078125,
+        290.161865234375,
+        323.39599609375
+      ],
+      "subfigures": [],
+      "asset": "assets/figures/fig04_p7_1684x1946.png",
+      "extraction_method": "embedded",
+      "confidence": 0.9,
+      "inspection": "inspected",
+      "inspection_status": "inspected",
+      "reviewed_by": null,
+      "review_note": null,
+      "binding_method": "MULTIMODAL_PAGE_LOCALIZATION",
+      "binding_confidence": 0.99,
+      "needs_visual_review": false,
+      "needs_review": false,
+      "row_count": null,
+      "col_count": null,
+      "structure": null,
+      "headers": null,
+      "rows": null,
+      "parsed_cells": null,
+      "raw_visual_fallback": null,
+      "structure_status": null,
+      "reconstruction_confidence": null,
+      "localization_method": "MULTIMODAL_PAGE_LOCALIZATION",
+      "localization_confidence": 0.99
+    },
+    {
+      "id": "F05",
+      "paper_label": "Fig. 5",
+      "kind": "figure",
+      "page": 8,
+      "caption_original": "Fig. 5: Dual-stream dynamic experience bus for autonomous research evolution. External knowledge from literature and code and internal experience from task memory and cross-task memory are integrated into global and local experience pools. The experience bus dynamically prunes and expands the structured search space, guides candidate scheme instantiation, and updates the main agent through agile verification, thereby transforming blind trial-and-error search into experience-guided optimization toward task-specific solutions.",
+      "caption_status": "OK",
+      "source_location": "p.8",
+      "role": "critical",
+      "depth": "deep",
+      "file": "assets/figures/fig05_p8_4400x1393.png",
+      "bbox": [
+        48.9640007019043,
+        222.569580078125,
+        563.0355224609375,
+        257.43865966796875
+      ],
+      "caption_bbox": [
+        48.9640007019043,
+        222.569580078125,
+        563.0355224609375,
+        257.43865966796875
+      ],
+      "figure_bbox": [
+        61.816001892089844,
+        56.070159912109375,
+        550.1776123046875,
+        210.6810302734375
+      ],
+      "subfigures": [],
+      "asset": "assets/figures/fig05_p8_4400x1393.png",
+      "extraction_method": "embedded",
+      "confidence": 0.9,
+      "inspection": "inspected",
+      "inspection_status": "inspected",
+      "reviewed_by": null,
+      "review_note": null,
+      "binding_method": "MULTIMODAL_PAGE_LOCALIZATION",
+      "binding_confidence": 0.99,
+      "needs_visual_review": false,
+      "needs_review": false,
+      "row_count": null,
+      "col_count": null,
+      "structure": null,
+      "headers": null,
+      "rows": null,
+      "parsed_cells": null,
+      "raw_visual_fallback": null,
+      "structure_status": null,
+      "reconstruction_confidence": null,
+      "localization_method": "MULTIMODAL_PAGE_LOCALIZATION",
+      "localization_confidence": 0.99
+    },
+    {
+      "id": "T01",
+      "paper_label": "TABLE I",
+      "kind": "table",
+      "page": 9,
+      "caption_original": "TABLE I: OBJECT DETECTION RESULTS ON FAIR1M (%). OVERALL MAP50 AND PER-CATEGORY AP ARE REPORTED FOR SELECTED WEAK CATEGORIES. REPRESENTATIVE DETECTORS ARE COMPARED WITH THE BASELINE AND SUCCESSIVE EVOLUTION STAGES OF RINGMOCLAW. BEST RESULTS ARE IN BOLD.",
+      "caption_status": "OK",
+      "source_location": "p.9",
+      "role": "critical",
+      "depth": "deep",
+      "file": "assets/figures/crop_T01_p9_923x898.png",
+      "bbox": [
+        54.013031005859375,
+        58.393550872802734,
+        557.99267578125,
+        93.26263427734375
+      ],
+      "caption_bbox": [
+        54.013031005859375,
+        58.393550872802734,
+        557.99267578125,
+        93.26263427734375
+      ],
+      "figure_bbox": [
+        43.9640007019043,
+        103.74649810791016,
+        375.9166564941406,
+        426.9330139160156
+      ],
+      "subfigures": [],
+      "asset": "assets/figures/crop_T01_p9_923x898.png",
+      "extraction_method": "deterministic_crop",
+      "confidence": 0.92,
+      "inspection": "inspected",
+      "inspection_status": "inspected",
+      "reviewed_by": null,
+      "review_note": null,
+      "binding_method": "MULTIMODAL_PAGE_LOCALIZATION",
+      "binding_confidence": 0.92,
+      "needs_visual_review": false,
+      "needs_review": false,
+      "row_count": 23,
+      "col_count": 2,
+      "structure": {
+        "header": true,
+        "rows": 23,
+        "cols": 2,
+        "status": "VERIFIED"
+      },
+      "headers": [
+        "Method",
+        "C5 C10 C11 C14"
+      ],
+      "rows": [
+        [
+          "mAP50"
+        ],
+        [
+          "Gliding Vertex [51]",
+          "29.92 0.01 0.01 9.12 15.67"
+        ],
+        [
+          "RetinaNet [49]",
+          "30.67 0.81 1.70 9.57 16.37"
+        ],
+        [
+          "Cascade R-CNN [52]",
+          "31.18 0.00 0.00 12.10 15.35"
+        ],
+        [
+          "Faster R-CNN [53]",
+          "32.12 0.01 0.13 9.81 17.65"
+        ],
+        [
+          "RoI Transformer [54]",
+          "35.29 0.00 0.00 14.31 14.32"
+        ],
+        [
+          "OFA-Net [55]",
+          "43.73 30.71 29.25 9.90 30.37"
+        ],
+        [
+          "Oriented R-CNN [56]",
+          "44.30 25.55 32.85 20.46 32.89"
+        ],
+        [
+          "RingMoClaw evolution"
+        ],
+        [
+          "Baseline (Train & Infer) 47.30 51.74 32.56 31.11 20.29"
+        ],
+        [
+          "Data Augmentation",
+          "48.18 51.94 34.76 31.14 21.89"
+        ],
+        [
+          "Training Config Update 47.77 51.83 35.06 31.13 23.90"
+        ],
+        [
+          "Few-Shot Training",
+          "47.69 51.92 35.15 31.58 24.11"
+        ],
+        [
+          "Multi-Model Fusion",
+          "49.11 53.87 36.27 32.87 26.60"
+        ],
+        [
+          "Module Innovation",
+          "49.14 54.14 36.36 33.16 26.89"
+        ],
+        [
+          "Note: C5: C919; C10: ARJ21; C11: Passenger Ship; C14: Tugboat; C24: Trailer; C25: Tractor; C26:"
+        ],
+        [
+          "pretraining data and reasoning style, which keeps the review patches with an"
+        ],
+        [
+          "branch heterogeneous with respect to the execution chain.",
+          "random resizing,"
+        ],
+        [
+          "Object detection. We report mean average precision for data"
+        ],
+        [
+          "(mAP50) as the evaluation metric. The baseline detector rate of 6 × 10−5"
+        ],
+        [
+          "adopts a YOLO11x-OBB oriented detection head, following 1,500-iteration"
+        ],
+        [
+          "the FAIR1M detection setting in [5]. On FAIR1M-v1.0, high- All models are"
+        ],
+        [
+          "resolution images are cropped into 512 × 512 patches with size of 16 using"
+        ]
+      ],
+      "parsed_cells": [
+        [
+          "Method",
+          "C5 C10 C11 C14"
+        ],
+        [
+          "mAP50"
+        ],
+        [
+          "Gliding Vertex [51]",
+          "29.92 0.01 0.01 9.12 15.67"
+        ],
+        [
+          "RetinaNet [49]",
+          "30.67 0.81 1.70 9.57 16.37"
+        ],
+        [
+          "Cascade R-CNN [52]",
+          "31.18 0.00 0.00 12.10 15.35"
+        ],
+        [
+          "Faster R-CNN [53]",
+          "32.12 0.01 0.13 9.81 17.65"
+        ],
+        [
+          "RoI Transformer [54]",
+          "35.29 0.00 0.00 14.31 14.32"
+        ],
+        [
+          "OFA-Net [55]",
+          "43.73 30.71 29.25 9.90 30.37"
+        ],
+        [
+          "Oriented R-CNN [56]",
+          "44.30 25.55 32.85 20.46 32.89"
+        ],
+        [
+          "RingMoClaw evolution"
+        ],
+        [
+          "Baseline (Train & Infer) 47.30 51.74 32.56 31.11 20.29"
+        ],
+        [
+          "Data Augmentation",
+          "48.18 51.94 34.76 31.14 21.89"
+        ],
+        [
+          "Training Config Update 47.77 51.83 35.06 31.13 23.90"
+        ],
+        [
+          "Few-Shot Training",
+          "47.69 51.92 35.15 31.58 24.11"
+        ],
+        [
+          "Multi-Model Fusion",
+          "49.11 53.87 36.27 32.87 26.60"
+        ],
+        [
+          "Module Innovation",
+          "49.14 54.14 36.36 33.16 26.89"
+        ],
+        [
+          "Note: C5: C919; C10: ARJ21; C11: Passenger Ship; C14: Tugboat; C24: Trailer; C25: Tractor; C26:"
+        ],
+        [
+          "pretraining data and reasoning style, which keeps the review patches with an"
+        ],
+        [
+          "branch heterogeneous with respect to the execution chain.",
+          "random resizing,"
+        ],
+        [
+          "Object detection. We report mean average precision for data"
+        ],
+        [
+          "(mAP50) as the evaluation metric. The baseline detector rate of 6 × 10−5"
+        ],
+        [
+          "adopts a YOLO11x-OBB oriented detection head, following 1,500-iteration"
+        ],
+        [
+          "the FAIR1M detection setting in [5]. On FAIR1M-v1.0, high- All models are"
+        ],
+        [
+          "resolution images are cropped into 512 × 512 patches with size of 16 using"
+        ]
+      ],
+      "raw_visual_fallback": null,
+      "structure_status": "VERIFIED",
+      "reconstruction_confidence": 0.9,
+      "localization_method": "MULTIMODAL_PAGE_LOCALIZATION",
+      "localization_confidence": 0.92
+    },
+    {
+      "id": "F06",
+      "paper_label": "Fig. 6",
+      "kind": "figure",
+      "page": 10,
+      "caption_original": "Fig. 6: Weak categories detection results on FAIR1M across different evolution stages. From left to right: (1) Baseline, (2) Data Augmentation, (3) Training Strategy Optimization, (4) Two-Stage Few-Shot Detection, (5) Multi-Model Fusion, and (6) Module Innovation. Green boxes denote true positives (TP) of base categories; yellow/purple boxes denote true positives (TP) of weak/rare categories; red boxes denote false negatives (FN, missed detections); and pink boxes denote false positives (FP, incorrect detections). The figure illustrates how progressive improvements in architecture and module design reduce both missed detections and false positives, particularly for weak categories, highlighting the effectiveness of the proposed RingMoClaw Auto-Research framework in addressing long-tail fine-grained detection challenges.",
+      "caption_status": "OK",
+      "source_location": "p.10",
+      "role": "critical",
+      "depth": "deep",
+      "file": "assets/figures/fig07_p10_4401x2227.png",
+      "bbox": [
+        48.9640007019043,
+        328.08856201171875,
+        563.0357666015625,
+        380.89068603515625
+      ],
+      "caption_bbox": [
+        48.9640007019043,
+        328.08856201171875,
+        563.0357666015625,
+        380.89068603515625
+      ],
+      "figure_bbox": [
+        48.9640007019043,
+        56.068603515625,
+        563.0360107421875,
+        316.20001220703125
+      ],
+      "subfigures": [],
+      "asset": "assets/figures/fig07_p10_4401x2227.png",
+      "extraction_method": "embedded",
+      "confidence": 0.9,
+      "inspection": "inspected",
+      "inspection_status": "inspected",
+      "reviewed_by": null,
+      "review_note": null,
+      "binding_method": "MULTIMODAL_PAGE_LOCALIZATION",
+      "binding_confidence": 0.99,
+      "needs_visual_review": false,
+      "needs_review": false,
+      "row_count": null,
+      "col_count": null,
+      "structure": null,
+      "headers": null,
+      "rows": null,
+      "parsed_cells": null,
+      "raw_visual_fallback": null,
+      "structure_status": null,
+      "reconstruction_confidence": null,
+      "localization_method": "MULTIMODAL_PAGE_LOCALIZATION",
+      "localization_confidence": 0.99
+    },
+    {
+      "id": "F07",
+      "paper_label": "Fig. 7",
+      "kind": "figure",
+      "page": 10,
+      "caption_original": "Fig. 7: Training behavior of the final detector on FAIR1M. (a) Training and validation loss curves over 20 epochs. (b) Mean precision-recall curve over the 37 object categories.",
+      "caption_status": "OK",
+      "source_location": "p.10",
+      "role": "critical",
+      "depth": "deep",
+      "file": "assets/figures/fig08_p10_1482x1739.png",
+      "bbox": [
+        48.9640007019043,
+        620.9165649414062,
+        300.0221862792969,
+        646.8186645507812
+      ],
+      "caption_bbox": [
+        48.9640007019043,
+        620.9165649414062,
+        300.0221862792969,
+        646.8186645507812
+      ],
+      "figure_bbox": [
+        86.62300109863281,
+        402.806640625,
+        262.36773681640625,
+        609.0280151367188
+      ],
+      "subfigures": [
+        "a",
+        "b"
+      ],
+      "asset": "assets/figures/fig08_p10_1482x1739.png",
+      "extraction_method": "embedded",
+      "confidence": 0.9,
+      "inspection": "inspected",
+      "inspection_status": "inspected",
+      "reviewed_by": null,
+      "review_note": null,
+      "binding_method": "MULTIMODAL_PAGE_LOCALIZATION",
+      "binding_confidence": 0.94,
+      "needs_visual_review": false,
+      "needs_review": false,
+      "row_count": null,
+      "col_count": null,
+      "structure": null,
+      "headers": null,
+      "rows": null,
+      "parsed_cells": null,
+      "raw_visual_fallback": null,
+      "structure_status": null,
+      "reconstruction_confidence": null,
+      "localization_method": "MULTIMODAL_PAGE_LOCALIZATION",
+      "localization_confidence": 0.94
+    },
+    {
+      "id": "T02",
+      "paper_label": "TABLE II",
+      "kind": "table",
+      "page": 11,
+      "caption_original": "TABLE II: SCENE CLASSIFICATION RESULTS ON NWPU-RESISC45 (%). THE TABLE REPORTS OVERALL ACCURACY AND PER-CATEGORY ACCURACY FOR SELECTED WEAK CATEGORIES. REPRESENTATIVE CLASSIFIERS ARE COMPARED WITH THE BASELINE AND FUSION STRATEGIES SELECTED BY RINGMOCLAW. BEST RESULTS ARE IN BOLD.",
+      "caption_status": "OK",
+      "source_location": "p.11",
+      "role": "critical",
+      "depth": "deep",
+      "file": "assets/figures/crop_T02_p11_790x449.png",
+      "bbox": [
+        63.676025390625,
+        58.393550872802734,
+        548.3279418945312,
+        93.26263427734375
+      ],
+      "caption_bbox": [
+        63.676025390625,
+        58.393550872802734,
+        548.3279418945312,
+        93.26263427734375
+      ],
+      "figure_bbox": [
+        43.9639892578125,
+        102.07427978515625,
+        328.02276611328125,
+        263.33868408203125
+      ],
+      "subfigures": [],
+      "asset": "assets/figures/crop_T02_p11_790x449.png",
+      "extraction_method": "deterministic_crop",
+      "confidence": 0.92,
+      "inspection": "inspected",
+      "inspection_status": "inspected",
+      "reviewed_by": null,
+      "review_note": null,
+      "binding_method": "MULTIMODAL_PAGE_LOCALIZATION",
+      "binding_confidence": 0.92,
+      "needs_visual_review": false,
+      "needs_review": false,
+      "row_count": 10,
+      "col_count": 3,
+      "structure": {
+        "header": true,
+        "rows": 10,
+        "cols": 3,
+        "status": "VERIFIED"
+      },
+      "headers": [
+        "Method",
+        "Acc",
+        "C7 C10 C14"
+      ],
+      "rows": [
+        [
+          "ConvNeXt-T [61]",
+          "92.25 80.71 84.29 86.07"
+        ],
+        [
+          "EfficientNet-B4 [62]",
+          "92.08 77.86 93.93 87.86"
+        ],
+        [
+          "ResNet50 [63]",
+          "82.10 46.07 77.50 70.36"
+        ],
+        [
+          "RingMoClaw Evolution"
+        ],
+        [
+          "Baseline (Train & Infer) 93.18 73.93 91.07 87.14"
+        ],
+        [
+          "Multi-Model Fusion",
+          "93.71 80.71 93.93 87.14"
+        ],
+        [
+          "Soft Multi-Model Fusion 94.48 80.36 95.00 89.29"
+        ],
+        [
+          "Soft TTA Fusion",
+          "94.97 82.29 95.00 92.14"
+        ],
+        [
+          "*The correspondence between weak categories: C7: church, C10: commercial area,"
+        ],
+        [
+          "palace, C30: railway station, C34: runway, C43: thermal power station."
+        ]
+      ],
+      "parsed_cells": [
+        [
+          "Method",
+          "Acc",
+          "C7 C10 C14"
+        ],
+        [
+          "ConvNeXt-T [61]",
+          "92.25 80.71 84.29 86.07"
+        ],
+        [
+          "EfficientNet-B4 [62]",
+          "92.08 77.86 93.93 87.86"
+        ],
+        [
+          "ResNet50 [63]",
+          "82.10 46.07 77.50 70.36"
+        ],
+        [
+          "RingMoClaw Evolution"
+        ],
+        [
+          "Baseline (Train & Infer) 93.18 73.93 91.07 87.14"
+        ],
+        [
+          "Multi-Model Fusion",
+          "93.71 80.71 93.93 87.14"
+        ],
+        [
+          "Soft Multi-Model Fusion 94.48 80.36 95.00 89.29"
+        ],
+        [
+          "Soft TTA Fusion",
+          "94.97 82.29 95.00 92.14"
+        ],
+        [
+          "*The correspondence between weak categories: C7: church, C10: commercial area,"
+        ],
+        [
+          "palace, C30: railway station, C34: runway, C43: thermal power station."
+        ]
+      ],
+      "raw_visual_fallback": null,
+      "structure_status": "VERIFIED",
+      "reconstruction_confidence": 0.9,
+      "localization_method": "MULTIMODAL_PAGE_LOCALIZATION",
+      "localization_confidence": 0.92
+    },
+    {
+      "id": "F08",
+      "paper_label": "Fig. 8",
+      "kind": "figure",
+      "page": 11,
+      "caption_original": "Fig. 8: Class activation map visualization of the baseline classifier and the candidate classifiers selected for score-level fusion on representative weak categories of NWPU-RESISC45. Different candidate models attend to different discriminative regions, indicating clear complementary behavior across scene categories.",
+      "caption_status": "OK",
+      "source_location": "p.11",
+      "role": "critical",
+      "depth": "deep",
+      "file": "assets/figures/fig10_p11_3665x1903.png",
+      "bbox": [
+        48.9640007019043,
+        556.6775512695312,
+        563.0355224609375,
+        573.6146240234375
+      ],
+      "caption_bbox": [
+        48.9640007019043,
+        556.6775512695312,
+        563.0355224609375,
+        573.6146240234375
+      ],
+      "figure_bbox": [
+        48.9640007019043,
+        277.8661804199219,
+        563.0342407226562,
+        544.7899780273438
+      ],
+      "subfigures": [],
+      "asset": "assets/figures/fig10_p11_3665x1903.png",
+      "extraction_method": "embedded",
+      "confidence": 0.9,
+      "inspection": "inspected",
+      "inspection_status": "inspected",
+      "reviewed_by": null,
+      "review_note": null,
+      "binding_method": "MULTIMODAL_PAGE_LOCALIZATION",
+      "binding_confidence": 0.99,
+      "needs_visual_review": false,
+      "needs_review": false,
+      "row_count": null,
+      "col_count": null,
+      "structure": null,
+      "headers": null,
+      "rows": null,
+      "parsed_cells": null,
+      "raw_visual_fallback": null,
+      "structure_status": null,
+      "reconstruction_confidence": null,
+      "localization_method": "MULTIMODAL_PAGE_LOCALIZATION",
+      "localization_confidence": 0.99
+    },
+    {
+      "id": "T03",
+      "paper_label": "TABLE III",
+      "kind": "table",
+      "page": 12,
+      "caption_original": "TABLE III: COMPARISON WITH REPRESENTATIVE REMOTE SENSING SEMANTIC SEGMENTATION METHODS AND THE EVOLUTION RESULTS OF RINGMOCLAW ON ISAID VALIDATION SET. BEST RESULTS ARE IN BOLD.",
+      "caption_status": "OK",
+      "source_location": "p.12",
+      "role": "critical",
+      "depth": "deep",
+      "file": "assets/figures/crop_T03_p12_729x905.png",
+      "bbox": [
+        49.77101135253906,
+        58.393550872802734,
+        299.2119445800781,
+        93.26263427734375
+      ],
+      "caption_bbox": [
+        49.77101135253906,
+        58.393550872802734,
+        299.2119445800781,
+        93.26263427734375
+      ],
+      "figure_bbox": [
+        43.9640007019043,
+        101.15499877929688,
+        306.1084899902344,
+        426.44439697265625
+      ],
+      "subfigures": [],
+      "asset": "assets/figures/crop_T03_p12_729x905.png",
+      "extraction_method": "deterministic_crop",
+      "confidence": 0.92,
+      "inspection": "inspected",
+      "inspection_status": "inspected",
+      "reviewed_by": null,
+      "review_note": null,
+      "binding_method": "MULTIMODAL_PAGE_LOCALIZATION",
+      "binding_confidence": 0.92,
+      "needs_visual_review": false,
+      "needs_review": false,
+      "row_count": 24,
+      "col_count": 2,
+      "structure": {
+        "header": true,
+        "rows": 24,
+        "cols": 2,
+        "status": "VERIFIED"
+      },
+      "headers": [
+        "Method / Strategy",
+        "LV RA SV mIoU (%)"
+      ],
+      "rows": [
+        [
+          "RANet [64]",
+          "60.1 70.5 49.3 62.1"
+        ],
+        [
+          "HMANet [65]",
+          "59.7 62.9 50.3 62.6"
+        ],
+        [
+          "FarSeg [66]",
+          "60.6 71.4 46.3 63.7"
+        ],
+        [
+          "FactSeg [6]",
+          "62.7 69.4 49.5 64.8"
+        ],
+        [
+          "GRDL [67]",
+          "60.5 68.7 50.7 65.1"
+        ],
+        [
+          "UperNet (RSP-ViTAEv2-S) [68] 62.5 62.2 51.6 64.3"
+        ],
+        [
+          "UperNet-RingMo [5]",
+          "63.9 67.3 51.2 67.2"
+        ],
+        [
+          "RingMoClaw Evolution"
+        ],
+        [
+          "Baseline (Train & Infer)",
+          "64.8 64.9 50.4 67.2"
+        ],
+        [
+          "Larger Backbone",
+          "65.5 72.9 51.8 69.0"
+        ],
+        [
+          "Single-scale Upscaling",
+          "67.7 69.2 54.9 69.5"
+        ],
+        [
+          "Multi-scale TTA",
+          "67.0 72.4 53.7 69.8"
+        ],
+        [
+          "Upscale-only TTA",
+          "67.7 70.6 54.8 69.9"
+        ],
+        [
+          "*LV, RA, and SV denote Large Vehicle, Roundabout, and Small Vehicle,"
+        ],
+        [
+          "respectively."
+        ],
+        [
+          "TABLE IV"
+        ],
+        [
+          "COMPARISON WITH REPRESENTATIVE REMOTE SENSING CHANGE"
+        ],
+        [
+          "DETECTION METHODS AND THE EVOLUTION RESULTS OF RINGMOCLAW"
+        ],
+        [
+          "ON LEVIR-CD VALIDATION SET. BEST RESULTS ARE IN BOLD."
+        ],
+        [
+          "Method / Strategy",
+          "F1 IoU"
+        ],
+        [
+          "FC-Siam-Di [69]",
+          "86.31 83.31"
+        ],
+        [
+          "FC-Siam-Conc [69]",
+          "83.69 76.77"
+        ],
+        [
+          "IFNet [70]",
+          "88.13 82.93"
+        ],
+        [
+          "STANet [59]",
+          "87.30 77.40"
+        ]
+      ],
+      "parsed_cells": [
+        [
+          "Method / Strategy",
+          "LV RA SV mIoU (%)"
+        ],
+        [
+          "RANet [64]",
+          "60.1 70.5 49.3 62.1"
+        ],
+        [
+          "HMANet [65]",
+          "59.7 62.9 50.3 62.6"
+        ],
+        [
+          "FarSeg [66]",
+          "60.6 71.4 46.3 63.7"
+        ],
+        [
+          "FactSeg [6]",
+          "62.7 69.4 49.5 64.8"
+        ],
+        [
+          "GRDL [67]",
+          "60.5 68.7 50.7 65.1"
+        ],
+        [
+          "UperNet (RSP-ViTAEv2-S) [68] 62.5 62.2 51.6 64.3"
+        ],
+        [
+          "UperNet-RingMo [5]",
+          "63.9 67.3 51.2 67.2"
+        ],
+        [
+          "RingMoClaw Evolution"
+        ],
+        [
+          "Baseline (Train & Infer)",
+          "64.8 64.9 50.4 67.2"
+        ],
+        [
+          "Larger Backbone",
+          "65.5 72.9 51.8 69.0"
+        ],
+        [
+          "Single-scale Upscaling",
+          "67.7 69.2 54.9 69.5"
+        ],
+        [
+          "Multi-scale TTA",
+          "67.0 72.4 53.7 69.8"
+        ],
+        [
+          "Upscale-only TTA",
+          "67.7 70.6 54.8 69.9"
+        ],
+        [
+          "*LV, RA, and SV denote Large Vehicle, Roundabout, and Small Vehicle,"
+        ],
+        [
+          "respectively."
+        ],
+        [
+          "TABLE IV"
+        ],
+        [
+          "COMPARISON WITH REPRESENTATIVE REMOTE SENSING CHANGE"
+        ],
+        [
+          "DETECTION METHODS AND THE EVOLUTION RESULTS OF RINGMOCLAW"
+        ],
+        [
+          "ON LEVIR-CD VALIDATION SET. BEST RESULTS ARE IN BOLD."
+        ],
+        [
+          "Method / Strategy",
+          "F1 IoU"
+        ],
+        [
+          "FC-Siam-Di [69]",
+          "86.31 83.31"
+        ],
+        [
+          "FC-Siam-Conc [69]",
+          "83.69 76.77"
+        ],
+        [
+          "IFNet [70]",
+          "88.13 82.93"
+        ],
+        [
+          "STANet [59]",
+          "87.30 77.40"
+        ]
+      ],
+      "raw_visual_fallback": null,
+      "structure_status": "VERIFIED",
+      "reconstruction_confidence": 0.9,
+      "localization_method": "MULTIMODAL_PAGE_LOCALIZATION",
+      "localization_confidence": 0.92
+    },
+    {
+      "id": "T04",
+      "paper_label": "TABLE IV",
+      "kind": "table",
+      "page": 12,
+      "caption_original": "TABLE IV: COMPARISON WITH REPRESENTATIVE REMOTE SENSING CHANGE DETECTION METHODS AND THE EVOLUTION RESULTS OF RINGMOCLAW ON LEVIR-CD VALIDATION SET. BEST RESULTS ARE IN BOLD.",
+      "caption_status": "OK",
+      "source_location": "p.12",
+      "role": "critical",
+      "depth": "deep",
+      "file": "assets/figures/crop_T04_p12_729x679.png",
+      "bbox": [
+        51.79900360107422,
+        315.3265686035156,
+        297.18963623046875,
+        350.1956787109375
+      ],
+      "caption_bbox": [
+        51.79900360107422,
+        315.3265686035156,
+        297.18963623046875,
+        350.1956787109375
+      ],
+      "figure_bbox": [
+        43.9640007019043,
+        53.393550872802734,
+        306.1084899902344,
+        297.5956726074219
+      ],
+      "subfigures": [],
+      "asset": "assets/figures/crop_T04_p12_729x679.png",
+      "extraction_method": "deterministic_crop",
+      "confidence": 0.92,
+      "inspection": "inspected",
+      "inspection_status": "inspected",
+      "reviewed_by": null,
+      "review_note": null,
+      "binding_method": "MULTIMODAL_PAGE_LOCALIZATION",
+      "binding_confidence": 0.92,
+      "needs_visual_review": false,
+      "needs_review": false,
+      "row_count": 19,
+      "col_count": 1,
+      "structure": {
+        "header": true,
+        "rows": 19,
+        "cols": 1,
+        "status": "VERIFIED"
+      },
+      "headers": [
+        "TABLE III"
+      ],
+      "rows": [
+        [
+          "COMPARISON WITH REPRESENTATIVE REMOTE SENSING SEMANTIC"
+        ],
+        [
+          "SEGMENTATION METHODS AND THE EVOLUTION RESULTS OF"
+        ],
+        [
+          "RINGMOCLAW ON ISAID VALIDATION SET. BEST RESULTS ARE IN BOLD."
+        ],
+        [
+          "Method / Strategy",
+          "LV RA SV mIoU (%)"
+        ],
+        [
+          "RANet [64]",
+          "60.1 70.5 49.3 62.1"
+        ],
+        [
+          "HMANet [65]",
+          "59.7 62.9 50.3 62.6"
+        ],
+        [
+          "FarSeg [66]",
+          "60.6 71.4 46.3 63.7"
+        ],
+        [
+          "FactSeg [6]",
+          "62.7 69.4 49.5 64.8"
+        ],
+        [
+          "GRDL [67]",
+          "60.5 68.7 50.7 65.1"
+        ],
+        [
+          "UperNet (RSP-ViTAEv2-S) [68] 62.5 62.2 51.6 64.3"
+        ],
+        [
+          "UperNet-RingMo [5]",
+          "63.9 67.3 51.2 67.2"
+        ],
+        [
+          "RingMoClaw Evolution"
+        ],
+        [
+          "Baseline (Train & Infer)",
+          "64.8 64.9 50.4 67.2"
+        ],
+        [
+          "Larger Backbone",
+          "65.5 72.9 51.8 69.0"
+        ],
+        [
+          "Single-scale Upscaling",
+          "67.7 69.2 54.9 69.5"
+        ],
+        [
+          "Multi-scale TTA",
+          "67.0 72.4 53.7 69.8"
+        ],
+        [
+          "Upscale-only TTA",
+          "67.7 70.6 54.8 69.9"
+        ],
+        [
+          "*LV, RA, and SV denote Large Vehicle, Roundabout, and Small Vehicle,"
+        ],
+        [
+          "respectively."
+        ]
+      ],
+      "parsed_cells": [
+        [
+          "TABLE III"
+        ],
+        [
+          "COMPARISON WITH REPRESENTATIVE REMOTE SENSING SEMANTIC"
+        ],
+        [
+          "SEGMENTATION METHODS AND THE EVOLUTION RESULTS OF"
+        ],
+        [
+          "RINGMOCLAW ON ISAID VALIDATION SET. BEST RESULTS ARE IN BOLD."
+        ],
+        [
+          "Method / Strategy",
+          "LV RA SV mIoU (%)"
+        ],
+        [
+          "RANet [64]",
+          "60.1 70.5 49.3 62.1"
+        ],
+        [
+          "HMANet [65]",
+          "59.7 62.9 50.3 62.6"
+        ],
+        [
+          "FarSeg [66]",
+          "60.6 71.4 46.3 63.7"
+        ],
+        [
+          "FactSeg [6]",
+          "62.7 69.4 49.5 64.8"
+        ],
+        [
+          "GRDL [67]",
+          "60.5 68.7 50.7 65.1"
+        ],
+        [
+          "UperNet (RSP-ViTAEv2-S) [68] 62.5 62.2 51.6 64.3"
+        ],
+        [
+          "UperNet-RingMo [5]",
+          "63.9 67.3 51.2 67.2"
+        ],
+        [
+          "RingMoClaw Evolution"
+        ],
+        [
+          "Baseline (Train & Infer)",
+          "64.8 64.9 50.4 67.2"
+        ],
+        [
+          "Larger Backbone",
+          "65.5 72.9 51.8 69.0"
+        ],
+        [
+          "Single-scale Upscaling",
+          "67.7 69.2 54.9 69.5"
+        ],
+        [
+          "Multi-scale TTA",
+          "67.0 72.4 53.7 69.8"
+        ],
+        [
+          "Upscale-only TTA",
+          "67.7 70.6 54.8 69.9"
+        ],
+        [
+          "*LV, RA, and SV denote Large Vehicle, Roundabout, and Small Vehicle,"
+        ],
+        [
+          "respectively."
+        ]
+      ],
+      "raw_visual_fallback": null,
+      "structure_status": "VERIFIED",
+      "reconstruction_confidence": 0.9,
+      "localization_method": "MULTIMODAL_PAGE_LOCALIZATION",
+      "localization_confidence": 0.92
+    },
+    {
+      "id": "T05",
+      "paper_label": "TABLE V",
+      "kind": "table",
+      "page": 13,
+      "caption_original": "TABLE V: CROSS-TASK COMPARISON WITH REPRESENTATIVE RESEARCH-AUTOMATION FRAMEWORKS. PERFORMANCE GAINS ARE COMPUTED RELATIVE TO THE CORRESPONDING BASELINE MODEL FOR EACH TASK.",
+      "caption_status": "OK",
+      "source_location": "p.13",
+      "role": "critical",
+      "depth": "deep",
+      "file": "assets/figures/crop_T05_p13_885x902.png",
+      "bbox": [
+        51.66900634765625,
+        58.393550872802734,
+        560.3402099609375,
+        84.296630859375
+      ],
+      "caption_bbox": [
+        51.66900634765625,
+        58.393550872802734,
+        560.3402099609375,
+        84.296630859375
+      ],
+      "figure_bbox": [
+        43.9639892578125,
+        93.33289337158203,
+        362.20257568359375,
+        417.8279724121094
+      ],
+      "subfigures": [],
+      "asset": "assets/figures/crop_T05_p13_885x902.png",
+      "extraction_method": "deterministic_crop",
+      "confidence": 0.92,
+      "inspection": "inspected",
+      "inspection_status": "inspected",
+      "reviewed_by": null,
+      "review_note": null,
+      "binding_method": "MULTIMODAL_PAGE_LOCALIZATION",
+      "binding_confidence": 0.92,
+      "needs_visual_review": false,
+      "needs_review": false,
+      "row_count": 27,
+      "col_count": 2,
+      "structure": {
+        "header": true,
+        "rows": 27,
+        "cols": 2,
+        "status": "VERIFIED"
+      },
+      "headers": [
+        "Object Detection",
+        "Scene Classification"
+      ],
+      "rows": [
+        [
+          "Framework"
+        ],
+        [
+          "∆mAP50 ↑ ∆mAP50:95 ↑ ER ↓ ∆Acc ↑ ER ↓"
+        ],
+        [
+          "AutoResearch [74]",
+          "-3.50",
+          "-1.13",
+          "20 1.00",
+          "11"
+        ],
+        [
+          "AutoResearchClaw [75] 0.57",
+          "0.12",
+          "18 1.31",
+          "10"
+        ],
+        [
+          "RingMoClaw",
+          "1.84",
+          "0.51",
+          "7",
+          "1.79",
+          "4"
+        ],
+        [
+          "Note:"
+        ],
+        [
+          "Performance gain is defined as the difference between the final evolved model and the"
+        ],
+        [
+          "“ER” denotes the number of completed evolution steps required by each framework on the"
+        ],
+        [
+          "rounds indicate better research-automation effectiveness and efficiency."
+        ],
+        [
+          "TABLE VI"
+        ],
+        [
+          "EVALUATION OF THE MSFR AND CPR."
+        ],
+        [
+          "Configuration MSFR CPR mAP50 mAP50:95 Params FLOPs"
+        ],
+        [
+          "Original baseline – – 47.30 36.59 119 M 167 G"
+        ],
+        [
+          "MSFR",
+          "✓ – 48.31 36.77 +0.599 M +0.604 G"
+        ],
+        [
+          "✓"
+        ],
+        [
+          "CPR",
+          "–",
+          "48.29 36.72 +0.131 M +0.272 G"
+        ],
+        [
+          "✓ ✓"
+        ],
+        [
+          "MSFR + CPR",
+          "49.14 37.10 +0.730 M +0.876 G"
+        ],
+        [
+          "with an interface-compatible multi-scale refinement module,"
+        ],
+        [
+          "whereas CPR augments the rotated RoI classification head"
+        ],
+        [
+          "with prototype-based logit refinement. The Vision Agent im-"
+        ],
+        [
+          "plements and evaluates these candidates, while the Critic"
+        ],
+        [
+          "Mechanism determines whether the resulting architectural"
+        ],
+        [
+          "modifications should be retained. Table VI reports the per-"
+        ],
+        [
+          "formance and computational overhead of the individual and"
+        ],
+        [
+          "combined module configurations. Detailed architectures, math-"
+        ],
+        [
+          "ematical formulations, insertion positions, and implementation"
+        ]
+      ],
+      "parsed_cells": [
+        [
+          "Object Detection",
+          "Scene Classification"
+        ],
+        [
+          "Framework"
+        ],
+        [
+          "∆mAP50 ↑ ∆mAP50:95 ↑ ER ↓ ∆Acc ↑ ER ↓"
+        ],
+        [
+          "AutoResearch [74]",
+          "-3.50",
+          "-1.13",
+          "20 1.00",
+          "11"
+        ],
+        [
+          "AutoResearchClaw [75] 0.57",
+          "0.12",
+          "18 1.31",
+          "10"
+        ],
+        [
+          "RingMoClaw",
+          "1.84",
+          "0.51",
+          "7",
+          "1.79",
+          "4"
+        ],
+        [
+          "Note:"
+        ],
+        [
+          "Performance gain is defined as the difference between the final evolved model and the"
+        ],
+        [
+          "“ER” denotes the number of completed evolution steps required by each framework on the"
+        ],
+        [
+          "rounds indicate better research-automation effectiveness and efficiency."
+        ],
+        [
+          "TABLE VI"
+        ],
+        [
+          "EVALUATION OF THE MSFR AND CPR."
+        ],
+        [
+          "Configuration MSFR CPR mAP50 mAP50:95 Params FLOPs"
+        ],
+        [
+          "Original baseline – – 47.30 36.59 119 M 167 G"
+        ],
+        [
+          "MSFR",
+          "✓ – 48.31 36.77 +0.599 M +0.604 G"
+        ],
+        [
+          "✓"
+        ],
+        [
+          "CPR",
+          "–",
+          "48.29 36.72 +0.131 M +0.272 G"
+        ],
+        [
+          "✓ ✓"
+        ],
+        [
+          "MSFR + CPR",
+          "49.14 37.10 +0.730 M +0.876 G"
+        ],
+        [
+          "with an interface-compatible multi-scale refinement module,"
+        ],
+        [
+          "whereas CPR augments the rotated RoI classification head"
+        ],
+        [
+          "with prototype-based logit refinement. The Vision Agent im-"
+        ],
+        [
+          "plements and evaluates these candidates, while the Critic"
+        ],
+        [
+          "Mechanism determines whether the resulting architectural"
+        ],
+        [
+          "modifications should be retained. Table VI reports the per-"
+        ],
+        [
+          "formance and computational overhead of the individual and"
+        ],
+        [
+          "combined module configurations. Detailed architectures, math-"
+        ],
+        [
+          "ematical formulations, insertion positions, and implementation"
+        ]
+      ],
+      "raw_visual_fallback": null,
+      "structure_status": "VERIFIED",
+      "reconstruction_confidence": 0.9,
+      "localization_method": "MULTIMODAL_PAGE_LOCALIZATION",
+      "localization_confidence": 0.92
+    },
+    {
+      "id": "T06",
+      "paper_label": "TABLE VI",
+      "kind": "table",
+      "page": 13,
+      "caption_original": "TABLE VI: EVALUATION OF THE MSFR AND CPR.",
+      "caption_status": "OK",
+      "source_location": "p.13",
+      "role": "critical",
+      "depth": "deep",
+      "file": "assets/figures/crop_T06_p13_1011x900.png",
+      "bbox": [
+        107.94798278808594,
+        208.17852783203125,
+        241.03778076171875,
+        225.1146240234375
+      ],
+      "caption_bbox": [
+        107.94798278808594,
+        208.17852783203125,
+        241.03778076171875,
+        225.1146240234375
+      ],
+      "figure_bbox": [
+        43.9640007019043,
+        231.94903564453125,
+        407.8069763183594,
+        555.6558837890625
+      ],
+      "subfigures": [],
+      "asset": "assets/figures/crop_T06_p13_1011x900.png",
+      "extraction_method": "deterministic_crop",
+      "confidence": 0.92,
+      "inspection": "inspected",
+      "inspection_status": "inspected",
+      "reviewed_by": null,
+      "review_note": null,
+      "binding_method": "MULTIMODAL_PAGE_LOCALIZATION",
+      "binding_confidence": 0.92,
+      "needs_visual_review": false,
+      "needs_review": false,
+      "row_count": 35,
+      "col_count": 1,
+      "structure": {
+        "header": true,
+        "rows": 35,
+        "cols": 1,
+        "status": "VERIFIED"
+      },
+      "headers": [
+        "Configuration MSFR CPR mAP50 mAP50:95 Params FLOPs"
+      ],
+      "rows": [
+        [
+          "Original baseline – – 47.30 36.59 119 M 167 G"
+        ],
+        [
+          "MSFR",
+          "✓ – 48.31 36.77 +0.599 M +0.604 G"
+        ],
+        [
+          "✓"
+        ],
+        [
+          "CPR",
+          "–",
+          "48.29 36.72 +0.131 M +0.272 G"
+        ],
+        [
+          "✓ ✓"
+        ],
+        [
+          "MSFR + CPR",
+          "49.14 37.10 +0.730 M +0.876 G"
+        ],
+        [
+          "with an interface-compatible multi-scale refinement module,"
+        ],
+        [
+          "whereas CPR augments the rotated RoI classification head"
+        ],
+        [
+          "with prototype-based logit refinement. The Vision Agent im-"
+        ],
+        [
+          "plements and evaluates these candidates, while the Critic"
+        ],
+        [
+          "Mechanism determines whether the resulting architectural"
+        ],
+        [
+          "modifications should be retained. Table VI reports the per-"
+        ],
+        [
+          "formance and computational overhead of the individual and"
+        ],
+        [
+          "combined module configurations. Detailed architectures, math-"
+        ],
+        [
+          "ematical formulations, insertion positions, and implementation"
+        ],
+        [
+          "details are provided in Appendix A."
+        ],
+        [
+          "Fig. 9. Per class recall on"
+        ],
+        [
+          "The results show that the jointly retained MSFR-CPR"
+        ],
+        [
+          "and three single technique"
+        ],
+        [
+          "configuration achieves mAP50/mAP50:95 49.14/37.10 while"
+        ],
+        [
+          "baseline: a class aware"
+        ],
+        [
+          "introducing only 0.730 M additional parameters and 0.876 G"
+        ],
+        [
+          "FLOPs."
+        ],
+        [
+          "As shown in Table"
+        ],
+        [
+          "evolution rounds and"
+        ],
+        [
+          "C. Practical Cost and Search Efficiency"
+        ],
+        [
+          "removing the Critic"
+        ],
+        [
+          "For the object detection task, we further compare RingMo-"
+        ],
+        [
+          "in a lower mAP of"
+        ],
+        [
+          "Claw with AutoResearch [74] and AutoResearchClaw [75] in"
+        ],
+        [
+          "Critic mechanism"
+        ],
+        [
+          "terms of evolution rounds, explored candidates, GPU con-"
+        ],
+        [
+          "detection performance"
+        ],
+        [
+          "sumption, wall-clock time, and LLM usage. As shown in"
+        ],
+        [
+          "reducing ineffective"
+        ]
+      ],
+      "parsed_cells": [
+        [
+          "Configuration MSFR CPR mAP50 mAP50:95 Params FLOPs"
+        ],
+        [
+          "Original baseline – – 47.30 36.59 119 M 167 G"
+        ],
+        [
+          "MSFR",
+          "✓ – 48.31 36.77 +0.599 M +0.604 G"
+        ],
+        [
+          "✓"
+        ],
+        [
+          "CPR",
+          "–",
+          "48.29 36.72 +0.131 M +0.272 G"
+        ],
+        [
+          "✓ ✓"
+        ],
+        [
+          "MSFR + CPR",
+          "49.14 37.10 +0.730 M +0.876 G"
+        ],
+        [
+          "with an interface-compatible multi-scale refinement module,"
+        ],
+        [
+          "whereas CPR augments the rotated RoI classification head"
+        ],
+        [
+          "with prototype-based logit refinement. The Vision Agent im-"
+        ],
+        [
+          "plements and evaluates these candidates, while the Critic"
+        ],
+        [
+          "Mechanism determines whether the resulting architectural"
+        ],
+        [
+          "modifications should be retained. Table VI reports the per-"
+        ],
+        [
+          "formance and computational overhead of the individual and"
+        ],
+        [
+          "combined module configurations. Detailed architectures, math-"
+        ],
+        [
+          "ematical formulations, insertion positions, and implementation"
+        ],
+        [
+          "details are provided in Appendix A."
+        ],
+        [
+          "Fig. 9. Per class recall on"
+        ],
+        [
+          "The results show that the jointly retained MSFR-CPR"
+        ],
+        [
+          "and three single technique"
+        ],
+        [
+          "configuration achieves mAP50/mAP50:95 49.14/37.10 while"
+        ],
+        [
+          "baseline: a class aware"
+        ],
+        [
+          "introducing only 0.730 M additional parameters and 0.876 G"
+        ],
+        [
+          "FLOPs."
+        ],
+        [
+          "As shown in Table"
+        ],
+        [
+          "evolution rounds and"
+        ],
+        [
+          "C. Practical Cost and Search Efficiency"
+        ],
+        [
+          "removing the Critic"
+        ],
+        [
+          "For the object detection task, we further compare RingMo-"
+        ],
+        [
+          "in a lower mAP of"
+        ],
+        [
+          "Claw with AutoResearch [74] and AutoResearchClaw [75] in"
+        ],
+        [
+          "Critic mechanism"
+        ],
+        [
+          "terms of evolution rounds, explored candidates, GPU con-"
+        ],
+        [
+          "detection performance"
+        ],
+        [
+          "sumption, wall-clock time, and LLM usage. As shown in"
+        ],
+        [
+          "reducing ineffective"
+        ]
+      ],
+      "raw_visual_fallback": null,
+      "structure_status": "VERIFIED",
+      "reconstruction_confidence": 0.9,
+      "localization_method": "MULTIMODAL_PAGE_LOCALIZATION",
+      "localization_confidence": 0.92
+    },
+    {
+      "id": "F09",
+      "paper_label": "Fig. 9",
+      "kind": "figure",
+      "page": 13,
+      "caption_original": "Fig. 9: Per class recall on weak categories of FAIR1M for the baseline and three single technique variants. Each variant adds one technique to the baseline: a class aware sampler, a focal loss, and a BFPA attention module.",
+      "caption_status": "OK",
+      "source_location": "p.13",
+      "role": "critical",
+      "depth": "deep",
+      "file": "assets/figures/fig15_p13_1384x1140.png",
+      "bbox": [
+        311.9779968261719,
+        424.53857421875,
+        563.0361938476562,
+        450.4416809082031
+      ],
+      "caption_bbox": [
+        311.9779968261719,
+        424.53857421875,
+        563.0361938476562,
+        450.4416809082031
+      ],
+      "figure_bbox": [
+        311.9779968261719,
+        205.8554229736328,
+        563.0338745117188,
+        412.6499938964844
+      ],
+      "subfigures": [],
+      "asset": "assets/figures/fig15_p13_1384x1140.png",
+      "extraction_method": "embedded",
+      "confidence": 0.9,
+      "inspection": "inspected",
+      "inspection_status": "inspected",
+      "reviewed_by": null,
+      "review_note": null,
+      "binding_method": "MULTIMODAL_PAGE_LOCALIZATION",
+      "binding_confidence": 0.99,
+      "needs_visual_review": false,
+      "needs_review": false,
+      "row_count": null,
+      "col_count": null,
+      "structure": null,
+      "headers": null,
+      "rows": null,
+      "parsed_cells": null,
+      "raw_visual_fallback": null,
+      "structure_status": null,
+      "reconstruction_confidence": null,
+      "localization_method": "MULTIMODAL_PAGE_LOCALIZATION",
+      "localization_confidence": 0.99
+    },
+    {
+      "id": "T07",
+      "paper_label": "TABLE VII",
+      "kind": "table",
+      "page": 14,
+      "caption_original": "TABLE VII: PRACTICAL COST AND SEARCH EFFICIENCY COMPARISON OF AUTONOMOUS RESEARCH FRAMEWORKS ON THE OBJECT DETECTION TASK.",
+      "caption_status": "OK",
+      "source_location": "p.14",
+      "role": "critical",
+      "depth": "deep",
+      "file": "assets/figures/crop_T07_p14_907x908.png",
+      "bbox": [
+        73.85000610351562,
+        58.393550872802734,
+        538.1500244140625,
+        75.33062744140625
+      ],
+      "caption_bbox": [
+        73.85000610351562,
+        58.393550872802734,
+        538.1500244140625,
+        75.33062744140625
+      ],
+      "figure_bbox": [
+        44.4109992980957,
+        82.73225402832031,
+        370.4856262207031,
+        409.14404296875
+      ],
+      "subfigures": [],
+      "asset": "assets/figures/crop_T07_p14_907x908.png",
+      "extraction_method": "deterministic_crop",
+      "confidence": 0.92,
+      "inspection": "inspected",
+      "inspection_status": "inspected",
+      "reviewed_by": null,
+      "review_note": null,
+      "binding_method": "MULTIMODAL_PAGE_LOCALIZATION",
+      "binding_confidence": 0.92,
+      "needs_visual_review": false,
+      "needs_review": false,
+      "row_count": 29,
+      "col_count": 2,
+      "structure": {
+        "header": true,
+        "rows": 29,
+        "cols": 2,
+        "status": "VERIFIED"
+      },
+      "headers": [
+        "Framework",
+        "Evolution Rounds Explored Candidates GPU-hours"
+      ],
+      "rows": [
+        [
+          "AutoResearch",
+          "20",
+          "20",
+          "26.90"
+        ],
+        [
+          "AutoResearchClaw",
+          "18",
+          "35",
+          "18.28"
+        ],
+        [
+          "RingMoClaw",
+          "7",
+          "28",
+          "12.14"
+        ],
+        [
+          "“Explored Candidates” denotes the total number of optimization proposals considered during"
+        ],
+        [
+          "whereas AutoResearchClaw and RingMoClaw may consider multiple candidates within a round."
+        ],
+        [
+          "incurred no commercial API cost."
+        ],
+        [
+          "TABLE VIII"
+        ],
+        [
+          "ABLATION STUDY ON THE CRITIC MECHANISM ON FAIR1M.",
+          "VALIDATION OF"
+        ],
+        [
+          "Variant",
+          "Rounds Final mAP (%)"
+        ],
+        [
+          "Full Framework (Ours) 7",
+          "49.14"
+        ],
+        [
+          "w/o Critic Mechanism 11",
+          "47.43"
+        ],
+        [
+          "“Rounds” denotes the number of full evolution rounds until the detection"
+        ],
+        [
+          "accuracy no longer shows a clear improvement and the evolution converges."
+        ],
+        [
+          "“Final mAP” reports the detection accuracy at convergence."
+        ],
+        [
+          "TABLE IX"
+        ],
+        [
+          "ABLATION STUDY ON THE DUAL-STREAM EXPERIENCE BUS ON"
+        ],
+        [
+          "FAIR1M."
+        ],
+        [
+          "between the"
+        ],
+        [
+          "We further"
+        ],
+        [
+          "Variant",
+          "Rounds to Conv. Failed mAP (%)"
+        ],
+        [
+          "candidates"
+        ],
+        [
+          "Full Framework (Ours)",
+          "7",
+          "2",
+          "49.14"
+        ],
+        [
+          "w/o External Stream",
+          "9",
+          "4",
+          "48.44"
+        ],
+        [
+          "w/o Internal Stream",
+          "11",
+          "5",
+          "47.62",
+          "Precision"
+        ],
+        [
+          "w/o Both Streams",
+          "14",
+          "6",
+          "47.53"
+        ],
+        [
+          "“Rounds to Conv.” denotes the number of full evolution rounds until the where a"
+        ],
+        [
+          "detection accuracy no longer shows a clear improvement. “Failed” reports"
+        ],
+        [
+          "training"
+        ],
+        [
+          "the number of iterations whose training yielded no improvement over the"
+        ]
+      ],
+      "parsed_cells": [
+        [
+          "Framework",
+          "Evolution Rounds Explored Candidates GPU-hours"
+        ],
+        [
+          "AutoResearch",
+          "20",
+          "20",
+          "26.90"
+        ],
+        [
+          "AutoResearchClaw",
+          "18",
+          "35",
+          "18.28"
+        ],
+        [
+          "RingMoClaw",
+          "7",
+          "28",
+          "12.14"
+        ],
+        [
+          "“Explored Candidates” denotes the total number of optimization proposals considered during"
+        ],
+        [
+          "whereas AutoResearchClaw and RingMoClaw may consider multiple candidates within a round."
+        ],
+        [
+          "incurred no commercial API cost."
+        ],
+        [
+          "TABLE VIII"
+        ],
+        [
+          "ABLATION STUDY ON THE CRITIC MECHANISM ON FAIR1M.",
+          "VALIDATION OF"
+        ],
+        [
+          "Variant",
+          "Rounds Final mAP (%)"
+        ],
+        [
+          "Full Framework (Ours) 7",
+          "49.14"
+        ],
+        [
+          "w/o Critic Mechanism 11",
+          "47.43"
+        ],
+        [
+          "“Rounds” denotes the number of full evolution rounds until the detection"
+        ],
+        [
+          "accuracy no longer shows a clear improvement and the evolution converges."
+        ],
+        [
+          "“Final mAP” reports the detection accuracy at convergence."
+        ],
+        [
+          "TABLE IX"
+        ],
+        [
+          "ABLATION STUDY ON THE DUAL-STREAM EXPERIENCE BUS ON"
+        ],
+        [
+          "FAIR1M."
+        ],
+        [
+          "between the"
+        ],
+        [
+          "We further"
+        ],
+        [
+          "Variant",
+          "Rounds to Conv. Failed mAP (%)"
+        ],
+        [
+          "candidates"
+        ],
+        [
+          "Full Framework (Ours)",
+          "7",
+          "2",
+          "49.14"
+        ],
+        [
+          "w/o External Stream",
+          "9",
+          "4",
+          "48.44"
+        ],
+        [
+          "w/o Internal Stream",
+          "11",
+          "5",
+          "47.62",
+          "Precision"
+        ],
+        [
+          "w/o Both Streams",
+          "14",
+          "6",
+          "47.53"
+        ],
+        [
+          "“Rounds to Conv.” denotes the number of full evolution rounds until the where a"
+        ],
+        [
+          "detection accuracy no longer shows a clear improvement. “Failed” reports"
+        ],
+        [
+          "training"
+        ],
+        [
+          "the number of iterations whose training yielded no improvement over the"
+        ]
+      ],
+      "raw_visual_fallback": null,
+      "structure_status": "VERIFIED",
+      "reconstruction_confidence": 0.9,
+      "localization_method": "MULTIMODAL_PAGE_LOCALIZATION",
+      "localization_confidence": 0.92
+    },
+    {
+      "id": "T08",
+      "paper_label": "TABLE VIII",
+      "kind": "table",
+      "page": 14,
+      "caption_original": "TABLE VIII: ABLATION STUDY ON THE CRITIC MECHANISM ON FAIR1M.",
+      "caption_status": "OK",
+      "source_location": "p.14",
+      "role": "critical",
+      "depth": "deep",
+      "file": "assets/figures/crop_T08_p14_908x892.png",
+      "bbox": [
+        70.12999725341797,
+        183.6595458984375,
+        278.8562927246094,
+        200.59661865234375
+      ],
+      "caption_bbox": [
+        70.12999725341797,
+        183.6595458984375,
+        278.8562927246094,
+        200.59661865234375
+      ],
+      "figure_bbox": [
+        43.96399688720703,
+        208.173583984375,
+        370.4856262207031,
+        528.9849243164062
+      ],
+      "subfigures": [],
+      "asset": "assets/figures/crop_T08_p14_908x892.png",
+      "extraction_method": "deterministic_crop",
+      "confidence": 0.92,
+      "inspection": "inspected",
+      "inspection_status": "inspected",
+      "reviewed_by": null,
+      "review_note": null,
+      "binding_method": "MULTIMODAL_PAGE_LOCALIZATION",
+      "binding_confidence": 0.92,
+      "needs_visual_review": false,
+      "needs_review": false,
+      "row_count": 38,
+      "col_count": 2,
+      "structure": {
+        "header": true,
+        "rows": 38,
+        "cols": 2,
+        "status": "VERIFIED"
+      },
+      "headers": [
+        "Variant",
+        "Rounds Final mAP (%)"
+      ],
+      "rows": [
+        [
+          "Full Framework (Ours) 7",
+          "49.14"
+        ],
+        [
+          "w/o Critic Mechanism 11",
+          "47.43"
+        ],
+        [
+          "“Rounds” denotes the number of full evolution rounds until the detection"
+        ],
+        [
+          "accuracy no longer shows a clear improvement and the evolution converges."
+        ],
+        [
+          "“Final mAP” reports the detection accuracy at convergence."
+        ],
+        [
+          "TABLE IX"
+        ],
+        [
+          "ABLATION STUDY ON THE DUAL-STREAM EXPERIENCE BUS ON"
+        ],
+        [
+          "FAIR1M."
+        ],
+        [
+          "between the"
+        ],
+        [
+          "We further"
+        ],
+        [
+          "Variant",
+          "Rounds to Conv. Failed mAP (%)"
+        ],
+        [
+          "candidates"
+        ],
+        [
+          "Full Framework (Ours)",
+          "7",
+          "2",
+          "49.14"
+        ],
+        [
+          "w/o External Stream",
+          "9",
+          "4",
+          "48.44"
+        ],
+        [
+          "w/o Internal Stream",
+          "11",
+          "5",
+          "47.62",
+          "Precision"
+        ],
+        [
+          "w/o Both Streams",
+          "14",
+          "6",
+          "47.53"
+        ],
+        [
+          "“Rounds to Conv.” denotes the number of full evolution rounds until the where a"
+        ],
+        [
+          "detection accuracy no longer shows a clear improvement. “Failed” reports"
+        ],
+        [
+          "training"
+        ],
+        [
+          "the number of iterations whose training yielded no improvement over the"
+        ],
+        [
+          "previous round. “mAP” reports the detection accuracy at convergence. Here, TP"
+        ],
+        [
+          "five-minute"
+        ],
+        [
+          "training, FP"
+        ],
+        [
+          "ciency."
+        ],
+        [
+          "FN denotes a"
+        ],
+        [
+          "Fig. 9 further reports the per class recall on weak categories"
+        ],
+        [
+          "minute stage."
+        ],
+        [
+          "for the baseline and three single technique variants. The class"
+        ],
+        [
+          "As"
+        ],
+        [
+          "aware sampler and the focal loss [49] come from the internal"
+        ],
+        [
+          "a significant"
+        ],
+        [
+          "experience that flagged class imbalance, while the BFPA"
+        ],
+        [
+          "mAP50:95"
+        ],
+        [
+          "attention module [50] is retrieved from external literature."
+        ],
+        [
+          "test p-value of"
+        ],
+        [
+          "Each technique improves a different subset of weak categories,"
+        ],
+        [
+          "observed for"
+        ],
+        [
+          "indicating that the directions surfaced by the two streams are"
+        ]
+      ],
+      "parsed_cells": [
+        [
+          "Variant",
+          "Rounds Final mAP (%)"
+        ],
+        [
+          "Full Framework (Ours) 7",
+          "49.14"
+        ],
+        [
+          "w/o Critic Mechanism 11",
+          "47.43"
+        ],
+        [
+          "“Rounds” denotes the number of full evolution rounds until the detection"
+        ],
+        [
+          "accuracy no longer shows a clear improvement and the evolution converges."
+        ],
+        [
+          "“Final mAP” reports the detection accuracy at convergence."
+        ],
+        [
+          "TABLE IX"
+        ],
+        [
+          "ABLATION STUDY ON THE DUAL-STREAM EXPERIENCE BUS ON"
+        ],
+        [
+          "FAIR1M."
+        ],
+        [
+          "between the"
+        ],
+        [
+          "We further"
+        ],
+        [
+          "Variant",
+          "Rounds to Conv. Failed mAP (%)"
+        ],
+        [
+          "candidates"
+        ],
+        [
+          "Full Framework (Ours)",
+          "7",
+          "2",
+          "49.14"
+        ],
+        [
+          "w/o External Stream",
+          "9",
+          "4",
+          "48.44"
+        ],
+        [
+          "w/o Internal Stream",
+          "11",
+          "5",
+          "47.62",
+          "Precision"
+        ],
+        [
+          "w/o Both Streams",
+          "14",
+          "6",
+          "47.53"
+        ],
+        [
+          "“Rounds to Conv.” denotes the number of full evolution rounds until the where a"
+        ],
+        [
+          "detection accuracy no longer shows a clear improvement. “Failed” reports"
+        ],
+        [
+          "training"
+        ],
+        [
+          "the number of iterations whose training yielded no improvement over the"
+        ],
+        [
+          "previous round. “mAP” reports the detection accuracy at convergence. Here, TP"
+        ],
+        [
+          "five-minute"
+        ],
+        [
+          "training, FP"
+        ],
+        [
+          "ciency."
+        ],
+        [
+          "FN denotes a"
+        ],
+        [
+          "Fig. 9 further reports the per class recall on weak categories"
+        ],
+        [
+          "minute stage."
+        ],
+        [
+          "for the baseline and three single technique variants. The class"
+        ],
+        [
+          "As"
+        ],
+        [
+          "aware sampler and the focal loss [49] come from the internal"
+        ],
+        [
+          "a significant"
+        ],
+        [
+          "experience that flagged class imbalance, while the BFPA"
+        ],
+        [
+          "mAP50:95"
+        ],
+        [
+          "attention module [50] is retrieved from external literature."
+        ],
+        [
+          "test p-value of"
+        ],
+        [
+          "Each technique improves a different subset of weak categories,"
+        ],
+        [
+          "observed for"
+        ],
+        [
+          "indicating that the directions surfaced by the two streams are"
+        ]
+      ],
+      "raw_visual_fallback": null,
+      "structure_status": "VERIFIED",
+      "reconstruction_confidence": 0.9,
+      "localization_method": "MULTIMODAL_PAGE_LOCALIZATION",
+      "localization_confidence": 0.92
+    },
+    {
+      "id": "T09",
+      "paper_label": "TABLE IX",
+      "kind": "table",
+      "page": 14,
+      "caption_original": "TABLE IX: ABLATION STUDY ON THE DUAL-STREAM EXPERIENCE BUS ON FAIR1M.",
+      "caption_status": "OK",
+      "source_location": "p.14",
+      "role": "critical",
+      "depth": "deep",
+      "file": "assets/figures/crop_T09_p14_902x630.png",
+      "bbox": [
+        65.57100677490234,
+        290.4475402832031,
+        283.4232482910156,
+        316.35064697265625
+      ],
+      "caption_bbox": [
+        65.57100677490234,
+        290.4475402832031,
+        283.4232482910156,
+        316.35064697265625
+      ],
+      "figure_bbox": [
+        44.4109992980957,
+        53.393550872802734,
+        368.7297668457031,
+        279.92364501953125
+      ],
+      "subfigures": [],
+      "asset": "assets/figures/crop_T09_p14_902x630.png",
+      "extraction_method": "deterministic_crop",
+      "confidence": 0.92,
+      "inspection": "inspected",
+      "inspection_status": "inspected",
+      "reviewed_by": null,
+      "review_note": null,
+      "binding_method": "MULTIMODAL_PAGE_LOCALIZATION",
+      "binding_confidence": 0.92,
+      "needs_visual_review": false,
+      "needs_review": false,
+      "row_count": 16,
+      "col_count": 1,
+      "structure": {
+        "header": true,
+        "rows": 16,
+        "cols": 1,
+        "status": "VERIFIED"
+      },
+      "headers": [
+        "TABLE VII"
+      ],
+      "rows": [
+        [
+          "PRACTICAL COST AND SEARCH EFFICIENCY COMPARISON OF AUTONOMOUS RESEARCH"
+        ],
+        [
+          "Framework",
+          "Evolution Rounds Explored Candidates GPU-hours"
+        ],
+        [
+          "AutoResearch",
+          "20",
+          "20",
+          "26.90"
+        ],
+        [
+          "AutoResearchClaw",
+          "18",
+          "35",
+          "18.28"
+        ],
+        [
+          "RingMoClaw",
+          "7",
+          "28",
+          "12.14"
+        ],
+        [
+          "“Explored Candidates” denotes the total number of optimization proposals considered during"
+        ],
+        [
+          "whereas AutoResearchClaw and RingMoClaw may consider multiple candidates within a round."
+        ],
+        [
+          "incurred no commercial API cost."
+        ],
+        [
+          "TABLE VIII"
+        ],
+        [
+          "ABLATION STUDY ON THE CRITIC MECHANISM ON FAIR1M.",
+          "VALIDATION"
+        ],
+        [
+          "Variant",
+          "Rounds Final mAP (%)"
+        ],
+        [
+          "Full Framework (Ours) 7",
+          "49.14"
+        ],
+        [
+          "w/o Critic Mechanism 11",
+          "47.43"
+        ],
+        [
+          "“Rounds” denotes the number of full evolution rounds until the detection"
+        ],
+        [
+          "accuracy no longer shows a clear improvement and the evolution converges."
+        ],
+        [
+          "“Final mAP” reports the detection accuracy at convergence."
+        ]
+      ],
+      "parsed_cells": [
+        [
+          "TABLE VII"
+        ],
+        [
+          "PRACTICAL COST AND SEARCH EFFICIENCY COMPARISON OF AUTONOMOUS RESEARCH"
+        ],
+        [
+          "Framework",
+          "Evolution Rounds Explored Candidates GPU-hours"
+        ],
+        [
+          "AutoResearch",
+          "20",
+          "20",
+          "26.90"
+        ],
+        [
+          "AutoResearchClaw",
+          "18",
+          "35",
+          "18.28"
+        ],
+        [
+          "RingMoClaw",
+          "7",
+          "28",
+          "12.14"
+        ],
+        [
+          "“Explored Candidates” denotes the total number of optimization proposals considered during"
+        ],
+        [
+          "whereas AutoResearchClaw and RingMoClaw may consider multiple candidates within a round."
+        ],
+        [
+          "incurred no commercial API cost."
+        ],
+        [
+          "TABLE VIII"
+        ],
+        [
+          "ABLATION STUDY ON THE CRITIC MECHANISM ON FAIR1M.",
+          "VALIDATION"
+        ],
+        [
+          "Variant",
+          "Rounds Final mAP (%)"
+        ],
+        [
+          "Full Framework (Ours) 7",
+          "49.14"
+        ],
+        [
+          "w/o Critic Mechanism 11",
+          "47.43"
+        ],
+        [
+          "“Rounds” denotes the number of full evolution rounds until the detection"
+        ],
+        [
+          "accuracy no longer shows a clear improvement and the evolution converges."
+        ],
+        [
+          "“Final mAP” reports the detection accuracy at convergence."
+        ]
+      ],
+      "raw_visual_fallback": null,
+      "structure_status": "VERIFIED",
+      "reconstruction_confidence": 0.9,
+      "localization_method": "MULTIMODAL_PAGE_LOCALIZATION",
+      "localization_confidence": 0.92
+    },
+    {
+      "id": "T10",
+      "paper_label": "TABLE X",
+      "kind": "table",
+      "page": 14,
+      "caption_original": "TABLE X: VALIDATION OF THE FIVE-MINUTE VERIFICATION PROTOCOL ON THE OBJECT DETECTION TASK.",
+      "caption_status": "OK",
+      "source_location": "p.14",
+      "role": "critical",
+      "depth": "deep",
+      "file": "assets/figures/crop_T10_p14_1415x925.png",
+      "bbox": [
+        321.3000183105469,
+        183.6595458984375,
+        553.7215576171875,
+        209.5626220703125
+      ],
+      "caption_bbox": [
+        321.3000183105469,
+        183.6595458984375,
+        553.7215576171875,
+        209.5626220703125
+      ],
+      "figure_bbox": [
+        58.8182373046875,
+        208.173583984375,
+        568.041015625,
+        540.9398803710938
+      ],
+      "subfigures": [],
+      "asset": "assets/figures/crop_T10_p14_1415x925.png",
+      "extraction_method": "deterministic_crop",
+      "confidence": 0.92,
+      "inspection": "inspected",
+      "inspection_status": "inspected",
+      "reviewed_by": null,
+      "review_note": null,
+      "binding_method": "MULTIMODAL_PAGE_LOCALIZATION",
+      "binding_confidence": 0.92,
+      "needs_visual_review": false,
+      "needs_review": false,
+      "row_count": 43,
+      "col_count": 2,
+      "structure": {
+        "header": true,
+        "rows": 43,
+        "cols": 2,
+        "status": "VERIFIED"
+      },
+      "headers": [
+        "Variant",
+        "Rounds Final mAP (%)"
+      ],
+      "rows": [
+        [
+          "Metric",
+          "Result"
+        ],
+        [
+          "Full Framework (Ours) 7",
+          "49.14",
+          "Number of candidate strategies 10"
+        ],
+        [
+          "w/o Critic Mechanism 11",
+          "47.43"
+        ],
+        [
+          "Spearman ρ (mAP50:95)",
+          "0.64"
+        ],
+        [
+          "“Rounds” denotes the number of full evolution rounds until the detection",
+          "Permutation-test p-value",
+          "0.03"
+        ],
+        [
+          "no longer shows a clear improvement and the evolution converges."
+        ],
+        [
+          "Spearman ρ (mAP50)",
+          "0.59"
+        ],
+        [
+          "“Final mAP” reports the detection accuracy at convergence.",
+          "Detrimental-candidate precision 1.00"
+        ],
+        [
+          "Detrimental-candidate recall",
+          "0.83"
+        ],
+        [
+          "TABLE IX"
+        ],
+        [
+          "ABLATION STUDY ON THE DUAL-STREAM EXPERIENCE BUS ON"
+        ],
+        [
+          "FAIR1M."
+        ],
+        [
+          "between the five-minute and full-training performance gains."
+        ],
+        [
+          "We further evaluate the screening capability for detrimental"
+        ],
+        [
+          "Variant",
+          "Rounds to Conv. Failed mAP (%)"
+        ],
+        [
+          "candidates using precision and recall:"
+        ],
+        [
+          "Full Framework (Ours)",
+          "7",
+          "2",
+          "49.14"
+        ],
+        [
+          "w/o External Stream",
+          "9",
+          "4",
+          "48.44",
+          "TP",
+          "TP"
+        ],
+        [
+          "w/o Internal Stream",
+          "11",
+          "5",
+          "47.62",
+          "Precision =",
+          ", Recall =",
+          ", (8)"
+        ],
+        [
+          "w/o Both Streams",
+          "14",
+          "6",
+          "47.53",
+          "TP + FP",
+          "TP + FN"
+        ],
+        [
+          "“Rounds to Conv.” denotes the number of full evolution rounds until the where a detrimental candidate is defined according to its full-"
+        ],
+        [
+          "accuracy no longer shows a clear improvement. “Failed” reports"
+        ],
+        [
+          "training performance relative to the corresponding baseline."
+        ],
+        [
+          "the number of iterations whose training yielded no improvement over the"
+        ],
+        [
+          "previous round. “mAP” reports the detection accuracy at convergence. Here, TP denotes a candidate identified as detrimental by the"
+        ],
+        [
+          "five-minute protocol and confirmed to be detrimental after full"
+        ],
+        [
+          "training, FP denotes an incorrectly rejected candidate, and"
+        ],
+        [
+          "FN denotes a detrimental candidate missed during the five-"
+        ],
+        [
+          "Fig. 9 further reports the per class recall on weak categories"
+        ],
+        [
+          "minute stage."
+        ],
+        [
+          "the baseline and three single technique variants. The class"
+        ],
+        [
+          "As summarized in Table X, the five-minute results exhibit"
+        ],
+        [
+          "sampler and the focal loss [49] come from the internal"
+        ],
+        [
+          "a significant positive rank correlation with the full-training"
+        ],
+        [
+          "that flagged class imbalance, while the BFPA"
+        ],
+        [
+          "mAP50:95 gains, achieving ρ = 0.64 with a permutation-"
+        ],
+        [
+          "module [50] is retrieved from external literature."
+        ],
+        [
+          "test p-value of 0.03. A consistent positive correlation is also"
+        ],
+        [
+          "technique improves a different subset of weak categories,"
+        ],
+        [
+          "observed for mAP50, with ρ = 0.59. Moreover, all five candi-"
+        ],
+        [
+          "that the directions surfaced by the two streams are"
+        ],
+        [
+          "dates identified as detrimental by the five-minute protocol are"
+        ],
+        [
+          "rather than redundant."
+        ]
+      ],
+      "parsed_cells": [
+        [
+          "Variant",
+          "Rounds Final mAP (%)"
+        ],
+        [
+          "Metric",
+          "Result"
+        ],
+        [
+          "Full Framework (Ours) 7",
+          "49.14",
+          "Number of candidate strategies 10"
+        ],
+        [
+          "w/o Critic Mechanism 11",
+          "47.43"
+        ],
+        [
+          "Spearman ρ (mAP50:95)",
+          "0.64"
+        ],
+        [
+          "“Rounds” denotes the number of full evolution rounds until the detection",
+          "Permutation-test p-value",
+          "0.03"
+        ],
+        [
+          "no longer shows a clear improvement and the evolution converges."
+        ],
+        [
+          "Spearman ρ (mAP50)",
+          "0.59"
+        ],
+        [
+          "“Final mAP” reports the detection accuracy at convergence.",
+          "Detrimental-candidate precision 1.00"
+        ],
+        [
+          "Detrimental-candidate recall",
+          "0.83"
+        ],
+        [
+          "TABLE IX"
+        ],
+        [
+          "ABLATION STUDY ON THE DUAL-STREAM EXPERIENCE BUS ON"
+        ],
+        [
+          "FAIR1M."
+        ],
+        [
+          "between the five-minute and full-training performance gains."
+        ],
+        [
+          "We further evaluate the screening capability for detrimental"
+        ],
+        [
+          "Variant",
+          "Rounds to Conv. Failed mAP (%)"
+        ],
+        [
+          "candidates using precision and recall:"
+        ],
+        [
+          "Full Framework (Ours)",
+          "7",
+          "2",
+          "49.14"
+        ],
+        [
+          "w/o External Stream",
+          "9",
+          "4",
+          "48.44",
+          "TP",
+          "TP"
+        ],
+        [
+          "w/o Internal Stream",
+          "11",
+          "5",
+          "47.62",
+          "Precision =",
+          ", Recall =",
+          ", (8)"
+        ],
+        [
+          "w/o Both Streams",
+          "14",
+          "6",
+          "47.53",
+          "TP + FP",
+          "TP + FN"
+        ],
+        [
+          "“Rounds to Conv.” denotes the number of full evolution rounds until the where a detrimental candidate is defined according to its full-"
+        ],
+        [
+          "accuracy no longer shows a clear improvement. “Failed” reports"
+        ],
+        [
+          "training performance relative to the corresponding baseline."
+        ],
+        [
+          "the number of iterations whose training yielded no improvement over the"
+        ],
+        [
+          "previous round. “mAP” reports the detection accuracy at convergence. Here, TP denotes a candidate identified as detrimental by the"
+        ],
+        [
+          "five-minute protocol and confirmed to be detrimental after full"
+        ],
+        [
+          "training, FP denotes an incorrectly rejected candidate, and"
+        ],
+        [
+          "FN denotes a detrimental candidate missed during the five-"
+        ],
+        [
+          "Fig. 9 further reports the per class recall on weak categories"
+        ],
+        [
+          "minute stage."
+        ],
+        [
+          "the baseline and three single technique variants. The class"
+        ],
+        [
+          "As summarized in Table X, the five-minute results exhibit"
+        ],
+        [
+          "sampler and the focal loss [49] come from the internal"
+        ],
+        [
+          "a significant positive rank correlation with the full-training"
+        ],
+        [
+          "that flagged class imbalance, while the BFPA"
+        ],
+        [
+          "mAP50:95 gains, achieving ρ = 0.64 with a permutation-"
+        ],
+        [
+          "module [50] is retrieved from external literature."
+        ],
+        [
+          "test p-value of 0.03. A consistent positive correlation is also"
+        ],
+        [
+          "technique improves a different subset of weak categories,"
+        ],
+        [
+          "observed for mAP50, with ρ = 0.59. Moreover, all five candi-"
+        ],
+        [
+          "that the directions surfaced by the two streams are"
+        ],
+        [
+          "dates identified as detrimental by the five-minute protocol are"
+        ],
+        [
+          "rather than redundant."
+        ]
+      ],
+      "raw_visual_fallback": null,
+      "structure_status": "VERIFIED",
+      "reconstruction_confidence": 0.9,
+      "localization_method": "MULTIMODAL_PAGE_LOCALIZATION",
+      "localization_confidence": 0.92
+    },
+    {
+      "id": "T11",
+      "paper_label": "TABLE XI",
+      "kind": "table",
+      "page": 19,
+      "caption_original": "TABLE XI: REPRESENTATIVE OPERATORS IN THE SEARCH-SPACE INSTANTIATION FOR THE FAIR1M ORIENTED OBJECT DETECTION TASK.",
+      "caption_status": "OK",
+      "source_location": "p.19",
+      "role": "critical",
+      "depth": "deep",
+      "file": "assets/figures/crop_T11_p19_943x881.png",
+      "bbox": [
+        92.23300170898438,
+        58.393550872802734,
+        519.7665405273438,
+        75.33062744140625
+      ],
+      "caption_bbox": [
+        92.23300170898438,
+        58.393550872802734,
+        519.7665405273438,
+        75.33062744140625
+      ],
+      "figure_bbox": [
+        43.96399688720703,
+        84.71878814697266,
+        383.29449462890625,
+        401.7369384765625
+      ],
+      "subfigures": [],
+      "asset": "assets/figures/crop_T11_p19_943x881.png",
+      "extraction_method": "deterministic_crop",
+      "confidence": 0.92,
+      "inspection": "inspected",
+      "inspection_status": "inspected",
+      "reviewed_by": null,
+      "review_note": null,
+      "binding_method": "MULTIMODAL_PAGE_LOCALIZATION",
+      "binding_confidence": 0.92,
+      "needs_visual_review": false,
+      "needs_review": false,
+      "row_count": 36,
+      "col_count": 2,
+      "structure": {
+        "header": true,
+        "rows": 36,
+        "cols": 2,
+        "status": "VERIFIED"
+      },
+      "headers": [
+        "Dimension Operator",
+        "Parameters (initial value / range or choices)"
+      ],
+      "rows": [
+        [
+          "attention",
+          "module: CBAM / {CBAM, SE, ECA}; insertion:"
+        ],
+        [
+          "Sarch"
+        ],
+        [
+          "{backbone, neck}"
+        ],
+        [
+          "feature_fusion",
+          "fusion: weighted add / {weighted add, concat,"
+        ],
+        [
+          "focal_loss",
+          "γ: 2.0 / [0.5, 5.0]; α: 0.25 / [0.1, 0.9]"
+        ],
+        [
+          "Strain"
+        ],
+        [
+          "rotated_regression_"
+        ],
+        [
+          "loss: KLD / {KLD, GWD, rotated IoU, KFIoU};"
+        ],
+        [
+          "loss"
+        ],
+        [
+          "[0.1, 10]"
+        ],
+        [
+          "rotation",
+          "maximum angle: 180◦/ [0, 180◦]"
+        ],
+        [
+          "Sdata"
+        ],
+        [
+          "oversampling",
+          "ratio: 3.0 / [1, 10]"
+        ],
+        [
+          "auxiliary_model",
+          "auxiliary task: classification / {segmentation,"
+        ],
+        [
+          "Sintg"
+        ],
+        [
+          "external_module",
+          "typed parameters extracted from the admitted"
+        ],
+        [
+          "Main Agent"
+        ],
+        [
+          "For each round, at most 20 papers and 20 repositories"
+        ],
+        [
+          "are retained before screening. Duplicate papers are removed You are the Main"
+        ],
+        [
+          "research loop"
+        ],
+        [
+          "according to normalized titles, and duplicate repositories are"
+        ],
+        [
+          "You plan. You do"
+        ],
+        [
+          "removed according to normalized repository names. We then code, or review"
+        ],
+        [
+          "literature, or"
+        ],
+        [
+          "apply a set of fixed filtering rules. Papers with abstracts"
+        ],
+        [
+          "You are given"
+        ],
+        [
+          "shorter than 40 characters are discarded, while repositories are candidate pool"
+        ],
+        [
+          "retrieved,"
+        ],
+        [
+          "discarded if they are archived or contain descriptions shorter"
+        ],
+        [
+          "negative"
+        ],
+        [
+          "than 15 characters. Only the metadata and textual information Your task is to"
+        ],
+        [
+          "that pool as the"
+        ],
+        [
+          "provided by the repositories are used during retrieval; external"
+        ],
+        [
+          "choice from the"
+        ],
+        [
+          "repositories are not cloned or executed at this stage.",
+          "a candidate that"
+        ],
+        [
+          "Return JSON"
+        ]
+      ],
+      "parsed_cells": [
+        [
+          "Dimension Operator",
+          "Parameters (initial value / range or choices)"
+        ],
+        [
+          "attention",
+          "module: CBAM / {CBAM, SE, ECA}; insertion:"
+        ],
+        [
+          "Sarch"
+        ],
+        [
+          "{backbone, neck}"
+        ],
+        [
+          "feature_fusion",
+          "fusion: weighted add / {weighted add, concat,"
+        ],
+        [
+          "focal_loss",
+          "γ: 2.0 / [0.5, 5.0]; α: 0.25 / [0.1, 0.9]"
+        ],
+        [
+          "Strain"
+        ],
+        [
+          "rotated_regression_"
+        ],
+        [
+          "loss: KLD / {KLD, GWD, rotated IoU, KFIoU};"
+        ],
+        [
+          "loss"
+        ],
+        [
+          "[0.1, 10]"
+        ],
+        [
+          "rotation",
+          "maximum angle: 180◦/ [0, 180◦]"
+        ],
+        [
+          "Sdata"
+        ],
+        [
+          "oversampling",
+          "ratio: 3.0 / [1, 10]"
+        ],
+        [
+          "auxiliary_model",
+          "auxiliary task: classification / {segmentation,"
+        ],
+        [
+          "Sintg"
+        ],
+        [
+          "external_module",
+          "typed parameters extracted from the admitted"
+        ],
+        [
+          "Main Agent"
+        ],
+        [
+          "For each round, at most 20 papers and 20 repositories"
+        ],
+        [
+          "are retained before screening. Duplicate papers are removed You are the Main"
+        ],
+        [
+          "research loop"
+        ],
+        [
+          "according to normalized titles, and duplicate repositories are"
+        ],
+        [
+          "You plan. You do"
+        ],
+        [
+          "removed according to normalized repository names. We then code, or review"
+        ],
+        [
+          "literature, or"
+        ],
+        [
+          "apply a set of fixed filtering rules. Papers with abstracts"
+        ],
+        [
+          "You are given"
+        ],
+        [
+          "shorter than 40 characters are discarded, while repositories are candidate pool"
+        ],
+        [
+          "retrieved,"
+        ],
+        [
+          "discarded if they are archived or contain descriptions shorter"
+        ],
+        [
+          "negative"
+        ],
+        [
+          "than 15 characters. Only the metadata and textual information Your task is to"
+        ],
+        [
+          "that pool as the"
+        ],
+        [
+          "provided by the repositories are used during retrieval; external"
+        ],
+        [
+          "choice from the"
+        ],
+        [
+          "repositories are not cloned or executed at this stage.",
+          "a candidate that"
+        ],
+        [
+          "Return JSON"
+        ]
+      ],
+      "raw_visual_fallback": null,
+      "structure_status": "VERIFIED",
+      "reconstruction_confidence": 0.9,
+      "localization_method": "MULTIMODAL_PAGE_LOCALIZATION",
+      "localization_confidence": 0.92
+    }
+  ],
+  "embedded_saved": 9,
+  "unmatched_assets": [],
+  "review_required": []
+}

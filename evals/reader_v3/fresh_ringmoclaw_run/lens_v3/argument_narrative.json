@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "lens": "argument_narrative",
+  "lens_kind": "core",
+  "source_sha256": "32df5e2843de7e8ccd52d56b9dfed257c26786ef3b71fbc397a1c3a5e26fb0fa",
+  "base_sha256": "9036b3e1e1575dfaad4cd49908a18e8236215985a834e9b97438c7abde86b1df",
+  "summary": "重构论文核心论点拓扑：从一次性任务脚本编排跃迁至'执行集群-审查中枢'解耦的自演化闭环。",
+  "findings": [
+    {
+      "id": "FND-AN-01",
+      "statement": "RingMoClaw 构建了从单智能体向'执行集群-审查中枢'解耦的多智能体自演化科研闭环范式",
+      "evidence": [
+        "F01",
+        "F02",
+        "p.1",
+        "p.3"
+      ],
+      "epistemic": "VERIFIED",
+      "action": "KEEP",
+      "importance": "CRITICAL",
+      "reason": "确立全文核心论点与范式跃迁"
+    },
+    {
+      "id": "FND-AN-02",
+      "statement": "框架通过三阶段同行审稿卡点与双流经验总线引导定向启发式剪枝，兼具微结构创新与算力压缩双重突破",
+      "evidence": [
+        "F02",
+        "T01",
+        "T07",
+        "p.3",
+        "p.9",
+        "p.14"
+      ],
+      "epistemic": "VERIFIED",
+      "action": "KEEP",
+      "importance": "CRITICAL",
+      "reason": "论文核心论述主线"
+    }
+  ]
+}
