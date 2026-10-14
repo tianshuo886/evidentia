@@ -71,6 +71,7 @@ def main():
         equations_by_page[eq['page']].append(eq)
     eq_counter = len(all_eqs)
 
+    current_sec = None
     for n, p in enumerate(doc, 1):
         rect = p.rect
         blocks = p.get_text('blocks')
@@ -111,6 +112,7 @@ def main():
             line = line.strip()
             if re.match(r'^(?:\d+(?:\.\d+)*\s+|[A-Z][A-Z ]{3,}$)', line) and len(line) < 160:
                 sections.append(line)
+                current_sec = line
 
         mentions = []
         for m in re.finditer(r'\b((?:Extended\s+Data\s+)?(?:Fig(?:ure)?\.?\s*[S]?\d+[A-Za-z]?|Table\s*[S]?\d+[A-Za-z]?|Supplementary\s+(?:Fig(?:ure)?\.?|Table)\s*[S]?\d+[A-Za-z]?|Eq(?:uation)?\.?\s*(?:\(\s*\d+\s*\)|\d+)))', txt, re.I):

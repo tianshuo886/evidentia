@@ -842,7 +842,9 @@ def render_paper_reader_md(manuscript: dict, root=None) -> str:
                 lines.append(f"{text}{cite}\n")
             elif kind in ('figure', 'table'):
                 caption = sanitize_editorial_text(block.get('caption', '图表'))
-                lines.append(f"### {caption}\n")
+                eid = block.get('evidence_id')
+                heading = f"### {caption} 〔{eid}〕\n" if eid else f"### {caption}\n"
+                lines.append(heading)
                 asset = resolve_visual_asset(block, root) if root else block.get('asset')
                 if asset: lines.append(f"![{caption}]({asset})\n")
                 analysis = sanitize_editorial_text(block.get('analysis', ''))
