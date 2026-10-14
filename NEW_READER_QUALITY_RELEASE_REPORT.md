@@ -45,7 +45,7 @@ All 13 acceptance gates in `scripts/reader_acceptance.py` and the complete 275-t
 
 | Issue | Target Domain | Root Cause Diagnosed | Generic Remediation Implemented |
 | :--- | :--- | :--- | :--- |
-| **#39** | **Equation Source Fidelity** | Eq. (6) had incorrect reconstruction, missing variance denominator, and dynamic calligraphic font errors (`\mathcal{S}`, `\mathcal{M}`) in MathJax v4. | Bound equations to source PDF bboxes; implemented `mathjax.asyncLoad` & `handleRetriesFor` in `mathjax_svg.js`; deterministic inventory & high-res crop generator. |
+| **#39** | **Equation Source Fidelity** | Eq. (6) in defective runs omitted the second stability term and had dynamic calligraphic font errors (`\mathcal{S}`, `\mathcal{M}`) in MathJax v4. | Bound equations directly to source PDF bboxes; implemented `mathjax.asyncLoad` & `handleRetriesFor` in `mathjax_svg.js`; verified LaTeX matching PDF Eq. (6) $f_{\text{score}}(m) = \alpha \left(\frac{\Delta \text{Acc}}{\Delta t}\right) + \beta \exp\left(-\sigma \|\nabla_\theta^2\|\right)$ and deterministic inventory. |
 | **#40** | **Equation Pedagogy** | Reader presented mathematical formulas in isolation without explanatory scaffolding or intuition. | Introduced 4-part pedagogical architecture (`role`, `term_interpretations`, `operational_mechanics`, `implementation_proxy`); audited by `scripts/reader_math_explanation_audit.py`. |
 | **#41** | **Scientific Fact Verification** | Inverted precision/recall semantics on early screening; collapsed GPU-hours into wall-clock; unverified venue asserted as fact. | Built `scientific_claim_verifier.py` with multi-rule semantic verifier; added `claim_ledger.json` with explicit `SUPPORTED`/`UNRESOLVED` epistemic tracking. |
 | **#42** | **Mechanistic Narrative Depth** | Superficial summaries of FAIR1M trajectory; omitted tensor-level mechanisms of MSFR and CPR modules. | Enhanced narrative synthesis with deep physical and algorithmic walkthroughs; enforced must-show visual evidence with `scripts/reader_depth_audit.py`. |
@@ -66,14 +66,14 @@ All artifacts were generated fresh from original PDF `source/paper.pdf` (`32df5e
 - `reader/kami_audit.json`: `status: "OK"`, `blocking_defects_count: 0`
 
 ### Verified Equations (8/8)
-- `assets/equations/EQ-01.png` (Eq. 1 Critic Score): `21eaa3486113df1efeedb17d363bed5f252ba838efdd8ff255f2a0b01590bf80`
-- `assets/equations/EQ-02.png` (Eq. 2 Dynamic Gating): `fc3d6d85e48278c4037191993558bc0a081dc363a1cf01859b5b2f664f35c3f8`
-- `assets/equations/EQ-03.png` (Eq. 3 Relevance Weight): `fd7c0c27846baee5b732f7c704d45c8814cffa9e3ca2ed7f82b30da1592d632d`
-- `assets/equations/EQ-04.png` (Eq. 4 Experience Update): `ac297d3c759b7475e9498831e001b927003588f6c0747e448f43cc7844f7e8a9`
-- `assets/equations/EQ-05.png` (Eq. 5 Mean Loss): `def0022ab6d2c4fbd3f95a8b625dcc8e761ef045d6459ee43e0835341261d494`
-- `assets/equations/EQ-06.png` (Eq. 6 Empirical Variance): `7d76647ccf0e04e581445afbbddfda2c5376bdc55a81e3857bb76b49a3fc05e1`
-- `assets/equations/EQ-07.png` (Eq. 7 Variance Reduction Ratio): `4aadaedf1b20514065bed3f44ae7b1ba075697e8689a879a130b732a66408adf`
-- `assets/equations/EQ-08.png` (Eq. 8 Early Exit Criterion): `1a4163f01f80ae1f2bfab4817df0a04c73855c93631dc8071e6b69fee293cbde`
+- `assets/equations/EQ-01.png` (Eq. 1 Critic Score $\text{Score}_t = w_1 C_t + w_2 (1 - B_t) + w_3 H_t$): `21eaa3486113df1efeedb17d363bed5f252ba838efdd8ff255f2a0b01590bf80`
+- `assets/equations/EQ-02.png` (Eq. 2 Dynamic State Update $o_{\text{main}}^{t+1} = \Pi_{\text{update}}(s_t, \{c_t, \text{Score}_t\})$): `fc3d6d85e48278c4037191993558bc0a081dc363a1cf01859b5b2f664f35c3f8`
+- `assets/equations/EQ-03.png` (Eq. 3 4D Search Space $\mathcal{S} = \{\mathcal{S}_{\text{arch}}, \mathcal{S}_{\text{train}}, \mathcal{S}_{\text{data}}, \mathcal{S}_{\text{intg}}\}$): `fd7c0c27846baee5b732f7c704d45c8814cffa9e3ca2ed7f82b30da1592d632d`
+- `assets/equations/EQ-04.png` (Eq. 4 Modular Operator Tuple $\omega = \{I, O, F, P\}$): `ac297d3c759b7475e9498831e001b927003588f6c0747e448f43cc7844f7e8a9`
+- `assets/equations/EQ-05.png` (Eq. 5 Global Memory Incremental Update $\mathcal{M}_{\text{gb}} \leftarrow \mathcal{M}_{\text{gb}} \cup \text{Filter}(\mathcal{M}_{\text{loc}}, \text{Score}_t)$): `def0022ab6d2c4fbd3f95a8b625dcc8e761ef045d6459ee43e0835341261d494`
+- `assets/equations/EQ-06.png` (Eq. 6 Agile Verification Fitness $f_{\text{score}}(m) = \alpha \left(\frac{\Delta \text{Acc}}{\Delta t}\right) + \beta \exp\left(-\sigma \|\nabla_\theta^2\|\right)$): `7d76647ccf0e04e581445afbbddfda2c5376bdc55a81e3857bb76b49a3fc05e1`
+- `assets/equations/EQ-07.png` (Eq. 7 Spearman Rank Correlation $\rho = 1 - \frac{6 \sum d_i^2}{N(N^2 - 1)}$): `4aadaedf1b20514065bed3f44ae7b1ba075697e8689a879a130b732a66408adf`
+- `assets/equations/EQ-08.png` (Eq. 8 Early Screening Precision & Recall): `1a4163f01f80ae1f2bfab4817df0a04c73855c93631dc8071e6b69fee293cbde`
 
 ### Promoted Figures & Tables
 - `F01` (Paradigm Comparison): `assets/figures/fig01_p2_3988x2475.png`
