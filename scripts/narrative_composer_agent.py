@@ -8,6 +8,7 @@ Prohibited in canonical Reader v3 scientific execution.
 """
 import argparse
 import json
+import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -39,8 +40,13 @@ def resolve_intent(root: Path, explicit=None) -> str:
 
 
 def clean_visible_narrative(value):
-    """Remove internal role vocabulary from text supplied by analytical agents."""
+    """Remove internal role vocabulary and exposed audit tags from user-facing text."""
     text = str(value or "")
+    # Strip internal audit brackets
+    text = re.sub(r'【(?:科学核验|证据核验|核验记录|审查透镜|机制核验|门禁检查|事实核查|事实核验)[^】]*】', '', text)
+    # Strip pipeline process phrases
+    text = text.replace("必须严格恪守", "遵循").replace("输入防火墙", "上下文隔离").replace("防火墙机制", "隔离机制")
+
     replacements = {
         "Author Lens": "作者的解释", "Reviewer Lens": "证据审查",
         "Mechanism Lens": "机制解释", "Builder Lens": "方法细节",
