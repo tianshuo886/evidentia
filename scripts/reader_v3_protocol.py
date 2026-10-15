@@ -253,6 +253,21 @@ def create_lead_writer_task(root: Path) -> Path:
     manifest = load_json(manifest_p)
     lens_files = [f"lens_v3/{x['id']}.json" for x in manifest["lenses"]]
     source_sha = _source_sha(root)
+    # Explicit image paths for evidence selected by this particular paper,
+    # not a generic per-figure attribute checklist. Host adapters must attach
+    # the referenced visual bytes as images when composing scientific claims.
+    plan = load_json(plan_p)
+    must_show = (plan.get("visual_evidence_selection") or {}).get("must_show") or []
+    inventory_path = root / "model/figure_inventory.json"
+    inventory = load_json(inventory_path) if inventory_path.exists() else {}
+    by_id = {str(item.get("id")): item for item in inventory.get("items", [])
+             if isinstance(item, dict) and item.get("id")}
+    selected_images = []
+    for evidence_id in must_show:
+        item = by_id.get(str(evidence_id)) or {}
+        asset = item.get("file") or item.get("asset")
+        if asset and (root / asset).is_file() and asset not in selected_images:
+            selected_images.append(asset)
     task = {
         "task_id": "TASK-V3-LEAD-WRITING",
         "task_type": "LEAD_WRITING",
@@ -266,6 +281,9 @@ def create_lead_writer_task(root: Path) -> Path:
             "source_pdf": "source/paper.pdf",
             "source_map": "model/source_map.json",
             "figure_inventory": "model/figure_inventory.json",
+            "source_pages": "source_pages/",
+            "visual_selected_assets": selected_images,
+            "must_show_evidence_ids": must_show,
             "lead_reader_draft": "model/paper_understanding_draft.json",
             "revision_memo": "model/revision_memo.json",
             "narrative_plan": "model/narrative_plan.json",
