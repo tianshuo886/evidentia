@@ -786,7 +786,7 @@ def _match_benchmark_claims(source_sha: str, paper_id: str, title: str) -> Optio
 
 
 def extract_dynamic_claims_from_manuscript(root: Path, manuscript_data: Dict[str, Any], diagnostics: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-    """Dynamically extract atomic claims from sections, takeaways, and quantitative blocks for any paper."""
+    """Extract candidate statements; independent source review must confirm them."""
     doc = manuscript_data.get("document", {})
     chapters = doc.get("sections") or doc.get("chapters", [])
     extracted_claims = []
@@ -820,7 +820,7 @@ def extract_dynamic_claims_from_manuscript(root: Path, manuscript_data: Dict[str
             if is_takeaway or is_table_fig or has_quant:
                 # Split into sentence-level atomic statements
                 sentences = [s.strip() for s in re.split(r"[。；\n]", text) if len(s.strip()) >= 15]
-                for s in sentences[:2]:
+                for s in sentences:
                     # Determine epistemic category
                     category = "OBSERVATION"
                     if any(w in s for w in ("未公开", "未说明", "未决", "UNRESOLVED", "缺少详细", "待验证")):
@@ -848,9 +848,15 @@ def extract_dynamic_claims_from_manuscript(root: Path, manuscript_data: Dict[str
                         }
 
                     # Check against diagnostics for matching contradictions
-                    matching_diags = [d for d in diagnostics if d.get("offending_span", "") in s or any(a in anchors for a in [d.get("anchor", "")])]
-                    verdict = "SUPPORTED"
-                    reasoning = "Validated against source text without contradictory findings."
+                    matching_diags = [
+                        d for d in diagnostics
+                        if (d.get("offending_span") and d["offending_span"] in s)
+                        or (d.get("anchor") and d["anchor"] in anchors)
+                    ]
+                    # Failure to match known-error patterns cannot prove
+                    # agreement with the source PDF.
+                    verdict = "UNVERIFIED"
+                    reasoning = "Reader candidate; source comparison has not run."
                     severity = "INFORMATIONAL"
                     if category == "UNRESOLVED":
                         verdict = "UNRESOLVED"
@@ -870,22 +876,18 @@ def extract_dynamic_claims_from_manuscript(root: Path, manuscript_data: Dict[str
                         "numerical_semantics": num_sem,
                         "attribution": {
                             "attributed_to": "AUTHORS" if category != "READER_ASSESSMENT" else "EVIDENTIA_INDEPENDENT",
-                            "source_confirmed": True,
+                            "source_confirmed": False,
                             "project_context_leakage": False
                         },
-                        "confidence": "HIGH" if category != "UNRESOLVED" else "UNCERTAIN",
+                        "confidence": "UNCERTAIN",
                         "boundaries": [f"Derived from section {cid}"],
                         "verdict": verdict,
                         "verifier_reasoning": reasoning,
                         "severity": severity
                     })
                     claim_counter += 1
-                    if len(extracted_claims) >= 12:
-                        break
-        if len(extracted_claims) >= 12:
-            break
 
-    # If no dynamic claims extracted (e.g. minimal text fixture), provide base claim from paper_model or title
+    # Preserve a clearly unverified placeholder if no material candidate was extracted.
     if not extracted_claims:
         extracted_claims.append({
             "claim_id": "CLM-DYN-01",
@@ -896,13 +898,13 @@ def extract_dynamic_claims_from_manuscript(root: Path, manuscript_data: Dict[str
             "numerical_semantics": None,
             "attribution": {
                 "attributed_to": "AUTHORS",
-                "source_confirmed": True,
+                "source_confirmed": False,
                 "project_context_leakage": False
             },
-            "confidence": "HIGH",
-            "boundaries": ["Baseline structural claim"],
-            "verdict": "SUPPORTED",
-            "verifier_reasoning": "Baseline structural claim verified against manuscript title and lead.",
+            "confidence": "UNCERTAIN",
+            "boundaries": ["No substantive candidate found"],
+            "verdict": "UNVERIFIED",
+            "verifier_reasoning": "Title only; no source verification.",
             "severity": "INFORMATIONAL"
         })
 
@@ -954,35 +956,9 @@ def build_claim_ledger_for_manuscript(root: Path, manuscript_data: Dict[str, Any
 
     diagnostics = verify_text_claims(full_text, {"venue_status": venue_info})
 
-    # Check for known benchmark claims
-    bench_claims = _match_benchmark_claims(source_sha, paper_id, title)
-    claims = []
-
-    if bench_claims:
-        # Populate verified benchmark claims and evaluate against observed diagnostics
-        for template in bench_claims:
-            claim = dict(template)
-            checked_rules = claim.get("rules_checked", [])
-            matching_diags = [d for d in diagnostics if d.get("rule") in checked_rules]
-
-            if matching_diags:
-                first_d = matching_diags[0]
-                claim["verdict"] = first_d.get("verdict", "CONTRADICTED")
-                claim["severity"] = first_d.get("severity", "P0_BLOCKER")
-                claim["verifier_reasoning"] = first_d.get("message", "Contradicted by source evidence.")
-            else:
-                if claim.get("epistemic_category") == "UNRESOLVED":
-                    claim["verdict"] = "UNRESOLVED"
-                    claim["severity"] = "INFORMATIONAL"
-                    claim["verifier_reasoning"] = "Convention details are unresolved in published source material."
-                else:
-                    claim["verdict"] = "SUPPORTED"
-                    claim["severity"] = "INFORMATIONAL"
-                    claim["verifier_reasoning"] = "Verified in accordance with source evidence and calibrated epistemics."
-            claims.append(claim)
-    else:
-        # Dynamically extract atomic claims from manuscript
-        claims = extract_dynamic_claims_from_manuscript(root, manuscript_data, diagnostics)
+    # Never use paper-specific cached claim templates as scientific truth.
+    # The historical registry is retained for old fixtures, not production.
+    claims = extract_dynamic_claims_from_manuscript(root, manuscript_data, diagnostics)
 
     contradicted_count = sum(1 for c in claims if c["verdict"] == "CONTRADICTED")
     critical_contradictions = [
@@ -990,7 +966,10 @@ def build_claim_ledger_for_manuscript(root: Path, manuscript_data: Dict[str, Any
         for c in claims if c["verdict"] == "CONTRADICTED" and c.get("severity") == "P0_BLOCKER"
     ]
 
-    status = "FAIL" if critical_contradictions else ("NEEDS_REVIEW" if any(c["verdict"] in ("CONTRADICTED", "UNSUPPORTED") for c in claims) else "PASS")
+    status = "FAIL" if critical_contradictions else ("NEEDS_REVIEW" if any(
+        c["verdict"] in ("CONTRADICTED", "UNSUPPORTED", "UNVERIFIED", "UNRESOLVED")
+        for c in claims
+    ) else "PASS")
 
     ledger = {
         "schema_version": "1.0",
@@ -1005,6 +984,7 @@ def build_claim_ledger_for_manuscript(root: Path, manuscript_data: Dict[str, Any
             "contradicted": contradicted_count,
             "unsupported": sum(1 for c in claims if c["verdict"] == "UNSUPPORTED"),
             "unresolved": sum(1 for c in claims if c["verdict"] == "UNRESOLVED"),
+            "unverified": sum(1 for c in claims if c["verdict"] == "UNVERIFIED"),
             "critical_contradictions": critical_contradictions,
             "diagnostics": diagnostics,
             "status": status
