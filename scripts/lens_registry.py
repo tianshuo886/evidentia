@@ -19,7 +19,8 @@ CORE_LENSES = [
             "What are the paper's material claims, propositions, observations or organizing moves?",
             "What ordered topology connects those nodes, and which relations are author-stated versus assessed?",
             "Which important thread would be lost if this paper were forced into a conventional scientific-story outline?",
-            "What source evidence makes each material transition credible?"
+            "What source evidence makes each material transition credible?",
+            "Which high-profile author claims exceed the evidence, and which quieter results or appendices materially qualify the story?"
         ],
         "forbidden": ["project transfer", "implementation advice unrelated to faithful reading"]
     },
@@ -32,7 +33,8 @@ CORE_LENSES = [
             "What did the authors actually do, prove, measure, compare, classify or construct, in the order needed to understand this paper?",
             "Why does each reported component or transition exist?",
             "What assumptions, controls, variables, measurements, proof steps or selection rules matter?",
-            "Which design choices are necessary to interpret the paper's native argument correctly?"
+            "Which design choices are necessary to interpret the paper's native argument correctly?",
+            "When relevant, read appendices/supplements for load-bearing initialization, tensor or proof steps, training details and failure/recovery behavior; distinguish source detail from inference."
         ],
         "forbidden": ["project transfer"]
     },
@@ -46,7 +48,9 @@ CORE_LENSES = [
             "What does each directly show, and which node or relation does it support or contradict?",
             "What is the magnitude, direction or formal consequence where the source states it?",
             "What does the evidence not establish?",
-            "Are there anomalous or off-trend observations that matter?"
+            "Are there anomalous or off-trend observations that matter?",
+            "Look beyond headline best scores: negative trajectories, ablation reversals, missing baselines, surrogate metrics and table footnotes can change the conclusion.",
+            "For decisive graphics actually inspect source panels, legends, axes and scales; do not infer their content from captions or inventories alone."
         ],
         "forbidden": ["invented numerical values", "project transfer"]
     },
@@ -59,7 +63,8 @@ CORE_LENSES = [
             "Are the paper's controls, comparisons, sampling, proof dependencies or evaluation protocols adequate for its own claims?",
             "Are there confounds, leakage, unsupported generalizations or inferential jumps?",
             "What alternative explanation or interpretation could fit the same evidence?",
-            "Which boundaries, assumptions and unresolved issues remain material?"
+            "Which boundaries, assumptions and unresolved issues remain material?",
+            "Does author rhetoric imply stronger causal, generalization or engineering claims than the controls and observations establish?"
         ],
         "forbidden": ["project transfer"]
     }
