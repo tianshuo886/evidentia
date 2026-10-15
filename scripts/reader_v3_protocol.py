@@ -69,7 +69,7 @@ def create_lead_reader_task(root: Path) -> Path:
             "experiment, design choice, mechanism, contradiction, measurement, taxonomy branch, boundary, result and "
             "unresolved issue are examples, never a required checklist. Preserve structurally unusual forms such as "
             "proofs, taxonomies, reviews, measurement protocols, or multi-part empirical cases. Then explain the paper "
-            "in natural prose, identify decisive/source-critical evidence, and record uncertainty and open issues. "
+            "in natural prose, identify decisive/source-critical evidence, and record uncertainty and open issues. Inspect actual source PDF figures and legends when they matter; inventories/captions alone are not image inspection. Separate author rhetoric from what experiments and appendices justify. "
             "Do not force a problem→gap→method→experiment→result→limitation story. Do not expose internal Evidentia "
             "terminology or discuss the user's project. Classify paper_type using a concise category."
         ),
@@ -135,7 +135,7 @@ def create_lens_tasks(root: Path) -> list[Path]:
                 + "\n".join(f"- {q}" for q in lens["questions"])
                 + "\nCross-cutting checks: record a real anomaly when relevant; test a serious counterfactual/alternative "
                   "explanation when relevant. Do not force either when the evidence does not support one. "
-                  "Use action KEEP/EXPAND/CORRECT/QUALIFY/VERIFY/NONE to tell the later editor how the Lead Reader draft should change."
+                  "When decisive images are discussed, inspect the real PDF page or image; do not treat text-only inventories as proof of visual review. Look for consequential appendix detail, negative trajectories and proxy metric limitations. Use action KEEP/EXPAND/CORRECT/QUALIFY/VERIFY/NONE to tell the later editor how the Lead Reader draft should change."
             ),
             "executor_template": build_executor_metadata()
         }
@@ -234,7 +234,7 @@ def create_revision_memo_task(root: Path) -> Path:
             "Identify scientific explanation deficits (missing necessary mechanism, variable, experiment control, "
             "discrepancy, boundary). For each deficit, mark action as MUST_EXPLAIN, QUALIFY, CAN_LINK_TO_ATLAS, or UNRESOLVED "
             "with precise source anchors. Reconcile specialist findings, merge duplicates, preserve real conflicts, "
-            "and leave genuinely unresolved points unresolved. Do not produce a new paper summary."
+            "and leave genuinely unresolved points unresolved. Provide actionable edits for missing mechanism links, overclaimed evidence, exact source figure/equation mismatches or anomalous results when material; these are examples, not fixed slots. Do not produce a new paper summary."
         ),
         "executor_template": build_executor_metadata()
     }
@@ -290,7 +290,7 @@ def create_lead_writer_task(root: Path) -> Path:
             "INLINE_EVIDENCE", "NO_INTERNAL_PIPELINE_VOCABULARY", "NO_PROJECT_TRANSFER"
         ],
         "instructions": (
-            "Return a narrative_manuscript v3 object. Re-read source evidence whenever the draft, plan or Revision Memo requires it. "
+            "Return a narrative_manuscript v3 object. Re-read source evidence whenever the draft, plan or Revision Memo requires it. Actually access original images/pages for critical must_show figures; inspect dense panels or legends at higher resolution when necessary, or preserve uncertainty if illegible. "
             "Write for a researcher who has not read the paper: first explain how this particular paper constructs its case, "
             "then follow the supplied paper-specific plan without turning it into pipeline jargon. Use the plan's dynamic "
             "section structure rather than fixed slots; do not add universal problem, gap, method, experiment, result or "
@@ -300,7 +300,7 @@ def create_lead_writer_task(root: Path) -> Path:
             "question/hypothesis -> data/controls/split -> metric and unit -> observed comparison -> what the observation supports "
             "and does not prove. Place verified figures/tables/equations locally where they advance the scientific argument "
             "(including architecture figures and decisive experimental tables); each visual block must explain what question it addresses, "
-            "what to inspect, what it supports, and what it cannot prove. The primary prose must never mention Lens names, Council, O/I/A, "
+            "what to inspect, what it supports, and what it cannot prove. Explain decisive panels/curves/axes/controls in natural language when useful, without an image checklist. Explain mechanism inputs, transformations and limits rather than merely listing module names. The primary prose must never mention Lens names, Council, O/I/A, "
             "schemas, hashes, task IDs, pipeline phases or audit machinery. Do not create project-transfer or reusable-component advice. "
             "Preserve uncertainty instead of filling gaps with generic prose."
         ),
