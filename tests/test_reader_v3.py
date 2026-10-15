@@ -136,6 +136,30 @@ def test_reader_v3_task_chain_is_host_neutral_and_context_isolated(tmp_path):
     assert not schema_validate(writer, "agent_task")
 
 
+def test_writer_task_lists_decisive_visual_assets_for_host_multimodal_input(tmp_path):
+    root = _workspace(tmp_path)
+    images = root / "assets/figures"
+    images.mkdir(parents=True)
+    (images / "architecture.png").write_bytes(b"png-placeholder-for-path-contract")
+    for name, payload in (
+        ("paper_understanding_draft.json", {"paper_id": "PAPER-V3"}),
+        ("revision_memo.json", {"revisions": []}),
+        ("lens_v3_manifest.json", {"lenses": []}),
+        ("narrative_plan.json", {"visual_evidence_selection": {
+            "must_show": ["F-ARCH", "T-RESULT"], "can_omit_with_justification": []
+        }})
+    ):
+        (root / "model" / name).write_text(json.dumps(payload))
+    (root / "model/figure_inventory.json").write_text(json.dumps({
+        "items": [{"id": "F-ARCH", "file": "assets/figures/architecture.png"}]
+    }))
+    task = load_json(create_lead_writer_task(root))
+    assert task["input_artifacts"]["must_show_evidence_ids"] == ["F-ARCH", "T-RESULT"]
+    assert task["input_artifacts"]["visual_selected_assets"] == ["assets/figures/architecture.png"]
+    assert task["input_artifacts"]["source_pages"] == "source_pages/"
+    assert not schema_validate(task, "agent_task")
+
+
 def test_direct_baseline_task_is_real_model_contract_not_synthetic_fixture(tmp_path):
     root = _workspace(tmp_path)
     p = create_direct_task(root)
