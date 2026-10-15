@@ -2,16 +2,15 @@
 
 [English](README.md) · [中文](README.zh-CN.md)
 
-> **P0 READER RELEASE HOLD — 2026-10-13 — newest real-run output FAILED — START WITH #39.**
+> **P0 HOLD — 2026-10-15 — Source-level scientific truth and genuine multi-Lens release, START WITH #45.**
 >
-> The newly generated RingMoClaw Reader contains a materially rewritten paper equation (Eq. 6), unrendered key formulas, broken evidence links, inadequate explanation and uncalibrated scientific conclusions. Closed historical #36–#38 and the Oct 11 PASS report document their earlier scope; **they do not qualify the newer artifacts for release**.
+> A new IEEE GRSM HSI review Reader incorrectly recast Fig. 9's six algorithms as three, Fig. 10's two representations as three model families, and Fig. 11's one NSR-Net at 5/20/80 labels as cross-model evidence; Eq. (4) dropped its source residual and inline LaTeX was emitted literally. PDF SHA-256: `3290be0d3fc159376e15d35fe08bce31baaeb70f7d07e2c782cd8579b980580b`. Audits found broader defects: generic claims default to SUPPORTED without independent verification, an arbitrary twelve-claim limit, optional semantic/visual release reviews and an old cached seven-paper A/B shortcut. **Closed #39–#44 document earlier work and do not qualify this new paper.**
 >
-> **Mandatory execution order for Orca / Codex / maintainers (GitHub issue list order is NOT priority):**
-> **[#39 START HERE: formula source fidelity](https://github.com/tianshuo886/evidentia/issues/39)** → **[#40 math explanation](https://github.com/tianshuo886/evidentia/issues/40)** → **[#41 general scientific truth and calibration](https://github.com/tianshuo886/evidentia/issues/41)** → **[#42 mechanistic depth and narrative quality](https://github.com/tianshuo886/evidentia/issues/42)** → **[#43 HTML/MD/PDF delivery integrity](https://github.com/tianshuo886/evidentia/issues/43)** → **[#44 FINAL GATE: fresh-run source-assisted release qualification](https://github.com/tianshuo886/evidentia/issues/44)**.
+> **Mandatory P0 order:** **[#45 START HERE — original figure/panel semantics](https://github.com/tianshuo886/evidentia/issues/45)** → **[#46 fail-closed atomic scientific claims](https://github.com/tianshuo886/evidentia/issues/46)** → **[#47 genuine 4+2 Lens accountability and run provenance](https://github.com/tianshuo886/evidentia/issues/47)**; **[#48 inline math and source-equation fidelity](https://github.com/tianshuo886/evidentia/issues/48)** may run in parallel after #45's source-evidence contract; **[#49 FINAL GATE — required independent fresh-paper review and noncached A/B](https://github.com/tianshuo886/evidentia/issues/49)** is last.
 >
-> All six are **P0 release blockers**. Close each only with its stated evidence and acceptance criteria; non-dependent engineering may run concurrently but no dependency or source check may be skipped. **Defer #30–#35 and other P1/P2 feature work** until #44 genuinely passes. Do not issue `PAPER_COMPLETE` with material equation, scientific attribution, evidence navigation or asset failures.
+> **All five are P0 release blockers.** Suspend claims of PAPER_COMPLETE for any fresh paper until independently verified. Preserve the current Reader v3 / 4 Core + 2 Adaptive Lens / Revision Memo / Lead Writer / Kami architecture. Do not hardcode this survey or upload the licensed IEEE PDF into the public repository; use permitted derived regression facts and private local source paths. Defer #30–#35 feature work until #49 passes with actual model execution receipts and held-out fresh papers.
 >
-> Historical work: [#36](https://github.com/tianshuo886/evidentia/issues/36), [#37](https://github.com/tianshuo886/evidentia/issues/37), [#38](https://github.com/tianshuo886/evidentia/issues/38), [earlier release report](READER_QUALITY_RELEASE_REPORT.md).
+> Historical work: [#39–#44](https://github.com/tianshuo886/evidentia/issues/44) and [earlier release report](NEW_READER_QUALITY_RELEASE_REPORT.md) do not constitute a new Reader acceptance certificate.
 
 ---
 
