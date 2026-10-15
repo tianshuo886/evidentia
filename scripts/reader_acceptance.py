@@ -482,6 +482,16 @@ def evaluate(root: Path, *, artifact_only=False, regression_report=None):
     try:
         report = _evaluate_artifact(root, artifact_only=artifact_only)
         report["implementation_sha256"] = implementation_hash()
+        report["source_review_executed"] = (
+            not artifact_only
+            and (root / "reader/semantic_review.json").is_file()
+            and (root / "reader/visual_review.json").is_file()
+        )
+        # Artifact-only checks can certify structure, never actual reading
+        # of original source; do not label fixture runs science-verified.
+        if artifact_only:
+            report["science_verified"] = False
+            report["explanation_complete"] = False
         if report["status"] == "READER_ACCEPTED":
             report["artifact_hashes"] = bindings(root)
         if not artifact_only:
