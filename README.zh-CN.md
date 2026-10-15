@@ -2,16 +2,15 @@
 
 [English](README.md) · [中文](README.zh-CN.md)
 
-> **P0 科研精读质量阻塞｜2026-10-13｜新版真实运行未通过验收｜从 #39 开始**
+> **P0 源证据与真实多 Lens 验收阻塞｜2026-10-15｜从 #45 开始**
 >
-> 最新 RingMoClaw 重新精读产物暴露了新的数学语义失真（原论文公式 (6) 被改写）、核心公式占位符、证据锚点失效、解释不充分与科学判断过度确定等问题。前一轮 **#36–#38 已关闭及 2026-10-11 的 PASS 报告仅是历史阶段的证据，不能视为新产物通过验收**。本轮必须使用真实新运行和独立来源核验来修复。
+> 一篇全新 30 页 IEEE GRSM 高光谱综述的 Reader 在正文中把原始 Figure 9 的 **六种方法**错误写成 **三种**、Figure 10 **两个表征组**写成**三种模型方案**、Figure 11 **单个 NSR-Net 的 5/20/80 样本配置**写成跨模型对比；公式 (4) 缺失残差项，行内 LaTeX 以纯代码显示。源 PDF SHA-256 `3290be0d3fc159376e15d35fe08bce31baaeb70f7d07e2c782cd8579b980580b`。由此暴露出通用核验默认 `SUPPORTED`、最多十二条主张、可选语义/视觉审核以及缓存历史 A/B 的新论文发布漏洞。**#39–#44 为已关闭的历史修复，不能作为新论文自动通过验收的证据。**
 >
-> **Orca / Codex / 维护者的强制优先级顺序（GitHub 默认按更新时间排序，不代表执行优先级）：**
-> **[#39 从这里开始：公式忠实重建](https://github.com/tianshuo886/evidentia/issues/39)** → **[#40 公式教学式解释](https://github.com/tianshuo886/evidentia/issues/40)** → **[#41 通用科学完整性与结论校准](https://github.com/tianshuo886/evidentia/issues/41)** → **[#42 机制深度与叙事质量](https://github.com/tianshuo886/evidentia/issues/42)** → **[#43 HTML/MD/PDF 交付完整性](https://github.com/tianshuo886/evidentia/issues/43)** → **[#44 最终全新运行与真实评测验收](https://github.com/tianshuo886/evidentia/issues/44)**。
+> **Orca / Codex 强制最高优先级：** **[#45 START HERE：图表面板与实验事实核验](https://github.com/tianshuo886/evidentia/issues/45)** → **[#46 通用科学主张 fail-closed](https://github.com/tianshuo886/evidentia/issues/46)** → **[#47 真实六 Lens 科学责任与执行溯源](https://github.com/tianshuo886/evidentia/issues/47)**；**[#48 行内数学渲染与公式保真](https://github.com/tianshuo886/evidentia/issues/48)** 可在 #45 源证据协议确认后与 #46–#47 并行；最后必须完成 **[#49 FINAL GATE：全新论文独立审阅与非缓存发布门禁](https://github.com/tianshuo886/evidentia/issues/49)**。
 >
-> 六项全部为 P0 发布阻塞任务。**#39 START HERE，#44 FINAL GATE**。各阶段通过 Issue 内的实际验收标准后再关闭；允许互不依赖的工程修改并行，但不得跳过依赖顺序宣布通过。暂缓 #30–#35 等 P1/P2 功能开发，直至 #44 通过。若重要公式、科学归因、证据链接或交付资产未通过，严禁签发 `PAPER_COMPLETE`。
+> **五个 Issue 均为 P0 发布阻塞任务**，所有真实新论文 `PAPER_COMPLETE` 先暂停签发。保留现有 Reader v3 / 4 Core + 2 Adaptive Lens / Revision Memo / Lead Writer / Kami 架构，不为单篇论文硬编码过关。真实源 PDF 的 IEEE 授权版本不得直接公开提交；可提供允许公开的事实回归样本、源哈希与本地私有复验说明。暂缓 #30–#35 与其他功能扩展，直到 #49 有真实执行凭证并通过跨论文独立验收。
 >
-> 历史发布记录：[#36](https://github.com/tianshuo886/evidentia/issues/36) / [#37](https://github.com/tianshuo886/evidentia/issues/37) / [#38](https://github.com/tianshuo886/evidentia/issues/38)；[历史质量报告](READER_QUALITY_RELEASE_REPORT.md)。
+> 历史修复归档：[Issue #39–#44](https://github.com/tianshuo886/evidentia/issues/44) 及 [原发布报告](NEW_READER_QUALITY_RELEASE_REPORT.md)，均不自动认证本次新的 IEEE GRSM Reader。
 
 ---
 
