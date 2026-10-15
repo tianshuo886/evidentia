@@ -2,15 +2,15 @@
 
 [English](README.md) · [中文](README.zh-CN.md)
 
-> **P0 源证据与真实多 Lens 验收阻塞｜2026-10-15｜从 #45 开始**
+> **P0 科学可信性修复｜2026-10-15 更新实施原则｜从 #45 开始**
 >
-> 一篇全新 30 页 IEEE GRSM 高光谱综述的 Reader 在正文中把原始 Figure 9 的 **六种方法**错误写成 **三种**、Figure 10 **两个表征组**写成**三种模型方案**、Figure 11 **单个 NSR-Net 的 5/20/80 样本配置**写成跨模型对比；公式 (4) 缺失残差项，行内 LaTeX 以纯代码显示。源 PDF SHA-256 `3290be0d3fc159376e15d35fe08bce31baaeb70f7d07e2c782cd8579b980580b`。由此暴露出通用核验默认 `SUPPORTED`、最多十二条主张、可选语义/视觉审核以及缓存历史 A/B 的新论文发布漏洞。**#39–#44 为已关闭的历史修复，不能作为新论文自动通过验收的证据。**
+> **核心设计裁决：固定科学底线，不固定科学思考过程。** Evidentia 应让强模型充分、自主阅读原论文，通过 4 Core + 2 Adaptive Lens 独立产生互补发现；由编辑模型消解关键分歧，Lead Writer 完成动态中文叙事，再由隔离的科学 Reviewer **直接对照原始论文与最终稿**质疑和纠错。程序只承担真实调用溯源、证据可追踪、严重矛盾阻断、公式与页面渲染等确定性职责。**不强制每张图填固定字段、不按句穷举全量 claim ledger、不要求每篇重复七组 A/B、不把六 Lens 变成六张 checklist**。
 >
-> **Orca / Codex 强制最高优先级：** **[#45 START HERE：图表面板与实验事实核验](https://github.com/tianshuo886/evidentia/issues/45)** → **[#46 通用科学主张 fail-closed](https://github.com/tianshuo886/evidentia/issues/46)** → **[#47 真实六 Lens 科学责任与执行溯源](https://github.com/tianshuo886/evidentia/issues/47)**；**[#48 行内数学渲染与公式保真](https://github.com/tianshuo886/evidentia/issues/48)** 可在 #45 源证据协议确认后与 #46–#47 并行；最后必须完成 **[#49 FINAL GATE：全新论文独立审阅与非缓存发布门禁](https://github.com/tianshuo886/evidentia/issues/49)**。
+> 最近一篇 IEEE GRSM 高光谱综述暴露了 Figure 9–11 的编造比较、公式 (4) 遗漏残差、正文行内 LaTeX 裸露。审计代码发现：通用科学审查存在默认 `SUPPORTED` 和最多 12 条声明限制，最终语义/视觉审查可能缺席，旧基准报告可绕过真实新论文验收。**#39–#44 是历史已关闭工作，不代表这篇新论文已被独立认证。**
 >
-> **五个 Issue 均为 P0 发布阻塞任务**，所有真实新论文 `PAPER_COMPLETE` 先暂停签发。保留现有 Reader v3 / 4 Core + 2 Adaptive Lens / Revision Memo / Lead Writer / Kami 架构，不为单篇论文硬编码过关。真实源 PDF 的 IEEE 授权版本不得直接公开提交；可提供允许公开的事实回归样本、源哈希与本地私有复验说明。暂缓 #30–#35 与其他功能扩展，直到 #49 有真实执行凭证并通过跨论文独立验收。
+> **Orca / Codex 新一轮 P0 执行次序：** **[#45 START HERE：开放式图表科学审稿](https://github.com/tianshuo886/evidentia/issues/45)** → **[#46 独立原文审阅与最小化问题记录](https://github.com/tianshuo886/evidentia/issues/46)** → **[#47 自适应六 Lens 会诊与真实执行](https://github.com/tianshuo886/evidentia/issues/47)**；**[#48 行内数学与公式保真](https://github.com/tianshuo886/evidentia/issues/48)** 可并行；最后 **[#49 FINAL GATE：独立科学审稿与真实发布资格](https://github.com/tianshuo886/evidentia/issues/49)**。Issue 内的新版原则优先于旧设计文档与之前的目标文本。
 >
-> 历史修复归档：[Issue #39–#44](https://github.com/tianshuo886/evidentia/issues/44) 及 [原发布报告](NEW_READER_QUALITY_RELEASE_REPORT.md)，均不自动认证本次新的 IEEE GRSM Reader。
+> 保持 Reader v3 / Revision Memo / Lead Writer / Kami 架构，禁止硬编码这篇论文；重要且明确的原文矛盾未修复、真实模型审稿未运行或核心公式未正常显示时，不得签发 `PAPER_COMPLETE`。版权受限源 PDF 不得公开上传。#49 通过前暂停 #30–#35 的功能扩展。
 
 ---
 
