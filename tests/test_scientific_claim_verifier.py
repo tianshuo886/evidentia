@@ -210,46 +210,23 @@ def test_editorial_prose_free_of_leakage_passes():
 # 7. RINGMOCLAW 10-CLAIM ATOMIC CLAIM LEDGER
 # ==============================================================================
 
-def test_ringmoclaw_claim_ledger_ten_claims_and_epistemics(tmp_path):
-    """RingMoClaw produces 10 atomic claims with calibrated epistemic categories."""
+def test_known_paper_must_not_receive_cached_claim_verdicts(tmp_path):
+    """Known benchmark titles must not create pre-approved source claims."""
     root = tmp_path / "ringmoclaw_workspace"
     root.mkdir()
     manuscript = {
-        "schema_version": "3.0",
-        "paper_id": "ringmoclaw",
-        "source_sha256": RINGMOCLAW_SHA,
-        "document": {
-            "title": "RingMoClaw",
-            "paper_meta": {
-                "authors": ["Kaiyue Kang", "Xian Sun"],
-                "venue": "arXiv:2609.00814v2 (preprint · venue unverified)",
-                "year": 2026,
-                "preprint_status": "PREPRINT",
-                "venue_verified_externally": False
-            },
-            "orientation": {"lead": "自演化科研闭环精读"},
-            "sections": [
-                {"id": "sec-01", "title": "实证突破", "blocks": [{"type": "paragraph", "text": "精读正文"}]}
-            ]
-        }
+        "paper_id": "ringmoclaw", "source_sha256": RINGMOCLAW_SHA,
+        "document": {"title": "RingMoClaw",
+                     "paper_meta": {"authors": ["Kaiyue Kang"], "venue": "arXiv", "year": 2026},
+                     "sections": [{"id": "sec-01", "title": "Overview",
+                                   "blocks": [{"type": "paragraph", "text": "Short overview."}]}]}
     }
     ledger = build_claim_ledger_for_manuscript(root, manuscript)
-    errs = list(schema_validate(ledger, "claim_ledger"))
-    assert not errs, f"Claim ledger schema error: {errs}"
-
-    claims = ledger["claims"]
-    assert len(claims) == 10, f"Expected 10 canonical claims for RingMoClaw, got {len(claims)}"
-
-    claim_ids = {c["claim_id"] for c in claims}
-    assert {f"CLM-{i:02d}" for i in range(1, 11)} == claim_ids
-
-    # Verify epistemic categories
-    epistemic_map = {c["claim_id"]: c["epistemic_category"] for c in claims}
-    assert epistemic_map["CLM-01"] == "OBSERVATION"
-    assert epistemic_map["CLM-05"] == "AUTHOR_INTERPRETATION"
-    assert epistemic_map["CLM-08"] == "UNRESOLVED"
-    assert epistemic_map["CLM-09"] == "READER_ASSESSMENT"
-    assert epistemic_map["CLM-10"] == "OBSERVATION"
+    assert not schema_validate(ledger, "claim_ledger")
+    assert len(ledger["claims"]) == 1
+    assert ledger["claims"][0]["verdict"] == "UNVERIFIED"
+    assert ledger["claims"][0]["attribution"]["source_confirmed"] is False
+    assert ledger["verification_summary"]["status"] == "NEEDS_REVIEW"
 
 
 # ==============================================================================
@@ -257,71 +234,37 @@ def test_ringmoclaw_claim_ledger_ten_claims_and_epistemics(tmp_path):
 # ==============================================================================
 
 def test_cross_paper_vaswani_attention_ledger(tmp_path):
-    """Attention Is All You Need produces canonical 3 claims and passes schema."""
     root = tmp_path / "attention_workspace"
     root.mkdir()
     manuscript = {
-        "schema_version": "3.0",
-        "paper_id": "vaswani2017attention",
-        "source_sha256": "attention-sha256",
-        "document": {
-            "title": "Attention Is All You Need",
-            "paper_meta": {
-                "authors": ["Ashish Vaswani", "Noam Shazeer"],
-                "venue": "NeurIPS 2017",
-                "year": 2017,
-                "venue_verified_externally": True
-            },
-            "sections": [
-                {"id": "sec-01", "title": "Model Architecture", "blocks": [{"type": "paragraph", "text": "Transformer architecture."}]}
-            ]
-        }
+        "paper_id": "vaswani2017attention", "source_sha256": "attention-sha256",
+        "document": {"title": "Attention Is All You Need",
+                     "paper_meta": {"authors": ["A. Vaswani"], "venue": "NeurIPS 2017", "year": 2017},
+                     "sections": [{"id": "sec-01", "title": "Model Architecture",
+                                   "blocks": [{"type": "paragraph", "text": "Transformer architecture."}]}]}
     }
     ledger = build_claim_ledger_for_manuscript(root, manuscript)
-    errs = list(schema_validate(ledger, "claim_ledger"))
-    assert not errs, f"Attention ledger schema error: {errs}"
-
-    claims = ledger["claims"]
-    assert len(claims) == 3
-    claim_ids = {c["claim_id"] for c in claims}
-    assert "CLM-ATTN-01" in claim_ids
-    assert "CLM-ATTN-02" in claim_ids
-    assert "CLM-ATTN-03" in claim_ids
-    assert ledger["verification_summary"]["status"] == "PASS"
+    assert not schema_validate(ledger, "claim_ledger")
+    assert len(ledger["claims"]) == 1
+    assert ledger["claims"][0]["verdict"] == "UNVERIFIED"
+    assert ledger["verification_summary"]["status"] == "NEEDS_REVIEW"
 
 
 def test_cross_paper_lora_ledger(tmp_path):
-    """LoRA produces canonical 3 claims and passes schema."""
     root = tmp_path / "lora_workspace"
     root.mkdir()
     manuscript = {
-        "schema_version": "3.0",
-        "paper_id": "hu2021lora",
-        "source_sha256": "lora-sha256",
-        "document": {
-            "title": "LoRA: Low-Rank Adaptation of Large Language Models",
-            "paper_meta": {
-                "authors": ["Edward J. Hu", "Yelong Shen"],
-                "venue": "ICLR 2022",
-                "year": 2022,
-                "venue_verified_externally": True
-            },
-            "sections": [
-                {"id": "sec-01", "title": "Problem Statement", "blocks": [{"type": "paragraph", "text": "Low-rank parameterization."}]}
-            ]
-        }
+        "paper_id": "hu2021lora", "source_sha256": "lora-sha256",
+        "document": {"title": "LoRA: Low-Rank Adaptation of Large Language Models",
+                     "paper_meta": {"authors": ["E. Hu"], "venue": "ICLR", "year": 2022},
+                     "sections": [{"id": "sec-01", "title": "Problem Statement",
+                                   "blocks": [{"type": "paragraph", "text": "Low-rank parameterization."}]}]}
     }
     ledger = build_claim_ledger_for_manuscript(root, manuscript)
-    errs = list(schema_validate(ledger, "claim_ledger"))
-    assert not errs, f"LoRA ledger schema error: {errs}"
-
-    claims = ledger["claims"]
-    assert len(claims) == 3
-    claim_ids = {c["claim_id"] for c in claims}
-    assert "CLM-LORA-01" in claim_ids
-    assert "CLM-LORA-02" in claim_ids
-    assert "CLM-LORA-03" in claim_ids
-    assert ledger["verification_summary"]["status"] == "PASS"
+    assert not schema_validate(ledger, "claim_ledger")
+    assert len(ledger["claims"]) == 1
+    assert ledger["claims"][0]["verdict"] == "UNVERIFIED"
+    assert ledger["verification_summary"]["status"] == "NEEDS_REVIEW"
 
 
 # ==============================================================================
@@ -378,7 +321,8 @@ def test_dynamic_claim_extraction_for_arbitrary_paper(tmp_path):
     categories = {c["epistemic_category"] for c in claims}
     assert "OBSERVATION" in categories
     assert "UNRESOLVED" in categories
-    assert ledger["verification_summary"]["status"] == "PASS"
+    assert ledger["verification_summary"]["status"] == "NEEDS_REVIEW"
+    assert all(c["attribution"]["source_confirmed"] is False for c in claims)
 
 
 # ==============================================================================
