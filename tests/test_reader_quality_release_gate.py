@@ -198,8 +198,11 @@ def test_layer3_runtime_integration_gate_facets(tmp_path):
     root = fixture(tmp_path)
     render_reader(root)
     report = evaluate(root, artifact_only=True)
-    assert report["science_verified"] is True
-    assert report["explanation_complete"] is True
+    # A structural fixture has not undergone an independent source review;
+    # artifact_only must never claim scientific or explanatory verification.
+    assert report["science_verified"] is False
+    assert report["explanation_complete"] is False
+    assert report["source_review_executed"] is False
     # In artifact-only mode, benchmark_pass is False until full corpus is validated
     assert report["benchmark_pass"] is False
     assert report["status"] == "READER_ACCEPTED"
