@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python3
 """Unified CLI and Host-agnostic workflow orchestrator for Evidentia v1.1.
 
@@ -346,9 +347,17 @@ def run_canonical_v3_workflow(args):
         print(f"    - Audit Evidence Atlas   : {atlas_p}")
     print(f"    - Paper Literature Folder: {out_dir.resolve()}\n")
 
-    # Rendering is not release (Issue #49). Fail closed: without a real,
-    # hash-bound independent source/Reader review of THIS paper, the run is
-    # NOT_RUN and may not be reported as PAPER_COMPLETE.
+    # Prepare the independent review packets the release gate requires, so a
+    # finished run hands back an actionable task instead of a bare refusal.
+    # Rendering is not release (Issue #49).
+    try:
+        from source_review import write_task as _write_source_task
+        if not (out_dir / 'reader/source_review.json').exists():
+            _write_source_task(out_dir)
+            print(f"    - Source review task    : {out_dir / 'tasks/v3/source_review.json'}")
+    except (OSError, ValueError, FileNotFoundError) as exc:
+        print(f"    - Source review task    : could not be prepared ({exc})")
+
     from release_gate import evaluate_release, write_decision
     release = evaluate_release(out_dir)
     decision_p = write_decision(out_dir, release)
