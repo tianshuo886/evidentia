@@ -1,5 +1,6 @@
 """End-to-end acceptance coverage for the Issue #10–#13 Reader contract."""
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -12,6 +13,11 @@ from test_gates import fixture
 
 
 def _render(root, intent=None):
+    # These fixtures intentionally point every evidence item at one placeholder
+    # image. The shared-asset guard is real and covered by
+    # test_shared_image_bytes_across_distinct_figures_is_rejected, so opt out
+    # here rather than weakening the guard.
+    os.environ['EVIDENTIA_ALLOW_SHARED_ASSETS'] = '1'
     render_reader(root, intent=intent)
     # Unit tests exercise the artifact contract. Human semantic/visual review
     # and the real-paper regression report are covered by
