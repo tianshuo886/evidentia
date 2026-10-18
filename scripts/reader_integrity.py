@@ -43,7 +43,13 @@ class ReaderHTML(HTMLParser):
             self.anchors.append(attr["href"][1:])
         if tag == "section" and eid.startswith("ch-"):
             self.primary = eid not in ("ch-sources", "ch-appendix")
-        skip = tag in ("style", "script", "svg") or bool(set(attr.get("class", "").split()) & {"evidence-cite", "evidence-cites", "math-display", "eq-label"})
+        # Rendered mathematics (MathJax SVG) is presentation of the same TeX the
+        # manuscript already carries, so its glyph text must not count as extra
+        # prose. Skip the container and everything inside it (Issue #48).
+        skip = tag in ("style", "script", "svg", "mjx-container") or bool(
+            set(attr.get("class", "").split())
+            & {"evidence-cite", "evidence-cites", "math-display", "eq-label"}
+        )
         parent_skip = any(x[2] for x in self.stack)
         container = eid.removeprefix("evidence-") if eid.startswith("evidence-") else next((x[1] for x in reversed(self.stack) if x[1]), None)
         if tag == "img" and container:
