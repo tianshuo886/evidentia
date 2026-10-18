@@ -1,88 +1,93 @@
-"""Test suite for Issue #37: Deep Explanation and Visual Coverage.
 
-Verifies:
-1. Figure 2 (F02) and Roman-numeral tables (T01-T10) are successfully extracted and bound
-2. Defective Reader fails depth audit due to missing architecture and explanation deficits
-3. Corrected Reader satisfies all 6 core explanation areas and binds 9 must-show assets
-4. Visual evidence selection audit accounts for Figs. 6-9 and all tables without arbitrary blanket counts
-5. Zero internal pipeline vocabulary (Lens, Council, O/I/A) leaked into final narrative
-"""
+"""Paper-independent narrative depth and visual coverage regressions."""
 import json
-import pytest
+import sys
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
-SCRIPTS = ROOT / "scripts"
-EVALS = ROOT / "evals/reader_v3/semantic_regressions/ringmoclaw"
+sys.path.insert(0, str(ROOT / "scripts"))
 
-import sys
-sys.path.insert(0, str(SCRIPTS))
-
-from reader_depth_audit import audit_explanation_depth, audit_visual_evidence_selection
-from validate_common import load_json
+from reader_depth_audit import audit_reader_mechanistic_depth, audit_visual_evidence_selection
+from scientific_claim_verifier import verify_text_claims
 
 
-def test_coverage_expectations_fixture_valid():
-    """Verify that coverage expectations fixture is complete and well-structured."""
-    exp_p = EVALS / "coverage_expectations.json"
-    assert exp_p.exists()
-    exp = load_json(exp_p)
-    assert len(exp["knowledge_coverage_requirements"]) >= 7
-    must_show = exp["visual_evidence_selection"]["must_show"]
-    accounted = exp["visual_evidence_selection"]["accounted_omissions"]
-    must_show_ids = {m["id"] for m in must_show}
-    accounted_ids = {a["id"] for a in accounted}
-
-    # F02 must be required
-    assert "F02" in must_show_ids
-    assert "T01" in must_show_ids
-    assert "T06" in must_show_ids
-    assert "T07" in must_show_ids
-    assert "T08" in must_show_ids
-    assert "T09" in must_show_ids
-    assert "T10" in must_show_ids
-
-    # Figs 6-9 must be accounted for
-    assert {"F06", "F07", "F08", "F09"}.issubset(accounted_ids)
+@pytest.fixture
+def coverage_expectations(tmp_path):
+    expectations = {"visual_evidence_selection": {
+        "must_show": [{"id": "F01", "label": "Representation flow"},
+                      {"id": "T01", "label": "Controlled comparison"}],
+        "accounted_omissions": [{"id": "F03", "reason": "Repeated examples retained in the atlas"}],
+    }}
+    (tmp_path / "coverage_expectations.json").write_text(json.dumps(expectations))
+    return expectations
 
 
-def test_defective_reader_fails_depth_audit():
-    """Defective Reader fails depth audit due to missing F02 and incomplete mechanisms."""
-    defective_text = (EVALS / "defective_reader.md").read_text(encoding="utf-8")
-    res = audit_explanation_depth(defective_text, visual_items=[])
-    assert res["overall_status"] == "DEFICIT"
-    assert res["score"] < 60.0
-    deficits = [d["concept"] for d in res["explanation_deficits"]]
-    assert any("Fig. 2" in d or "Architecture" in d for d in deficits)
+def reader_with_visuals(*ids, text="输入特征矩阵经过投影，再以权重聚合得到紧凑表征。"):
+    return {"paper_id": "synthetic-depth", "source_sha256": "a" * 64,
+            "document": {"title": "Synthetic study", "sections": [{
+                "id": "method", "title": "Method", "blocks": [
+                    {"type": "paragraph", "text": text},
+                    *[{"type": "table" if eid.startswith("T") else "figure", "evidence_id": eid,
+                       "caption": "Synthetic controlled evidence",
+                       "analysis": "图表展示输入特征经过投影后的表示变化，并对照固定训练预算下的基线结果；这些观察支持当前设置中的增益，但并不代表其他任务上仍有同样效果。"}
+                      for eid in ids],
+                ]}]}}
 
 
-def test_corrected_reader_achieves_complete_depth():
-    """Corrected Reader covers all 6 key concepts and achieves 100% score."""
-    corrected_text = (EVALS / "corrected_reader.md").read_text(encoding="utf-8")
-    exp = load_json(EVALS / "coverage_expectations.json")
-    must_show_items = [{"id": m["id"]} for m in exp["visual_evidence_selection"]["must_show"]]
-
-    res = audit_explanation_depth(corrected_text, visual_items=must_show_items)
-    assert res["overall_status"] == "PASS"
-    assert res["score"] == 100.0
-    assert len(res["explanation_deficits"]) == 0
+def test_coverage_expectations_fixture_valid(coverage_expectations):
+    selection = coverage_expectations["visual_evidence_selection"]
+    required = {item["id"] for item in selection["must_show"]}
+    omitted = {item["id"] for item in selection["accounted_omissions"]}
+    assert required == {"F01", "T01"}
+    assert required.isdisjoint(omitted)
+    assert all(item["reason"] for item in selection["accounted_omissions"])
 
 
-def test_visual_selection_audit_passes_without_omissions():
-    """Visual selection audit accounts for all must-show assets and Atlas omissions."""
-    exp = load_json(EVALS / "coverage_expectations.json")
-    must_show_items = [{"id": m["id"]} for m in exp["visual_evidence_selection"]["must_show"]]
+def test_defective_reader_fails_depth_audit(tmp_path, coverage_expectations, monkeypatch):
+    monkeypatch.delenv("EVIDENTIA_FIXTURE_ACCEPTANCE", raising=False)
+    report = audit_reader_mechanistic_depth(tmp_path, reader_with_visuals(text="方法很好，结果不错。"))
+    assert report["status"] == "DEFICIT"
+    kinds = {d["type"] for d in report["diagnostics"]}
+    assert {"LACKS_REPRESENTATION_DEPTH", "MISSING_MUST_SHOW"} <= kinds
+    assert {d["target"] for d in report["diagnostics"] if d["type"] == "MISSING_MUST_SHOW"} == {"F01", "T01"}
 
-    vis_res = audit_visual_evidence_selection(must_show_items, exp)
-    assert vis_res["status"] == "PASS"
-    assert vis_res["must_show_bound"] == len(exp["visual_evidence_selection"]["must_show"])
-    assert len(vis_res["missing_must_show"]) == 0
-    assert vis_res["accounted_omissions_count"] >= 9
+
+def test_corrected_reader_achieves_complete_depth(tmp_path, coverage_expectations, monkeypatch):
+    monkeypatch.delenv("EVIDENTIA_FIXTURE_ACCEPTANCE", raising=False)
+    report = audit_reader_mechanistic_depth(tmp_path, reader_with_visuals("F01", "T01"))
+    assert report["status"] == "PASS"
+    assert report["errors"] == []
+    assert report["bound_visuals_count"] == 2
+
+
+def test_visual_selection_audit_passes_without_omissions(coverage_expectations):
+    report = audit_visual_evidence_selection([{"id": "F01"}, {"id": "T01"}], coverage_expectations)
+    assert report["status"] == "PASS"
+    assert report["must_show_bound"] == report["must_show_total"] == 2
+    assert report["missing_must_show"] == []
+    assert report["accounted_omissions_count"] == 1
+
+
+def test_visual_selection_reports_missing_asset(coverage_expectations):
+    report = audit_visual_evidence_selection([{"id": "F01"}, {"id": "F99"}], coverage_expectations)
+    assert report["status"] == "FAIL"
+    assert [item["id"] for item in report["missing_must_show"]] == ["T01"]
+    assert report["must_show_bound"] == 1
 
 
 def test_narrative_purity_no_internal_machinery_leaked():
-    """Check that neither Lens, Council, O/I/A, nor task IDs leak into narrative."""
-    corrected_text = (EVALS / "corrected_reader.md").read_text(encoding="utf-8")
-    forbidden = ["Author Lens", "Reviewer Lens", "Mechanism Lens", "Lens Council", "TASK-V3", "O/I/A", "schema_version"]
-    for term in forbidden:
-        assert term not in corrected_text, f"Internal term leaked: {term}"
+    text = "读者独立评估：本实验仅比较固定预算下的两种特征投影，尚不能推广到所有任务。"
+    assert verify_text_claims(text) == []
+    assert any(d["rule"] == "AUDIT_VOCABULARY_LEAKAGE"
+               for d in verify_text_claims(text + "【门禁检查通过】"))
+
+
+def test_mechanism_audit_without_paper_expectations_is_not_run():
+    from reader_depth_audit import audit_explanation_depth
+
+    report = audit_explanation_depth("A synthetic paragraph with no current-paper audit plan.")
+    assert report["overall_status"] == "NOT_RUN"
+    assert report["concepts_audited"] == 0
+    assert report["score"] is None
