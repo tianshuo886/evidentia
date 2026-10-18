@@ -12,13 +12,15 @@ Verification Criteria:
    - What it computes: Identifies inputs, outputs, and constituent symbols.
    - How it works: Decomposes key terms, explaining the intuitive effect of operators,
      signs, fractions, denominators, and exponentials.
-   - Engineering proxies: Explicitly distinguishes practical proxies (e.g., CV_50) from
-     theoretical formulations (e.g., Hessian norm), stating unverified or omitted details.
+   - Engineering proxies: Distinguish practical proxies from theoretical formulations,
+     stating unverified or omitted implementation details when the source supports them.
 3. Anti-Patterns & Rejections:
    - Silent Equations: Reject equations rendered with only a generic 1-line label.
-   - Contradictory Explanations: Reject false statements that contradict the mathematics
-     (e.g., claiming 1 - B_t rewards bottlenecks or claiming a surrogate is an exact second derivative).
+   - Contradictory Explanations: Flag contradictions between the source-verified equation
+     and the explanation; automatic checks do not supply paper-specific answer rules.
 4. Concise Definitions: Allow concise definitions for auxiliary/notation equations.
+5. Paper-agnostic Rules: Derive explanation priority from mathematical structure and
+   explicit pedagogy metadata, never a paper identity or equation number.
 """
 import argparse
 import json
@@ -26,25 +28,11 @@ import re
 import sys
 from pathlib import Path
 
-# Common mathematical terms indicating priority
+# Common operators whose behavior usually needs explanation. Rule selection is
+# based only on mathematical structure, never paper identity or equation number.
 MUST_EXPLAIN_INDICATORS = [
-    r"\frac", r"/", r"\exp", r"\sum", r"\text{softmax}", r"\Pi", r"W_0",
-    r"\nabla", r"\le", r"\ge", r"Score", r"f_{\text{score}}"
-]
-
-CONTRADICTION_RULES = [
-    {
-        "anchor": r"1\s*-\s*B_t|Score_t|Critic",
-        "pattern": r"瓶颈.*(越严重|越大).*得分.*(越高|上升|增加)|奖励.*瓶颈",
-        "neg_keywords": ["反转", "抑制", "惩罚", "降低", "扣除", "并非", "压低"],
-        "error": "MATHEMATICAL_CONTRADICTION: 错误声称瓶颈越严重得分越高 (1-B_t 实质为反转抑制)"
-    },
-    {
-        "anchor": r"f_\{?\\?text\{score\}\}|f_\{?score\}?|CV_\{?50\}?|cv50|二阶|早筛",
-        "pattern": r"(?:准确|严格|精确|直接)计算.*(?:二阶|Hessian)",
-        "neg_keywords": ["开销", "代理", "替代", "无法", "不可行", "过大", "并非", "轻量"],
-        "error": "MATHEMATICAL_CONTRADICTION: 错误声称工程实现精确计算了二阶 Hessian (实际使用 CV_50 作为轻量代理)"
-    }
+    r"\frac", r"/", r"\exp", r"\sum", r"\text{softmax}", r"\Pi",
+    r"\nabla", r"\le", r"\ge", r"\sqrt", r"\int", r"\prod"
 ]
 
 
@@ -68,10 +56,9 @@ def audit_single_equation(eq_data: dict, full_context_text: str) -> dict:
     # Priority determination
     priority = pedagogy.get("explanation_priority") or eq_data.get("explanation_priority")
     if not priority:
-        eq_num = eq_data.get("equation_number")
-        if eq_num in (1, 2, 5, 6, 9, 10, 12, 13) or any(ind in latex for ind in MUST_EXPLAIN_INDICATORS):
+        if any(ind in latex for ind in MUST_EXPLAIN_INDICATORS):
             priority = "MUST_EXPLAIN"
-        elif eq_num in (3, 4, 7, 8, 11, 14, 15):
+        elif "=" in latex and len(latex) > 20:
             priority = "CONCISE_DEFINE"
         else:
             priority = "AUDIT_ONLY"
@@ -100,19 +87,7 @@ def audit_single_equation(eq_data: dict, full_context_text: str) -> dict:
         res["issues"].append(f"UNEXPLAINED_MATERIAL_EQUATION: {paper_label} [{eq_id}] 缺乏足够教学式解释 (仅有简略标签或空白)")
         return res
 
-    # Check 2: Sentence-level contradiction checks
-    sentences = [s.strip() for s in re.split(r"[。；\n]", combined_text) if s.strip()]
-    for rule in CONTRADICTION_RULES:
-        if re.search(rule["anchor"], latex, re.I) or re.search(rule["anchor"], combined_text, re.I):
-            for s in sentences:
-                if re.search(rule["pattern"], s):
-                    if any(k in s for k in rule.get("neg_keywords", [])):
-                        continue
-                    res["passed"] = False
-                    res["issues"].append(rule["error"])
-                    break
-
-    # Check 3: MUST_EXPLAIN detailed pedagogy requirements
+    # Check 2: MUST_EXPLAIN detailed pedagogy requirements
     if priority == "MUST_EXPLAIN":
         # A: Term decomposition
         term_interps = pedagogy.get("term_interpretations") or []
@@ -134,45 +109,6 @@ def audit_single_equation(eq_data: dict, full_context_text: str) -> dict:
             if term_coverage < 0.4 and len(target_terms) > 1:
                 res["passed"] = False
                 res["issues"].append(f"INSUFFICIENT_TERM_GROUNDING: {paper_label} 仅解释了 {explained_terms}/{len(target_terms)} 个关键项")
-
-        # B: Special paper-specific semantic audits
-        # RingMoClaw Eq. 1: Must explain 1 - B_t bottleneck inversion
-        if "1 - B_t" in latex or "1-B_t" in latex:
-            explains_inversion = any(kw in combined_text for kw in ["反转", "抑制", "惩罚", "逆向", "1 - B", "1-B"])
-            res["checks"]["explains_bottleneck_inversion"] = explains_inversion
-            if not explains_inversion:
-                res["passed"] = False
-                res["issues"].append(f"MISSING_OPERATION_INTUITION: {paper_label} 未解释 1 - B_t 逆向抑制瓶颈的数学直觉")
-
-        # RingMoClaw Eq. 6: Must explain Delta t (rate), stability penalty, and CV_50 proxy
-        if "Delta" in latex and ("Acc" in latex or "acc" in latex):
-            explains_rate = any(kw in combined_text for kw in ["时间", "效率", "速度", "变化率", "Δt", "Delta t", "单位时间"])
-            res["checks"]["explains_rate"] = explains_rate
-            if not explains_rate:
-                res["passed"] = False
-                res["issues"].append(f"MISSING_OPERATION_INTUITION: {paper_label} 未解释除以 Δt 的单位时间效率/变化率意义")
-
-            explains_proxy = any(kw in combined_text for kw in ["变异系数", "CV", "代理", "最后 50 步", "最后50步", "50 步", "轻量"])
-            res["checks"]["explains_proxy"] = explains_proxy
-            if not explains_proxy:
-                res["passed"] = False
-                res["issues"].append(f"MISSING_IMPLEMENTATION_PROXY: {paper_label} 未明确说明工程实现中采用损失变异系数作为二阶曲率轻量代理")
-
-        # Attention Eq. 1: Must explain 1/sqrt(d_k) scaling factor preventing gradient saturation
-        if "softmax" in latex and ("d_k" in latex or r"\sqrt" in latex):
-            explains_scaling = any(kw in combined_text for kw in ["缩放", "方差", "梯度消失", "饱和", "极小", "根号", "d_k"])
-            res["checks"]["explains_scaling"] = explains_scaling
-            if not explains_scaling:
-                res["passed"] = False
-                res["issues"].append(f"MISSING_OPERATION_INTUITION: {paper_label} 未解释 1/sqrt(d_k) 缩放因子防止 softmax 梯度饱和的直觉")
-
-        # LoRA Eq. 3: Must explain rank decomposition BA and alpha/r scaling
-        if "W_0" in latex and ("B" in latex or "BA" in latex):
-            explains_low_rank = any(kw in combined_text for kw in ["低秩", "分解", "本征", "内在秩", "参数量", "降维"])
-            res["checks"]["explains_low_rank"] = explains_low_rank
-            if not explains_low_rank:
-                res["passed"] = False
-                res["issues"].append(f"MISSING_OPERATION_INTUITION: {paper_label} 未解释低秩分解重参数化的数学直觉")
 
     elif priority == "CONCISE_DEFINE":
         # Concise definition check: role or definition must be present
