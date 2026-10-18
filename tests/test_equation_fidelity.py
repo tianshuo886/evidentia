@@ -17,6 +17,7 @@ Tests:
 5. Visual Rendering: Verified LaTeX renders MathJax SVG (latex-display-svg); unverified renders localized crop fallback with zero placeholders.
 """
 import json
+import os
 import re
 import shutil
 import pytest
@@ -43,7 +44,13 @@ from render_paper_reader import normalize_latex, render_paper_reader
 from test_gates import fixture
 from validate_common import load_json, schema_validate
 
-RINGMO_PDF = Path("/Users/shentianshuo/Code/PINN canopy/literature/RingMoClaw_An_Experience-Inspired_Multi-Agent_Framework_for_Self-Evolving_Research_in_Remote_Sensing_2609_00814_v2/RingMoClaw_An_Experience-Inspired_Multi-Agent_Framework_for_Self-Evolving_Research_in_Remote_Sensing_2609_00814_v2.pdf")
+# The RingMoClaw PDF is a local, licensed research asset and is never committed.
+# CI records SKIPPED when it is absent rather than failing on a machine-specific
+# absolute path (which is what kept master red since 2026-10-14).
+RINGMO_PDF = Path(os.environ.get(
+    "EVIDENTIA_RINGMOCLAW_PDF",
+    str(ROOT / "reader-v3-runs/workspaces/RINGMOCLAW/source/paper.pdf"),
+))
 ATTENTION_PDF = ROOT / "reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/source/paper.pdf"
 LORA_PDF = ROOT / "reader-v3-runs/workspaces/BENCH-02-LORA-ADAPTATION/source/paper.pdf"
 
@@ -82,7 +89,11 @@ def test_reproduction_oct13_defective_reader_fails_equation_checks():
 
 def test_ringmoclaw_layout_equation_inventory_and_crops(tmp_path):
     """Layout-aware extraction finds all 15 numbered equations with bounded crops."""
-    assert RINGMO_PDF.exists(), f"Source PDF missing at {RINGMO_PDF}"
+    if not RINGMO_PDF.is_file():
+        pytest.skip(
+            "RingMoClaw PDF is not redistributable; set EVIDENTIA_RINGMOCLAW_PDF "
+            "to a local copy to execute this scientific extraction test"
+        )
     eqs = detect_equations_from_pdf(RINGMO_PDF, tmp_path, pdf_sha256="32df5e2843de7e8ccd52d56b9dfed257c26786ef3b71fbc397a1c3a5e26fb0fa")
 
     assert len(eqs) >= 8, f"Expected at least 8 main equations, found {len(eqs)}"
