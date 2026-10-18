@@ -1,205 +1,152 @@
-"""Comprehensive Test Suite for Issue #39: Formula Source Fidelity.
+"""Source-fidelity contracts using redistributable synthetic equations.
 
-Tests:
-1. Reproduction: Oct 13 defective RingMoClaw Reader deterministically FAILS on:
-   - Eq. (6) mathematical rewrite (stripping Delta t, mutating + to -, replacing exp with sigma_loss^2)
-   - Eq. (1) and Eq. (2) placeholder '公式无法可靠重建'
-   - Unresolved EQ-05 anchor
-2. Source Inventory: RingMoClaw equations (1)-(15) extracted with layout-aware bounding boxes and high-res crops.
-3. Cross-Paper Generalization: Attention Is All You Need and LoRA pass source extraction and LaTeX fidelity without paper-specific hacks.
-4. Adversarial Mutation Rejection:
-   - Denominator loss
-   - Operator inversion (+ -> -)
-   - Exponential elimination
-   - Hessian/curvature replacement with proxy
-   - Exponent / subscript alteration
-   - Placeholder emission
-5. Visual Rendering: Verified LaTeX renders MathJax SVG (latex-display-svg); unverified renders localized crop fallback with zero placeholders.
+Licensed PDF validation is opt-in; heuristic transcription is not verification.
 """
-import json
+import hashlib
 import os
-import re
-import shutil
-import pytest
+import sys
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
-SCRIPTS = ROOT / "scripts"
-TESTS = ROOT / "tests"
-EVALS = ROOT / "evals/reader_v3/semantic_regressions/ringmoclaw"
-OCT13 = EVALS / "oct13_run"
+sys.path.insert(0, str(ROOT / "scripts"))
 
-import sys
-sys.path.insert(0, str(SCRIPTS))
-sys.path.insert(0, str(TESTS))
-
-from equation_fidelity import (
-    detect_equations_from_pdf,
-    verify_equation_semantic_mutation,
-    clean_math_text,
-    KNOWN_BENCHMARK_EQUATIONS
-)
-from reader_acceptance import evaluate
-from render_paper_reader import normalize_latex, render_paper_reader
-from test_gates import fixture
-from validate_common import load_json, schema_validate
-
-# The RingMoClaw PDF is a local, licensed research asset and is never committed.
-# CI records SKIPPED when it is absent rather than failing on a machine-specific
-# absolute path, which is what kept master red since 2026-10-14.
-RINGMO_PDF = Path(os.environ.get(
-    "EVIDENTIA_RINGMOCLAW_PDF",
-    str(ROOT / "reader-v3-runs/workspaces/RINGMOCLAW/source/paper.pdf"),
-))
-ATTENTION_PDF = ROOT / "reader-v3-runs/workspaces/BENCH-01-VASWANI-ATTENTION/source/paper.pdf"
-LORA_PDF = ROOT / "reader-v3-runs/workspaces/BENCH-02-LORA-ADAPTATION/source/paper.pdf"
+from equation_fidelity import clean_math_text, detect_equations_from_pdf, verify_equation_semantic_mutation
+from kami_adapter import find_kami_root, render_math_html
+from render_paper_reader import render_block_html, render_paper_reader_md
 
 
-def test_reproduction_oct13_defective_reader_fails_equation_checks():
-    """Verify that user's Oct 13 run artifacts deterministically fail on equation fidelity."""
-    assert OCT13.exists()
-    html_p = OCT13 / "reader.html"
-    md_p = OCT13 / "reader.md"
-    manuscript_p = OCT13 / "narrative_manuscript.json"
+@pytest.fixture
+def synthetic_pdf(tmp_path):
+    """Exercise real text/layout extraction without a licensed source asset."""
+    import fitz
 
-    assert html_p.exists() and md_p.exists() and manuscript_p.exists()
-
-    html_content = html_p.read_text(encoding="utf-8")
-    md_content = md_p.read_text(encoding="utf-8")
-    manuscript = load_json(manuscript_p)
-
-    # Defect 1: Eq. 1 and Eq. 2 rendered as placeholders in HTML
-    assert "公式无法可靠重建" in html_content, "Expected placeholder in defective HTML"
-    assert html_content.count("公式无法可靠重建") >= 2
-
-    # Defect 2: EQ-05 anchor is broken (cited in text, but no evidence-EQ-05 element exists)
-    assert 'href="#evidence-EQ-05"' in html_content
-    assert 'id="evidence-EQ-05"' not in html_content
-
-    # Defect 3: Eq. 6 rewrite in prose/manuscript
-    rewritten_text = "f_score(m) = α*ΔAcc - β*σ_loss^2"
-    assert "α*ΔAcc - β*σ_loss" in md_content or "α*ΔAcc - β*σ_loss" in html_content
-
-    # Verify that mutation checker rejects the rewritten Eq. 6
-    gt_eq6 = KNOWN_BENCHMARK_EQUATIONS["32df5e2843de7e8ccd52d56b9dfed257c26786ef3b71fbc397a1c3a5e26fb0fa"][6]["latex"]
-    is_ok, reason = verify_equation_semantic_mutation(rewritten_text, gt_eq6)
-    assert not is_ok, "Defective Eq. 6 must be rejected by equation fidelity checker"
-    assert "OPERATOR_MUTATION" in reason or "DENOMINATOR_LOSS" in reason
+    pdf = tmp_path / "synthetic.pdf"
+    with fitz.open() as doc:
+        page = doc.new_page(width=600, height=400)
+        page.insert_text((60, 70), "Synthetic equation extraction fixture")
+        page.insert_text((60, 130), "y = a + b (1)")
+        page.insert_text((60, 220), "z = c / d (2)")
+        doc.save(pdf)
+    return pdf
 
 
-def test_ringmoclaw_layout_equation_inventory_and_crops(tmp_path):
-    """Layout-aware extraction finds all 15 numbered equations with bounded crops."""
-    if not RINGMO_PDF.is_file():
-        pytest.skip(
-            "RingMoClaw PDF is not redistributable; set EVIDENTIA_RINGMOCLAW_PDF "
-            "to a local copy to execute this scientific extraction test"
-        )
-    eqs = detect_equations_from_pdf(RINGMO_PDF, tmp_path, pdf_sha256="32df5e2843de7e8ccd52d56b9dfed257c26786ef3b71fbc397a1c3a5e26fb0fa")
-
-    assert len(eqs) >= 8, f"Expected at least 8 main equations, found {len(eqs)}"
-    eq_nums = [e["equation_number"] for e in eqs]
-    assert 1 in eq_nums and 2 in eq_nums and 5 in eq_nums and 6 in eq_nums and 7 in eq_nums and 8 in eq_nums
-
-    # Verify crops exist and have non-zero size
-    for eq in eqs:
-        crop_file = tmp_path / eq["fallback_asset"]
-        assert crop_file.exists(), f"Crop missing: {crop_file}"
-        assert crop_file.stat().st_size > 500, f"Crop too small: {crop_file}"
-        bbox = eq["bbox"]
-        assert bbox[2] > bbox[0] and bbox[3] > bbox[1]
-        assert eq["source_confidence"] == "VERIFIED"
-        assert eq["latex"] is not None
-
-    # Check Eq. 6 exact operators and operands
-    eq6 = next(e for e in eqs if e["equation_number"] == 6)
-    assert r"\frac{\Delta \text{Acc}}{\Delta t}" in eq6["latex"] or r"\Delta \text{Acc}" in eq6["latex"]
-    assert r"\exp" in eq6["latex"]
-    assert r"\nabla_\theta^2" in eq6["latex"] or r"\nabla" in eq6["latex"]
-    assert "+" in eq6["latex"]
+def assert_unreviewed_inventory(equations, root):
+    assert equations, "Expected numbered equations in the source PDF"
+    for eq in equations:
+        assert eq["source_confidence"] == "UNCERTAIN"
+        assert eq["verification_receipt"]["source_verified"] is False
+        assert eq["raw_text"]
+        assert eq["latex"]  # Useful proposal, not independently reviewed evidence.
+        assert eq["page"] >= 1
+        x0, y0, x1, y1 = eq["bbox"]
+        assert x1 > x0 and y1 > y0
+        crop = root / eq["fallback_asset"]
+        assert crop.is_file()
+        assert crop.read_bytes().startswith(b"\x89PNG\r\n\x1a\n")
 
 
-def test_cross_paper_generalization_attention_and_lora(tmp_path):
-    """Attention and LoRA equations are extracted and verified without paper-specific hacks."""
-    if ATTENTION_PDF.exists():
-        att_eqs = detect_equations_from_pdf(ATTENTION_PDF, tmp_path / "attention", pdf_sha256="bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697")
-        assert len(att_eqs) >= 2, f"Attention equations missing: {len(att_eqs)}"
-        eq1 = next(e for e in att_eqs if e["equation_number"] == 1)
-        assert r"\text{softmax}" in eq1["latex"] or "softmax" in eq1["latex"]
-        assert r"Q K^T" in eq1["latex"] or "Q" in eq1["latex"]
-
-    if LORA_PDF.exists():
-        lora_eqs = detect_equations_from_pdf(LORA_PDF, tmp_path / "lora", pdf_sha256="e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a")
-        assert len(lora_eqs) >= 3, f"LoRA equations missing: {len(lora_eqs)}"
-        eq3 = next(e for e in lora_eqs if e["equation_number"] == 3)
-        assert "W_0" in eq3["latex"] or "W0" in eq3["latex"]
-        assert "B A" in eq3["latex"] or "BA" in eq3["latex"]
+def test_synthetic_layout_extraction_preserves_source_uncertainty(synthetic_pdf, tmp_path):
+    digest = hashlib.sha256(synthetic_pdf.read_bytes()).hexdigest()
+    equations = detect_equations_from_pdf(synthetic_pdf, tmp_path, pdf_sha256=digest)
+    assert [eq["equation_number"] for eq in equations] == [1, 2]
+    assert [eq["equation_id"] for eq in equations] == ["EQ-01", "EQ-02"]
+    assert "y = a + b" in equations[0]["raw_text"]
+    assert "z = c / d" in equations[1]["raw_text"]
+    assert_unreviewed_inventory(equations, tmp_path)
 
 
-@pytest.mark.parametrize("mutated_latex,expected_error", [
-    (r"f_{\text{score}}(m) = \alpha \cdot \Delta \text{Acc} + \beta \exp(-\sigma \|\nabla_\theta^2\|)", "DENOMINATOR_LOSS"),
-    (r"f_{\text{score}}(m) = \alpha \left(\frac{\Delta \text{Acc}}{\Delta t}\right) - \beta \exp(-\sigma \|\nabla_\theta^2\|)", "OPERATOR_MUTATION"),
-    (r"f_{\text{score}}(m) = \alpha \left(\frac{\Delta \text{Acc}}{\Delta t}\right) + \beta (-\sigma \|\nabla_\theta^2\|)", "EXPONENTIAL_REMOVED"),
-    (r"f_{\text{score}}(m) = \alpha \left(\frac{\Delta \text{Acc}}{\Delta t}\right) - \beta \cdot \sigma_{\text{loss}}^2", "OPERATOR_MUTATION"),
-    (r"f_{\text{score}}(m) = \alpha \left(\frac{\Delta \text{Acc}}{\Delta t}\right) + \beta \exp(-\sigma \|\nabla_\theta\|)", "EXPONENT_MUTATION"),
+def test_licensed_pdf_extraction_opt_in(tmp_path):
+    configured = os.environ.get("EVIDENTIA_LICENSED_EQUATION_PDF")
+    if not configured:
+        pytest.skip("Set EVIDENTIA_LICENSED_EQUATION_PDF to opt into licensed PDF validation")
+    pdf = Path(configured).expanduser()
+    assert pdf.is_file(), "EVIDENTIA_LICENSED_EQUATION_PDF must name an existing PDF"
+    digest = hashlib.sha256(pdf.read_bytes()).hexdigest()
+    assert_unreviewed_inventory(
+        detect_equations_from_pdf(pdf, tmp_path, pdf_sha256=digest), tmp_path
+    )
+
+
+@pytest.mark.parametrize("source,candidate,error", [
+    (r"r = \frac{u}{\Delta t}", r"r = u", "DENOMINATOR_LOSS"),
+    (r"q = a + \beta b", r"q = a - \beta b", "OPERATOR_MUTATION"),
+    (r"q = \exp(-x)", r"q = (-x)", "EXPONENTIAL_REMOVED"),
+    (r"h = \nabla_\theta^2 g", r"h = \nabla_\theta g", "EXPONENT_MUTATION"),
 ])
-def test_adversarial_mutation_matrix_rejected(mutated_latex, expected_error):
-    """Mutation tests independently reject math alterations."""
-    gt = r"f_{\text{score}}(m) = \alpha \left(\frac{\Delta \text{Acc}}{\Delta t}\right) + \beta \exp\left(-\sigma \|\nabla_\theta^2\|\right)"
-    is_ok, err = verify_equation_semantic_mutation(mutated_latex, gt)
-    assert not is_ok, f"Expected mutation {mutated_latex} to fail"
-    assert expected_error in err, f"Expected {expected_error} in {err}"
+def test_supported_math_mutations_are_rejected(source, candidate, error):
+    # Positive control prevents an always-rejecting verifier from passing.
+    assert verify_equation_semantic_mutation(source, source)[0]
+    accepted, reason = verify_equation_semantic_mutation(candidate, source)
+    assert not accepted
+    assert error in reason
 
 
-def test_rendered_reader_contains_svg_and_zero_placeholders(tmp_path):
-    """End-to-end rendering produces MathJax SVG and zero '公式无法可靠重建' placeholders."""
-    root = fixture(tmp_path)
-    source_map = load_json(root / "model/source_map.json")
+@pytest.mark.parametrize("source,candidate", [
+    (r"q = a + \beta b", r"q=a+\beta b"),
+    (r"q = a \cdot b", r"q = a \times b"),
+    (r"q = \exp(-x)", r"q=\exp(-x)"),
+])
+def test_formatting_only_changes_are_accepted(source, candidate):
+    assert verify_equation_semantic_mutation(candidate, source)[0]
 
-    eqs = KNOWN_BENCHMARK_EQUATIONS["32df5e2843de7e8ccd52d56b9dfed257c26786ef3b71fbc397a1c3a5e26fb0fa"]
-    source_map["pages"][0]["equations"] = [
-        {
-            "equation_id": "EQ-01",
-            "paper_label": "Eq. (1)",
-            "equation_number": 1,
-            "page": 1,
-            "raw_text": "Score_t = w_1 C_t + w_2 (1 - B_t) + w_3 H_t",
-            "latex": eqs[1]["latex"],
-            "display_mode": True,
-            "source_confidence": "VERIFIED",
-            "role_zh": eqs[1]["role_zh"],
-            "explanation": eqs[1]["explanation"],
-            "pedagogy": eqs[1]["pedagogy"]
-        },
-        {
-            "equation_id": "EQ-06",
-            "paper_label": "Eq. (6)",
-            "equation_number": 6,
-            "page": 1,
-            "raw_text": "fscore(m) = alpha (DeltaAcc / Deltat) + beta exp(-sigma ||nabla^2||)",
-            "latex": eqs[6]["latex"],
-            "display_mode": True,
-            "source_confidence": "VERIFIED",
-            "role_zh": eqs[6]["role_zh"],
-            "explanation": eqs[6]["explanation"],
-            "pedagogy": eqs[6]["pedagogy"]
-        }
-    ]
-    (root / "model/source_map.json").write_text(json.dumps(source_map, ensure_ascii=False), encoding="utf-8")
 
-    from render_reader import render_reader
-    render_reader(root)
+def test_ocr_math_character_normalization():
+    assert clean_math_text("  α − β ≤ γ  ") == r"\alpha - \beta \le  \gamma"
 
-    html_out = (root / "reader/paper_reader.html").read_text(encoding="utf-8")
-    md_out = (root / "reader/paper_reader.md").read_text(encoding="utf-8")
 
-    # Assertions
-    assert "公式无法可靠重建" not in html_out
-    assert "公式无法可靠重建" not in md_out
-    assert "latex-display-svg" in html_out
-    assert "<svg" in html_out
-    assert "id='evidence-EQ-01'" in html_out or 'id="evidence-EQ-01"' in html_out
-    assert "id='evidence-EQ-06'" in html_out or 'id="evidence-EQ-06"' in html_out
+@pytest.mark.parametrize("confidence", ["UNCERTAIN", "AMBIGUOUS", "NOT_STATED"])
+def test_unverified_html_uses_local_source_crop(synthetic_pdf, tmp_path, confidence):
+    equation = detect_equations_from_pdf(synthetic_pdf, tmp_path)[0]
+    equation.update(type="equation", source_confidence=confidence)
+    html = render_block_html(equation, tmp_path)
+    assert "equation-fallback" in html
+    assert equation["fallback_asset"] in html
+    assert "math-source" not in html
+    assert "公式无法可靠重建" not in html
+    assert f"id='evidence-{equation['equation_id']}'" in html
 
-    # Acceptance evaluation must PASS
-    rep = evaluate(root, artifact_only=True)
-    assert rep["status"] == "READER_ACCEPTED", rep
+
+def test_missing_transcription_renders_source_crop_in_both_views(synthetic_pdf, tmp_path):
+    equation = detect_equations_from_pdf(synthetic_pdf, tmp_path)[0]
+    equation.update(type="equation", latex=None)
+    manuscript = {"document": {"title": "Synthetic source", "sections": [
+        {"id": "math", "title": "Math", "blocks": [equation]}
+    ]}}
+    html = render_block_html(equation, tmp_path)
+    markdown = render_paper_reader_md(manuscript, tmp_path)
+    for rendered in (html, markdown):
+        assert equation["fallback_asset"] in rendered
+        assert "公式无法可靠重建" not in rendered
+    assert "equation-fallback" in html
+    assert "![公式源图 EQ-01]" in markdown
+
+
+def test_verified_equation_emits_math_source_not_crop(tmp_path):
+    equation = {"type": "equation", "equation_id": "EQ-01",
+                "latex": "y = a + b", "source_confidence": "VERIFIED"}
+    html = render_block_html(equation, tmp_path)
+    assert "math-source" in html
+    assert "y = a + b" in html
+    assert "equation-fallback" not in html
+    assert "id='evidence-EQ-01'" in html
+
+
+def test_math_rendering_without_backend_fails_explicitly(tmp_path):
+    html = render_block_html({"type": "equation", "latex": "y = a + b"}, tmp_path)
+    with pytest.raises(RuntimeError, match="MathJax renderer is required"):
+        render_math_html(html, kami_root=tmp_path / "missing-backend")
+    assert render_math_html("<p>No equations</p>", kami_root=tmp_path) == "<p>No equations</p>"
+
+
+def test_verified_math_renders_svg_when_backend_is_installed(tmp_path):
+    kami_root = find_kami_root()
+    if kami_root is None or not (kami_root / "scripts/math_render.py").is_file():
+        pytest.skip("Optional SVG integration requires an installed Kami math backend")
+    html = render_block_html({"type": "equation", "equation_id": "EQ-01",
+                              "latex": "y = a + b", "source_confidence": "VERIFIED"}, tmp_path)
+    rendered = render_math_html(html, kami_root=kami_root)
+    assert "latex-display-svg" in rendered
+    assert "<svg" in rendered
+    assert "evidence-EQ-01" in rendered
