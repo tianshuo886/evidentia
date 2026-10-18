@@ -65,11 +65,18 @@ class ReaderHTML(HTMLParser):
                 del self.stack[idx:]
                 break
 
+    # Inline math markers are presentation of the same TeX the manuscript
+    # carries. The rendered HTML has already replaced them with SVG, so the
+    # unrendered expectation must drop them too, or parity compares a formula
+    # against its own glyphs (Issue #48).
+    MATH_MARKER = re.compile(r"\\\(.+?\\\)|\\\[.+?\\\]", re.S)
+
     def handle_data(self, data):
         if not any(x[2] for x in self.stack):
-            self.all_text.append(data)
+            cleaned = self.MATH_MARKER.sub(" ", data)
+            self.all_text.append(cleaned)
             if self.primary:
-                self.text.append(data)
+                self.text.append(cleaned)
 
 
 def parity_errors(root, manuscript, html_text, md_text, pdf_text):
