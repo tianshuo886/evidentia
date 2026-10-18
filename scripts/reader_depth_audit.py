@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python3
 """Scientific Explanation Depth and Visual Coverage Audit Engine (Issue #37, #42).
 
@@ -51,8 +50,21 @@ def audit_explanation_depth(text: str, visual_items: List[Dict[str, Any]] = None
     results = []
     missing_concepts = []
 
-    # Use expectations if provided, otherwise default to REQUIRED_MECHANISM_CONCEPTS
-    concepts = REQUIRED_MECHANISM_CONCEPTS
+    # Expectations must come from this paper's own Reader/Lens output. An empty
+    # expectation set means this audit did not run; it must not divide by zero or
+    # return a false PASS.
+    concepts = (expectations or {}).get("mechanism_concepts") or REQUIRED_MECHANISM_CONCEPTS
+    if not concepts:
+        return {
+            "overall_status": "NOT_RUN",
+            "score": None,
+            "concepts_audited": 0,
+            "concepts_covered": 0,
+            "details": [],
+            "explanation_deficits": [],
+            "reason": "No paper-specific mechanism expectations were supplied.",
+        }
+
     for key, spec in concepts.items():
         present_tokens = [tok for tok in spec["required_tokens"] if tok.replace(" ", "") in norm]
         coverage_ratio = len(present_tokens) / len(spec["required_tokens"])
@@ -170,25 +182,32 @@ def audit_reader_mechanistic_depth(root: Path, manuscript: dict, html_text: str 
             errors.append(msg)
             diagnostics.append({"target": "GENERAL", "type": "LACKS_REPRESENTATION_DEPTH", "message": msg})
 
-    # 4. Coverage expectations check if expectations exist in workspace or evals
-    exp_paths = [
-        root / "coverage_expectations.json",
-        root / "model/coverage_expectations.json",
-    ]
-    for p in exp_paths:
-        if p and p.exists():
+    exp = None
+    for p in (root / "coverage_expectations.json", root / "model/coverage_expectations.json"):
+        if p.is_file():
             try:
                 exp = load_json(p)
-                vis_items = [{"id": b.get("evidence_id")} for b in bound_visuals if b.get("evidence_id")]
-                vis_audit = audit_visual_evidence_selection(vis_items, exp)
-                for missing in vis_audit.get("missing_must_show", []):
-                    msg = f"Must-show visual evidence asset missing from Reader: {missing.get('id')} ({missing.get('label')})"
-                    if msg not in errors:
-                        errors.append(msg)
-                        diagnostics.append({"target": missing.get("id"), "type": "MISSING_MUST_SHOW", "message": msg})
-            except Exception:
-                pass
+            except (OSError, ValueError):
+                exp = None
             break
+
+    if exp:
+        vis_items = [{"id": b.get("evidence_id")} for b in bound_visuals if b.get("evidence_id")]
+        vis_audit = audit_visual_evidence_selection(vis_items, exp)
+        for missing in vis_audit.get("missing_must_show", []):
+            msg = f"Must-show visual evidence asset missing from Reader: {missing.get('id')} ({missing.get('label')})"
+            if msg not in errors:
+                errors.append(msg)
+                diagnostics.append({"target": missing.get("id"), "type": "MISSING_MUST_SHOW", "message": msg})
+
+        # Optional paper-specific concepts, if the Lead Reader/Lens selected
+        # them for this paper. No fixed concept checklist exists in production.
+        depth = audit_explanation_depth(full_text, bound_visuals, exp)
+        for deficit in depth.get("explanation_deficits", []):
+            msg = f"Mechanism explanation deficit: {deficit.get('concept')}"
+            if msg not in errors:
+                errors.append(msg)
+                diagnostics.append({"target": deficit.get("concept"), "type": "MECHANISM_EXPECTATION_MISSING", "message": msg})
 
     status = "PASS" if not errors else "DEFICIT"
     return {

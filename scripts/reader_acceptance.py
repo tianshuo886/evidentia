@@ -464,46 +464,46 @@ def _report(errors):
 
 
 def validate_corpus_or_release_report(regression_report=None):
-    """Require a fresh, implementation-bound corpus report for full releases.
+    """Validate an optional development comparison report.
 
-    Historical ISSUE19/ISSUE38 pair evaluations are regression references only:
-    their presence cannot certify the current paper or implementation.
+    Cross-paper evaluations qualify a skill/version change. They are not a
+    prerequisite for releasing an individual paper; per-paper source review is
+    enforced by `release_gate.py`. Historical cached scores never authorize a
+    new paper.
     """
-    if not regression_report:
-        return ["fresh real-corpus release report is required for PAPER_COMPLETE; "
-                "pass --regression-report after an independent corpus run"]
+    if regression_report is None:
+        return []
     from reader_regression import validate_release_report
     return validate_release_report(regression_report)
 
 
 def evaluate(root: Path, *, artifact_only=False, regression_report=None):
-    """Artifact-only success is never PAPER_COMPLETE; release needs corpus proof."""
+    """Evaluate one Reader's artifacts; scientific release is decided separately.
+
+    This gate validates current-paper artifact integrity only. It deliberately
+    does not require a multi-paper corpus run; `release_gate.py` requires the
+    real execution receipts and independent source review for this paper.
+    """
     root = Path(root)
     try:
         report = _evaluate_artifact(root, artifact_only=artifact_only)
         report["implementation_sha256"] = implementation_hash()
-        report["source_review_executed"] = (
-            not artifact_only
-            and (root / "reader/semantic_review.json").is_file()
-            and (root / "reader/visual_review.json").is_file()
-        )
-        # Artifact-only checks can certify structure, never actual reading
-        # of original source; do not label fixture runs science-verified.
+        report["source_review_executed"] = False
+        report["science_verified"] = False
+        report["benchmark_pass"] = False
+        report["regression_passed"] = None
         if artifact_only:
-            report["science_verified"] = False
+            report["explanation_complete"] = False
+        else:
             report["explanation_complete"] = False
         if report["status"] == "READER_ACCEPTED":
             report["artifact_hashes"] = bindings(root)
-        if not artifact_only:
+        if regression_report is not None:
             corpus_errors = validate_corpus_or_release_report(regression_report)
             report["regression_passed"] = not corpus_errors
-            report["benchmark_pass"] = not corpus_errors
             report["errors"].extend(corpus_errors)
             report["diagnostics"].extend({"gate": "regression", "message": e} for e in corpus_errors)
-            if report["status"] == "READER_ACCEPTED" and not corpus_errors and report["science_verified"] and report["explanation_complete"]:
-                report["status"] = "PAPER_COMPLETE"
-                report["release_ready"] = True
-            else:
+            if corpus_errors:
                 report["status"] = "NEEDS_REVIEW"
                 report["release_ready"] = False
         return report
@@ -518,7 +518,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", required=True)
     ap.add_argument("--artifact-only", action="store_true", help="Evaluate one Reader for the regression runner; never reports PAPER_COMPLETE")
-    ap.add_argument("--regression-report", help="Required fresh, hash-bound real-corpus report for PAPER_COMPLETE; historical pair JSONs cannot authorize release")
+    ap.add_argument("--regression-report", help="Optional fresh cross-paper comparison report; never used alone to release a paper")
     args = ap.parse_args()
     root = Path(args.out)
     report = evaluate(root, artifact_only=args.artifact_only, regression_report=args.regression_report)

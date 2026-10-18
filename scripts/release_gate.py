@@ -100,6 +100,17 @@ def _source_review_missing(root: Path) -> bool:
     return not (root / SOURCE_REVIEW).is_file()
 
 
+def _source_review_recommendation(root: Path) -> str | None:
+    path = root / SOURCE_REVIEW
+    if not path.is_file():
+        return None
+    try:
+        review = json.loads(path.read_text(encoding="utf-8"))
+        return str((review.get("overall") or {}).get("recommendation") or "") or None
+    except (OSError, ValueError):
+        return None
+
+
 def evaluate_release(
     root: Path,
     *,
@@ -121,6 +132,7 @@ def evaluate_release(
     findings = _read_review_findings(root)
     source_blocking = _source_review_issues(root)
     source_missing = _source_review_missing(root)
+    source_recommendation = _source_review_recommendation(root)
 
     # A workspace assembled from fixtures or hand-authored envelopes is not a
     # scientific result, however good its artifacts look (Issue #47).
@@ -152,14 +164,23 @@ def evaluate_release(
         reason = (
             f"{len(source_blocking)} statement(s) in the Reader contradict the source paper"
         )
+    elif source_recommendation == "BLOCK":
+        decision = "BLOCKED"
+        reason = "independent source reviewer recommends BLOCK"
+    elif source_recommendation == "NEEDS_REVISION":
+        decision = "NEEDS_REVIEW"
+        reason = "independent source reviewer requests revision"
+    elif source_recommendation != "PASS":
+        decision = "NEEDS_REVIEW"
+        reason = "source review did not record an explicit PASS recommendation"
     elif findings:
         decision = "BLOCKED"
         reason = (
             f"{len(findings)} unresolved critical finding(s) in the source/Reader review"
         )
-    elif acceptance.get("status") == "PAPER_COMPLETE":
+    elif acceptance.get("status") == "READER_ACCEPTED" and acceptance.get("errors") == []:
         decision = "PASS"
-        reason = "independent review executed, acceptance gates pass, release bound to this build"
+        reason = "real model execution, independent source review, and current-paper artifact gates all pass"
     else:
         decision = "NEEDS_REVIEW"
         errors = acceptance.get("errors") or []
@@ -177,6 +198,7 @@ def evaluate_release(
         "artifact_only": artifact_only,
         "real_execution_verified": authenticity["real_execution_verified"],
         "execution_counts": authenticity["counts"],
+        "source_review_recommendation": source_recommendation,
         "missing_reviews": missing + ([SOURCE_REVIEW] if source_missing else []),
         "critical_findings": findings + [
             {"review": SOURCE_REVIEW, **issue} for issue in source_blocking

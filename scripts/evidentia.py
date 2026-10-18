@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python3
 """Unified CLI and Host-agnostic workflow orchestrator for Evidentia v1.1.
 
