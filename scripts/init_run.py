@@ -32,18 +32,17 @@ def main():
     (r / 'working').mkdir(parents=True, exist_ok=True)
     (r / 'source').mkdir(exist_ok=True)
 
-    src_pdf = Path(a.pdf).resolve()
-    if src_pdf != (r / 'working/paper.pdf').resolve():
-        shutil.copy2(a.pdf, r / 'working/paper.pdf')
-    if src_pdf != (r / 'source/paper.pdf').resolve():
-        shutil.copy2(a.pdf, r / 'source/paper.pdf')
+    # One canonical source per paper (Issue #55). `source/paper.pdf` is
+    # authoritative; `working/paper.pdf` shares the same inode instead of
+    # duplicating the whole PDF for a 30-page paper.
+    from storage_links import link_or_copy
+    link_or_copy(Path(a.pdf), r / 'source/paper.pdf')
+    link_or_copy(r / 'source/paper.pdf', r / 'working/paper.pdf')
 
     for s in a.supplement:
-        s_pdf = Path(s).resolve()
-        if s_pdf != (r / 'working' / Path(s).name).resolve():
-            shutil.copy2(s, r / 'working' / Path(s).name)
-        if s_pdf != (r / 'source' / Path(s).name).resolve():
-            shutil.copy2(s, r / 'source' / Path(s).name)
+        name = Path(s).name
+        link_or_copy(Path(s), r / 'source' / name)
+        link_or_copy(r / 'source' / name, r / 'working' / name)
 
     boundaries = get_intent_boundaries(intent)
     allowed = ['working/paper.pdf'] + [f'working/{Path(s).name}' for s in a.supplement]

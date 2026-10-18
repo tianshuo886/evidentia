@@ -106,7 +106,9 @@ def sync_top_level_readers(out_dir: Path):
         report_pdfs = {'paper_reader.pdf', 'reader.pdf'}
         root_source_pdfs = [p for p in out_dir.glob('*.pdf') if p.name not in report_pdfs]
         if not root_source_pdfs:
-            shutil.copy2(str(source_pdf), str(out_dir / f'{out_dir.name}.pdf'))
+            # Convenience alias in the paper root: same inode, not another copy (#55).
+            from storage_links import link_or_copy
+            link_or_copy(source_pdf, out_dir / f'{out_dir.name}.pdf')
     if not reader_dir.exists():
         return
     for fname in ('paper_reader.html', 'reader.html', 'evidence_atlas.html'):
@@ -328,14 +330,7 @@ def run_canonical_v3_workflow(args):
         from render_reader import render_reader
         render_reader(out_dir, intent=target_intent)
 
-    rs_p = out_dir / 'run_state.json'
-    if rs_p.exists():
-        rs = json.loads(rs_p.read_text(encoding='utf-8'))
-        rs['phase'] = 'PAPER_COMPLETE'
-        if 'completed_phases' not in rs:
-            rs['completed_phases'] = []
-        rs['completed_phases'].append('PAPER_COMPLETE')
-        rs_p.write_text(json.dumps(rs, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
+    # NOTE: no unconditional PAPER_COMPLETE here. The release gate below decides.
 
     paper_html_p = (out_dir / 'paper_reader.html').resolve() if (out_dir / 'paper_reader.html').exists() else (out_dir / 'reader/paper_reader.html').resolve()
     html_p = paper_html_p if paper_html_p.exists() else (out_dir / 'reader/reader.html').resolve()
@@ -343,13 +338,44 @@ def run_canonical_v3_workflow(args):
     paper_pdf_p = (out_dir / 'paper_reader.pdf').resolve() if (out_dir / 'paper_reader.pdf').exists() else (out_dir / 'reader/paper_reader.pdf').resolve()
     pdf_p = paper_pdf_p if paper_pdf_p.exists() else (out_dir / 'reader/reader.pdf').resolve()
 
-    print(f"\n>>> Evidentia Reader v3 COMPLETE! (Canonical Paper Reading achieved)")
+    print(f"\n>>> Evidentia Reader v3 rendered for {out_dir.name}")
     print(f"    - Interactive Web Reader : {html_p}")
     if pdf_p.exists():
         print(f"    - Printable PDF Snapshot : {pdf_p}")
     if atlas_p.exists():
         print(f"    - Audit Evidence Atlas   : {atlas_p}")
     print(f"    - Paper Literature Folder: {out_dir.resolve()}\n")
+
+    # Rendering is not release (Issue #49). Fail closed: without a real,
+    # hash-bound independent source/Reader review of THIS paper, the run is
+    # NOT_RUN and may not be reported as PAPER_COMPLETE.
+    from release_gate import evaluate_release, write_decision
+    release = evaluate_release(out_dir)
+    decision_p = write_decision(out_dir, release)
+
+    rs_p = out_dir / 'run_state.json'
+    if rs_p.exists():
+        rs = json.loads(rs_p.read_text(encoding='utf-8'))
+        if release['decision'] == 'PASS':
+            rs['phase'] = 'PAPER_COMPLETE'
+            rs.setdefault('completed_phases', []).append('PAPER_COMPLETE')
+        else:
+            rs['phase'] = 'RENDER'
+        rs['validation_status'] = release['decision']
+        rs.setdefault('artifacts', {})['reader_release_decision'] = (
+            'reader/READER_RELEASE_DECISION.md'
+        )
+        rs_p.write_text(json.dumps(rs, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
+
+    print(f">>> RELEASE DECISION: {release['decision']}")
+    print(f"    {release['reason']}")
+    print(f"    - Decision record: {decision_p}\n")
+    if release['decision'] != 'PASS':
+        print(
+            "    This paper is NOT released. Run 'python scripts/source_review.py --out "
+            f"{out_dir}' to create the source-review task, complete it against the PDF, "
+            "then re-run the gate.\n"
+        )
     return 0
 
 def run_legacy_workflow(args):

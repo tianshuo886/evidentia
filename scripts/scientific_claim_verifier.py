@@ -39,7 +39,7 @@ from validate_common import load_json, schema_validate, sha256
 
 SEVERITY_LEVELS = ("P0_BLOCKER", "QUALIFIED_FLAG", "INFORMATIONAL")
 EPISTEMIC_CATEGORIES = ("OBSERVATION", "AUTHOR_INTERPRETATION", "READER_ASSESSMENT", "UNRESOLVED")
-VERDICTS = ("SUPPORTED", "QUALIFIED", "CONTRADICTED", "UNSUPPORTED", "UNRESOLVED")
+VERDICTS = ("SUPPORTED", "QUALIFIED", "CONTRADICTED", "UNSUPPORTED", "UNVERIFIED", "UNRESOLVED")
 
 RINGMOCLAW_SHA = "32df5e2843de7e8ccd52d56b9dfed257c26786ef3b71fbc397a1c3a5e26fb0fa"
 
@@ -966,10 +966,18 @@ def build_claim_ledger_for_manuscript(root: Path, manuscript_data: Dict[str, Any
         for c in claims if c["verdict"] == "CONTRADICTED" and c.get("severity") == "P0_BLOCKER"
     ]
 
-    status = "FAIL" if critical_contradictions else ("NEEDS_REVIEW" if any(
+    if critical_contradictions:
+        status = "FAIL"
+    elif not claims:
+        # Nothing was even extracted, so nothing was verified.
+        status = "NOT_RUN"
+    elif any(
         c["verdict"] in ("CONTRADICTED", "UNSUPPORTED", "UNVERIFIED", "UNRESOLVED")
         for c in claims
-    ) else "PASS")
+    ):
+        status = "NEEDS_REVIEW"
+    else:
+        status = "PASS"
 
     ledger = {
         "schema_version": "1.0",

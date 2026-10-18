@@ -368,8 +368,17 @@ def main():
                         item['figure_bbox'] = [tx0, ty0, tx1, ty1]
                         best_score = max(best_score, 0.88)
 
-            # Try image extraction from matched candidate or best embedded image
+            # Try image extraction from matched candidate or best embedded image.
+            # An xref may only ever back ONE figure: reusing a neighbour's
+            # embedded object is how Fig. 11 ended up showing Fig. 9's bytes,
+            # which silently made the Reader describe the wrong image (#45).
             chosen_xref = best_cand[1] if best_cand else None
+            if chosen_xref and chosen_xref in saved:
+                item['binding_method'] = 'CANDIDATE_XREF_ALREADY_CLAIMED'
+                item['binding_confidence'] = 0.0
+                item['needs_visual_review'] = True
+                item['inspection_status'] = 'NEEDS_REVIEW'
+                chosen_xref = None
             if chosen_xref and chosen_xref not in saved:
                 try:
                     pix = fitz.Pixmap(doc, chosen_xref)

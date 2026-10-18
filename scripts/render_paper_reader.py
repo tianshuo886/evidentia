@@ -18,6 +18,7 @@ from validate_common import load_json, sha256
 # In Reader v3, narrative_manuscript.json is strictly authored by the Lead Writer.
 # Deterministic composition is quarantined for legacy compatibility only.
 import kami_adapter
+from math_text import protect_math, term_html, unrendered_math_errors
 
 def normalize_text_newlines(text: str) -> str:
     """Convert literal escaped '\\n' sequences into actual newlines, preserving LaTeX math commands."""
@@ -45,6 +46,11 @@ def sanitize_editorial_text(text: str) -> str:
 def esc(x):
     cleaned = sanitize_editorial_text(str(x or ''))
     return html.escape(cleaned)
+
+
+def esc_math(x):
+    """Escape prose while marking mathematics, after editorial sanitizing."""
+    return protect_math(sanitize_editorial_text(str(x or '')))
 
 def format_meta_line(authors: str, venue: str, year: any) -> str:
     """Format publication metadata line, ensuring year is never rendered twice."""
@@ -365,8 +371,12 @@ figure.kami-figure {
 }
 figure.kami-figure img {
   max-width: 100%;
-  max-height: 520px;
+  /* Dense multi-panel and architecture figures were unreadable at 520px.
+     Full width plus a lightbox gives true 1:1 zoom of the same source file. */
+  max-height: 76vh;
+  width: auto;
   object-fit: contain;
+  cursor: zoom-in;
   display: block;
   margin: 0 auto 8pt auto;
   border-radius: 2pt;
@@ -481,9 +491,23 @@ figcaption {
   .evidence-cite { display: none; }
   .chapter { break-before: page; }
   figure.kami-figure, .takeaway, .callout, .equation-block { break-inside: avoid; }
-  figure.kami-figure img, .table-asset, .equation-fallback { max-height: 480px; object-fit: contain; }
+  figure.kami-figure img, .table-asset, .equation-fallback { max-height: 620px; object-fit: contain; }
 }
 .evidence-binding { font-family: var(--sans); font-size: 8pt; color: var(--brand); margin-right: 5pt; }
+
+/* ========== SOURCE-IMAGE LIGHTBOX ========== */
+/* Scaling the same file the page already shows; never alters the evidence. */
+#evidentia-lightbox {
+  position: fixed; inset: 0; z-index: 9999; display: none;
+  background: rgba(0,0,0,.88); cursor: zoom-out;
+  align-items: center; justify-content: center; padding: 2vh 2vw;
+}
+#evidentia-lightbox.open { display: flex; }
+#evidentia-lightbox img { max-width: 96vw; max-height: 96vh; object-fit: contain; background: #fff; }
+#evidentia-lightbox .lb-hint {
+  position: absolute; top: 10px; left: 0; right: 0; text-align: center;
+  color: #ddd; font-family: var(--sans); font-size: 9pt;
+}
 
 /* ========== APPENDIX ========== */
 .appendix {
@@ -572,7 +596,7 @@ def render_block_html(b: dict, root: Path, local_ids: set[str] = None) -> str:
     ev_refs = b.get('evidence_refs', [])
     
     if b_type == 'paragraph':
-        text = esc(b.get('text', ''))
+        text = esc_math(b.get('text', ''))
         text, cited_refs = format_cites_in_text_html(text, local_ids)
         remaining_refs = [r for r in ev_refs if str(r).strip() not in cited_refs]
         trailing_cites = f" {_render_cites_span(remaining_refs, local_ids)}" if remaining_refs else ""
@@ -584,7 +608,7 @@ def render_block_html(b: dict, root: Path, local_ids: set[str] = None) -> str:
         return f"<p>{text}{trailing_cites}</p>"
         
     elif b_type == 'callout':
-        text = esc(b.get('text', ''))
+        text = esc_math(b.get('text', ''))
         text, cited_refs = format_cites_in_text_html(text, local_ids)
         remaining_refs = [r for r in ev_refs if str(r).strip() not in cited_refs]
         trailing_cites = f" {_render_cites_span(remaining_refs, local_ids)}" if remaining_refs else ""
@@ -596,7 +620,7 @@ def render_block_html(b: dict, root: Path, local_ids: set[str] = None) -> str:
         return f"<div class='callout'><p>{text}{trailing_cites}</p></div>"
         
     elif b_type == 'takeaway':
-        text = esc(b.get('text', ''))
+        text = esc_math(b.get('text', ''))
         text, cited_refs = format_cites_in_text_html(text, local_ids)
         remaining_refs = [r for r in ev_refs if str(r).strip() not in cited_refs]
         trailing_cites = f" {_render_cites_span(remaining_refs, local_ids)}" if remaining_refs else ""
@@ -606,8 +630,8 @@ def render_block_html(b: dict, root: Path, local_ids: set[str] = None) -> str:
         
     elif b_type == 'figure':
         fid = b.get('evidence_id', 'FIG')
-        cap = esc(b.get('caption', ''))
-        analysis = esc(b.get('analysis', ''))
+        cap = esc_math(b.get('caption', ''))
+        analysis = esc_math(b.get('analysis', ''))
         analysis, cited_refs = format_cites_in_text_html(analysis, local_ids)
         remaining_refs = [r for r in ev_refs if str(r).strip() not in cited_refs]
         trailing_cites = f" {_render_cites_span(remaining_refs, local_ids)}" if remaining_refs else ""
@@ -630,7 +654,7 @@ def render_block_html(b: dict, root: Path, local_ids: set[str] = None) -> str:
     elif b_type == 'equation':
         raw_latex = b.get('latex')
         raw = normalize_latex(raw_latex) if raw_latex else None
-        exp = esc(b.get('explanation', ''))
+        exp = esc_math(b.get('explanation', ''))
         exp, cited_refs = format_cites_in_text_html(exp, local_ids)
         remaining_refs = [r for r in ev_refs if str(r).strip() not in cited_refs]
         trailing_cites = f" {_render_cites_span(remaining_refs, local_ids)}" if remaining_refs else ""
@@ -662,7 +686,12 @@ def render_block_html(b: dict, root: Path, local_ids: set[str] = None) -> str:
         if role:
             pedagogy_html += f"<div class='eq-role'>角色定位：{esc(role)}</div>"
         if term_interps:
-            terms_li = "".join(f"<li><code>{esc(t.get('term', ''))}</code>（{esc(t.get('role', '项'))}）：{esc(t.get('intuition', ''))}</li>" for t in term_interps if t.get('term'))
+            # A glossary term is mathematics; <code> is skipped by the MathJax
+            # pipeline and produced literal \mathbf{D}\mathbf{A} (Issue #48).
+            terms_li = "".join(
+                f"<li>{term_html(t.get('term', ''))}（{esc(t.get('role', '项'))}）：{protect_math(t.get('intuition', ''))}</li>"
+                for t in term_interps if t.get('term')
+            )
             pedagogy_html += f"<div class='eq-terms'><strong>核心项解析与数学直觉</strong>：<ul>{terms_li}</ul></div>"
         if proxy:
             pedagogy_html += f"<div class='eq-proxy'><strong>工程实现与代理说明</strong>：{esc(proxy)}</div>"
@@ -678,8 +707,8 @@ def render_block_html(b: dict, root: Path, local_ids: set[str] = None) -> str:
         
     elif b_type == 'table':
         tid = b.get('evidence_id', 'TAB')
-        cap = esc(b.get('caption', ''))
-        analysis = esc(b.get('analysis', ''))
+        cap = esc_math(b.get('caption', ''))
+        analysis = esc_math(b.get('analysis', ''))
         analysis, cited_refs = format_cites_in_text_html(analysis, local_ids)
         remaining_refs = [r for r in ev_refs if str(r).strip() not in cited_refs]
         trailing_cites = f" {_render_cites_span(remaining_refs, local_ids)}" if remaining_refs else ""
@@ -804,6 +833,29 @@ def render_paper_reader_html(manuscript: dict, root: Path) -> str:
 <section class='toc'><h2>目录</h2>{''.join(toc_items)}</section>
 {''.join(chapters_html)}
 {appendix}
+<div id="evidentia-lightbox" role="dialog" aria-label="查看原始图片">
+  <div class="lb-hint">点击任意位置关闭 · 图片为源文件原始像素</div>
+  <img alt="" />
+</div>
+<script>
+(function () {{
+  var box = document.getElementById('evidentia-lightbox');
+  if (!box) return;
+  var img = box.querySelector('img');
+  document.addEventListener('click', function (event) {{
+    var target = event.target;
+    if (target === box || target === img) {{ box.classList.remove('open'); img.src = ''; return; }}
+    if (target && target.tagName === 'IMG' && target.closest('figure.kami-figure')) {{
+      img.src = target.getAttribute('src');
+      img.alt = target.getAttribute('alt') || '';
+      box.classList.add('open');
+    }}
+  }});
+  document.addEventListener('keydown', function (event) {{
+    if (event.key === 'Escape') {{ box.classList.remove('open'); img.src = ''; }}
+  }});
+}})();
+</script>
 </body></html>"""
 
 def render_paper_reader_md(manuscript: dict, root=None) -> str:
@@ -890,6 +942,38 @@ def render_paper_reader_md(manuscript: dict, root=None) -> str:
     lines.extend(['## 证据来源与页面锚点 <a id=\'sources\'></a>', '', '需要逐项核对来源时，请打开 [来源与核验记录](evidence_atlas.html)。', ''])
     return '\n'.join(lines) + '\n'
 
+def duplicate_asset_errors(manuscript: dict, root: Path) -> list[str]:
+    """Detect two different evidence items backed by byte-identical images.
+
+    Fig. 11 showing Fig. 9's bytes is the failure this prevents (#45).
+    """
+    seen: dict[str, str] = {}
+    errors: list[str] = []
+    for chapter in manuscript.get('document', {}).get('chapters', []):
+        for block in chapter.get('blocks', []):
+            if block.get('type') not in ('figure', 'table'):
+                continue
+            asset = resolve_visual_asset(block, root)
+            if not asset:
+                continue
+            path = root / asset
+            if not path.is_file():
+                continue
+            try:
+                digest = sha256(path)
+            except OSError:
+                continue
+            eid = str(block.get('evidence_id') or block.get('id') or '?')
+            if digest in seen and seen[digest] != eid:
+                errors.append(
+                    f"{seen[digest]} and {eid} both resolve to {asset} (sha256 {digest[:12]}); "
+                    "one of them is bound to the wrong image"
+                )
+            else:
+                seen[digest] = eid
+    return errors
+
+
 def render_paper_reader(root: Path, kami_root: Path = None) -> dict:
     """Render the primary Paper Reader HTML, Markdown, and PDF."""
     reader_dir = root / 'reader'
@@ -907,6 +991,15 @@ def render_paper_reader(root: Path, kami_root: Path = None) -> dict:
             "In Reader v3, the narrative manuscript must be produced by the strong-model Lead Writer. "
             "Deterministic composition is deprecated and prohibited in production."
         )
+    # Two distinct figures must never share one image file (Issue #45).
+    if os.environ.get('EVIDENTIA_ALLOW_SHARED_ASSETS') != '1':
+        collisions = duplicate_asset_errors(manuscript, root)
+        if collisions:
+            raise ValueError(
+                "distinct evidence items resolve to identical image bytes; refusing to render:\n  "
+                + "\n  ".join(collisions)
+            )
+
     binding_changes = rebind_visual_assets(manuscript, root)
     manuscript_p.write_text(json.dumps(manuscript, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
     if binding_changes:
@@ -920,6 +1013,16 @@ def render_paper_reader(root: Path, kami_root: Path = None) -> dict:
         )
 
     html_content = kami_adapter.render_math_html(render_paper_reader_html(manuscript, root), kami_root=kami_root)
+
+    # Deterministic math gate (Issue #48): a rendered Reader must never show raw
+    # TeX. Whether a formula is CORRECT is the source review's job (Issue #46).
+    math_errors = unrendered_math_errors(html_content)
+    if math_errors:
+        raise ValueError(
+            "Reader HTML still contains unrendered mathematics; refusing to publish:\n  "
+            + "\n  ".join(math_errors)
+        )
+
     html_file = reader_dir / 'paper_reader.html'
     html_file.write_text(html_content, encoding='utf-8')
     

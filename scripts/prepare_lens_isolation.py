@@ -13,6 +13,7 @@ import shutil
 from pathlib import Path
 
 from lens_execution_manifest import _normalise_rel
+from storage_links import link_or_copy, link_tree
 from validate_common import load_json
 
 
@@ -37,13 +38,13 @@ def prepare(root: Path) -> list[Path]:
                 continue
             rel = _normalise_rel(value)
             source = root / rel
+            destination = snapshot / rel
             if source.is_file():
-                destination = snapshot / rel
-                destination.parent.mkdir(parents=True, exist_ok=True)
-                shutil.copy2(source, destination)
+                # Hard-link, don't copy: the Lens still sees a complete isolated
+                # view, but the bytes are stored once (Issue #55).
+                link_or_copy(source, destination)
             elif source.is_dir():
-                destination = snapshot / rel
-                shutil.copytree(source, destination)
+                link_tree(source, destination)
             else:
                 raise FileNotFoundError(f"missing Lens input {rel} for {task_id}")
         (snapshot / "task.json").write_text(
