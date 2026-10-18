@@ -46,7 +46,7 @@ from validate_common import load_json, schema_validate
 
 # The RingMoClaw PDF is a local, licensed research asset and is never committed.
 # CI records SKIPPED when it is absent rather than failing on a machine-specific
-# absolute path (which is what kept master red since 2026-10-14).
+# absolute path, which is what kept master red since 2026-10-14.
 RINGMO_PDF = Path(os.environ.get(
     "EVIDENTIA_RINGMOCLAW_PDF",
     str(ROOT / "reader-v3-runs/workspaces/RINGMOCLAW/source/paper.pdf"),
