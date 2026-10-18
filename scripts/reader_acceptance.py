@@ -163,12 +163,12 @@ def _evaluate_artifact(root: Path, *, artifact_only=False):
     main_md = md_text[:md_appendix.start()] if md_appendix else md_text
     main_views = (main_html, main_md)
     full_views = (html_text, md_text, pdf_text)
-    # Unit/fixture artifact checks intentionally omit human review packets;
-    # the strict release path validates semantic and visual review if present.
-    if not artifact_only and (root / "reader/semantic_review.json").exists():
-        for message in semantic_review_errors(root, manuscript):
-            errors.gate = "unsupported_prose_free" if "unsupported_prose" in message or "renderer_purity" in message else "narrative_complete"
-            errors.append(message)
+    # Artifact-only mode exercises structural invariants for fixtures.
+    # Every normal release MUST perform the bound source/Reader semantic review.
+    # Absence of a file never means approval.
+    if not artifact_only:
+        errors.gate = "scientific_integrity"
+        errors.extend(semantic_review_errors(root, manuscript))
     errors.gate = "narrative_complete"
     paragraphs = [b.get("text", "") for ch in chapters for b in ch.get("blocks", []) if b.get("type") == "paragraph"]
     if not paragraphs or not any(str(p).strip() for p in paragraphs):
@@ -433,7 +433,7 @@ def _evaluate_artifact(root: Path, *, artifact_only=False):
 
     # 8. Kami visual QA freshness and cryptographic binding
     errors.gate = "visual_review"
-    if not artifact_only and (root / "reader/visual_review.json").exists():
+    if not artifact_only:
         errors.extend(visual_review_errors(root))
     audit_p = root / "reader/kami_audit.json"
     if not audit_p.exists():
@@ -464,41 +464,14 @@ def _report(errors):
 
 
 def validate_corpus_or_release_report(regression_report=None):
-    if regression_report:
-        from reader_regression import validate_release_report
-        return validate_release_report(regression_report)
-    
-    # Layer 3 diverse benchmark corpus (7 papers pair evaluations)
-    from reader_review import ROOT
-    corpus_evals = [
-        ROOT / "ISSUE19_BENCH-01-VASWANI-ATTENTION_PAIR_EVALUATION.json",
-        ROOT / "ISSUE19_BENCH-02-LORA-ADAPTATION_PAIR_EVALUATION.json",
-        ROOT / "ISSUE19_BENCH-03-REMOTE-SENSING-FOREST_PAIR_EVALUATION.json",
-        ROOT / "ISSUE19_BENCH-04-ALPHAFOLD2-STRUCTURE_PAIR_EVALUATION.json",
-        ROOT / "ISSUE19_BENCH-05-QUANTUM-SUPREMACY-ABLATION_PAIR_EVALUATION.json",
-        ROOT / "ISSUE19_UNSEEN-01-RETHINKING-GENERALIZATION_PAIR_EVALUATION.json",
-        ROOT / "ISSUE38_RINGMOCLAW_PAIR_EVALUATION.json"
-    ]
-    if all(p.exists() for p in corpus_evals):
-        corpus_errors = []
-        for p in corpus_evals:
-            ab_data = load_json(p)
-            if "eval_1_results" in ab_data:
-                conc = ab_data.get("paper_level_conclusion", {})
-                if not conc.get("no_regression_core_pass"):
-                    corpus_errors.append(f"{p.name}: core pass failed")
-            else:
-                errs = list(schema_validate(ab_data, "reader_pair_evaluation"))
-                if errs:
-                    corpus_errors.extend(f"{p.name}: {e}" for e in errs)
-                dims = {d["name"]: d for d in ab_data.get("dimensions", [])}
-                for dname in ("narrative_clarity", "scientific_completeness", "method_explanation"):
-                    if dname in dims and dims[dname]["evidentia_v3"] < dims[dname]["direct_ai"]:
-                        corpus_errors.append(f"{p.name}: regression on {dname}")
-                if len(ab_data.get("release_blockers", [])) > 0:
-                    corpus_errors.append(f"{p.name}: active release blocker in {p.name}")
-        return corpus_errors
+    """Require a fresh, implementation-bound corpus report for full releases.
 
+    Historical ISSUE19/ISSUE38 pair evaluations are regression references only:
+    their presence cannot certify the current paper or implementation.
+    """
+    if not regression_report:
+        return ["fresh real-corpus release report is required for PAPER_COMPLETE; "
+                "pass --regression-report after an independent corpus run"]
     from reader_regression import validate_release_report
     return validate_release_report(regression_report)
 
@@ -509,6 +482,16 @@ def evaluate(root: Path, *, artifact_only=False, regression_report=None):
     try:
         report = _evaluate_artifact(root, artifact_only=artifact_only)
         report["implementation_sha256"] = implementation_hash()
+        report["source_review_executed"] = (
+            not artifact_only
+            and (root / "reader/semantic_review.json").is_file()
+            and (root / "reader/visual_review.json").is_file()
+        )
+        # Artifact-only checks can certify structure, never actual reading
+        # of original source; do not label fixture runs science-verified.
+        if artifact_only:
+            report["science_verified"] = False
+            report["explanation_complete"] = False
         if report["status"] == "READER_ACCEPTED":
             report["artifact_hashes"] = bindings(root)
         if not artifact_only:
@@ -535,7 +518,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", required=True)
     ap.add_argument("--artifact-only", action="store_true", help="Evaluate one Reader for the regression runner; never reports PAPER_COMPLETE")
-    ap.add_argument("--regression-report", help="Hash-bound real-corpus release report (default: evals/reader_regression/release_report.json)")
+    ap.add_argument("--regression-report", help="Required fresh, hash-bound real-corpus report for PAPER_COMPLETE; historical pair JSONs cannot authorize release")
     args = ap.parse_args()
     root = Path(args.out)
     report = evaluate(root, artifact_only=args.artifact_only, regression_report=args.regression_report)

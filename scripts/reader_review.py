@@ -57,7 +57,8 @@ def bindings(root):
         if (root / f"model/{name}.json").exists():
             paths.add(f"model/{name}.json")
     manuscript = load_json(root / "reader/narrative_manuscript.json")
-    for chapter in manuscript.get("document", {}).get("chapters", []):
+    for chapter in (manuscript.get("document", {}).get("sections")
+                    or manuscript.get("document", {}).get("chapters", [])):
         for block in chapter.get("blocks", []):
             for key in ("asset", "fallback_asset"):
                 if block.get(key):
@@ -114,7 +115,8 @@ def semantic_review_errors(root, manuscript):
     review, errors = load_bound_review(root, "semantic_review.json")
     if review is None:
         return errors
-    chapters = manuscript.get("document", {}).get("chapters", [])
+    chapters = (manuscript.get("document", {}).get("sections")
+                or manuscript.get("document", {}).get("chapters", []))
     narrative = compact(" ".join(
         str(block.get(key, ""))
         for chapter in chapters for block in chapter.get("blocks", [])
