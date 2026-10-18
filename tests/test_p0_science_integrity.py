@@ -1,13 +1,7 @@
-"""Regression guards for the P0 science-integrity chain (#45, #46, #48, #49).
+"""Synthetic regression guards for source-grounded release behavior.
 
-These tests cover the failures that produced a wrong IEEE GRSM Reader:
-
-* Fig. 9/10/11 were described from the wrong image because several figures were
-  bound to the same embedded PDF object (#45).
-* Inline TeX leaked into the page as literal ``\\mathbf{D}\\mathbf{A}`` because
-  glossary terms were emitted inside ``<code>`` (#48).
-* A run that never performed an independent source review still reported
-  ``PAPER_COMPLETE`` (#49).
+Tests use generated assets and generic evidence IDs to check image binding, math
+rendering, and fail-closed release decisions.
 """
 import json
 import os
@@ -95,7 +89,7 @@ def _figure_block(eid, asset):
 
 
 def test_shared_image_bytes_across_distinct_figures_is_rejected(tmp_path):
-    """Fig. 11 showing Fig. 9's bytes is the exact failure this guards."""
+    """Two synthetic evidence IDs must not reuse identical image bytes."""
     from render_paper_reader import duplicate_asset_errors
 
     (tmp_path / "assets/figures").mkdir(parents=True)
@@ -110,8 +104,8 @@ def test_shared_image_bytes_across_distinct_figures_is_rejected(tmp_path):
                     "id": "spine-01",
                     "title": "T",
                     "blocks": [
-                        _figure_block("F09", "assets/figures/a.png"),
-                        _figure_block("F11", "assets/figures/b.png"),
+                        _figure_block("FIG-01", "assets/figures/a.png"),
+                        _figure_block("FIG-02", "assets/figures/b.png"),
                     ],
                 }
             ]
@@ -119,7 +113,7 @@ def test_shared_image_bytes_across_distinct_figures_is_rejected(tmp_path):
     }
     errors = duplicate_asset_errors(manuscript, tmp_path)
     assert errors, "two figures sharing identical bytes must be reported"
-    assert "F09" in errors[0] and "F11" in errors[0]
+    assert "FIG-01" in errors[0] and "FIG-02" in errors[0]
 
 
 def test_distinct_images_are_accepted(tmp_path):
@@ -136,8 +130,8 @@ def test_distinct_images_are_accepted(tmp_path):
                     "id": "spine-01",
                     "title": "T",
                     "blocks": [
-                        _figure_block("F09", "assets/figures/a.png"),
-                        _figure_block("F11", "assets/figures/b.png"),
+                        _figure_block("FIG-01", "assets/figures/a.png"),
+                        _figure_block("FIG-02", "assets/figures/b.png"),
                     ],
                 }
             ]
@@ -194,19 +188,17 @@ def test_decision_markdown_names_the_decision_and_reason():
     assert "eq gate failed" in md
 
 
-def test_historical_benchmark_files_cannot_authorise_release(tmp_path):
+def test_untrusted_cross_paper_score_cannot_authorise_release(tmp_path):
     """Presence of old A/B JSON must not upgrade a fresh paper to PASS."""
     from test_gates import fixture
     from render_reader import render_reader
 
     root = fixture(tmp_path)
     render_reader(root)
-    # Simulate the old shortcut: every historical pair evaluation present.
-    for name in (
-        "ISSUE19_BENCH-01-VASWANI-ATTENTION_PAIR_EVALUATION.json",
-        "ISSUE38_RINGMOCLAW_PAIR_EVALUATION.json",
-    ):
-        (root / name).write_text(json.dumps({"dimensions": [], "release_blockers": []}))
+    # A synthetic cached score is untrusted and cannot authorize this workspace.
+    (root / "legacy_cross_paper_score.json").write_text(
+        json.dumps({"status": "PASS", "benchmark_pass": True, "release_ready": True})
+    )
     report = evaluate_release(root)
     assert report["decision"] != "PASS"
 
@@ -230,10 +222,10 @@ def test_source_contradiction_blocks_release(tmp_path):
                 "kind": "figure_misread",
                 "verdict": "CONTRADICTED",
                 "severity": "P0_BLOCKER",
-                "summary": "Reader describes six methods as three",
+                "summary": "Reader describes six synthetic items as three",
                 "reader_locator": "spine-02 block 1",
-                "source_locator": "Fig. 9, p.21",
-                "comparison": "The source figure lists six named methods.",
+                "source_locator": "FIG-02, synthetic source",
+                "comparison": "The synthetic source fixture contains six named items.",
             }
         ],
         "overall": {"recommendation": "BLOCK"},
