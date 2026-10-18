@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+explanation = protect_math(sanitize_editorial_text(block.get('explanation', '')))
 """Render the human-facing Chinese Paper Reader.
 
 Responsibilities:
