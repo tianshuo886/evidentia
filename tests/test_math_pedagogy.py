@@ -86,6 +86,27 @@ def test_derivation_uses_raw_text_when_latex_is_missing():
     assert derive_equation_pedagogy(None, raw) == derive_equation_pedagogy(raw, raw)
 
 
+def test_explanation_priority_is_independent_of_equation_number():
+    simple = "x = y"
+    material = r"r = \frac{u}{v}"
+    for number in (1, 3, 17, 120):
+        assert derive_equation_pedagogy(simple, simple, eq_num=number)[
+            "explanation_priority"
+        ] == derive_equation_pedagogy(simple, simple)["explanation_priority"]
+        assert derive_equation_pedagogy(material, material, eq_num=number)[
+            "explanation_priority"
+        ] == "MUST_EXPLAIN"
+
+
+def test_audit_priority_uses_equation_structure_not_number():
+    simple = {"latex": "x = y", "explanation": "The synthetic output equals the input."}
+    results = [
+        audit_single_equation({**simple, "equation_number": number}, "")
+        for number in (1, 6, 15, 120)
+    ]
+    assert {result["priority"] for result in results} == {"AUDIT_ONLY"}
+
+
 def test_material_equation_without_explanation_fails(ratio_equation):
     ratio_equation["explanation"] = "比值公式"
     result = audit_single_equation(ratio_equation, full_context_text="")
