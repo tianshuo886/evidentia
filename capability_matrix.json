@@ -386,14 +386,16 @@
         "direct_reading_baseline"
       ],
       "scripts": [
-        "reader_v3_benchmark.py",
-        "reader_v3_corpus.py"
+        "scripts/eval_runner.py",
+        "scripts/reader_v3_benchmark.py",
+        "scripts/reader_v3_corpus.py"
       ],
       "tests": [
         "test_phase_b7"
       ],
-      "status": "REAL_PAPER_VALIDATED",
-      "evidence": "Formal Issue #19 real-paper benchmark completed (6 papers, PASS)."
+      "status": "SYNTHETIC_ONLY",
+      "evidence": "CI uses generated synthetic PDFs and schema fixtures only. No cross-paper empirical validation is claimed; real-paper corpus inputs and reports are external opt-in data.",
+      "validation_status": "SYNTHETIC_VALIDATED"
     },
     {
       "id": "ci_release_engineering",
