@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python3
 """Equation Fidelity and Source-Grounded Math Reconstruction (Issue #39 & #40).
 
