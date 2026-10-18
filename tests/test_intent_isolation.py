@@ -277,7 +277,11 @@ Existing bottleneck: 30% mAP drop under foggy sensor conditions.
     assert rs_p.exists()
     rs = json.loads(rs_p.read_text(encoding='utf-8'))
     assert rs.get('intent') == 'PAPER_READING'
-    assert rs.get('phase') in ('COMPLETE', 'PAPER_COMPLETE')
+    # Issue #49: rendering is not release. A fixture run performs no independent
+    # source review, so it must never claim PAPER_COMPLETE.
+    assert rs.get('phase') in ('RENDER', 'COMPLETE')
+    assert rs.get('validation_status') == 'NOT_RUN'
+    assert (out_dir / 'reader/READER_RELEASE_DECISION.md').exists()
     
     apply_dir = out_dir / 'apply'
     assert not apply_dir.exists()

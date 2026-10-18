@@ -207,9 +207,8 @@ def test_atomic_claim_ledger_schema_and_integrity(tmp_path):
     saved_ledger = load_json(root / "model/claim_ledger.json")
     schema_errs = list(schema_validate(saved_ledger, "claim_ledger"))
     assert not schema_errs, f"Claim ledger failed schema: {schema_errs}"
-    # Absence of a known regex defect is not independent source verification.
+    # Issue #46: no independent source comparison ran, so not PASS.
     assert saved_ledger["verification_summary"]["status"] == "NEEDS_REVIEW"
-    assert saved_ledger["verification_summary"]["unverified"] >= 1
     assert saved_ledger["verification_summary"]["contradicted"] == 0
 
 

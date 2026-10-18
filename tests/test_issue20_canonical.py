@@ -26,7 +26,9 @@ def test_evidentia_run_defaults_to_v3(tmp_path):
         "run", "--pdf", str(pdf_path), "--out", str(out_dir), "--fixture"
     ], capture_output=True, text=True)
     assert res.returncode == 0, res.stdout + res.stderr
-    assert "Evidentia Reader v3 COMPLETE" in res.stdout
+    # Issue #49: a fixture run renders but cannot be released.
+    assert "Evidentia Reader v3 rendered" in res.stdout
+    assert "RELEASE DECISION: NOT_RUN" in res.stdout
     assert (out_dir / "tasks/v3/lead_reading.json").exists()
     assert (out_dir / "tasks/v3/lens/argument_narrative.json").exists()
     assert (out_dir / "reader/narrative_manuscript.json").exists()

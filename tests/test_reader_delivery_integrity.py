@@ -72,7 +72,10 @@ def test_delivery_integrity_gate_registered_in_acceptance():
 
 def test_css_figure_dimensions_and_print_rules():
     """Verify figure presentation CSS and print media rules for reading legibility."""
-    assert "max-height: 520px" in KAMI_LONG_DOC_CSS
+    # Issue #45 raised the cap so dense multi-panel figures stay readable.
+    assert "max-height: 520px" not in KAMI_LONG_DOC_CSS
+    assert "max-height: 76vh" in KAMI_LONG_DOC_CSS
+    assert "evidentia-lightbox" in KAMI_LONG_DOC_CSS
     assert "object-fit: contain" in KAMI_LONG_DOC_CSS
     assert "@media print" in KAMI_LONG_DOC_CSS
     assert "break-before: page" in KAMI_LONG_DOC_CSS

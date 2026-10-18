@@ -8,7 +8,8 @@ Tests that figures and tables designated as `audit_only` are not dumped into
 the main narrative's decisive experiments chapter, while remaining fully
 accessible in the audit appendix.
 """
-import json, subprocess, sys
+import json
+import os, subprocess, sys
 from pathlib import Path
 
 ROOT = Path(__file__).parents[1]
@@ -67,7 +68,14 @@ def test_evidence_selectivity_in_main_reader(tmp_path):
         arg_p.unlink()
 
     # Run render_reader.py
-    res = subprocess.run([PY, str(ROOT / 'scripts/render_reader.py'), '--out', str(r)], capture_output=True, text=True)
+    # This fixture points all eight figures at one placeholder image, so the
+    # shared-asset guard is opted out here; the real guard is covered by
+    # test_shared_image_bytes_across_distinct_figures_is_rejected.
+    res = subprocess.run(
+        [PY, str(ROOT / 'scripts/render_reader.py'), '--out', str(r)],
+        capture_output=True, text=True,
+        env={**os.environ, 'EVIDENTIA_ALLOW_SHARED_ASSETS': '1'},
+    )
     assert res.returncode == 0, res.stdout + res.stderr
 
     ir = load_json(r / 'reader/paper_reader_ir.json')
