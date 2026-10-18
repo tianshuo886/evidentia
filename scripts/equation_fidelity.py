@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python3
 """Equation Fidelity and Source-Grounded Math Reconstruction (Issue #39 & #40).
 
@@ -920,7 +921,10 @@ def detect_equations_from_pdf(pdf_path: Path, workspace_root: Path, pdf_sha256: 
     extracted = []
     eq_counter = 0
 
-    known_paper_eqs = KNOWN_BENCHMARK_EQUATIONS.get(pdf_sha256, {})
+    # A per-paper LaTeX registry must never mark a formula VERIFIED: that is
+    # template matching, not source fidelity (Issue #46/#48). Extraction is
+    # always heuristic here, and an independent source review confirms it.
+    known_paper_eqs: dict = {}
 
     for pno in range(len(doc)):
         page = doc[pno]
