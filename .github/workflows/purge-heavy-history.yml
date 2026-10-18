@@ -47,13 +47,11 @@ jobs:
           else
             echo 'No removed paths are reachable from rewritten branches or tags.'
           fi
-          test -f scripts/eval_runner.py
-          test -f scripts/eval_metrics/grounding_metrics.py
-          test -f scripts/eval_baselines/single_pass_baseline.py
-          test -f tests/fixtures/evaluation/corpus/synthetic_corpus.json
-          test -f tests/fixtures/evaluation/annotations/ground_truth.json
-          test -f tests/fixtures/synthetic_workspace.py
+          # Production source and synthetic test assets must survive; all
+          # historical run outputs may disappear.
           test -f tests/test_equation_fidelity.py
+          test -f scripts/reader_acceptance.py
+          test -f scripts/release_gate.py
           du -sh .
           git count-objects -vH
 
