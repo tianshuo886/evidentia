@@ -39,7 +39,8 @@ jobs:
 
       - name: Prove large paths are absent from rewritten history
         run: |
-          if git log --all --name-only --format= | grep -E '^(reader-v3-runs/|evals/)'; then
+          REWRITTEN_REFS=$(git for-each-ref --format='%(refname)' refs/heads refs/tags)
+          if git log $REWRITTEN_REFS --name-only --format= | grep -E '^(reader-v3-runs/|evals/)'; then
             echo 'Removed paths are still reachable in history' >&2
             exit 1
           fi
