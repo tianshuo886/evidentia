@@ -55,6 +55,9 @@ jobs:
           du -sh .
           git count-objects -vH
 
+      - name: Restore origin after git-filter-repo
+        run: git remote add origin https://github.com/${GITHUB_REPOSITORY}.git
+
       - name: Force-push rewritten branches and tags
         run: |
           git push origin --force --all
