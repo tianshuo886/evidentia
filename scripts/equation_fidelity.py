@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python3
 """Equation Fidelity and Source-Grounded Math Reconstruction (Issue #39 & #40).
 
@@ -22,12 +21,6 @@ MATH_FUNCS = {
     'max', 'min', 'softmax', 'attention', 'concat', 'head', 'sign', 'rank', 'topk',
     'relu', 'ffn', 'iou', 'acc', 'diag', 'cos', 'sin', 'tan', 'det', 'trace'
 }
-
-# Canonical ground-truth equations and pedagogy for verified benchmark papers
-# Equation extraction never consults a per-paper answer registry. The PDF-derived
-# text is only a proposal and remains UNCERTAIN until an independent source
-# review confirms the formula. Paper-specific gold data belongs in opt-in tests,
-# not in the production skill.
 
 
 def clean_math_text(raw: str) -> str:
@@ -63,9 +56,7 @@ def derive_equation_pedagogy(latex: str, raw_text: str, role_zh: str = "", eq_nu
     text = latex or raw_text or ""
 
     # Priority determination
-    if any(ind in text for ind in [r"\frac", "/", r"\exp", r"\sum", r"\text{softmax}", r"\Pi", r"W_0", r"\nabla"]):
-        priority = "MUST_EXPLAIN"
-    elif eq_num is not None and eq_num <= 6:
+    if any(ind in text for ind in [r"\frac", "/", r"\exp", r"\sum", r"\text{softmax}", r"\Pi", r"\nabla", r"\sqrt", r"\int", r"\prod"]):
         priority = "MUST_EXPLAIN"
     elif "=" in text and len(text) > 20:
         priority = "CONCISE_DEFINE"
@@ -84,7 +75,7 @@ def derive_equation_pedagogy(latex: str, raw_text: str, role_zh: str = "", eq_nu
         elif r"\text{softmax}" in text or r"\text{Attention}" in text:
             role = "注意力与表征变换算子"
         else:
-            role = f"公式 ({eq_num})" if eq_num else "核心数学表述"
+            role = "核心数学表述"
 
     # Parse symbols
     symbols = []
