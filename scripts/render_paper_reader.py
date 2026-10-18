@@ -48,6 +48,12 @@ def esc(x):
     return html.escape(cleaned)
 
 
+def math_md(term) -> str:
+    """Render a glossary term as Markdown math, never as an inline code span."""
+    value = str(term or "")
+    return f"${value}$" if re.search(r"\\[a-zA-Z]{2,}", value) else value
+
+
 def esc_math(x):
     """Escape prose while marking mathematics, after editorial sanitizing."""
     return protect_math(sanitize_editorial_text(str(x or '')))
@@ -933,7 +939,14 @@ def render_paper_reader_md(manuscript: dict, root=None) -> str:
                     lines.append("**核心项解析与数学直觉**：")
                     for t in term_interps:
                         if t.get('term'):
-                            lines.append(f"- `{t.get('term')}`（{t.get('role', '项')}）：{t.get('intuition', '')}")
+                            # Keep Markdown consistent with the HTML view: a
+                            # glossary term is mathematics, not a code span
+                            # (Issue #48). Backticks here made the PDF disagree
+                            # with the rendered formula.
+                            lines.append(
+                                f"- {math_md(t.get('term'))}（{t.get('role', '项')}）："
+                                f"{protect_math(t.get('intuition', ''))}"
+                            )
                     lines.append("")
                 if proxy:
                     lines.append(f"**工程实现与代理说明**：{proxy}\n")

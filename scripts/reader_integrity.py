@@ -17,7 +17,7 @@ def surface(text):
     text = re.sub(r"</?[A-Za-z][^>]*>", " ", text)
     # Rendered math (MathJax SVG) is presentation of the same TeX the manuscript
     # carries, so parity compares prose, not formula glyphs (Issue #48).
-    text = re.sub(r"\\\(.+?\\\)|\\\[.+?\\\]", " ", text, flags=re.S)
+    text = re.sub(r"\\\(.+?\\\)|\\\[.+?\\\]|\$[^$\n]+\$", " ", text, flags=re.S)
     return re.sub(r"[\s\u00ad\u200b\ufeff`*_]+", "", text)
 
 
