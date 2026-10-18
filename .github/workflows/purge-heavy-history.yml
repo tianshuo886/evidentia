@@ -40,9 +40,12 @@ jobs:
       - name: Prove large paths are absent from rewritten history
         run: |
           REWRITTEN_REFS=$(git for-each-ref --format='%(refname)' refs/heads refs/tags)
-          if git log $REWRITTEN_REFS --name-only --format= | grep -E '^(reader-v3-runs/|evals/)'; then
+          if git log $REWRITTEN_REFS --name-only --format= | grep -E '^(reader-v3-runs/|evals/)' >/tmp/forbidden_paths; then
+            cat /tmp/forbidden_paths
             echo 'Removed paths are still reachable in history' >&2
             exit 1
+          else
+            echo 'No removed paths are reachable from rewritten branches or tags.'
           fi
           test -f scripts/eval_runner.py
           test -f scripts/eval_metrics/grounding_metrics.py
