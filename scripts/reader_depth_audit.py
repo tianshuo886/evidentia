@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python3
 """Scientific Explanation Depth and Visual Coverage Audit Engine (Issue #37, #42).
 
