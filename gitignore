@@ -1,0 +1,64 @@
+# Temporary / local implementation plan (do not commit)
+IMPLEMENTATION_PLAN.md
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environments
+.venv
+venv/
+ENV/
+runs/
+
+# Evidentia local execution artifacts
+audit_report.json
+model/
+
+# User paper workspaces and regenerated benchmark/run outputs are local data.
+reader-v3-runs/
+evals/reader_v3/
+evals/real_corpus/
+evals/real_annotations/
+evals/unseen/
+evals/replays/
+evals/reports/
+evals/reader_regression/
+# Keep only tiny synthetic evaluation inputs required by CI. Evaluation source
+# code lives in scripts/ and scripts/eval_* modules.
+!evals/corpus/
+!evals/corpus/**
+!evals/annotations/
+!evals/annotations/**
+
+# OS / Editor
+.DS_Store
+.vscode/
+.idea/
+evals/runners/
+evals/baselines/
+evals/metrics/
