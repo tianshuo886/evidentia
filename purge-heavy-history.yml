@@ -1,0 +1,67 @@
+name: One-time repository history compaction
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: Type PURGE-READER-V3-RUNS-AND-EVALS to rewrite repository history
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  purge:
+    if: ${{ inputs.confirm == 'PURGE-READER-V3-RUNS-AND-EVALS' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout all refs
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Record pre-purge size
+        run: |
+          du -sh reader-v3-runs evals || true
+          git count-objects -vH
+
+      - name: Install git-filter-repo
+        run: python -m pip install git-filter-repo
+
+      - name: Remove run outputs and paper-specific evaluation archives from every commit
+        run: |
+          git filter-repo --force \
+            --path reader-v3-runs/ \
+            --path evals/ \
+            --invert-paths
+
+      - name: Prove large paths are absent from rewritten history
+        run: |
+          if git log --all --name-only --format= | grep -E '^(reader-v3-runs/|evals/)'; then
+            echo 'Removed paths are still reachable in history' >&2
+            exit 1
+          fi
+          test -f scripts/eval_runner.py
+          test -f scripts/eval_metrics/grounding_metrics.py
+          test -f scripts/eval_baselines/single_pass_baseline.py
+          test -f tests/fixtures/evaluation/corpus/synthetic_corpus.json
+          test -f tests/fixtures/evaluation/annotations/ground_truth.json
+          test -f tests/fixtures/synthetic_workspace.py
+          test -f tests/test_equation_fidelity.py
+          du -sh .
+          git count-objects -vH
+
+      - name: Force-push rewritten branches and tags
+        run: |
+          git push origin --force --all
+          git push origin --force --tags
+
+      - name: Remove the one-time purge workflow from the rewritten repository
+        run: |
+          git rm .github/workflows/purge-heavy-history.yml
+          git -c user.name='github-actions[bot]' \
+              -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+              commit -m 'chore: remove one-time history purge workflow'
+          git push origin HEAD:master
