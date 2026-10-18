@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evidentia.dev/schemas/source_review.schema.json",
+  "title": "Independent Source Review",
+  "description": "Open-ended review of a final Reader against the original paper (Issue #46). Deliberately small: a verdict, where it is in the source, where it is in the Reader, and what to change. It is not a per-sentence claim ledger.",
+  "type": "object",
+  "required": ["schema_version", "source_sha256", "reviewer", "coverage", "issues", "overall"],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1.0" },
+    "source_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "manuscript_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "reviewed_at": { "type": "string" },
+    "reviewer": {
+      "type": "object",
+      "required": ["kind", "model", "method"],
+      "properties": {
+        "kind": { "type": "string", "enum": ["MODEL", "HUMAN"] },
+        "model": { "type": "string" },
+        "method": { "type": "string", "description": "How the review was actually performed." }
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "description": "Honest record of what was and was not examined.",
+      "properties": {
+        "sections_read": { "type": "array", "items": { "type": "string" } },
+        "figures_examined": { "type": "array", "items": { "type": "string" } },
+        "equations_examined": { "type": "array", "items": { "type": "string" } },
+        "skipped_sections": { "type": "array", "items": { "type": "string" } },
+        "skipped_sections_justification": { "type": "string" },
+        "claimed_complete": { "type": "boolean" }
+      }
+    },
+    "issues": {
+      "type": "array",
+      "description": "Only substantive findings. An empty list means nothing material was found, not that everything passed.",
+      "items": {
+        "type": "object",
+        "required": ["id", "kind", "verdict", "summary"],
+        "properties": {
+          "id": { "type": "string" },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "factual_contradiction",
+              "unsupported_comparison",
+              "dropped_condition",
+              "wrong_equation",
+              "causal_overreach",
+              "misattribution",
+              "mechanism_insufficient",
+              "evidence_boundary_missing",
+              "major_omission",
+              "figure_misread"
+            ]
+          },
+          "verdict": {
+            "type": "string",
+            "enum": ["SUPPORTED", "QUALIFIED", "CONTRADICTED", "UNSUPPORTED", "UNVERIFIED", "UNRESOLVED"]
+          },
+          "severity": { "type": "string", "enum": ["P0_BLOCKER", "MAJOR", "MINOR", "INFORMATIONAL"] },
+          "summary": { "type": "string" },
+          "reader_locator": { "type": "string", "description": "Section/paragraph or quoted Reader text." },
+          "source_locator": { "type": "string", "description": "Page, figure, table, equation, or quoted source text." },
+          "comparison": { "type": "string", "description": "What the comparison actually showed." },
+          "revision_request": { "type": "string" },
+          "confidence": { "type": "string", "enum": ["HIGH", "MEDIUM", "LOW"] }
+        }
+      }
+    },
+    "mechanism_assessment": {
+      "type": "object",
+      "description": "Whether the Reader explains how the work functions, not just that it works.",
+      "properties": {
+        "verdict": { "type": "string", "enum": ["SUFFICIENT", "PARTIAL", "INSUFFICIENT"] },
+        "reason": { "type": "string" },
+        "where_thin": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "overall": {
+      "type": "object",
+      "required": ["recommendation"],
+      "properties": {
+        "recommendation": { "type": "string", "enum": ["PASS", "NEEDS_REVISION", "BLOCK"] },
+        "reason": { "type": "string" },
+        "residual_uncertainty": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}
