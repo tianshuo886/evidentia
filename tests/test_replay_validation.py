@@ -12,7 +12,6 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PY = sys.executable
 sys.path.insert(0, str(ROOT / 'scripts'))
-sys.path.insert(0, str(ROOT / 'evals/runners'))
 from validate_common import load_json, schema_validate
 from eval_runner import create_synthetic_pdf
 
