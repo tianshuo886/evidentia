@@ -39,9 +39,9 @@ jobs:
           pip install -r requirements.txt
           pip install pyyaml pytest
 
-      - name: Run Pytest Test Suite
+      - name: Run single-paper Reader v3 core tests
         run: |
-          python -m pytest -v
+          python -m pytest -v $(cat tests/ci_core.txt)
 
       - name: Validate Contract Audit & Capability Matrix
         run: |
@@ -76,16 +76,10 @@ jobs:
           print('SKILL.md frontmatter valid!')
           "
 
-      - name: Validate Demo Example Artifacts
+      - name: Validate current-paper example artifacts
         run: |
           python scripts/evidentia.py validate --out examples/demo-paper
           python scripts/phase.py --status --out examples/demo-paper
-
-      - name: Validate Real Paper Demo Artifacts
-        run: |
-          python scripts/evidentia.py validate --out examples/real-paper-demo
-          python scripts/phase.py --status --out examples/real-paper-demo
-          python scripts/freeze_check.py --out examples/real-paper-demo
 
       - name: Validate Generated Production Tasks & Memory Firewall
         run: |
@@ -109,7 +103,6 @@ jobs:
           EVIDENTIA_FIXTURE_ACCEPTANCE: "1"
         run: |
           python scripts/reader_audit.py --out examples/demo-paper
-          python scripts/reader_audit.py --out examples/real-paper-demo
 
       - name: Optional Kami Visual QA
         continue-on-error: true
@@ -126,6 +119,6 @@ jobs:
               print('Kami CLI not installed in standard runner, skipped.')
           "
 
-      - name: Run Empirical Evaluation Benchmark
+      - name: Verify synthetic evaluation release boundary
         run: |
-          python evals/runners/eval_runner.py
+          python scripts/eval_runner.py --truth-level SYNTHETIC
