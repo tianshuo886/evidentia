@@ -114,7 +114,7 @@ jobs:
           if res.returncode == 0:
               print('Kami CLI available, running visual QA...')
               import kami_adapter
-              kami_adapter.verify_kami_visual_qa('examples/real-paper-demo')
+              kami_adapter.verify_kami_visual_qa('examples/demo-paper')
           else:
               print('Kami CLI not installed in standard runner, skipped.')
           "
