@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python3
 """Paper-agnostic candidate claim extraction and generic prose checks.
 
@@ -177,7 +176,7 @@ def verify_text_claims(text: str, source_metadata: Optional[Dict[str, Any]] = No
             "offending_span": bracket_match.group(0),
             "patch_instruction": "Remove all internal audit bracket tags from narrative prose."
         })
-    pipeline_jargon = ("必须严格恪守", "输入防火墙", "防火墙机制", "Lead Writer", "Analytical Agent")
+    pipeline_jargon = ("必须严格恪守", "输入防火墙", "防火墙机制", "Lead Writer", "Analytical Agent", "Internal Agent")
     for jw in pipeline_jargon:
         if jw in text:
             diagnostics.append({
