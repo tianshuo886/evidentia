@@ -1,22 +1,9 @@
-"""Real-Paper Workspace Validation for Evidentia (Issue #24).
+"""Synthetic Workspace Validation for Evidentia (Issue #24).
 
-Validates host-neutral workspace interaction workflows on three structurally diverse real papers:
-1. BENCH-02-LORA-ADAPTATION (Empirical NLP / LLM adaptation)
-2. BENCH-04-ALPHAFOLD2-STRUCTURE (Biomolecular / structural prediction breakthrough)
-3. UNSEEN-01-RETHINKING-GENERALIZATION (Theoretical / empirical generalization paradox)
-
-Demonstrates on each paper:
-- Open Reader (primary surface)
-- Select passage & resolve bound evidence
-- Ask evidence-grounded question
-- Open supporting evidence & source page
-- Create private user note (isolated from reader)
-- Propose correction without mutating Reader
-- Explicit Project Apply entry
+Exercises the full reader-first workflow on section- and chapter-shaped
+manuscripts without requiring named benchmark papers or generated run outputs.
 """
 from __future__ import annotations
-import json
-import shutil
 import sys
 from pathlib import Path
 import pytest
@@ -27,40 +14,26 @@ sys.path.insert(0, str(ROOT / "scripts"))
 from workspace_contract import WorkspaceSession
 from frozen_paper_object import compute_file_sha256
 
-PAPERS = [
-    {
-        "id": "BENCH-02-LORA-ADAPTATION",
-        "section_anchor": "s1",
-        "evidence_id": "F01",
-        "source_page": 1,
-        "question": "为什么适配首先是部署问题？",
-    },
-    {
-        "id": "BENCH-04-ALPHAFOLD2-STRUCTURE",
-        "section_anchor": "s1",
-        "evidence_id": "F01",
-        "source_page": 2,
-        "question": "AlphaFold在CASP14盲测中展示的核心精度尺度是什么？",
-    },
-    {
-        "id": "UNSEEN-01-RETHINKING-GENERALIZATION",
-        "section_anchor": "SEC-01",
-        "evidence_id": "F01",
-        "source_page": 1,
-        "question": "经典泛化理论在过参数化深度学习中为何失效？",
-    },
+sys.path.insert(0, str(ROOT / "tests" / "fixtures"))
+from synthetic_workspace import create_synthetic_workspace
+
+WORKSPACE_SHAPES = [
+    {"id": "SYNTHETIC-SECTIONS", "document_key": "sections", "section_prefix": "s",
+     "section_anchor": "s1", "evidence_id": "T01", "source_page": 2,
+     "question": "为什么合成测量值随测试条件变化？"},
+    {"id": "SYNTHETIC-CHAPTERS", "document_key": "chapters", "section_prefix": "SEC-",
+     "section_anchor": "SEC-01", "evidence_id": "T01", "source_page": 2,
+     "question": "哪项证据支持合成测量的解释？"},
 ]
 
 
-@pytest.mark.parametrize("paper_cfg", PAPERS, ids=[p["id"] for p in PAPERS])
-def test_real_paper_workspace_workflow(tmp_path, paper_cfg):
-    """Execute complete 7-step workspace interaction workflow on a real paper fixture."""
-    src_ws = ROOT / "reader-v3-runs" / "workspaces" / paper_cfg["id"]
-    assert src_ws.exists(), f"Source workspace missing: {src_ws}"
-
-    # Isolate in temp directory to guarantee zero contamination of source fixtures
-    ws_copy = tmp_path / paper_cfg["id"]
-    shutil.copytree(src_ws, ws_copy)
+@pytest.mark.parametrize("paper_cfg", WORKSPACE_SHAPES, ids=[p["id"] for p in WORKSPACE_SHAPES])
+def test_synthetic_workspace_workflow(tmp_path, paper_cfg):
+    """Execute the full interaction workflow on a tiny isolated workspace."""
+    ws_copy = create_synthetic_workspace(
+        tmp_path / paper_cfg["id"], paper_id=paper_cfg["id"],
+        document_key=paper_cfg["document_key"], section_prefix=paper_cfg["section_prefix"],
+    )
 
     # 1. Initialize Workspace Session
     session = WorkspaceSession(ws_copy)
@@ -78,7 +51,7 @@ def test_real_paper_workspace_workflow(tmp_path, paper_cfg):
     assert r_res["surface_role"] == "PRIMARY"
     assert r_res["default_surface"] is True
     assert r_res["resolved_anchor"]["section_id"] == paper_cfg["section_anchor"]
-    assert len(r_res["sections_outline"]) >= 5
+    assert len(r_res["sections_outline"]) == 3
 
     # 3. GET_READER_SELECTION
     sel_envelope = session.dispatch_action("GET_READER_SELECTION", {"anchor": paper_cfg["section_anchor"]})
@@ -154,14 +127,14 @@ def test_real_paper_workspace_workflow(tmp_path, paper_cfg):
         "START_PROJECT_APPLY",
         {
             "project_context": {
-                "project_id": "proj-canopy-research",
+                "project_id": "proj-synthetic-research",
                 "transfer_objective": "Evaluate transferability of findings",
             }
         },
     )
     assert apply_envelope["status"] == "SUCCESS"
     apply_res = apply_envelope["result"]
-    assert apply_res["project_id"] == "proj-canopy-research"
+    assert apply_res["project_id"] == "proj-synthetic-research"
     assert apply_res["apply_envelope"]["triggered_explicitly"] is True
     # Cryptographic immutability check
     assert compute_file_sha256(manuscript_p) == initial_man_sha
