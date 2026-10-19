@@ -39,9 +39,10 @@ def test_artifact_fixture_cannot_claim_scientific_review(tmp_path):
     assert result["status"] in ("READER_ACCEPTED", "NEEDS_REVIEW")
 
 
-def test_historical_pair_scores_cannot_replace_fresh_release_evidence():
-    errors = validate_corpus_or_release_report()
-    assert errors and "fresh real-corpus release report" in errors[0]
+def test_historical_pair_scores_are_not_required_for_per_paper_release():
+    # Cross-paper reports qualify a skill change; a per-paper release is bound
+    # to the current workspace's own execution and source review.
+    assert validate_corpus_or_release_report() == []
 
 
 def test_unseen_claim_extraction_has_no_twelve_claim_cutoff(tmp_path):
