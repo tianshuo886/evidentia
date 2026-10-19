@@ -78,6 +78,35 @@ def run_evaluation(corpus_file=None, annotations_file=None, report_out=None, lim
         "detection_fingerprints": {}
     }
 
+    if truth_level == "SYNTHETIC":
+        # The default CI contract is deliberately narrow: a synthetic workspace
+        # must not acquire a scientific release decision. Do not run the legacy
+        # empirical pipeline or fabricate benchmark scores here.
+        from release_gate import evaluate_release
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            root = Path(tmp_dir)
+            (root / "reader").mkdir()
+            (root / "reader/narrative_manuscript.json").write_text(
+                json.dumps({"paper_id": "synthetic-eval", "document": {"sections": []}}),
+                encoding="utf-8",
+            )
+            decision = evaluate_release(root, artifact_only=True)
+            if decision["decision"] == "PASS" or decision["real_execution_verified"]:
+                raise RuntimeError("synthetic evaluation incorrectly authorized scientific release")
+            report["summary"] = {
+                "truth_level": "SYNTHETIC",
+                "release_boundary": decision["decision"],
+                "real_execution_verified": decision["real_execution_verified"],
+                "empirical_scores": None,
+            }
+            report["per_paper_results"] = {}
+            report["detection_fingerprints"] = {}
+        out_file = Path(report_out) if report_out else (Path(tempfile.gettempdir()) / "evidentia-evaluation-report.json")
+        out_file.parent.mkdir(parents=True, exist_ok=True)
+        out_file.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\\n", encoding="utf-8")
+        print(f"OK: Synthetic release-boundary check = {decision['decision']}; no empirical scores generated.")
+        return report
+
     with tempfile.TemporaryDirectory() as tmp_dir:
         tmp_p = Path(tmp_dir)
         
@@ -108,13 +137,23 @@ def run_evaluation(corpus_file=None, annotations_file=None, report_out=None, lim
                 cmd_b.extend(['--replay', str(ROOT / 'tests/replays/standard')])
             run_b = subprocess.run(cmd_b, capture_output=True, text=True)
             if truth_level == "SYNTHETIC":
-                # Structural/synthetic runs are expected to stop at NOT_RUN;
-                # they cannot fabricate a source review to obtain PASS.
-                if "RELEASE DECISION: NOT_RUN" not in run_b.stdout:
-                    raise RuntimeError("synthetic standard run did not fail closed\n" + run_b.stdout + run_b.stderr)
-                # Synthetic fixtures verify the release boundary only. They do
-                # not count as empirical or paper-quality evidence.
-                report["per_paper_results"][pid] = {"release_boundary": "NOT_RUN", "truth_level": "SYNTHETIC"}
+                # Structural/synthetic runs are expected to stop before a
+                # source-backed release. Inspect the persisted decision rather
+                # than stdout wording: rendering may correctly yield
+                # NEEDS_REVIEW when the local PDF backend is unavailable.
+                decision_path = out_b / "reader/reader_release_decision.json"
+                if not decision_path.is_file():
+                    raise RuntimeError("synthetic standard run did not write a release decision\n" + run_b.stdout + run_b.stderr)
+                decision = json.loads(decision_path.read_text(encoding="utf-8"))
+                run_state_path = out_b / "run_state.json"
+                run_state = json.loads(run_state_path.read_text(encoding="utf-8")) if run_state_path.is_file() else {}
+                if decision.get("decision") == "PASS" or decision.get("real_execution_verified"):
+                    raise RuntimeError("synthetic standard run claimed a source-backed release\n" + run_b.stdout + run_b.stderr)
+                if run_state.get("phase") == "PAPER_COMPLETE":
+                    raise RuntimeError("synthetic standard run reached PAPER_COMPLETE\n" + run_b.stdout + run_b.stderr)
+                # Synthetic fixtures verify only that fixture runs cannot claim
+                # scientific release; they are not empirical quality evidence.
+                report["per_paper_results"][pid] = {"release_boundary": decision.get("decision"), "truth_level": "SYNTHETIC"}
                 report["detection_fingerprints"][pid] = {}
                 continue
             if run_b.returncode:
@@ -145,8 +184,16 @@ def run_evaluation(corpus_file=None, annotations_file=None, report_out=None, lim
                 cmd_c.extend(['--replay', str(ROOT / 'tests/replays/standard')])
             run_c = subprocess.run(cmd_c, capture_output=True, text=True)
             if truth_level == "SYNTHETIC":
-                if "RELEASE DECISION: NOT_RUN" not in run_c.stdout:
-                    raise RuntimeError("synthetic ensemble run did not fail closed\n" + run_c.stdout + run_c.stderr)
+                decision_path = out_c / "reader/reader_release_decision.json"
+                if not decision_path.is_file():
+                    raise RuntimeError("synthetic ensemble run did not write a release decision\n" + run_c.stdout + run_c.stderr)
+                decision = json.loads(decision_path.read_text(encoding="utf-8"))
+                run_state_path = out_c / "run_state.json"
+                run_state = json.loads(run_state_path.read_text(encoding="utf-8")) if run_state_path.is_file() else {}
+                if decision.get("decision") == "PASS" or decision.get("real_execution_verified"):
+                    raise RuntimeError("synthetic ensemble run claimed a source-backed release\n" + run_c.stdout + run_c.stderr)
+                if run_state.get("phase") == "PAPER_COMPLETE":
+                    raise RuntimeError("synthetic ensemble run reached PAPER_COMPLETE\n" + run_c.stdout + run_c.stderr)
                 continue
             if run_c.returncode:
                 raise subprocess.CalledProcessError(run_c.returncode, cmd_c, run_c.stdout, run_c.stderr)
