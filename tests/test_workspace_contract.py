@@ -12,11 +12,8 @@ H. Project Apply explicitness: Apply cannot start without explicit invocation.
 I. Host neutrality: canonical Workspace Contract contains no Agentero-only dependency.
 """
 from __future__ import annotations
-import copy
 import json
-import shutil
 import sys
-import tempfile
 from pathlib import Path
 import pytest
 
@@ -25,23 +22,19 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 from workspace_contract import WorkspaceSession, INTERNAL_LENS_MARKERS
 from frozen_paper_object import (
-    load_frozen_paper_object,
-    build_frozen_paper_object,
-    verify_frozen_paper_object_integrity,
     compute_file_sha256,
 )
 from validate_common import schema_validate
 import memory_manager
 
-FIXTURE_WS = ROOT / "reader-v3-runs" / "workspaces" / "BENCH-02-LORA-ADAPTATION"
+sys.path.insert(0, str(ROOT / "tests" / "fixtures"))
+from synthetic_workspace import SECTION_TITLE, create_synthetic_workspace
 
 
 @pytest.fixture
 def temp_workspace(tmp_path):
-    """Isolated copy of the LoRA workspace to test mutations, notes, and corrections safely."""
-    dest = tmp_path / "lora_workspace"
-    shutil.copytree(FIXTURE_WS, dest)
-    return dest
+    """Build an isolated synthetic workspace for mutation and navigation tests."""
+    return create_synthetic_workspace(tmp_path / "synthetic_workspace")
 
 
 # -----------------------------------------------------------------------------
@@ -80,7 +73,7 @@ def test_b_anchor_resolution(temp_workspace):
     res_s1 = session.open_reader(anchor="s1")
     assert res_s1["status"] == "SUCCESS"
     assert res_s1["resolved_anchor"]["section_id"] == "s1"
-    assert "部署问题" in res_s1["resolved_anchor"]["section_title"]
+    assert res_s1["resolved_anchor"]["section_title"] == SECTION_TITLE
     assert len(res_s1["resolved_anchor"]["evidence_refs"]) > 0
 
     # 2. Valid URL hash anchor "#s2"
@@ -112,7 +105,7 @@ def test_c_evidence_navigation_bidirectional(temp_workspace):
     sel = session.get_reader_selection(anchor="s2")
     assert sel["status"] == "SUCCESS"
     assert "F01" in sel["bound_evidence_ids"]
-    assert 4 in sel["bound_source_pages"] or 2 in sel["bound_source_pages"]
+    assert sel["bound_source_pages"] == [2]
 
     # 2. Evidence ID -> Source location and related Reader explanation
     ev_res = session.open_evidence("F01")
@@ -146,7 +139,7 @@ def test_d_selection_aware_ask_context(temp_workspace):
 
     # 1. Ask "为什么" returns causal explanation citing bound evidence
     ask_why = session.ask_with_context(
-        question="为什么适配首先是部署问题？",
+        question="为什么合成测量值随测试条件变化？",
         anchor="s1",
     )
     assert ask_why["status"] == "SUCCESS"
@@ -181,7 +174,7 @@ def test_d_selection_aware_ask_context(temp_workspace):
 
     # 5. Debug mode explicitly requested
     ask_dbg = session.ask_with_context(
-        question="为什么适配首先是部署问题？",
+        question="为什么合成测量值随测试条件变化？",
         anchor="s1",
         debug_mode=True,
     )
@@ -203,10 +196,10 @@ def test_e_notes_isolation(temp_workspace):
 
     # 1. Create private note
     note = session.create_private_note(
-        text="这是测试笔记：LoRA 的 rank 参数选择与显存节约关系。",
+        text="这是测试笔记：合成测量值与测试条件的关系。",
         anchor="s2",
         evidence_id="F01",
-        tags=["deployment", "memory"],
+        tags=["measurement", "synthetic"],
     )
     assert note["author_type"] == "USER"
     assert note["mutation_check"] == "PASSED_READER_SHA_UNCHANGED"
@@ -270,6 +263,26 @@ def test_f_memory_firewall():
     assert ok
 
 
+def test_f_unfrozen_apply_and_memory_fail_closed(temp_workspace, monkeypatch):
+    """An unfrozen session cannot enter Apply or access the memory store."""
+    session = WorkspaceSession(temp_workspace)
+    manuscript_p = temp_workspace / "reader/narrative_manuscript.json"
+    initial_sha = compute_file_sha256(manuscript_p)
+    session.fpo["frozen"] = False
+
+    def forbidden_memory_access(*args, **kwargs):
+        pytest.fail("Unfrozen session attempted to access Research Memory")
+
+    monkeypatch.setattr(memory_manager, "get_memory_root", forbidden_memory_access)
+    for result in (
+        session.start_project_apply({"project_id": "proj-synthetic"}),
+        session.query_research_memory("synthetic measurement"),
+    ):
+        assert result["status"] == "ERROR"
+        assert result["code"] == "UNFROZEN_PAPER_REJECTED"
+    assert compute_file_sha256(manuscript_p) == initial_sha
+
+
 # -----------------------------------------------------------------------------
 # G. Correction immutability
 # -----------------------------------------------------------------------------
@@ -282,8 +295,8 @@ def test_g_correction_immutability(temp_workspace):
     # 1. Propose correction
     prop = session.propose_correction(
         anchor="s2",
-        rationale="细化低秩分解关于矩阵初始化形式的说明",
-        proposed_text="A矩阵采用高斯分布初始化，B矩阵置零，以确保训练初始状态增量为零。",
+        rationale="细化合成测量测试条件的说明",
+        proposed_text="测试中仅改变一个条件，其他测量条件保持不变。",
         source_evidence={"source_page": 2, "notes": "Section 4.1 paragraph 1"},
     )
     assert prop["status"] == "PROPOSED"
@@ -306,7 +319,7 @@ def test_g_correction_immutability(temp_workspace):
     prop2 = session.propose_correction(
         anchor="s2",
         rationale="修正笔误并更新准确描述",
-        proposed_text="【经校对】在条件语言建模目标中，作者提出基于低秩重参数化分解矩阵增量。",
+        proposed_text="【经校对】作者提出测试条件变化可以解释合成测量值的变化。",
     )
     accept_res = session.review_correction(
         proposal_id=prop2["proposal_id"],
@@ -354,13 +367,13 @@ def test_h_project_apply_explicitness(temp_workspace):
 
     # 2. Explicit project_context succeeds
     proj_ctx = {
-        "project_id": "proj-canopy-lora",
-        "tech_stack": "PyTorch / PINN",
-        "transfer_goal": "Adapt canopy inversion via low-rank layers",
+        "project_id": "proj-synthetic",
+        "tech_stack": "Synthetic test harness",
+        "transfer_goal": "Transfer a synthetic measurement procedure",
     }
     res_ok = session.start_project_apply(proj_ctx)
     assert res_ok["status"] == "SUCCESS"
-    assert res_ok["project_id"] == "proj-canopy-lora"
+    assert res_ok["project_id"] == "proj-synthetic"
     assert res_ok["apply_envelope"]["triggered_explicitly"] is True
 
     # Zero mutation to the frozen reader
