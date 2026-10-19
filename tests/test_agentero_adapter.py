@@ -14,14 +14,12 @@ Validates:
 - Research Memory boundary
 - Host neutrality
 - ACP bridge tool definitions & tool dispatch
-- Complete 13-step end-to-end flow on real papers (LoRA, UNSEEN-01)
+- Complete 13-step end-to-end flow on synthetic section and chapter manuscripts
 """
 from __future__ import annotations
 import json
-import os
 import shutil
 import sys
-import tempfile
 from pathlib import Path
 import pytest
 
@@ -39,32 +37,29 @@ from adapters.agentero import (
 from frozen_paper_object import compute_file_sha256
 from workspace_contract import INTERNAL_LENS_MARKERS
 
-LORA_WS = ROOT / "reader-v3-runs" / "workspaces" / "BENCH-02-LORA-ADAPTATION"
-UNSEEN_WS = ROOT / "reader-v3-runs" / "workspaces" / "UNSEEN-01-RETHINKING-GENERALIZATION"
+sys.path.insert(0, str(ROOT / "tests" / "fixtures"))
+from synthetic_workspace import PAPER_ID, SECTION_TITLE, create_synthetic_workspace
 
 
 @pytest.fixture
-def temp_lora_vault(tmp_path):
-    """Create an isolated Agentero-style vault layout with LoRA workspace."""
-    paper_dir = tmp_path / "papers" / "BENCH-02-LORA-ADAPTATION"
-    evidentia_dir = paper_dir / "evidentia"
-    shutil.copytree(LORA_WS, evidentia_dir)
-    # Provide synthetic Agentero paper PDF at root of paper folder
-    source_pdf = evidentia_dir / "source" / "paper.pdf"
-    if source_pdf.exists():
-        shutil.copyfile(source_pdf, paper_dir / "BENCH-02-LORA-ADAPTATION.pdf")
+def temp_synthetic_vault(tmp_path):
+    """Create an isolated Agentero vault using only small synthetic artifacts."""
+    paper_dir = tmp_path / "papers" / PAPER_ID
+    evidentia_dir = create_synthetic_workspace(paper_dir / "evidentia")
+    shutil.copyfile(evidentia_dir / "source/paper.pdf", paper_dir / f"{PAPER_ID}.pdf")
     return paper_dir
 
 
 @pytest.fixture
-def temp_unseen_vault(tmp_path):
-    """Create an isolated Agentero-style vault layout with UNSEEN-01 workspace."""
-    paper_dir = tmp_path / "papers" / "UNSEEN-01-RETHINKING-GENERALIZATION"
-    evidentia_dir = paper_dir / "evidentia"
-    shutil.copytree(UNSEEN_WS, evidentia_dir)
-    source_pdf = evidentia_dir / "source" / "paper.pdf"
-    if source_pdf.exists():
-        shutil.copyfile(source_pdf, paper_dir / "UNSEEN-01-RETHINKING-GENERALIZATION.pdf")
+def temp_chapter_vault(tmp_path):
+    """Exercise chapter manuscripts and alternate anchors with synthetic content."""
+    paper_id = "SYNTHETIC-CHAPTER-PAPER"
+    paper_dir = tmp_path / "papers" / paper_id
+    evidentia_dir = create_synthetic_workspace(
+        paper_dir / "evidentia", paper_id=paper_id,
+        section_prefix="SEC-", document_key="chapters",
+    )
+    shutil.copyfile(evidentia_dir / "source/paper.pdf", paper_dir / f"{paper_id}.pdf")
     return paper_dir
 
 
@@ -87,25 +82,25 @@ def test_adapter_imports_and_host_detection(monkeypatch):
 # -----------------------------------------------------------------------------
 # 2. Vault Layout Mapping
 # -----------------------------------------------------------------------------
-def test_vault_layout_mapping(temp_lora_vault):
+def test_vault_layout_mapping(temp_synthetic_vault):
     """Verify AgenteroVaultLayout resolves paths and handles facade correctly."""
-    layout = AgenteroVaultLayout(temp_lora_vault)
-    assert layout.paper_id == "BENCH-02-LORA-ADAPTATION"
+    layout = AgenteroVaultLayout(temp_synthetic_vault)
+    assert layout.paper_id == "SYNTHETIC-PAPER"
     assert layout.evidentia_dir.exists()
     assert layout.canonical_pdf_path.exists()
-    assert layout.notes_md_path == temp_lora_vault / "NOTES.md"
+    assert layout.notes_md_path == temp_synthetic_vault / "NOTES.md"
 
     # Direct evidentia_dir target
-    layout_direct = AgenteroVaultLayout(temp_lora_vault / "evidentia")
-    assert layout_direct.paper_id == "BENCH-02-LORA-ADAPTATION"
+    layout_direct = AgenteroVaultLayout(temp_synthetic_vault / "evidentia")
+    assert layout_direct.paper_id == "SYNTHETIC-PAPER"
 
 
 # -----------------------------------------------------------------------------
 # 3. Reader-First Default Surface
 # -----------------------------------------------------------------------------
-def test_reader_first_default(temp_lora_vault):
+def test_reader_first_default(temp_synthetic_vault):
     """Verify opening paper defaults to Reader HTML, NOT raw PDF."""
-    adapter = AgenteroAdapter(temp_lora_vault)
+    adapter = AgenteroAdapter(temp_synthetic_vault)
 
     # 1. Open Reader
     r = adapter.open_reader()
@@ -130,16 +125,16 @@ def test_reader_first_default(temp_lora_vault):
 # -----------------------------------------------------------------------------
 # 4. Anchor Deep-Link Mapping
 # -----------------------------------------------------------------------------
-def test_anchor_deep_link_mapping(temp_lora_vault):
+def test_anchor_deep_link_mapping(temp_synthetic_vault):
     """Verify Reader anchors resolve to valid URI fragments and target elements."""
-    adapter = AgenteroAdapter(temp_lora_vault)
+    adapter = AgenteroAdapter(temp_synthetic_vault)
 
     # Valid anchor
     res = adapter.open_reader(anchor="s1")
     assert res["status"] == "SUCCESS"
     assert res["uri"].endswith("#s1")
     assert res["resolved_anchor"]["section_id"] == "s1"
-    assert "为什么“适配”首先是部署问题" in res["resolved_anchor"]["section_title"]
+    assert res["resolved_anchor"]["section_title"] == SECTION_TITLE
 
     # Stale/invalid anchor
     res_stale = adapter.open_reader(anchor="invalid-section-999")
@@ -151,9 +146,9 @@ def test_anchor_deep_link_mapping(temp_lora_vault):
 # -----------------------------------------------------------------------------
 # 5. Evidence & Source Navigation
 # -----------------------------------------------------------------------------
-def test_evidence_and_source_navigation(temp_lora_vault):
+def test_evidence_and_source_navigation(temp_synthetic_vault):
     """Verify bidirectional evidence navigation and truthful gap reporting."""
-    adapter = AgenteroAdapter(temp_lora_vault)
+    adapter = AgenteroAdapter(temp_synthetic_vault)
 
     # 1. Open evidence item
     ev = adapter.open_evidence("F01")
@@ -167,18 +162,18 @@ def test_evidence_and_source_navigation(temp_lora_vault):
     assert ev["authority"] == "FROZEN_READER"
 
     # 2. Open source page (truthful gap acknowledgement: region_overlay_supported is False)
-    src = adapter.open_source(page=4, region={"x": 10, "y": 20, "w": 100, "h": 50})
+    src = adapter.open_source(page=2, region={"x": 10, "y": 20, "w": 100, "h": 50})
     assert src["status"] == "SUCCESS"
     assert src["region_overlay_supported"] is False
-    assert src["page"] == 4
+    assert src["page"] == 2
 
 
 # -----------------------------------------------------------------------------
 # 6. Selection-Aware Ask Context & Epistemic Attribution
 # -----------------------------------------------------------------------------
-def test_selection_ask_context(temp_lora_vault):
+def test_selection_ask_context(temp_synthetic_vault):
     """Verify Ask receives selection + evidence context, with zero internal lens leakage."""
-    adapter = AgenteroAdapter(temp_lora_vault)
+    adapter = AgenteroAdapter(temp_synthetic_vault)
 
     # 1. Resolve selection
     sel = adapter.get_reader_selection(anchor="s2")
@@ -187,7 +182,7 @@ def test_selection_ask_context(temp_lora_vault):
 
     # 2. Ask question
     ask = adapter.ask_with_context(
-        question="为什么作者采用低秩分解ΔW=BA？",
+        question="为什么合成测量值随测试条件变化？",
         selection=sel,
         anchor="s2",
     )
@@ -205,18 +200,18 @@ def test_selection_ask_context(temp_lora_vault):
 # -----------------------------------------------------------------------------
 # 7. Notes Bridge & Immutability Isolation
 # -----------------------------------------------------------------------------
-def test_notes_bridge_and_isolation(temp_lora_vault):
+def test_notes_bridge_and_isolation(temp_synthetic_vault):
     """Verify notes synchronize to NOTES.md while strictly preserving FPO manuscript SHA."""
-    adapter = AgenteroAdapter(temp_lora_vault)
+    adapter = AgenteroAdapter(temp_synthetic_vault)
     man_path = adapter.layout.evidentia_dir / "reader" / "narrative_manuscript.json"
     sha_orig = compute_file_sha256(man_path)
 
     # 1. Create note
     res = adapter.create_private_note(
-        text="这是测试研究笔记：LoRA 在部署时的参数量优势与吞吐分析。",
+        text="这是测试研究笔记：合成测量的变化与测试条件。",
         anchor="s1",
         evidence_id="T01",
-        tags=["deployment", "gpt2"],
+        tags=["measurement", "synthetic"],
     )
     assert res["status"] == "SUCCESS"
     assert res["host_action"] == "NOTE_SAVED"
@@ -226,7 +221,7 @@ def test_notes_bridge_and_isolation(temp_lora_vault):
     notes_md = adapter.layout.notes_md_path
     assert notes_md.exists()
     content = notes_md.read_text(encoding="utf-8")
-    assert "LoRA 在部署时的参数量优势" in content
+    assert "合成测量的变化" in content
     assert res["note_id"] in content
 
     # Assert 100% zero mutation of frozen Reader manuscript
@@ -243,17 +238,17 @@ def test_notes_bridge_and_isolation(temp_lora_vault):
 # -----------------------------------------------------------------------------
 # 8. Correction Bridge (Reject & Accept)
 # -----------------------------------------------------------------------------
-def test_correction_bridge(temp_lora_vault):
+def test_correction_bridge(temp_synthetic_vault):
     """Verify correction proposals: reject preserves state; accept creates version v2."""
-    adapter = AgenteroAdapter(temp_lora_vault)
+    adapter = AgenteroAdapter(temp_synthetic_vault)
     man_path = adapter.layout.evidentia_dir / "reader" / "narrative_manuscript.json"
     sha_orig = compute_file_sha256(man_path)
 
     # 1. Propose correction
     prop = adapter.propose_correction(
         anchor="s2",
-        rationale="修正重参数化矩阵维度的叙述",
-        proposed_text="【经校对】在条件语言建模目标中，作者提出基于低秩重参数化分解矩阵增量。",
+        rationale="修正合成测量条件的叙述",
+        proposed_text="【经校对】作者提出测试条件变化可以解释合成测量值的变化。",
     )
     assert prop["status"] == "SUCCESS"
     assert prop["host_action"] == "SHOW_CORRECTION_DIFF"
@@ -277,7 +272,7 @@ def test_correction_bridge(temp_lora_vault):
     prop2 = adapter.propose_correction(
         anchor="s2",
         rationale="采纳校对文本",
-        proposed_text="【正式合入新版本】在条件语言建模目标中，作者提出基于低秩重参数化分解矩阵增量。",
+        proposed_text="【正式合入新版本】作者提出测试条件变化可以解释合成测量值的变化。",
     )
     acc = adapter.review_correction(
         proposal_id=prop2["proposal_id"],
@@ -300,9 +295,9 @@ def test_correction_bridge(temp_lora_vault):
 # -----------------------------------------------------------------------------
 # 9. Project Apply & Research Memory Boundaries
 # -----------------------------------------------------------------------------
-def test_project_apply_and_memory_boundaries(temp_lora_vault):
+def test_project_apply_and_memory_boundaries(temp_synthetic_vault, tmp_path, monkeypatch):
     """Verify Apply is explicit and post-freeze only; Research Memory is protected."""
-    adapter = AgenteroAdapter(temp_lora_vault)
+    adapter = AgenteroAdapter(temp_synthetic_vault)
     man_path = adapter.layout.evidentia_dir / "reader" / "narrative_manuscript.json"
     sha_orig = compute_file_sha256(man_path)
 
@@ -313,29 +308,32 @@ def test_project_apply_and_memory_boundaries(temp_lora_vault):
 
     # 2. Apply with explicit context succeeds
     res_ok = adapter.start_project_apply({
-        "project_id": "proj-canopy-lora",
-        "objective": "Apply low-rank parameter updates to canopy inversion model",
+        "project_id": "proj-synthetic",
+        "objective": "Apply the synthetic measurement procedure to a test project",
     })
     assert res_ok["status"] == "SUCCESS"
     assert res_ok["host_action"] == "OPEN_APPLY_WORKSPACE"
-    assert res_ok["project_id"] == "proj-canopy-lora"
+    assert res_ok["project_id"] == "proj-synthetic"
 
     # Frozen Reader remains immutable
     assert compute_file_sha256(man_path) == sha_orig
 
-    # 3. Memory query post-freeze succeeds without mutating reader
-    mem = adapter.query_research_memory(query="low-rank adaptation")
+    # 3. Memory query uses an isolated empty store, never the real research memory.
+    import memory_manager
+    monkeypatch.setattr(memory_manager, "DEFAULT_MEMORY_ROOT", tmp_path / "memory")
+    mem = adapter.query_research_memory(query="synthetic measurement")
     assert mem["status"] == "SUCCESS"
     assert mem["host_action"] == "SHOW_MEMORY_RESULTS"
+    assert mem["results_count"] == 0
     assert compute_file_sha256(man_path) == sha_orig
 
 
 # -----------------------------------------------------------------------------
 # 10. ACP Bridge Tool Definitions & Tool Dispatch
 # -----------------------------------------------------------------------------
-def test_acp_bridge_tool_definitions_and_dispatch(temp_lora_vault):
+def test_acp_bridge_tool_definitions_and_dispatch(temp_synthetic_vault):
     """Verify ACP tool definitions and dispatch routing."""
-    adapter = AgenteroAdapter(temp_lora_vault)
+    adapter = AgenteroAdapter(temp_synthetic_vault)
     tool_defs = get_agentero_tool_definitions()
     assert len(tool_defs) >= 7
 
@@ -351,11 +349,11 @@ def test_acp_bridge_tool_definitions_and_dispatch(temp_lora_vault):
 
 
 # -----------------------------------------------------------------------------
-# 11. Complete 13-Step Real-Paper End-to-End Validation: LoRA
+# 11. Complete 13-Step Synthetic Workspace End-to-End Validation: synthetic measurements
 # -----------------------------------------------------------------------------
-def test_real_paper_e2e_lora_complete_sequence(temp_lora_vault):
-    """Execute complete 13-step sequence on BENCH-02-LORA-ADAPTATION."""
-    adapter = AgenteroAdapter(temp_lora_vault)
+def test_synthetic_e2e_sections_complete_sequence(temp_synthetic_vault):
+    """Execute complete 13-step sequence on SYNTHETIC-PAPER."""
+    adapter = AgenteroAdapter(temp_synthetic_vault)
     man_path = adapter.layout.evidentia_dir / "reader" / "narrative_manuscript.json"
     sha_orig = compute_file_sha256(man_path)
 
@@ -375,7 +373,7 @@ def test_real_paper_e2e_lora_complete_sequence(temp_lora_vault):
 
     # 4. Ask an evidence-grounded question
     ask = adapter.ask_with_context(
-        question="为什么适配首先是部署问题？",
+        question="为什么合成测量值随测试条件变化？",
         selection=sel,
         anchor="s1",
     )
@@ -397,7 +395,7 @@ def test_real_paper_e2e_lora_complete_sequence(temp_lora_vault):
 
     # 7. Create persistent private note
     note = adapter.create_private_note(
-        text="E2E test note on LoRA deployment bottlenecks.",
+        text="E2E test note on synthetic measurement conditions.",
         anchor="s1",
         evidence_id="T01",
     )
@@ -410,8 +408,8 @@ def test_real_paper_e2e_lora_complete_sequence(temp_lora_vault):
     # 9. Create correction proposal
     prop = adapter.propose_correction(
         anchor="s1",
-        rationale="Test correction proposal for LoRA E2E validation.",
-        proposed_text="Proposed replacement text for deployment section.",
+        rationale="Test correction proposal for synthetic measurements E2E validation.",
+        proposed_text="Proposed replacement text for measurement section.",
     )
     assert prop["status"] == "SUCCESS"
     assert prop["proposal_status"] == "PROPOSED"
@@ -429,7 +427,7 @@ def test_real_paper_e2e_lora_complete_sequence(temp_lora_vault):
     prop2 = adapter.propose_correction(
         anchor="s1",
         rationale="Controlled correction for v2 release.",
-        proposed_text="Controlled v2 text for LoRA section 1.",
+        proposed_text="Controlled v2 text for synthetic measurements section 1.",
     )
     acc = adapter.review_correction(
         proposal_id=prop2["proposal_id"],
@@ -443,27 +441,27 @@ def test_real_paper_e2e_lora_complete_sequence(temp_lora_vault):
 
     # 12. Invoke explicit Project Apply
     app = adapter.start_project_apply({
-        "project_id": "proj-canopy-e2e",
-        "focus": "Transfer LoRA rank search to canopy network",
+        "project_id": "proj-synthetic-e2e",
+        "focus": "Transfer the synthetic measurement procedure",
     })
     assert app["status"] == "SUCCESS"
-    assert app["project_id"] == "proj-canopy-e2e"
+    assert app["project_id"] == "proj-synthetic-e2e"
 
     # 13. Verify ordinary Reader Q&A did not receive project context
     post_ask = adapter.ask_with_context(
-        question="矩阵A与B的初始化规则是什么？",
+        question="测试条件是如何定义的？",
         anchor="s2",
     )
-    assert "proj-canopy-e2e" not in post_ask["answer"]
+    assert "proj-synthetic-e2e" not in post_ask["answer"]
     assert compute_file_sha256(man_path) == sha_orig
 
 
 # -----------------------------------------------------------------------------
-# 12. Complete 13-Step Real-Paper End-to-End Validation: UNSEEN-01
+# 12. Complete 13-Step Synthetic Workspace End-to-End Validation: chapter workspace
 # -----------------------------------------------------------------------------
-def test_real_paper_e2e_unseen01_complete_sequence(temp_unseen_vault):
-    """Execute complete 13-step sequence on UNSEEN-01-RETHINKING-GENERALIZATION."""
-    adapter = AgenteroAdapter(temp_unseen_vault)
+def test_synthetic_e2e_chapters_complete_sequence(temp_chapter_vault):
+    """Execute complete 13-step sequence on SYNTHETIC-CHAPTER-PAPER."""
+    adapter = AgenteroAdapter(temp_chapter_vault)
     man_path = adapter.layout.evidentia_dir / "reader" / "narrative_manuscript.json"
     sha_orig = compute_file_sha256(man_path)
 
@@ -480,7 +478,7 @@ def test_real_paper_e2e_unseen01_complete_sequence(temp_unseen_vault):
 
     # 4. Ask evidence-grounded question
     ask = adapter.ask_with_context(
-        question="经典泛化理论在过参数化深度学习中为何失效？",
+        question="为什么合成测量值随测试条件变化？",
         selection=sel,
         anchor="SEC-01",
     )
@@ -497,7 +495,7 @@ def test_real_paper_e2e_unseen01_complete_sequence(temp_unseen_vault):
 
     # 7. Create note
     note = adapter.create_private_note(
-        text="E2E note on generalization paradox and random label fitting.",
+        text="E2E note on synthetic observations and test conditions.",
         anchor="SEC-01",
     )
     assert note["status"] == "SUCCESS"
@@ -508,8 +506,8 @@ def test_real_paper_e2e_unseen01_complete_sequence(temp_unseen_vault):
     # 9. Propose correction
     prop = adapter.propose_correction(
         anchor="SEC-01",
-        rationale="UNSEEN-01 correction test.",
-        proposed_text="Updated wording on finite sample expressivity.",
+        rationale="chapter workspace correction test.",
+        proposed_text="Updated wording on synthetic test conditions.",
     )
     assert prop["status"] == "SUCCESS"
 
@@ -525,8 +523,8 @@ def test_real_paper_e2e_unseen01_complete_sequence(temp_unseen_vault):
     # 11. Accept correction -> v2
     prop2 = adapter.propose_correction(
         anchor="SEC-01",
-        rationale="Accepted correction for UNSEEN-01.",
-        proposed_text="New text for UNSEEN-01 section 1.",
+        rationale="Accepted correction for chapter workspace.",
+        proposed_text="New text for chapter workspace section 1.",
     )
     acc = adapter.review_correction(
         proposal_id=prop2["proposal_id"],
@@ -539,15 +537,15 @@ def test_real_paper_e2e_unseen01_complete_sequence(temp_unseen_vault):
 
     # 12. Invoke explicit Apply
     app = adapter.start_project_apply({
-        "project_id": "proj-theory-generalization",
-        "focus": "Inspect implicit regularization",
+        "project_id": "proj-synthetic-chapters",
+        "focus": "Inspect synthetic measurement conditions",
     })
     assert app["status"] == "SUCCESS"
 
     # 13. Verify Q&A isolation
     post_ask = adapter.ask_with_context(
-        question="随机标签拟合实验得出的结论是什么？",
+        question="合成测量实验得出的结论是什么？",
         anchor="SEC-02",
     )
-    assert "proj-theory-generalization" not in post_ask["answer"]
+    assert "proj-synthetic-chapters" not in post_ask["answer"]
     assert compute_file_sha256(man_path) == sha_orig
